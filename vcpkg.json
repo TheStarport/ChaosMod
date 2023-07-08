@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "fl-chaos-mod",
+  "version": "1.0",
+  "builtin-baseline": "8eb76645c009c2a2e778e03bcbfb9b5e1be3aa40",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "version>=": "1.88"
+    }
+  ]
+}

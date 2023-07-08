@@ -1,0 +1,476 @@
+#include "PCH.hpp"
+
+#include "DirectX/d3d.hpp"
+#include "UiManager.hpp"
+
+#include "ImGuiWin32.hpp"
+
+#include <iostream>
+#include <shellapi.h>
+
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "d3dx9.lib")
+
+typedef int(__stdcall* OriginalWndProc)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+OriginalWndProc originalProc;
+PBYTE originalProcData = PBYTE(malloc(5));
+
+LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    i()->hwnd = hWnd;
+
+    const HCURSOR arrowCursor = LoadCursor(NULL, IDC_ARROW);
+    CURSORINFO ci;
+    ci.cbSize = sizeof(ci);
+    if (GetCursorInfo(&ci))
+    {
+        if (ci.hCursor == arrowCursor)
+        {
+            i()->SetCursor("arrow");
+        }
+    }
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+    {
+        return true;
+    }
+
+    Utils::Memory::UnDetour(PBYTE(originalProc), originalProcData);
+    const LRESULT result = originalProc(hWnd, msg, wParam, lParam);
+    Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
+    return result;
+}
+
+DWORD* mouseX = PDWORD(0x616840);
+DWORD* mouseY = PDWORD(0x616844);
+DWORD* mouseStateRaw = PDWORD(0x616850);
+
+UiManager::HkMouseState UiManager::ConvertState(DWORD state)
+{
+    HkMouseState mouseState{};
+    mouseState.LeftDown = (state & 1) ? 1 : 0;
+    mouseState.RightDown = (state & 2) ? 1 : 0;
+    mouseState.MiddleDown = (state & 4) ? 1 : 0;
+    mouseState.Mouse4Down = (state & 8) ? 1 : 0;
+    mouseState.Mouse5Down = (state & 16) ? 1 : 0;
+    return mouseState;
+}
+
+void UiManager::HandleInput()
+{
+    constexpr int LEFT = 0, RIGHT = 1, MIDDLE = 2, X1 = 3, X2 = 4;
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    const int xPos = *mouseX;
+    const int yPos = *mouseY;
+
+    auto state = ConvertState(*mouseStateRaw);
+
+    // Position before anything else
+    io.AddMousePosEvent((float)xPos, (float)yPos);
+    io.AddMouseButtonEvent(LEFT, state.LeftDown);
+    io.AddMouseButtonEvent(RIGHT, state.RightDown);
+    io.AddMouseButtonEvent(MIDDLE, state.MiddleDown);
+    io.AddMouseButtonEvent(X1, state.Mouse4Down);
+    io.AddMouseButtonEvent(X2, state.Mouse5Down);
+
+    if (!debugLogger.show && GetAsyncKeyState(VK_F5))
+    {
+        ToggleDebugConsole();
+    }
+}
+
+void* WINAPI CreateDirect3D8(UINT SDKVersion)
+{
+    char path[MAX_PATH];
+    GetSystemDirectoryA(path, MAX_PATH);
+    strcat_s(path, MAX_PATH, "\\d3d8.dll");
+
+    /*HMODULE d3ddll = LoadLibraryA(Path);
+
+    typedef IDirect3D9*(WINAPI * D3DProc8)(UINT);
+    D3DProc8 func = (D3DProc8)GetProcAddress(d3ddll, "Direct3DCreate8");*/
+
+    IDirect3D9* const d3d = Direct3DCreate9(D3D_SDK_VERSION);
+
+    if (d3d == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (const HMODULE module = LoadLibrary(TEXT("d3dx9_43.dll")); module == nullptr)
+    {
+        if (MessageBoxA(nullptr,
+                        "Failed to load d3dx9_43.dll! Some features will not work correctly.\n\n"
+                        "It's required to install the \"Microsoft DirectX End-User Runtime\" in order to use directx.\n\n"
+                        "Please click \"OK\" to open the official download page or \"CANCEL\" to continue anyway.",
+                        nullptr,
+                        MB_ICONWARNING | MB_TOPMOST | MB_SETFOREGROUND | MB_OKCANCEL | MB_DEFBUTTON1) == IDOK)
+        {
+            // Open the url
+            ShellExecuteA(nullptr, "open", "https://www.microsoft.com/download/details.aspx?id=35", nullptr, nullptr, SW_SHOW);
+            return nullptr;
+        }
+    }
+
+    return new Direct3D8(d3d);
+}
+
+typedef bool(__cdecl* OnCursorChange)(const char* cursorName, bool hideCursor);
+OnCursorChange onCursorChange;
+PBYTE onCursorChangeData = PBYTE(malloc(5));
+
+std::string curCursor;
+
+bool OnCursorChangeDetour(const char* cursorName, bool hideCursor)
+{
+    std::string name = cursorName;
+    if (name == "Cross")
+    {
+        name = "cross";
+    }
+
+    else if (name == "Arrow")
+    {
+        name = "arrow";
+    }
+
+    curCursor = name;
+    UiManager::i()->SetCursor(name);
+    return true;
+}
+
+void UiManager::SetCursor(std::string str)
+{
+    const auto cur = this->mapCursors.find(str);
+    if (cur != this->mapCursors.end())
+    {
+        ::SetCursor(cur->second);
+        // SetClassLongPtrA(UI::hwnd, GCLP_HCURSOR, (LONG_PTR)cur->second);
+        PostMessage(hwnd, WM_SETCURSOR, (WPARAM)1, (LPARAM)cur->second);
+    }
+}
+
+void UiManager::PatchShowCursor() const
+{
+    BYTE NopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x05B1750, NopPatch, 4);
+
+    BYTE NopPatch2[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x5B32F2, NopPatch2, 7);
+    Utils::Memory::WriteProcMem(0x5B1750, NopPatch2, 7);
+
+    BYTE NopPatch3[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x42025A, NopPatch3, 13);
+
+    BYTE NopPatch4[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x41ECC7, NopPatch4, 16);
+
+    BYTE NopPatch5[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x41EAA3, NopPatch5, 20);
+
+    // BYTE NopPatch6[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    //  Utils::Memory::WriteProcMem(0x41F7D5, NopPatch6, 17);
+
+    // Patch out checks for if the cursor is visible
+    BYTE NopPatch7[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    Utils::Memory::WriteProcMem(0x004202F6, NopPatch7, 7);
+    Utils::Memory::WriteProcMem(0x0041EEBD, NopPatch7, 7);
+    Utils::Memory::WriteProcMem(0x00420474, NopPatch7, 7);
+
+    // Patch out SetCursor
+    Utils::Memory::NopAddress(0x598989, 7);
+    Utils::Memory::NopAddress(0x5989B6, 7);
+    Utils::Memory::NopAddress(0x598AF2, 7);
+    Utils::Memory::NopAddress(0x598BEC, 7);
+    Utils::Memory::NopAddress(0x598C0B, 7);
+}
+
+PBYTE winKeyOriginalMem;
+typedef bool(__cdecl* WinKeyType)(uint msg, WPARAM wParam, LPARAM lParam);
+WinKeyType winKeyOriginal;
+
+bool UiManager::WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (msg)
+    {
+        case WM_KEYUP:
+        case WM_KEYDOWN:
+            {
+                if (ImGui::GetIO().WantCaptureKeyboard)
+                {
+                    return false;
+                }
+            }
+        default: break;
+    }
+    Utils::Memory::UnDetour(PBYTE(winKeyOriginal), winKeyOriginalMem);
+    auto result = winKeyOriginal(msg, wParam, lParam);
+    Utils::Memory::Detour(PBYTE(winKeyOriginal), WinKeyDetour, winKeyOriginalMem);
+    return result;
+}
+
+void UiManager::LoadWinKey()
+{
+    winKeyOriginalMem = PBYTE(malloc(5));
+    winKeyOriginal = WinKeyType(0x577850);
+    Utils::Memory::Detour(PBYTE(winKeyOriginal), WinKeyDetour, winKeyOriginalMem);
+}
+
+UiManager::UiManager()
+{
+    const auto fl = reinterpret_cast<char*>(GetModuleHandle(nullptr));
+
+    IMGUI_CHECKVERSION();
+    context = ImGui::CreateContext();
+
+    const ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+
+    ImGui::StyleColorsDark();
+
+    char* pRP8 = (char*)LoadLibrary(L"RP8.dll");
+    char* pAddress = pRP8 + 0x5E188;
+    FARPROC fpD3D8CreateHook = (FARPROC)CreateDirect3D8;
+    Utils::Memory::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
+
+    // Disable Freelancer's vanilla cursor and restore the windows version
+    PatchShowCursor();
+
+    onCursorChange = OnCursorChange(0x41DDE0);
+    Utils::Memory::Detour(PBYTE(onCursorChange), OnCursorChangeDetour, onCursorChangeData);
+
+    // Set borderless window mode
+    BYTE patch[] = { 0x00, 0x00 };
+    constexpr DWORD BorderlessWindowPatch1 = 0x02477A;
+    constexpr DWORD BorderlessWindowPatch2 = 0x02490D;
+    Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch1, &patch, 2);
+    Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch2, &patch, 2);
+
+    originalProc = OriginalWndProc(0x5B2570);
+    Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
+
+    LoadCursors();
+    LoadWinKey();
+}
+
+UiManager::~UiManager()
+{
+    ImGui_ImplWin32_Shutdown();
+    ImGui_ImplDX9_Shutdown();
+    ImGui::DestroyContext(context);
+}
+
+void UiManager::LoadCursors()
+{
+    try
+    {
+        char szCurDir[MAX_PATH];
+        GetCurrentDirectoryA(sizeof(szCurDir), szCurDir);
+        std::string dir = std::string(szCurDir);
+
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS"))
+        {
+            if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !Utils::String::EndsWith(entry.path().generic_string(), ".cur"))
+            {
+                continue;
+            }
+
+            const HCURSOR hCur = LoadCursorFromFileA(entry.path().generic_string().c_str());
+            if (!hCur)
+            {
+                continue;
+            }
+
+            if (this->mapCursors.contains(entry.path().stem().generic_string()))
+            {
+                continue;
+            }
+
+            this->mapCursors[entry.path().stem().generic_string()] = hCur;
+        }
+    }
+    catch (std::exception& ex)
+    {
+        std::string what = ex.what();
+        DebugLog(what);
+    }
+}
+
+void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND hwnd)
+{
+    i()->hwnd = hwnd;
+    ImGui_ImplDX9_Init(device);
+    ImGui_ImplWin32_Init(hwnd);
+
+    ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
+}
+
+void UiManager::DebugLog::Render()
+{
+    if (!show)
+    {
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    if (!ImGui::Begin("Debug Console", &show))
+    {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SameLine();
+    const bool clear = ImGui::Button("Clear");
+    ImGui::SameLine();
+    const bool copy = ImGui::Button("Copy");
+    ImGui::SameLine();
+    filter.Draw("Filter", -100.0f);
+
+    ImGui::Separator();
+
+    if (ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar))
+    {
+        if (clear)
+        {
+            buf.clear();
+            lineOffsets.clear();
+            lineOffsets.push_back(0);
+        }
+        if (copy)
+        {
+            ImGui::LogToClipboard();
+        }
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+        const char* b = buf.begin();
+        const char* bend = buf.end();
+        if (filter.IsActive())
+        {
+            // In this example we don't use the clipper when Filter is enabled.
+            // This is because we don't have random access to the result of our filter.
+            // A real application processing logs with ten of thousands of entries may want to store the result of
+            // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
+            for (int lineNo = 0; lineNo < lineOffsets.Size; lineNo++)
+            {
+                const char* lineStart = b + lineOffsets[lineNo];
+                if (const char* lineEnd = (lineNo + 1 < lineOffsets.Size) ? (b + lineOffsets[lineNo + 1] - 1) : bend; filter.PassFilter(lineStart, lineEnd))
+                {
+                    ImGui::TextUnformatted(lineStart, lineEnd);
+                }
+            }
+        }
+        else
+        {
+            ImGuiListClipper clipper;
+            clipper.Begin(lineOffsets.Size);
+            while (clipper.Step())
+            {
+                for (int lineNo = clipper.DisplayStart; lineNo < clipper.DisplayEnd; lineNo++)
+                {
+                    const char* lineStart = b + lineOffsets[lineNo];
+                    const char* lineEnd = (lineNo + 1 < lineOffsets.Size) ? (b + lineOffsets[lineNo + 1] - 1) : bend;
+                    ImGui::TextUnformatted(lineStart, lineEnd);
+                }
+            }
+            clipper.End();
+        }
+        ImGui::PopStyleVar();
+
+        // Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
+        // Using a scrollbar or mouse-wheel will take away from the bottom edge.
+        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+        {
+            ImGui::SetScrollHereY(1.0f);
+        }
+    }
+    ImGui::EndChild();
+    ImGui::End();
+}
+
+void UiManager::SelectionText::Render()
+{
+    if (!show)
+    {
+        return;
+    }
+
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoInputs;
+
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
+
+    auto location = ImGui::GetIO().DisplaySize;
+    location.x = location.x - location.x / 4.0f;
+    location.y = 0 + location.y / 6.0f;
+
+    ImGui::SetNextWindowPos(location, ImGuiCond_Always);
+    if (!ImGui::Begin("Selection Window", nullptr, windowFlags))
+    {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SetWindowFontScale(2.0f);
+    ImGui::Text("1.) Spawn Big Bertha");
+    ImGui::NewLine();
+    ImGui::Text("2.) Spawn Big Bertha");
+    ImGui::NewLine();
+    ImGui::Text("3.) Spawn Big Bertha");
+    ImGui::NewLine();
+    ImGui::Text("4.) Spawn Big Bertha");
+    ImGui::NewLine();
+
+    ImGui::SetWindowFontScale(1.0f);
+
+    ImGui::End();
+
+    ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGui::GetColorU32(0x000000FF));
+    if (ImGui::BeginMainMenuBar())
+    {
+        progress += 0.001f;
+        if (progress > 1.0f)
+        {
+            progress = 0.0f;
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImGui::GetColorU32(0xFFFFFFFF));
+        ImGui::ProgressBar(progress, ImVec2(-FLT_MIN, 0), "");
+        ImGui::PopStyleColor();
+        ImGui::EndMainMenuBar();
+    }
+    ImGui::PopStyleColor();
+}
+
+void UiManager::Render()
+{
+    HandleInput();
+
+    ImGui_ImplDX9_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+
+    ImGui::NewFrame();
+
+    debugLogger.Render();
+    selectionText.Render();
+
+    ImGui::EndFrame();
+
+    ImGui::Render();
+    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+}
+
+void UiManager::ToggleDebugConsole() { debugLogger.show = !debugLogger.show; }
+void UiManager::DebugLog(std::string& log)
+{
+    log += "\n";
+    int oldSize = debugLogger.buf.size();
+    debugLogger.buf.append(log.c_str(), log.c_str() + log.size());
+    for (const int newSize = debugLogger.buf.size(); oldSize < newSize; oldSize++)
+    {
+        if (debugLogger.buf[oldSize] == '\n')
+        {
+            debugLogger.lineOffsets.push_back(oldSize + 1);
+        }
+    }
+}

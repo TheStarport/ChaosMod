@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Utils.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PCH.cpp" />
+    <ClCompile Include="Systems\UiManager.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImGuiDX9.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DBase.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DDevice.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DIndexBuffer.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DSurface.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DSwapChain.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DTexture.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DTypes.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DVertexBuffer.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\D3DVolume.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Utils.hpp" />
+    <ClInclude Include="Components\Component.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PCH.hpp" />
+    <ClInclude Include="Systems\UiManager.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Singleton.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGuiDX9.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\DirectX\d3d.hpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\DirectX\D3DTypes.hpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\DirectX\Drawing.hpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
+      <Filter>Systems\DirectX</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Components">
+      <UniqueIdentifier>{fe50c016-7f29-4f4f-91aa-3ce0257ad152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{14d7e727-45e0-4c59-89f2-1548cfa7e19c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{268bcf29-8428-4b22-a63f-aeec879f8b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\DirectX">
+      <UniqueIdentifier>{57d48447-4af9-48c3-8e1a-69f0edc54fa8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\vcpkg.json" />
+  </ItemGroup>
+</Project>
