@@ -8,11 +8,11 @@ class UiManager : public Singleton<UiManager>
 {
         struct HkMouseState
         {
-                int LeftDown;
-                int RightDown;
-                int MiddleDown;
-                int Mouse4Down;
-                int Mouse5Down;
+                uint leftDown;
+                uint rightDown;
+                uint middleDown;
+                uint mouse4Down;
+                uint mouse5Down;
         };
 
         ImGuiContext* context;

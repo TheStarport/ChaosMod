@@ -7,6 +7,10 @@
     {
       "name": "imgui",
       "version>=": "1.88"
+    },
+    {
+      "name": "magic-enum",
+      "version>=": "0.8.2"
     }
   ]
 }

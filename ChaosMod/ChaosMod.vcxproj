@@ -178,6 +178,7 @@
     <ClCompile Include="Systems\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
+    <ClCompile Include="Utilities\MemChange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Systems\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
+    <ClInclude Include="Utilities\MemChange.hpp" />
     <ClInclude Include="Utilities\Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>

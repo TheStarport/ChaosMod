@@ -40,6 +40,10 @@
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp">
       <Filter>Systems\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\ImGuiWin32.cpp" />
+    <ClCompile Include="Utilities\MemChange.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -67,6 +71,10 @@
     </ClInclude>
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
       <Filter>Systems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGuiWin32.hpp" />
+    <ClInclude Include="Utilities\MemChange.hpp">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,12 +22,9 @@ LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
     const HCURSOR arrowCursor = LoadCursor(NULL, IDC_ARROW);
     CURSORINFO ci;
     ci.cbSize = sizeof(ci);
-    if (GetCursorInfo(&ci))
+    if (GetCursorInfo(&ci) && ci.hCursor == arrowCursor)
     {
-        if (ci.hCursor == arrowCursor)
-        {
-            i()->SetCursor("arrow");
-        }
+        i()->SetCursor("arrow");
     }
 
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -41,39 +38,35 @@ LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
     return result;
 }
 
-DWORD* mouseX = PDWORD(0x616840);
-DWORD* mouseY = PDWORD(0x616844);
-DWORD* mouseStateRaw = PDWORD(0x616850);
+DWORD* mouseX = reinterpret_cast<PDWORD>(0x616840);
+DWORD* mouseY = reinterpret_cast<PDWORD>(0x616844);
+DWORD* mouseStateRaw = reinterpret_cast<PDWORD>(0x616850);
 
-UiManager::HkMouseState UiManager::ConvertState(DWORD state)
+UiManager::HkMouseState UiManager::ConvertState(const DWORD state)
 {
-    HkMouseState mouseState{};
-    mouseState.LeftDown = (state & 1) ? 1 : 0;
-    mouseState.RightDown = (state & 2) ? 1 : 0;
-    mouseState.MiddleDown = (state & 4) ? 1 : 0;
-    mouseState.Mouse4Down = (state & 8) ? 1 : 0;
-    mouseState.Mouse5Down = (state & 16) ? 1 : 0;
-    return mouseState;
+    return {
+        (state & 1), (state & 2), (state & 4), (state & 8), (state & 16),
+    };
 }
 
 void UiManager::HandleInput()
 {
-    constexpr int LEFT = 0, RIGHT = 1, MIDDLE = 2, X1 = 3, X2 = 4;
+    constexpr int left = 0, right = 1, middle = 2, x1 = 3, x2 = 4;
 
     ImGuiIO& io = ImGui::GetIO();
 
-    const int xPos = *mouseX;
-    const int yPos = *mouseY;
+    const DWORD xPos = *mouseX;
+    const DWORD yPos = *mouseY;
 
-    auto state = ConvertState(*mouseStateRaw);
+    const auto [leftDown, rightDown, middleDown, mouse4Down, mouse5Down] = ConvertState(*mouseStateRaw);
 
     // Position before anything else
-    io.AddMousePosEvent((float)xPos, (float)yPos);
-    io.AddMouseButtonEvent(LEFT, state.LeftDown);
-    io.AddMouseButtonEvent(RIGHT, state.RightDown);
-    io.AddMouseButtonEvent(MIDDLE, state.MiddleDown);
-    io.AddMouseButtonEvent(X1, state.Mouse4Down);
-    io.AddMouseButtonEvent(X2, state.Mouse5Down);
+    io.AddMousePosEvent(static_cast<float>(xPos), static_cast<float>(yPos));
+    io.AddMouseButtonEvent(left, leftDown);
+    io.AddMouseButtonEvent(right, rightDown);
+    io.AddMouseButtonEvent(middle, middleDown);
+    io.AddMouseButtonEvent(x1, mouse4Down);
+    io.AddMouseButtonEvent(x2, mouse5Down);
 
     if (!debugLogger.show && GetAsyncKeyState(VK_F5))
     {
@@ -141,14 +134,13 @@ bool OnCursorChangeDetour(const char* cursorName, bool hideCursor)
     return true;
 }
 
-void UiManager::SetCursor(std::string str)
+void UiManager::SetCursor(const std::string str)
 {
-    const auto cur = this->mapCursors.find(str);
-    if (cur != this->mapCursors.end())
+    if (const auto cur = this->mapCursors.find(str); cur != this->mapCursors.end())
     {
         ::SetCursor(cur->second);
         // SetClassLongPtrA(UI::hwnd, GCLP_HCURSOR, (LONG_PTR)cur->second);
-        PostMessage(hwnd, WM_SETCURSOR, (WPARAM)1, (LPARAM)cur->second);
+        PostMessage(hwnd, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cur->second));
     }
 }
 
@@ -230,16 +222,16 @@ UiManager::UiManager()
 
     ImGui::StyleColorsDark();
 
-    char* pRP8 = (char*)LoadLibrary(L"RP8.dll");
-    char* pAddress = pRP8 + 0x5E188;
-    FARPROC fpD3D8CreateHook = (FARPROC)CreateDirect3D8;
+    const auto rp8 = reinterpret_cast<char*>(LoadLibrary(L"RP8.dll"));
+    char* pAddress = rp8 + 0x5E188;
+    auto fpD3D8CreateHook = reinterpret_cast<FARPROC>(CreateDirect3D8);
     Utils::Memory::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
 
     // Disable Freelancer's vanilla cursor and restore the windows version
     PatchShowCursor();
 
-    onCursorChange = OnCursorChange(0x41DDE0);
-    Utils::Memory::Detour(PBYTE(onCursorChange), OnCursorChangeDetour, onCursorChangeData);
+    onCursorChange = reinterpret_cast<OnCursorChange>(0x41DDE0);
+    Utils::Memory::Detour(reinterpret_cast<PBYTE>(onCursorChange), OnCursorChangeDetour, onCursorChangeData);
 
     // Set borderless window mode
     BYTE patch[] = { 0x00, 0x00 };
@@ -396,7 +388,8 @@ void UiManager::SelectionText::Render()
         return;
     }
 
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoInputs;
+    constexpr ImGuiWindowFlags windowFlags =
+        ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoInputs;
 
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
 
@@ -461,6 +454,7 @@ void UiManager::Render()
 }
 
 void UiManager::ToggleDebugConsole() { debugLogger.show = !debugLogger.show; }
+
 void UiManager::DebugLog(std::string& log)
 {
     log += "\n";
