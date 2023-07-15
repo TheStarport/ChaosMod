@@ -7,7 +7,7 @@ enum class MemEvent
     OnFixedUpdate = 1 << 2,
 };
 
-class final MemChange
+class MemChange final
 {
         DWORD address;
         size_t length;

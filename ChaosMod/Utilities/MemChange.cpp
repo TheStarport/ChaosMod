@@ -5,7 +5,7 @@
 
 using namespace magic_enum::bitwise_operators;
 
-static std::unordered_map<MemEvent, std::vector<MemChange*>> memoryChanges;
+std::unordered_map<MemEvent, std::vector<MemChange*>> MemChange::memoryChanges;
 
 MemChange::MemChange(const MemEvent desiredEvents, const DWORD address, const size_t length,
                      const std::function<void(MemEvent triggeringEvent, const std::vector<byte>& currentData, float frameDelta)> callback)
