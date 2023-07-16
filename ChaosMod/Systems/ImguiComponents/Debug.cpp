@@ -24,7 +24,9 @@ void HexWindow::GoTo(const DWORD address, const size_t len)
     currentMin = address < 0x8000 ? 0 : address - 0x8000;
     currentMax = address + 0x8000 - 1;
     currentOffset = address;
-    editor->GotoAddrAndHighlight(0x8000, len);
+
+    Refresh();
+    editor->GotoAddrAndHighlight(0x8000, 0x8000 + len / 2);
 }
 
 void ActiveAddressList::Render()
@@ -55,10 +57,12 @@ void ActiveAddressList::Render()
         {
             static bool selected = false;
             std::string str = std::format("{:#010x} ({}) - {}", address, length, active ? "active" : "inactive");
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, 0x660500FF);
             if (ImGui::Selectable(str.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
             {
                 hexWindow.GoTo(address, length);
             }
+            ImGui::PopStyleColor();
             selected = false;
         }
     }
