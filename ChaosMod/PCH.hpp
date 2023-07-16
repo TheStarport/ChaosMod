@@ -31,6 +31,10 @@ using u64 = unsigned long long;
 
 #include <Components/Component.hpp>
 
+#include <FLCoreServer.h>
+
+#pragma comment(lib, "flcoreserver.lib")
+
 #include "../Utils.hpp"
 
 #include "Utilities/Singleton.hpp"

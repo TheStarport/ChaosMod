@@ -6,6 +6,7 @@
 
 void ChaosTimer::TriggerChaos()
 {
+    pub::Audio::PlaySoundEffect(1, CreateID("ui_close_infocard"));
     // Do nothing for now
 }
 
