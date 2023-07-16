@@ -38,16 +38,24 @@ class ActiveAddressList final
         ActiveAddressList() { Refresh(); }
 };
 
-class DebugLog final
+class Configurator final
+{
+    public:
+        bool show = false;
+        void Render();
+};
+
+class DebugMenu final
 {
         ImGuiTextBuffer buf;
         ImGuiTextFilter filter;
         ImVector<int> lineOffsets;
 
         ActiveAddressList addressList{};
+        Configurator configurator{};
 
     public:
-        DebugLog() { lineOffsets.push_back(0); }
+        DebugMenu() { lineOffsets.push_back(0); }
 
         bool show = true;
         void Render();

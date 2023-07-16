@@ -3,6 +3,8 @@
 
 #include "Debug.hpp"
 
+#include "Systems/ConfigManager.hpp"
+
 #include <imgui-club/imgui_memory_editor/imgui_memory_editor.h>
 
 void HexWindow::Render() { editor->DrawWindow("Hex View", hexBuffer.data(), hexBuffer.size(), currentOffset); }
@@ -80,9 +82,55 @@ void ActiveAddressList::Render()
 
 void ActiveAddressList::Refresh() { addressList = MemChange::GetMemChanges(); }
 
-void DebugLog::Render()
+void Configurator::Render()
+{
+    if (!show)
+    {
+        return;
+    }
+
+    if (!ImGui::Begin("Configurator", &show, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
+    {
+        ImGui::End();
+    }
+
+    auto* config = ConfigManager::i();
+    if (ImGui::Button("Save Changes"))
+    {
+        config->Save();
+    }
+
+    ImGui::Separator();
+
+    // Effect Settings
+    ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
+    ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
+    ImGui::SliderInt("Total Allowed Concurrent Effects", &config->totalAllowedConcurrentEffects, 1, 12);
+    ImGui::Separator();
+
+    // Meta Settings
+    ImGui::Checkbox("Allow Meta Effects", &config->allowMetaEffects);
+    ImGui::Separator();
+
+    // Twitch Settings
+    ImGui::Checkbox("Enable Twitch Voting", &config->enableTwitchVoting);
+    ImGui::SameLine();
+    ImGui::SliderFloat("Twitch Voting Weight", &config->baseTwitchVoteWeight, 0.1f, 1.0f);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip(
+            "When using Twitch votes, the item with the most votes will have this percentage chance of being selected.\n This value will determine "
+            "the percentage chance of the Twitch value being selected. If set to 1, Twitch chat's option is guaranteed.\n This option is likely to "
+            "be more preferable if you have fewer engaged viewers as to still allow for a degree of randomness.");
+    }
+
+    ImGui::End();
+}
+
+void DebugMenu::Render()
 {
     addressList.Render();
+    configurator.Render();
 
     if (!show)
     {
@@ -101,12 +149,18 @@ void DebugLog::Render()
     ImGui::SameLine();
     const bool copy = ImGui::Button("Copy");
     ImGui::SameLine();
+    filter.Draw("Filter", -100.0f);
+
     if (ImGui::Button("Open Address List"))
     {
         addressList.show = true;
     }
+
     ImGui::SameLine();
-    filter.Draw("Filter", -100.0f);
+    if (ImGui::Button("Open Configurator"))
+    {
+        configurator.show = true;
+    }
 
     ImGui::Separator();
 
@@ -169,7 +223,7 @@ void DebugLog::Render()
     ImGui::End();
 }
 
-void DebugLog::Log(std::string log)
+void DebugMenu::Log(std::string log)
 {
     log += "\n";
     int oldSize = buf.size();

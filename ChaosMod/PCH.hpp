@@ -34,3 +34,5 @@ using u64 = unsigned long long;
 #include "../Utils.hpp"
 
 #include "Utilities/Singleton.hpp"
+
+void Log(const std::string& log);

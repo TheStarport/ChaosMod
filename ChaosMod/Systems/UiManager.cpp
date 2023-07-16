@@ -3,6 +3,7 @@
 #include "DirectX/d3d.hpp"
 #include "UiManager.hpp"
 
+#include "ConfigManager.hpp"
 #include "ImGuiHelpers/ImGuiDX9.hpp"
 #include "ImGuiHelpers/ImGuiWin32.hpp"
 
@@ -261,9 +262,8 @@ void UiManager::LoadCursors()
     {
         char szCurDir[MAX_PATH];
         GetCurrentDirectoryA(sizeof(szCurDir), szCurDir);
-        std::string dir = std::string(szCurDir);
 
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS"))
+        for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS"))
         {
             if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !Utils::String::EndsWith(entry.path().generic_string(), ".cur"))
             {
@@ -298,6 +298,9 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     ImGui_ImplWin32_Init(window);
 
     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
+
+    // Load our config
+    ConfigManager::Load();
 }
 
 void UiManager::Render()

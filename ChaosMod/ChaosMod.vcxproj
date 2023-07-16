@@ -166,6 +166,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Systems\ChaosTimer.cpp" />
+    <ClCompile Include="Systems\ConfigManager.cpp" />
     <ClCompile Include="Systems\DirectX\D3DBase.cpp" />
     <ClCompile Include="Systems\DirectX\D3DDevice.cpp" />
     <ClCompile Include="Systems\DirectX\D3DIndexBuffer.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Components\Component.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
+    <ClInclude Include="Systems\ConfigManager.hpp" />
     <ClInclude Include="Systems\DirectX\d3d.hpp" />
     <ClInclude Include="Systems\DirectX\D3DTypes.hpp" />
     <ClInclude Include="Systems\DirectX\Drawing.hpp" />

@@ -30,7 +30,7 @@ class UiManager final : public Singleton<UiManager>
         static void LoadWinKey();
 
         ChaosOptionText optionText;
-        DebugLog debugLog;
+        DebugMenu debugLog;
         ProgressBar progressBar;
 
     public:

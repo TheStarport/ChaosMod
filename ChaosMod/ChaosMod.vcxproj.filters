@@ -58,6 +58,9 @@
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp">
       <Filter>Systems\ImGuiHelpers</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\ConfigManager.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp">
       <Filter>Systems\ImGuiHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ConfigManager.hpp">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
