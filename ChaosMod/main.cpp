@@ -1,4 +1,5 @@
 #include "PCH.hpp"
+#include "Systems/ChaosTimer.hpp"
 #include "Systems/UiManager.hpp"
 
 static PBYTE thornLoadData;
@@ -60,6 +61,8 @@ void __cdecl Update(const double delta)
     {
         timeCounter -= SixtyFramesPerSecond;
         MemChange::TriggerEvent(MemEvent::OnFixedUpdate, static_cast<float>(delta));
+
+        ChaosTimer::i()->Update(static_cast<float>(delta));
     }
 
     MemChange::TriggerEvent(MemEvent::OnUpdate, static_cast<float>(delta));

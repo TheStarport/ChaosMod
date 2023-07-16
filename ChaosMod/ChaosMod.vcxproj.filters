@@ -7,9 +7,6 @@
     <ClCompile Include="Systems\UiManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImGuiDX9.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\DirectX\D3DBase.cpp">
       <Filter>Systems\DirectX</Filter>
     </ClCompile>
@@ -40,12 +37,26 @@
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp">
       <Filter>Systems\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImGuiWin32.cpp" />
     <ClCompile Include="Utilities\MemChange.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp">
       <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ChaosTimer.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp">
+      <Filter>Systems\ImGuiHelpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp">
+      <Filter>Systems\ImGuiHelpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,9 +71,6 @@
     <ClInclude Include="Utilities\Singleton.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGuiDX9.hpp">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Systems\DirectX\d3d.hpp">
       <Filter>Systems\DirectX</Filter>
     </ClInclude>
@@ -75,12 +83,26 @@
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
       <Filter>Systems\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGuiWin32.hpp" />
     <ClInclude Include="Utilities\MemChange.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp">
       <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ChaosTimer.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp">
+      <Filter>Systems\ImGuiHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp">
+      <Filter>Systems\ImGuiHelpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +120,9 @@
     </Filter>
     <Filter Include="Systems\ImguiComponents">
       <UniqueIdentifier>{2e0f0a05-95ef-4351-a235-74f65799bbcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\ImGuiHelpers">
+      <UniqueIdentifier>{2650c570-2d3a-41e3-93b5-6a4a6bd3d5ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

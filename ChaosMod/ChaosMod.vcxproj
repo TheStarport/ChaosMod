@@ -165,6 +165,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Systems\ChaosTimer.cpp" />
     <ClCompile Include="Systems\DirectX\D3DBase.cpp" />
     <ClCompile Include="Systems\DirectX\D3DDevice.cpp" />
     <ClCompile Include="Systems\DirectX\D3DIndexBuffer.cpp" />
@@ -175,9 +176,11 @@
     <ClCompile Include="Systems\DirectX\D3DVertexBuffer.cpp" />
     <ClCompile Include="Systems\DirectX\D3DVolume.cpp" />
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
-    <ClCompile Include="Systems\ImGuiDX9.cpp" />
-    <ClCompile Include="Systems\ImGuiWin32.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
+    <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
+    <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
     <ClCompile Include="Utilities\MemChange.cpp" />
   </ItemGroup>
@@ -185,13 +188,16 @@
     <ClInclude Include="..\Utils.hpp" />
     <ClInclude Include="Components\Component.hpp" />
     <ClInclude Include="PCH.hpp" />
+    <ClInclude Include="Systems\ChaosTimer.hpp" />
     <ClInclude Include="Systems\DirectX\d3d.hpp" />
     <ClInclude Include="Systems\DirectX\D3DTypes.hpp" />
     <ClInclude Include="Systems\DirectX\Drawing.hpp" />
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
-    <ClInclude Include="Systems\ImGuiDX9.hpp" />
-    <ClInclude Include="Systems\ImGuiWin32.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
+    <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
+    <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\MemChange.hpp" />
     <ClInclude Include="Utilities\Singleton.hpp" />

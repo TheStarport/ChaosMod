@@ -1,11 +1,12 @@
 #pragma once
 
+#include "ImguiComponents/ChaosOptionText.hpp"
 #include "d3d9.h"
 
-#include "ImGuiDX9.hpp"
 #include "ImguiComponents/Debug.hpp"
+#include "ImguiComponents/ProgressBar.hpp"
 
-class UiManager : public Singleton<UiManager>
+class UiManager final : public Singleton<UiManager>
 {
         struct HkMouseState
         {
@@ -28,14 +29,9 @@ class UiManager : public Singleton<UiManager>
         void PatchShowCursor() const;
         static void LoadWinKey();
 
-        struct SelectionText
-        {
-                float progress = 0.0f;
-                bool show = true;
-                void Render();
-        } selectionText;
-
+        ChaosOptionText optionText;
         DebugLog debugLog;
+        ProgressBar progressBar;
 
     public:
         void SetCursor(std::string str);
@@ -45,8 +41,11 @@ class UiManager : public Singleton<UiManager>
         void LoadCursors();
 
         static void Setup(LPDIRECT3DDEVICE9 device, HWND window);
+
         void Render();
 
         void ToggleDebugConsole();
         void DebugLog(const std::string& log);
+
+        void UpdateProgressBar(float progressPercentage);
 };

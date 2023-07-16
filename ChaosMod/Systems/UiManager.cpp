@@ -3,7 +3,8 @@
 #include "DirectX/d3d.hpp"
 #include "UiManager.hpp"
 
-#include "ImGuiWin32.hpp"
+#include "ImGuiHelpers/ImGuiDX9.hpp"
+#include "ImGuiHelpers/ImGuiWin32.hpp"
 
 #include <iostream>
 #include <shellapi.h>
@@ -299,60 +300,6 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
 }
 
-void UiManager::SelectionText::Render()
-{
-    if (!show)
-    {
-        return;
-    }
-
-    constexpr ImGuiWindowFlags windowFlags =
-        ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoInputs;
-
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
-
-    auto location = ImGui::GetIO().DisplaySize;
-    location.x = location.x - location.x / 4.0f;
-    location.y = 0 + location.y / 6.0f;
-
-    ImGui::SetNextWindowPos(location, ImGuiCond_Always);
-    if (!ImGui::Begin("Selection Window", nullptr, windowFlags))
-    {
-        ImGui::End();
-        return;
-    }
-
-    ImGui::SetWindowFontScale(2.0f);
-    ImGui::Text("1.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("2.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("3.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("4.) Spawn Big Bertha");
-    ImGui::NewLine();
-
-    ImGui::SetWindowFontScale(1.0f);
-
-    ImGui::End();
-
-    ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGui::GetColorU32(0x000000FF));
-    if (ImGui::BeginMainMenuBar())
-    {
-        progress += 0.001f;
-        if (progress > 1.0f)
-        {
-            progress = 0.0f;
-        }
-
-        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImGui::GetColorU32(0xFFFFFFFF));
-        ImGui::ProgressBar(progress, ImVec2(-FLT_MIN, 0), "");
-        ImGui::PopStyleColor();
-        ImGui::EndMainMenuBar();
-    }
-    ImGui::PopStyleColor();
-}
-
 void UiManager::Render()
 {
     HandleInput();
@@ -363,7 +310,8 @@ void UiManager::Render()
     ImGui::NewFrame();
 
     debugLog.Render();
-    selectionText.Render();
+    optionText.Render();
+    progressBar.Render();
 
     ImGui::ShowDemoWindow();
 
@@ -376,3 +324,4 @@ void UiManager::Render()
 void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
 
 void UiManager::DebugLog(const std::string& log) { debugLog.Log(log); }
+void UiManager::UpdateProgressBar(const float progressPercentage) { progressBar.SetProgressPercentage(progressPercentage); }
