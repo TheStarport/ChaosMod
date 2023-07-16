@@ -17,7 +17,7 @@ PBYTE originalProcData = PBYTE(malloc(5));
 
 LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    i()->hwnd = hWnd;
+    i()->window = hWnd;
 
     const HCURSOR arrowCursor = LoadCursor(NULL, IDC_ARROW);
     CURSORINFO ci;
@@ -68,7 +68,7 @@ void UiManager::HandleInput()
     io.AddMouseButtonEvent(x1, mouse4Down);
     io.AddMouseButtonEvent(x2, mouse5Down);
 
-    if (!debugLogger.show && GetAsyncKeyState(VK_F5))
+    if (!debugLog.show && GetAsyncKeyState(VK_F5))
     {
         ToggleDebugConsole();
     }
@@ -139,8 +139,8 @@ void UiManager::SetCursor(const std::string str)
     if (const auto cur = this->mapCursors.find(str); cur != this->mapCursors.end())
     {
         ::SetCursor(cur->second);
-        // SetClassLongPtrA(UI::hwnd, GCLP_HCURSOR, (LONG_PTR)cur->second);
-        PostMessage(hwnd, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cur->second));
+        // SetClassLongPtrA(UI::window, GCLP_HCURSOR, (LONG_PTR)cur->second);
+        PostMessage(window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cur->second));
     }
 }
 
@@ -290,95 +290,13 @@ void UiManager::LoadCursors()
     }
 }
 
-void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND hwnd)
+void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 {
-    i()->hwnd = hwnd;
+    i()->window = window;
     ImGui_ImplDX9_Init(device);
-    ImGui_ImplWin32_Init(hwnd);
+    ImGui_ImplWin32_Init(window);
 
     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
-}
-
-void UiManager::DebugLog::Render()
-{
-    if (!show)
-    {
-        return;
-    }
-
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Debug Console", &show))
-    {
-        ImGui::End();
-        return;
-    }
-
-    ImGui::SameLine();
-    const bool clear = ImGui::Button("Clear");
-    ImGui::SameLine();
-    const bool copy = ImGui::Button("Copy");
-    ImGui::SameLine();
-    filter.Draw("Filter", -100.0f);
-
-    ImGui::Separator();
-
-    if (ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar))
-    {
-        if (clear)
-        {
-            buf.clear();
-            lineOffsets.clear();
-            lineOffsets.push_back(0);
-        }
-        if (copy)
-        {
-            ImGui::LogToClipboard();
-        }
-
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-        const char* b = buf.begin();
-        const char* bend = buf.end();
-        if (filter.IsActive())
-        {
-            // In this example we don't use the clipper when Filter is enabled.
-            // This is because we don't have random access to the result of our filter.
-            // A real application processing logs with ten of thousands of entries may want to store the result of
-            // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
-            for (int lineNo = 0; lineNo < lineOffsets.Size; lineNo++)
-            {
-                const char* lineStart = b + lineOffsets[lineNo];
-                if (const char* lineEnd = (lineNo + 1 < lineOffsets.Size) ? (b + lineOffsets[lineNo + 1] - 1) : bend; filter.PassFilter(lineStart, lineEnd))
-                {
-                    ImGui::TextUnformatted(lineStart, lineEnd);
-                }
-            }
-        }
-        else
-        {
-            ImGuiListClipper clipper;
-            clipper.Begin(lineOffsets.Size);
-            while (clipper.Step())
-            {
-                for (int lineNo = clipper.DisplayStart; lineNo < clipper.DisplayEnd; lineNo++)
-                {
-                    const char* lineStart = b + lineOffsets[lineNo];
-                    const char* lineEnd = (lineNo + 1 < lineOffsets.Size) ? (b + lineOffsets[lineNo + 1] - 1) : bend;
-                    ImGui::TextUnformatted(lineStart, lineEnd);
-                }
-            }
-            clipper.End();
-        }
-        ImGui::PopStyleVar();
-
-        // Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
-        // Using a scrollbar or mouse-wheel will take away from the bottom edge.
-        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-        {
-            ImGui::SetScrollHereY(1.0f);
-        }
-    }
-    ImGui::EndChild();
-    ImGui::End();
 }
 
 void UiManager::SelectionText::Render()
@@ -444,8 +362,10 @@ void UiManager::Render()
 
     ImGui::NewFrame();
 
-    debugLogger.Render();
+    debugLog.Render();
     selectionText.Render();
+
+    ImGui::ShowDemoWindow();
 
     ImGui::EndFrame();
 
@@ -453,18 +373,6 @@ void UiManager::Render()
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
 
-void UiManager::ToggleDebugConsole() { debugLogger.show = !debugLogger.show; }
+void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
 
-void UiManager::DebugLog(std::string& log)
-{
-    log += "\n";
-    int oldSize = debugLogger.buf.size();
-    debugLogger.buf.append(log.c_str(), log.c_str() + log.size());
-    for (const int newSize = debugLogger.buf.size(); oldSize < newSize; oldSize++)
-    {
-        if (debugLogger.buf[oldSize] == '\n')
-        {
-            debugLogger.lineOffsets.push_back(oldSize + 1);
-        }
-    }
-}
+void UiManager::DebugLog(const std::string& log) { debugLog.Log(log); }

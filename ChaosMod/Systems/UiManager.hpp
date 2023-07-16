@@ -3,6 +3,7 @@
 #include "d3d9.h"
 
 #include "ImGuiDX9.hpp"
+#include "ImguiComponents/Debug.hpp"
 
 class UiManager : public Singleton<UiManager>
 {
@@ -16,7 +17,7 @@ class UiManager : public Singleton<UiManager>
         };
 
         ImGuiContext* context;
-        HWND hwnd{};
+        HWND window = nullptr;
         std::map<std::string, HCURSOR> mapCursors;
 
         static LRESULT __stdcall WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -27,25 +28,14 @@ class UiManager : public Singleton<UiManager>
         void PatchShowCursor() const;
         static void LoadWinKey();
 
-        struct DebugLog
-        {
-                DebugLog() { lineOffsets.push_back(0); }
-
-                ImGuiTextBuffer buf;
-                ImGuiTextFilter filter;
-                ImVector<int> lineOffsets;
-
-                bool show = true;
-                void Render();
-
-        } debugLogger;
-
         struct SelectionText
         {
                 float progress = 0.0f;
                 bool show = true;
                 void Render();
         } selectionText;
+
+        DebugLog debugLog;
 
     public:
         void SetCursor(std::string str);
@@ -54,9 +44,9 @@ class UiManager : public Singleton<UiManager>
         ~UiManager();
         void LoadCursors();
 
-        static void Setup(const LPDIRECT3DDEVICE9 device, const HWND hwnd);
+        static void Setup(LPDIRECT3DDEVICE9 device, HWND window);
         void Render();
 
         void ToggleDebugConsole();
-        void DebugLog(std::string& log);
+        void DebugLog(const std::string& log);
 };

@@ -3,13 +3,15 @@
 #include "MemChange.hpp"
 #include "magic_enum.hpp"
 
+#include <ranges>
+
 using namespace magic_enum::bitwise_operators;
 
 std::unordered_map<MemEvent, std::vector<MemChange*>> MemChange::memoryChanges;
 
 MemChange::MemChange(const MemEvent desiredEvents, const DWORD address, const size_t length,
-                     const std::function<void(MemEvent triggeringEvent, const std::vector<byte>& currentData, float frameDelta)> callback)
-    : address(address), length(length), callback(callback)
+                     const std::function<void(const std::vector<byte>& currentData, float frameDelta)> callback)
+    : active(false), address(address), length(length), callback(callback)
 {
     // If the memory change list hasn't been setup, iterate over the the possible events and create an empty vector
     if (memoryChanges.empty())
@@ -46,10 +48,31 @@ void MemChange::TriggerEvent(const MemEvent event, const float frameDelta)
         std::vector<byte> currentData;
         currentData.resize(memChange->length);
         Utils::Memory::ReadProcMem(reinterpret_cast<void*>(memChange->address), currentData.data(), memChange->length);
-        memChange->callback(event, currentData, frameDelta);
+        memChange->callback(currentData, frameDelta);
+        memChange->active = true;
     }
 }
 
-void MemChange::Reset() { Utils::Memory::WriteProcMem(reinterpret_cast<void*>(address), originalData.data(), length); }
+std::vector<MemChange::ActiveChange> MemChange::GetMemChanges()
+{
+    std::vector<ActiveChange> ret;
+    ret.reserve(memoryChanges.size());
+
+    for (const auto& val : memoryChanges | std::views::values)
+    {
+        for (const auto& change : val)
+        {
+            ret.emplace_back(change->address, change->length, change->active);
+        }
+    }
+
+    return ret;
+}
+
+void MemChange::Reset()
+{
+    Utils::Memory::WriteProcMem(reinterpret_cast<void*>(address), originalData.data(), length);
+    active = false;
+}
 
 MemChange::~MemChange() { Reset(); }

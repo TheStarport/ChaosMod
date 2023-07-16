@@ -44,6 +44,9 @@
     <ClCompile Include="Utilities\MemChange.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\Debug.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -76,6 +79,9 @@
     <ClInclude Include="Utilities\MemChange.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\Debug.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -89,6 +95,9 @@
     </Filter>
     <Filter Include="Systems\DirectX">
       <UniqueIdentifier>{57d48447-4af9-48c3-8e1a-69f0edc54fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\ImguiComponents">
+      <UniqueIdentifier>{2e0f0a05-95ef-4351-a235-74f65799bbcd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
