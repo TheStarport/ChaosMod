@@ -70,7 +70,7 @@ void UiManager::HandleInput()
     io.AddMouseButtonEvent(x1, mouse4Down);
     io.AddMouseButtonEvent(x2, mouse5Down);
 
-    if (!debugLog.show && GetAsyncKeyState(VK_F5))
+    if (GetAsyncKeyState(VK_F5))
     {
         ToggleDebugConsole();
     }

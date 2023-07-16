@@ -59,10 +59,9 @@ void __cdecl Update(const double delta)
     timeCounter += delta;
     while (timeCounter > SixtyFramesPerSecond)
     {
+        MemChange::TriggerEvent(MemEvent::OnFixedUpdate, static_cast<float>(SixtyFramesPerSecond));
+        ChaosTimer::i()->Update(static_cast<float>(SixtyFramesPerSecond));
         timeCounter -= SixtyFramesPerSecond;
-        MemChange::TriggerEvent(MemEvent::OnFixedUpdate, static_cast<float>(delta));
-
-        ChaosTimer::i()->Update(static_cast<float>(delta));
     }
 
     MemChange::TriggerEvent(MemEvent::OnUpdate, static_cast<float>(delta));
