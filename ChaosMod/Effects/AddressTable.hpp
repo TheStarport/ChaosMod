@@ -12,6 +12,8 @@ enum class AddressTable : DWORD
     HudPowerColor = 0x0D57AC,
     HudShieldColor = 0x0D5843,
     HudHullColor = 0x0D588D,
+    EnergyBarHeight = 0x1D7E68,
+    TotalBarWidth = 0x1D7E58,
 
     // Visual
 };

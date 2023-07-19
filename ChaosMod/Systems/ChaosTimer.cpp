@@ -5,6 +5,7 @@
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
 #include "Effects/DB/Audio/BossMusic.hpp"
+#include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
 #include "UiManager.hpp"
 
@@ -144,6 +145,7 @@ void ChaosTimer::RegisterAllEffects()
 {
 #define Ef(T) ActiveEffect::RegisterEffect<T>()
     Ef(Lgbtui);
+    Ef(BuggyInterface);
     Ef(BossMusic);
 #undef Ef
 }

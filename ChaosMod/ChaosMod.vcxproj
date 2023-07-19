@@ -192,6 +192,7 @@
     <ClInclude Include="Effects\ActiveEffect.hpp" />
     <ClInclude Include="Effects\AddressTable.hpp" />
     <ClInclude Include="Effects\DB\Audio\BossMusic.hpp" />
+    <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />

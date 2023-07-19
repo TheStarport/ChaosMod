@@ -131,6 +131,9 @@
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
