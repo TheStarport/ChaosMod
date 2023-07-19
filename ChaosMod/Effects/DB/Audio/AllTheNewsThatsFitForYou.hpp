@@ -3,6 +3,8 @@
 
 #include "Effects/MemoryEffect.hpp"
 
+#include <sapi.h>
+
 class AllTheNewsThatsFitForYou final : public ActiveEffect
 {
         float time = 10.0f;
