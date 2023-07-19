@@ -5,6 +5,14 @@
 
 class Lgbtui final : public MemoryEffect
 {
+        // clang-format off
+        MemoryListStart(offsets)
+        MemoryListItem("freelancer.exe", 0x0D57AC, 3)
+        MemoryListItem("freelancer.exe", 0x0D5843, 3)
+        MemoryListItem("freelancer.exe", 0x0D588D, 3)
+        MemoryListEnd(offsets);
+        // clang-format on
+
         byte r = 255;
         byte g = 0;
         byte b = 0;
@@ -64,20 +72,18 @@ class Lgbtui final : public MemoryEffect
     public:
         void Update(float delta) override
         {
-            const auto [module, address, length] = GetMemoryAddress();
-
-            // TODO: Rewrite this to not be awful
             for (uint i = 0u; i < 20; i++)
             {
                 CalculateRgb();
             }
 
             std::array bytes = { b, g, r };
-            Utils::Memory::WriteProcMem(module + address, bytes.data(), bytes.size());
+
+            for (auto& [module, address, length, originalData] : GetMemoryAddresses())
+            {
+                Utils::Memory::WriteProcMem(module + address, bytes.data(), bytes.size());
+            }
         }
 
         DefEffectInfo("LGBTUI+", 1.0f, EffectType::Interface);
-
-    protected:
-        DefMemoryAddress("freelancer.exe", 0x0D57AC, 3);
 };

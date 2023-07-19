@@ -15,7 +15,10 @@ std::vector<MemoryEffect::MemoryAddress> MemoryEffect::GetMemoryEffects()
 
     for (const auto& change : memoryChanges)
     {
-        ret.emplace_back(change->GetMemoryAddress());
+        for (const auto& address : change->GetMemoryAddresses())
+        {
+            ret.emplace_back(address);
+        }
     }
 
     return ret;
@@ -23,14 +26,21 @@ std::vector<MemoryEffect::MemoryAddress> MemoryEffect::GetMemoryEffects()
 
 void MemoryEffect::Begin()
 {
-    const auto [module, address, length] = GetMemoryAddress();
-    originalData.resize(length);
+    for (auto& [module, offset, length, originalData] : GetMemoryAddresses())
+    {
+        originalData.resize(length);
+        Utils::Memory::ReadProcMem(module + offset, originalData.data(), length);
+    }
 
-    Utils::Memory::ReadProcMem(module + address, originalData.data(), length);
+    memoryChanges.emplace_back(this);
 }
 
 void MemoryEffect::End()
 {
-    const auto [module, address, length] = GetMemoryAddress();
-    Utils::Memory::WriteProcMem(module + address, originalData.data(), length);
+    for (auto& [module, offset, length, originalData] : GetMemoryAddresses())
+    {
+        Utils::Memory::WriteProcMem(module + offset, originalData.data(), length);
+    }
+
+    std::erase(memoryChanges, this);
 }

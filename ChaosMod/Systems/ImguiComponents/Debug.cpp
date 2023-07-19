@@ -55,7 +55,7 @@ void ActiveAddressList::Render()
     ImGui::Separator();
     if (ImGui::BeginChild("address-list", ImVec2(0, 0), false))
     {
-        for (const auto& [module, offset, length] : addressList)
+        for (const auto& [module, offset, length, originalData] : addressList)
         {
             static bool selected = false;
             std::string str = std::format("{:#010x} ({})", module + offset, length);

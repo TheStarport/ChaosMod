@@ -12,6 +12,7 @@ class MemoryEffect : public ActiveEffect
                 DWORD module;
                 uint offset;
                 size_t length;
+                std::vector<byte> originalData;
         };
 
         static std::vector<MemoryAddress> GetMemoryEffects();
@@ -20,13 +21,16 @@ class MemoryEffect : public ActiveEffect
         void End() override;
 
     protected:
-        std::vector<byte> originalData;
-        virtual const MemoryAddress& GetMemoryAddress() = 0;
+        virtual std::vector<MemoryAddress>& GetMemoryAddresses() = 0;
 };
 
-#define DefMemoryAddress(module, offset, length)                                        \
-    const MemoryAddress& GetMemoryAddress()                                             \
-    {                                                                                   \
-        static MemoryAddress mem = { DWORD(GetModuleHandleA(module)), offset, length }; \
-        return mem;                                                                     \
+// clang-format off
+#define MemoryListStart(x) std::vector<MemoryAddress> x = {
+#define MemoryListItem(module, offset, length) { DWORD(GetModuleHandleA(module)), offset, length },
+#define MemoryListEnd(x) };                                                                                 \
+    std::vector<MemoryAddress>& GetMemoryAddresses()                                                  \
+    {                                                                                                       \
+        return x;                                                                                           \
     }
+
+// clang-format on

@@ -39,6 +39,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return effect;
     }
 
+    Log("Failed to select effect after 5 attempts.");
     return nullptr;
 }
 
