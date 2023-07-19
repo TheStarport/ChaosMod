@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImguiComponents/ActiveEffectsText.hpp"
 #include "ImguiComponents/ChaosOptionText.hpp"
 #include "d3d9.h"
 
@@ -32,6 +33,7 @@ class UiManager final : public Singleton<UiManager>
         ChaosOptionText optionText;
         DebugMenu debugLog;
         ProgressBar progressBar;
+        ActiveEffectsText activeEffectsText;
 
     public:
         void SetCursor(std::string str);
@@ -48,4 +50,16 @@ class UiManager final : public Singleton<UiManager>
         void DebugLog(const std::string& log);
 
         void UpdateProgressBar(float progressPercentage);
+
+        enum class Font
+        {
+            TitiliumWeb,
+            TitiliumWebLarge,
+        };
+
+    private:
+        static std::map<Font, ImFont*> loadedFonts;
+
+    public:
+        static ImFont* GetFont(Font font);
 };

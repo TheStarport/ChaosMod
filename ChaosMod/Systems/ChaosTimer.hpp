@@ -17,5 +17,6 @@ class ChaosTimer final : public Singleton<ChaosTimer>
 
     public:
         void Update(float delta);
+        static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
         static void RegisterAllEffects();
 };

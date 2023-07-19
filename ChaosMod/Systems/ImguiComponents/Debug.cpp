@@ -109,10 +109,13 @@ void Configurator::Render()
     ImGui::Separator();
 
     // Meta Settings
+    ImGui::Text("Meta Settings");
     ImGui::Checkbox("Allow Meta Effects", &config->allowMetaEffects);
     ImGui::Separator();
 
     // Twitch Settings
+    ImGui::Text("Twitch Settings");
+
     ImGui::Checkbox("Enable Twitch Voting", &config->enableTwitchVoting);
     ImGui::SameLine();
     ImGui::SliderFloat("Twitch Voting Weight", &config->baseTwitchVoteWeight, 0.1f, 1.0f);
@@ -123,6 +126,18 @@ void Configurator::Render()
             "the percentage chance of the Twitch value being selected. If set to 1, Twitch chat's option is guaranteed.\n This option is likely to "
             "be more preferable if you have fewer engaged viewers as to still allow for a degree of randomness.");
     }
+    ImGui::Separator();
+
+    // Style Settings
+    ImGui::Text("Style Settings");
+
+    static DWORD startingColor = ConfigManager::i()->progressBarColor;
+    static auto vec = ImGui::ColorConvertU32ToFloat4(startingColor);
+    static float col[3] = { vec.x, vec.y, vec.z };
+    ImGui::ColorEdit3("Chaos Progress Color", col, ImGuiColorEditFlags_PickerHueBar);
+
+    DWORD e = ImGui::ColorConvertFloat4ToU32(ImVec4(col[0], col[1], col[2], 0xFF));
+    ConfigManager::i()->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(col[0], col[1], col[2], 0xFF));
 
     ImGui::End();
 }
@@ -137,7 +152,7 @@ void DebugMenu::Render()
         return;
     }
 
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Debug Console", &show))
     {
         ImGui::End();

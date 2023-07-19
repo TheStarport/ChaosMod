@@ -17,6 +17,8 @@ typedef int(__stdcall* OriginalWndProc)(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 OriginalWndProc originalProc;
 PBYTE originalProcData = PBYTE(malloc(5));
 
+std::map<UiManager::Font, ImFont*> UiManager::loadedFonts;
+
 LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     i()->window = hWnd;
@@ -297,10 +299,24 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     ImGui_ImplDX9_Init(device);
     ImGui_ImplWin32_Init(window);
 
-    ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
-
     // Load our config
     ConfigManager::Load();
+
+    ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
+
+    const auto& io = ImGui::GetIO();
+
+    const auto font = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 28);
+    if (!font)
+    {
+        Log("Unable to load custom fonts!");
+        return;
+    }
+
+    loadedFonts[Font::TitiliumWeb] = font;
+    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 50);
+
+    io.Fonts->Build();
 }
 
 void UiManager::Render()
@@ -312,11 +328,16 @@ void UiManager::Render()
 
     ImGui::NewFrame();
 
+    ImGui::PushFont(loadedFonts.begin()->second);
+
     debugLog.Render();
     optionText.Render();
     progressBar.Render();
+    activeEffectsText.Render();
 
     ImGui::ShowDemoWindow();
+
+    ImGui::PopFont();
 
     ImGui::EndFrame();
 
@@ -328,3 +349,20 @@ void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
 
 void UiManager::DebugLog(const std::string& log) { debugLog.Log(log); }
 void UiManager::UpdateProgressBar(const float progressPercentage) { progressBar.SetProgressPercentage(progressPercentage); }
+
+ImFont* UiManager::GetFont(const Font font)
+{
+    if (loadedFonts.empty())
+    {
+        // Return default if failed to load
+        return ImGui::GetFont();
+    }
+
+    const auto iter = loadedFonts.find(font);
+    if (iter == loadedFonts.end())
+    {
+        return nullptr;
+    }
+
+    return iter->second;
+}

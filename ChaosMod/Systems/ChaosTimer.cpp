@@ -128,6 +128,8 @@ void ChaosTimer::Update(const float delta)
     }
 }
 
+const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() { return i()->activeEffects; }
+
 void ChaosTimer::RegisterAllEffects()
 {
 #define Ef(T) ActiveEffect::RegisterEffect<T>()
