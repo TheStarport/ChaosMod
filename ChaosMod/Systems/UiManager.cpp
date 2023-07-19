@@ -244,6 +244,10 @@ UiManager::UiManager()
     Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch1, &patch, 2);
     Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch2, &patch, 2);
 
+    // Ensure the game remains running when out of focus
+    byte patch3[] = { 0xEB };
+    Utils::Memory::WriteProcMem(fl + 0x1B2665, patch3, sizeof patch3);
+
     originalProc = OriginalWndProc(0x5B2570);
     Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
 
