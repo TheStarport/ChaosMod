@@ -7,9 +7,9 @@ class Lgbtui final : public MemoryEffect
 {
         // clang-format off
         MemoryListStart(offsets)
-        MemoryListItem("freelancer.exe", 0x0D57AC, 3)
-        MemoryListItem("freelancer.exe", 0x0D5843, 3)
-        MemoryListItem("freelancer.exe", 0x0D588D, 3)
+        MemoryListItem("freelancer.exe", HudPowerColor, 3)
+        MemoryListItem("freelancer.exe", HudShieldColor, 3)
+        MemoryListItem("freelancer.exe", HudHullColor, 3)
         MemoryListEnd(offsets);
         // clang-format on
 

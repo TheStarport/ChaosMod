@@ -64,6 +64,9 @@
     <ClCompile Include="Systems\EffectManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -119,6 +122,15 @@
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Audio\BossMusic.hpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\AddressTable.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -144,6 +156,9 @@
     </Filter>
     <Filter Include="Effects\DB\Interface">
       <UniqueIdentifier>{93ec0519-54c9-42e2-8442-8430d25c2da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Audio">
+      <UniqueIdentifier>{791359b9-a3ac-470d-a77a-781bbc79c459}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

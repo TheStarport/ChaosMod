@@ -4,6 +4,7 @@
 
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "Effects/DB/Audio/BossMusic.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
 #include "UiManager.hpp"
 
@@ -45,6 +46,15 @@ ActiveEffect* ChaosTimer::SelectEffect()
 
 void ChaosTimer::TriggerChaos()
 {
+    uint* aaP = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 28);
+    uint* aaa = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 24);
+    uint* aa23 = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 20);
+    uint* a = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 16);
+    uint* b = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 12);
+    uint* c = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 8);
+    uint* d = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 4);
+    uint* e = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C);
+
     const auto effect = SelectEffect();
     if (!effect)
     {
@@ -122,5 +132,6 @@ void ChaosTimer::RegisterAllEffects()
 {
 #define Ef(T) ActiveEffect::RegisterEffect<T>()
     Ef(Lgbtui);
+    Ef(BossMusic);
 #undef Ef
 }

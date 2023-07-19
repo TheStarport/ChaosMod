@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ActiveEffect.hpp"
+#include "AddressTable.hpp"
 
 class MemoryEffect : public ActiveEffect
 {
@@ -10,7 +11,7 @@ class MemoryEffect : public ActiveEffect
         struct MemoryAddress
         {
                 DWORD module;
-                uint offset;
+                DWORD offset;
                 size_t length;
                 std::vector<byte> originalData;
         };
@@ -26,7 +27,7 @@ class MemoryEffect : public ActiveEffect
 
 // clang-format off
 #define MemoryListStart(x) std::vector<MemoryAddress> x = {
-#define MemoryListItem(module, offset, length) { DWORD(GetModuleHandleA(module)), offset, length },
+#define MemoryListItem(module, offset, length) { DWORD(GetModuleHandleA(module)), DWORD(AddressTable::offset), length },
 #define MemoryListEnd(x) };                                                                                 \
     std::vector<MemoryAddress>& GetMemoryAddresses()                                                  \
     {                                                                                                       \

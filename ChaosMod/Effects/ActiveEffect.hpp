@@ -5,7 +5,8 @@ enum class EffectType
     Visual,
     Interface,
     Movement,
-    Teleport
+    Teleport,
+    Audio
 };
 
 class ActiveEffect
