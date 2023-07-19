@@ -9,6 +9,8 @@
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
+#include "Effects/DB/StatManipulation/GetHumbled.hpp"
+#include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -155,5 +157,9 @@ void ChaosTimer::RegisterAllEffects()
     Ef(AllTheNewsThatsFitForYou);
     Ef(BossMusic);
     Ef(IfTrentHadATextToSpeechDevice);
+
+    // Stat Manipulation
+    Ef(LonniganCameThrough);
+    Ef(GetHumbled);
 #undef Ef
 }

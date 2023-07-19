@@ -140,6 +140,12 @@
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp">
       <Filter>Effects\DB\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -168,6 +174,9 @@
     </Filter>
     <Filter Include="Effects\DB\Audio">
       <UniqueIdentifier>{791359b9-a3ac-470d-a77a-781bbc79c459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\StatManipulation">
+      <UniqueIdentifier>{ab2171eb-3bb5-4574-bd3d-a0415a28e703}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

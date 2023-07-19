@@ -6,7 +6,8 @@ enum class EffectType
     Interface,
     Movement,
     Teleport,
-    Audio
+    Audio,
+    StatManipulation
 };
 
 class ActiveEffect
@@ -17,7 +18,7 @@ class ActiveEffect
         struct EffectInfo
         {
                 EffectInfo(std::string name, const float timeModifier, const EffectType category)
-                    : effectName(std::move(name)), isTimed(timeModifier >= 0.0f), category(category), timingModifier(timeModifier)
+                    : effectName(std::move(name)), isTimed(timeModifier > 0.0f), category(category), timingModifier(timeModifier)
                 {}
 
                 std::string effectName{};

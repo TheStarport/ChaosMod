@@ -196,6 +196,8 @@
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
