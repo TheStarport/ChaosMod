@@ -46,15 +46,6 @@ ActiveEffect* ChaosTimer::SelectEffect()
 
 void ChaosTimer::TriggerChaos()
 {
-    uint* aaP = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 28);
-    uint* aaa = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 24);
-    uint* aa23 = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 20);
-    uint* a = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 16);
-    uint* b = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 12);
-    uint* c = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 8);
-    uint* d = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C - 4);
-    uint* e = (uint*)(DWORD(GetModuleHandleA("freelancer.exe")) + 0x27995C);
-
     const auto effect = SelectEffect();
     if (!effect)
     {
@@ -88,6 +79,25 @@ void ChaosTimer::TriggerChaos()
 
 void ChaosTimer::Update(const float delta)
 {
+    // If they don't have a ship lets not do chaos
+    // This will also mean they can do the intro and story up until they get their starflier
+    if (!Utils::GetShipArch())
+    {
+        // Clear any ongoing effects
+        if (!activeEffects.empty())
+        {
+            for (const auto& key : activeEffects | std::views::keys)
+            {
+                key->End();
+            }
+
+            activeEffects.clear();
+            currentTime = 0.0f;
+        }
+
+        return;
+    }
+
     currentTime += delta;
 
     const float nextTime = ConfigManager::i()->timeBetweenChaos * modifiers;
