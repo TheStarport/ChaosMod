@@ -37,9 +37,6 @@
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp">
       <Filter>Systems\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Utilities\MemChange.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
@@ -61,12 +58,15 @@
     <ClCompile Include="Systems\ConfigManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\MemoryEffect.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\EffectManager.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
-    <ClInclude Include="Components\Component.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\UiManager.hpp">
       <Filter>Systems</Filter>
@@ -85,9 +85,6 @@
     </ClInclude>
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
       <Filter>Systems\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities\MemChange.hpp">
-      <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp">
       <Filter>Systems\ImguiComponents</Filter>
@@ -110,11 +107,20 @@
     <ClInclude Include="Systems\ConfigManager.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\MemoryEffect.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\EffectManager.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\ActiveEffect.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Components">
-      <UniqueIdentifier>{fe50c016-7f29-4f4f-91aa-3ce0257ad152}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems">
       <UniqueIdentifier>{14d7e727-45e0-4c59-89f2-1548cfa7e19c}</UniqueIdentifier>
     </Filter>
@@ -129,6 +135,15 @@
     </Filter>
     <Filter Include="Systems\ImGuiHelpers">
       <UniqueIdentifier>{2650c570-2d3a-41e3-93b5-6a4a6bd3d5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{2ab2600e-8905-4f25-8cc4-a35f68feef3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB">
+      <UniqueIdentifier>{151368a0-7432-4dc4-b205-29e3c2e32be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Interface">
+      <UniqueIdentifier>{93ec0519-54c9-42e2-8442-8430d25c2da2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

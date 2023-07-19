@@ -40,8 +40,8 @@ ConfigManager* ConfigManager::Load()
         {
             try
             {
-                [[maybe_unused]] ConfigManager manager = nlohmann::json::parse(content);
-                return i();
+                [[maybe_unused]] auto manager = std::make_unique<ConfigManager>(nlohmann::json::parse(content));
+                return i(&manager);
             }
             catch (std::exception& ex)
             {

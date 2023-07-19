@@ -15,28 +15,10 @@ double timeCounter;
 
 bool init = false;
 
-MemChange* change;
-
 void Init()
 {
     init = true;
-
-    // Setup mem changes
-    DWORD addr = reinterpret_cast<DWORD>(GetModuleHandle(nullptr)) + 0x0D57AC;
-    change =
-        new MemChange(MemEvent::OnFixedUpdate,
-                      addr,
-                      6,
-                      [addr](auto& data, float delta)
-                      {
-                          std::random_device r;
-                          std::default_random_engine engine(r());
-                          std::uniform_int_distribution<uint> dist(0x0, 0xFFFFFF);
-
-                          const auto val = dist(engine);
-                          std::array bytes = { static_cast<byte>(val & 0xff), static_cast<byte>((val >> 8) & 0xff), static_cast<byte>((val >> 16) & 0xff) };
-                          Utils::Memory::WriteProcMem(addr, bytes.data(), bytes.size());
-                      });
+    ChaosTimer::RegisterAllEffects();
 }
 
 void* ScriptLoadHook(const char* script)
@@ -59,12 +41,10 @@ void __cdecl Update(const double delta)
     timeCounter += delta;
     while (timeCounter > SixtyFramesPerSecond)
     {
-        MemChange::TriggerEvent(MemEvent::OnFixedUpdate, static_cast<float>(SixtyFramesPerSecond));
         ChaosTimer::i()->Update(static_cast<float>(SixtyFramesPerSecond));
         timeCounter -= SixtyFramesPerSecond;
     }
 
-    MemChange::TriggerEvent(MemEvent::OnUpdate, static_cast<float>(delta));
     Utils::Memory::UnDetour((PBYTE)globalTimingFunction, data);
     globalTimingFunction(delta);
     Utils::Memory::Detour((PBYTE)globalTimingFunction, Update, data);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utilities/MemChange.hpp"
+#include "Effects/MemoryEffect.hpp"
 
 #include <imgui.h>
 
@@ -25,7 +25,7 @@ class HexWindow final
 
 class ActiveAddressList final
 {
-        std::vector<MemChange::ActiveChange> addressList{};
+        std::vector<MemoryEffect::MemoryAddress> addressList;
         HexWindow hexWindow{};
         bool keepHexWindowUpdated = false;
 

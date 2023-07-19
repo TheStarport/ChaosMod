@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Utils.cpp" />
+    <ClCompile Include="Effects\MemoryEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -177,17 +178,19 @@
     <ClCompile Include="Systems\DirectX\D3DVertexBuffer.cpp" />
     <ClCompile Include="Systems\DirectX\D3DVolume.cpp" />
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp" />
+    <ClCompile Include="Systems\EffectManager.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
-    <ClCompile Include="Utilities\MemChange.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
-    <ClInclude Include="Components\Component.hpp" />
+    <ClInclude Include="Effects\ActiveEffect.hpp" />
+    <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
+    <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
     <ClInclude Include="Systems\ConfigManager.hpp" />
@@ -195,13 +198,13 @@
     <ClInclude Include="Systems\DirectX\D3DTypes.hpp" />
     <ClInclude Include="Systems\DirectX\Drawing.hpp" />
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp" />
+    <ClInclude Include="Systems\EffectManager.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
-    <ClInclude Include="Utilities\MemChange.hpp" />
     <ClInclude Include="Utilities\Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>

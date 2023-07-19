@@ -29,8 +29,6 @@ using u64 = unsigned long long;
 #include <unordered_set>
 #include <vector>
 
-#include <Components/Component.hpp>
-
 #include <FLCoreServer.h>
 
 #pragma comment(lib, "flcoreserver.lib")

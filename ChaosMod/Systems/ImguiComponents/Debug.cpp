@@ -55,14 +55,14 @@ void ActiveAddressList::Render()
     ImGui::Separator();
     if (ImGui::BeginChild("address-list", ImVec2(0, 0), false))
     {
-        for (const auto& [address, length, active] : addressList)
+        for (const auto& [module, offset, length] : addressList)
         {
             static bool selected = false;
-            std::string str = std::format("{:#010x} ({}) - {}", address, length, active ? "active" : "inactive");
+            std::string str = std::format("{:#010x} ({})", module + offset, length);
             ImGui::PushStyleColor(ImGuiCol_HeaderHovered, 0x660500FF);
             if (ImGui::Selectable(str.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
             {
-                hexWindow.GoTo(address, length);
+                hexWindow.GoTo(module + offset, length);
             }
             ImGui::PopStyleColor();
             selected = false;
@@ -80,7 +80,7 @@ void ActiveAddressList::Render()
     hexWindow.Render();
 }
 
-void ActiveAddressList::Refresh() { addressList = MemChange::GetMemChanges(); }
+void ActiveAddressList::Refresh() { addressList = MemoryEffect::GetMemoryEffects(); }
 
 void Configurator::Render()
 {
@@ -105,7 +105,7 @@ void Configurator::Render()
     // Effect Settings
     ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
     ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
-    ImGui::SliderInt("Total Allowed Concurrent Effects", &config->totalAllowedConcurrentEffects, 1, 12);
+    ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->totalAllowedConcurrentEffects), 1, 12);
     ImGui::Separator();
 
     // Meta Settings

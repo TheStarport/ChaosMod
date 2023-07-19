@@ -8,7 +8,7 @@ class ConfigManager : public Singleton<ConfigManager>
         float timeBetweenChaos = 30.0f;
         float defaultEffectDuration = 90.0f;
         bool allowMetaEffects = true;
-        int totalAllowedConcurrentEffects = 6;
+        uint totalAllowedConcurrentEffects = 6;
         bool enableTwitchVoting = false;
         float baseTwitchVoteWeight = 1.0f;
 
