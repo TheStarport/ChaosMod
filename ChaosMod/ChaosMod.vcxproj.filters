@@ -134,6 +134,9 @@
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

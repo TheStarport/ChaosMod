@@ -4,6 +4,7 @@
 
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "Effects/DB/Audio/AllTheNewsThatsFitForYou.hpp"
 #include "Effects/DB/Audio/BossMusic.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
@@ -144,8 +145,13 @@ const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() {
 void ChaosTimer::RegisterAllEffects()
 {
 #define Ef(T) ActiveEffect::RegisterEffect<T>()
+
+    // Interface
     Ef(Lgbtui);
     Ef(BuggyInterface);
+
+    // Audio
+    Ef(AllTheNewsThatsFitForYou);
     Ef(BossMusic);
 #undef Ef
 }
