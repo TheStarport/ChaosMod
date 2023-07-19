@@ -25,11 +25,12 @@ void MemoryEffect::Begin()
 {
     const auto [module, address, length] = GetMemoryAddress();
     originalData.resize(length);
+
     Utils::Memory::ReadProcMem(module + address, originalData.data(), length);
 }
 
 void MemoryEffect::End()
 {
     const auto [module, address, length] = GetMemoryAddress();
-    Utils::Memory::WriteProcMem(address, originalData.data(), length);
+    Utils::Memory::WriteProcMem(module + address, originalData.data(), length);
 }

@@ -79,5 +79,5 @@ class Lgbtui final : public MemoryEffect
         DefEffectInfo("LGBTUI+", 1.0f, EffectType::Interface);
 
     protected:
-        DefMemoryAddress("freelancer.exe", 0x0D57AC, 6);
+        DefMemoryAddress("freelancer.exe", 0x0D57AC, 3);
 };
