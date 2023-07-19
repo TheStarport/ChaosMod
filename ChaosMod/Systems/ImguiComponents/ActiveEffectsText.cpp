@@ -20,12 +20,12 @@ void ActiveEffectsText::Render() const
     constexpr ImGuiWindowFlags windowFlags =
         ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoInputs;
 
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
-
     auto location = ImGui::GetIO().DisplaySize;
     location.x = location.x - location.x / 4.0f;
-    location.y = 0 + location.y / 2.0f;
 
+    ImGui::SetNextWindowSize(ImVec2(500, location.y - (location.y * 10 / 100)), ImGuiCond_Always);
+
+    location.y = 200;
     ImGui::SetNextWindowPos(location, ImGuiCond_Always);
     if (!ImGui::Begin("Active Effects Window", nullptr, windowFlags))
     {
