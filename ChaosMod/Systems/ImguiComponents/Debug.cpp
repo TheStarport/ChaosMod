@@ -28,7 +28,7 @@ void HexWindow::GoTo(const DWORD address, const size_t len)
     currentOffset = address;
 
     Refresh();
-    editor->GotoAddrAndHighlight(0x8000, 0x8000 + len / 2);
+    editor->GotoAddrAndHighlight(0x8000, 0x8000 + len);
 }
 
 void ActiveAddressList::Render()
