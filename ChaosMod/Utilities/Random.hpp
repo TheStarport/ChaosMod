@@ -17,4 +17,11 @@ class Random final : public Singleton<Random>
         {
             return std::uniform_int_distribution<T>(min, max)(engine);
         }
+
+        template <typename T>
+            requires std::is_floating_point_v<T>
+        T UniformFloat(T min, T max)
+        {
+            return std::uniform_real_distribution<T>(min, max)(engine);
+        }
 };
