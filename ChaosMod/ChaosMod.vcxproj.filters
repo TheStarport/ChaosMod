@@ -146,6 +146,9 @@
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\Random.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

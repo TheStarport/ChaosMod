@@ -1,8 +1,6 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 #pragma once
 
-#include "Effects/MemoryEffect.hpp"
-
 #include <sapi.h>
 
 class IfTrentHadATextToSpeechDevice final : public ActiveEffect
@@ -16,11 +14,9 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
         std::jthread ttsThread{};
         void Begin() override
         {
-            std::random_device r;
-            std::default_random_engine engine(r());
-            std::uniform_int_distribution<uint> dist(0x0, ttsLines.size() - 1);
+            const uint index = Random::i()->Uniform(0u, ttsLines.size() - 1);
 
-            auto line = ttsLines[dist(engine)];
+            auto line = ttsLines[index];
 
             ttsThread = std::jthread(
                 [line]

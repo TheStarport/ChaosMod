@@ -34,7 +34,8 @@ using u64 = unsigned long long;
 #pragma comment(lib, "flcoreserver.lib")
 
 #include "../Utils.hpp"
-
 #include "Utilities/Singleton.hpp"
+
+#include "Utilities/Random.hpp"
 
 void Log(const std::string& log);

@@ -15,7 +15,7 @@
 
 #include <magic_enum.hpp>
 
-void ChaosTimer::PlayBadEffect() { pub::Audio::PlaySoundEffect(1, CreateID("news_vendor_open")); }
+void ChaosTimer::PlayBadEffect() { pub::Audio::PlaySoundEffect(1, CreateID("ui_select_remove")); }
 void ChaosTimer::PlayEffectSkip() { pub::Audio::PlaySoundEffect(1, CreateID("ui_open_infocard_button")); }
 void ChaosTimer::PlayNextEffect() { pub::Audio::PlaySoundEffect(1, CreateID("ui_close_infocard")); }
 
@@ -29,13 +29,9 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    std::random_device r;
-    std::default_random_engine engine(r());
-    std::uniform_int_distribution<uint> dist(0x0, possibleEffects.size() - 1);
-
     for (uint attempts = 0; attempts < 5; attempts++)
     {
-        const auto val = dist(engine);
+        const auto val = Random::i()->Uniform(0u, possibleEffects.size() - 1);
         auto effect = possibleEffects[val];
         if (activeEffects.contains(effect))
         {
@@ -62,7 +58,7 @@ void ChaosTimer::TriggerChaos()
     if (activeEffects.size() >= ConfigManager::i()->totalAllowedConcurrentEffects)
     {
         // Clean out those without timers
-        std::erase_if(activeEffects, [](const auto& active) { return active.first->GetEffectInfo().isTimed; });
+        std::erase_if(activeEffects, [](const auto& active) { return !active.first->GetEffectInfo().isTimed; });
         if (activeEffects.size() >= ConfigManager::i()->totalAllowedConcurrentEffects)
         {
             // If still too large skip
@@ -76,7 +72,7 @@ void ChaosTimer::TriggerChaos()
     effect->Begin();
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
-    const float timing = info.isTimed ? info.timingModifier * ConfigManager::i()->defaultEffectDuration : 30.0f;
+    const float timing = info.isTimed ? modifiers * (info.timingModifier * ConfigManager::i()->defaultEffectDuration) : 30.0f;
 
     activeEffects[effect] = timing;
     PlayNextEffect();
@@ -128,11 +124,7 @@ void ChaosTimer::Update(const float delta)
 
         if (effect->second <= 0)
         {
-            if (info.isTimed)
-            {
-                effect->first->End();
-            }
-
+            effect->first->End();
             effect = activeEffects.erase(effect);
         }
         else
