@@ -161,6 +161,12 @@
     <ClInclude Include="Utilities\Random.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Detour.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

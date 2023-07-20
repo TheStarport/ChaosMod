@@ -202,6 +202,7 @@
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
+    <ClInclude Include="Utilities\Detour.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />
     <ClInclude Include="Utilities\Singleton.hpp" />
   </ItemGroup>
