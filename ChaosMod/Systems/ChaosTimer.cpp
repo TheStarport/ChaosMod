@@ -84,9 +84,8 @@ void ChaosTimer::TriggerChaos()
 
 void ChaosTimer::Update(const float delta)
 {
-    // If they don't have a ship lets not do chaos
-    // This will also mean they can do the intro and story up until they get their starflier
-    if (!Utils::GetShipArch())
+    // If they don't have a ship lets not do chaos (aka are they in space?)
+    if (!Utils::GetCShip())
     {
         // Clear any ongoing effects
         if (!activeEffects.empty())
