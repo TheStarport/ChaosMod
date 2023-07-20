@@ -3,9 +3,76 @@
 
 #include "Debug.hpp"
 
+#include "Systems/ChaosTimer.hpp"
 #include "Systems/ConfigManager.hpp"
 
 #include <imgui-club/imgui_memory_editor/imgui_memory_editor.h>
+#include <magic_enum.hpp>
+
+void EffectSelectorWindow::Refresh()
+{
+    for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
+    {
+        auto& info = effect->GetEffectInfo();
+        if (!allEffects.contains(info.category))
+        {
+            allEffects[info.category] = {};
+        }
+
+        allEffects[info.category].emplace_back(effect);
+    }
+}
+
+EffectSelectorWindow::EffectSelectorWindow() { Refresh(); }
+
+void EffectSelectorWindow::Render()
+{
+    if (!show)
+    {
+        return;
+    }
+
+    if (allEffects.empty())
+    {
+        Refresh();
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Effect Selector", &show);
+
+    magic_enum::enum_for_each<EffectType>(
+        [this](auto val)
+        {
+            constexpr EffectType category = val;
+            const auto categoryName = std::string(magic_enum::enum_name(category));
+
+            const auto effects = allEffects.find(category);
+            if (effects == allEffects.end())
+            {
+                return;
+            }
+
+            if (ImGui::TreeNode(categoryName.c_str()))
+            {
+                for (ActiveEffect* effect : effects->second)
+                {
+                    auto& info = effect->GetEffectInfo();
+                    static bool selected = false;
+                    if (ImGui::Selectable(info.effectName.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
+                    {
+                        ChaosTimer::i()->TriggerSpecificEffect(effect);
+                    }
+                    selected = false;
+                }
+
+                ImGui::TreePop();
+            }
+
+            ImGui::Separator();
+        });
+
+    ImGui::End();
+}
 
 void HexWindow::Render() { editor->DrawWindow("Hex View", hexBuffer.data(), hexBuffer.size(), currentOffset); }
 HexWindow::~HexWindow() { delete editor; }
@@ -146,6 +213,7 @@ void DebugMenu::Render()
 {
     addressList.Render();
     configurator.Render();
+    effectSelector.Render();
 
     if (!show)
     {
@@ -175,6 +243,11 @@ void DebugMenu::Render()
     if (ImGui::Button("Open Configurator"))
     {
         configurator.show = true;
+    }
+
+    if (ImGui::Button("Open Debug Event Selector"))
+    {
+        effectSelector.show = true;
     }
 
     ImGui::Separator();

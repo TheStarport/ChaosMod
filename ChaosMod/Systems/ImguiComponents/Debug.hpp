@@ -4,6 +4,18 @@
 
 #include <imgui.h>
 
+class EffectSelectorWindow final
+{
+        std::map<EffectType, std::vector<ActiveEffect*>> allEffects;
+
+    public:
+        void Refresh();
+        EffectSelectorWindow();
+
+        bool show = false;
+        void Render();
+};
+
 // Wrapper around ImGui Memory Editor
 class HexWindow final
 {
@@ -53,6 +65,7 @@ class DebugMenu final
 
         ActiveAddressList addressList{};
         Configurator configurator{};
+        EffectSelectorWindow effectSelector{};
 
     public:
         DebugMenu() { lineOffsets.push_back(0); }

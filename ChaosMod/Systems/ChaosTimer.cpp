@@ -49,13 +49,16 @@ ActiveEffect* ChaosTimer::SelectEffect()
     return nullptr;
 }
 
-void ChaosTimer::TriggerChaos()
+void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 {
-    const auto effect = SelectEffect();
     if (!effect)
     {
-        PlayBadEffect();
-        return;
+        effect = SelectEffect();
+        if (!effect)
+        {
+            PlayBadEffect();
+            return;
+        }
     }
 
     // Too many active effects
@@ -81,6 +84,8 @@ void ChaosTimer::TriggerChaos()
     activeEffects[effect] = timing;
     PlayNextEffect();
 }
+
+void ChaosTimer::TriggerSpecificEffect(ActiveEffect* effect) { TriggerChaos(effect); }
 
 void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
 void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }

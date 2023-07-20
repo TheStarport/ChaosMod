@@ -13,10 +13,11 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         static void PlayNextEffect();
 
         ActiveEffect* SelectEffect();
-        void TriggerChaos();
+        void TriggerChaos(ActiveEffect* effect = nullptr);
         std::unordered_map<ActiveEffect*, float> activeEffects;
 
     public:
+        void TriggerSpecificEffect(ActiveEffect* effect);
         void ToggleDoubleTime();
         void AdjustModifier(float modifier);
         void Update(float delta);
