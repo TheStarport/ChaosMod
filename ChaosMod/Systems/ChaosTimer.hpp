@@ -6,6 +6,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
 {
         float currentTime = 0.0f;
         float modifiers = 1.0f;
+        bool doubleTime = false;
 
         static void PlayBadEffect();
         static void PlayEffectSkip();
@@ -16,6 +17,8 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         std::unordered_map<ActiveEffect*, float> activeEffects;
 
     public:
+        void ToggleDoubleTime();
+        void AdjustModifier(float modifier);
         void Update(float delta);
         static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
         static void RegisterAllEffects();

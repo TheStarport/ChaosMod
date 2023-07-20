@@ -9,6 +9,10 @@
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
+#include "Effects/DB/Meta/BoxOfChocolates.hpp"
+#include "Effects/DB/Meta/DoubleEffectTime.hpp"
+#include "Effects/DB/Meta/DoubleTime.hpp"
+#include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "UiManager.hpp"
@@ -78,6 +82,9 @@ void ChaosTimer::TriggerChaos()
     PlayNextEffect();
 }
 
+void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
+void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }
+
 void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)
@@ -105,6 +112,11 @@ void ChaosTimer::Update(const float delta)
     {
         currentTime = 0.0f;
         TriggerChaos();
+
+        if (doubleTime)
+        {
+            TriggerChaos();
+        }
     }
 
     UiManager::i()->UpdateProgressBar(currentTime / nextTime);
@@ -152,5 +164,12 @@ void ChaosTimer::RegisterAllEffects()
     // Stat Manipulation
     Ef(LonniganCameThrough);
     Ef(GetHumbled);
+
+    // Meta
+    Ef(BoxOfChocolates);
+    Ef(FakeCrash);
+    Ef(DoubleTime);
+    Ef(DoubleEffectTime);
+
 #undef Ef
 }

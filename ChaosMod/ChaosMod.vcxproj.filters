@@ -146,6 +146,18 @@
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClInclude>
     <ClInclude Include="Utilities\Random.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -180,6 +192,12 @@
     </Filter>
     <Filter Include="Effects\DB\StatManipulation">
       <UniqueIdentifier>{ab2171eb-3bb5-4574-bd3d-a0415a28e703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Movement">
+      <UniqueIdentifier>{8f1f57db-7673-48ad-af1f-55ac6e414467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Meta">
+      <UniqueIdentifier>{42da5ebb-c094-4271-a1a8-7be896b93c87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

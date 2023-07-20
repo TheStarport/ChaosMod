@@ -196,6 +196,10 @@
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
+    <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
+    <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp" />
+    <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />
+    <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
