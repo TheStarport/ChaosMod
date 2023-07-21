@@ -198,13 +198,19 @@ void Configurator::Render()
     // Style Settings
     ImGui::Text("Style Settings");
 
-    static DWORD startingColor = ConfigManager::i()->progressBarColor;
-    static auto vec = ImGui::ColorConvertU32ToFloat4(startingColor);
-    static float col[3] = { vec.x, vec.y, vec.z };
-    ImGui::ColorEdit3("Chaos Progress Color", col, ImGuiColorEditFlags_PickerHueBar);
+    static DWORD startingProgressBarColor = ConfigManager::i()->progressBarColor;
+    static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
+    static float progressColor[3] = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
+    ImGui::ColorEdit3("Chaos Progress Color", progressColor, ImGuiColorEditFlags_PickerHueBar);
+    ConfigManager::i()->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
 
-    DWORD e = ImGui::ColorConvertFloat4ToU32(ImVec4(col[0], col[1], col[2], 0xFF));
-    ConfigManager::i()->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(col[0], col[1], col[2], 0xFF));
+    static DWORD startingProgressBarTextColor = ConfigManager::i()->progressBarTextColor;
+    static auto startingProgressBarTextColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarTextColor);
+    static float progressTextColor[3] = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
+    ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
+    ConfigManager::i()->progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
+
+    ImGui::Checkbox("Show Time Remaining On Effects", &ConfigManager::i()->showTimeRemainingOnEffects);
 
     ImGui::End();
 }

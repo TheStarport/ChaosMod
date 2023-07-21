@@ -202,6 +202,7 @@
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />

@@ -167,6 +167,9 @@
     <ClInclude Include="Utilities\Detour.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

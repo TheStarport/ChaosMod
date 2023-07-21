@@ -15,6 +15,7 @@
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
+#include "Effects/DB/StatManipulation/SpectatorMode.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "UiManager.hpp"
 
@@ -171,6 +172,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LonniganCameThrough);
     Ef(GetHumbled);
     Ef(WiffleBats);
+    Ef(SpectatorMode);
 
     // Meta
     Ef(BoxOfChocolates);

@@ -12,9 +12,11 @@ class ConfigManager : public Singleton<ConfigManager>
         bool enableTwitchVoting = false;
         float baseTwitchVoteWeight = 1.0f;
         DWORD progressBarColor = 0xFFFFFFFF;
+        DWORD progressBarTextColor = 0xFF00FF00;
+        bool showTimeRemainingOnEffects = false;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
-                                       enableTwitchVoting, baseTwitchVoteWeight, progressBarColor);
+                                       enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects);
 
         void Save();
         static ConfigManager* Load();

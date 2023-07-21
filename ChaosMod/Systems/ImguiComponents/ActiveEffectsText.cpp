@@ -23,8 +23,11 @@ void ActiveEffectsText::WriteEffect(const std::string& name, const bool isTimed,
 
         ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 200);
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
-        ImGui::ProgressBar(fraction, ImVec2(200, 0), "");
-        ImGui::PopStyleColor();
+        ImGui::PushStyleColor(ImGuiCol_Text, ConfigManager::i()->progressBarTextColor);
+
+        const std::string timeRemaining = ConfigManager::i()->showTimeRemainingOnEffects ? std::format("{:.1f}", time) : "";
+        ImGui::ProgressBar(fraction, ImVec2(200, 0), timeRemaining.c_str());
+        ImGui::PopStyleColor(2);
     }
 
     ImGui::NewLine();
