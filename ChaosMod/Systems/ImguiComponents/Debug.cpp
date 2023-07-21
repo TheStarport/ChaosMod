@@ -159,6 +159,7 @@ void Configurator::Render()
     if (!ImGui::Begin("Configurator", &show, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
     {
         ImGui::End();
+        return;
     }
 
     auto* config = ConfigManager::i();
