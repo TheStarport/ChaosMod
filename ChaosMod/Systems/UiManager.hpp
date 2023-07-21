@@ -27,7 +27,6 @@ class UiManager final : public Singleton<UiManager>
         void HandleInput();
         static bool WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam);
 
-        void PatchShowCursor() const;
         static void LoadWinKey();
 
         ChaosOptionText optionText;

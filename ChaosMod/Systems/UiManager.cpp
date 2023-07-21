@@ -148,41 +148,6 @@ void UiManager::SetCursor(const std::string str)
     }
 }
 
-void UiManager::PatchShowCursor() const
-{
-    BYTE NopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x05B1750, NopPatch, 4);
-
-    BYTE NopPatch2[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x5B32F2, NopPatch2, 7);
-    Utils::Memory::WriteProcMem(0x5B1750, NopPatch2, 7);
-
-    BYTE NopPatch3[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x42025A, NopPatch3, 13);
-
-    BYTE NopPatch4[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x41ECC7, NopPatch4, 16);
-
-    BYTE NopPatch5[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x41EAA3, NopPatch5, 20);
-
-    // BYTE NopPatch6[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    //  Utils::Memory::WriteProcMem(0x41F7D5, NopPatch6, 17);
-
-    // Patch out checks for if the cursor is visible
-    BYTE NopPatch7[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    Utils::Memory::WriteProcMem(0x004202F6, NopPatch7, 7);
-    Utils::Memory::WriteProcMem(0x0041EEBD, NopPatch7, 7);
-    Utils::Memory::WriteProcMem(0x00420474, NopPatch7, 7);
-
-    // Patch out SetCursor
-    Utils::Memory::NopAddress(0x598989, 7);
-    Utils::Memory::NopAddress(0x5989B6, 7);
-    Utils::Memory::NopAddress(0x598AF2, 7);
-    Utils::Memory::NopAddress(0x598BEC, 7);
-    Utils::Memory::NopAddress(0x598C0B, 7);
-}
-
 PBYTE winKeyOriginalMem;
 typedef bool(__cdecl* WinKeyType)(uint msg, WPARAM wParam, LPARAM lParam);
 WinKeyType winKeyOriginal;
@@ -231,22 +196,8 @@ UiManager::UiManager()
     auto fpD3D8CreateHook = reinterpret_cast<FARPROC>(CreateDirect3D8);
     Utils::Memory::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
 
-    // Disable Freelancer's vanilla cursor and restore the windows version
-    PatchShowCursor();
-
     onCursorChange = reinterpret_cast<OnCursorChange>(0x41DDE0);
     Utils::Memory::Detour(reinterpret_cast<PBYTE>(onCursorChange), OnCursorChangeDetour, onCursorChangeData);
-
-    // Set borderless window mode
-    BYTE patch[] = { 0x00, 0x00 };
-    constexpr DWORD BorderlessWindowPatch1 = 0x02477A;
-    constexpr DWORD BorderlessWindowPatch2 = 0x02490D;
-    Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch1, &patch, 2);
-    Utils::Memory::WriteProcMem(fl + BorderlessWindowPatch2, &patch, 2);
-
-    // Ensure the game remains running when out of focus
-    byte patch3[] = { 0xEB };
-    Utils::Memory::WriteProcMem(fl + 0x1B2665, patch3, sizeof patch3);
 
     originalProc = OriginalWndProc(0x5B2570);
     Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
