@@ -61,11 +61,11 @@
     <ClCompile Include="Effects\MemoryEffect.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\EffectManager.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp">
       <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\EventManager.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,9 +112,6 @@
     </ClInclude>
     <ClInclude Include="Effects\MemoryEffect.hpp">
       <Filter>Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\EffectManager.hpp">
-      <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Effects\ActiveEffect.hpp">
       <Filter>Effects</Filter>
@@ -169,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\EventManager.hpp">
+      <Filter>Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

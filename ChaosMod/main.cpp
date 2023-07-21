@@ -1,5 +1,6 @@
 #include "PCH.hpp"
 #include "Systems/ChaosTimer.hpp"
+#include "Systems/EventManager.hpp"
 #include "Systems/UiManager.hpp"
 
 static PBYTE thornLoadData;
@@ -19,6 +20,7 @@ void Init()
 {
     init = true;
     ChaosTimer::RegisterAllEffects();
+    EventManager::i()->SetupDetours();
 }
 
 void* ScriptLoadHook(const char* script)
