@@ -193,10 +193,12 @@
     <ClInclude Include="Effects\AddressTable.hpp" />
     <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp" />
     <ClInclude Include="Effects\DB\Audio\BossMusic.hpp" />
+    <ClInclude Include="Effects\DB\Audio\DodgeThis.hpp" />
     <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp" />
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
+    <ClInclude Include="Effects\DB\Interface\NoHud.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp" />
     <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />

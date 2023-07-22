@@ -6,6 +6,7 @@
 #include "Effects/ActiveEffect.hpp"
 #include "Effects/DB/Audio/AllTheNewsThatsFitForYou.hpp"
 #include "Effects/DB/Audio/BossMusic.hpp"
+#include "Effects/DB/Audio/DodgeThis.hpp"
 #include "Effects/DB/Audio/IDoNotSpeakMorseCode.hpp"
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
@@ -169,6 +170,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(BossMusic);
     Ef(IfTrentHadATextToSpeechDevice);
     Ef(IDoNotSpeakMorseCode);
+    Ef(DodgeThis);
 
     // Stat Manipulation
     Ef(LonniganCameThrough);
