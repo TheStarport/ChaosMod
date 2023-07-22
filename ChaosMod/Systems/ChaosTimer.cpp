@@ -17,6 +17,8 @@
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
+#include "Effects/DB/NPC/IAmRobot.hpp"
+#include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
@@ -193,6 +195,8 @@ void ChaosTimer::RegisterAllEffects()
 
     // Npc
     Ef(Screaming);
+    Ef(IAmRobot);
+    Ef(PlanetOfTheApes);
 
 #undef Ef
 }

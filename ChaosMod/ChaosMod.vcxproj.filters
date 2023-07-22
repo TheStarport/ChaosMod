@@ -185,6 +185,12 @@
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp">
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

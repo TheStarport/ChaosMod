@@ -51,6 +51,16 @@
 #define OBJ_LOOT				(1 << 28)
 #define OBJ_ASTEROID			(1 << 29)
 
+struct Costume
+{
+	UINT head;
+	UINT body;
+	UINT lefthand;
+	UINT righthand;
+	UINT accessory[8];
+	int  accessories;
+};
+
 struct IMPORT CacheString
 {
 	void clear(void);
@@ -3464,16 +3474,7 @@ public:
 
 		uint iBase;
 		uint iHash2; // rep group? (otherwise it's the hash)
-		struct structCostume
-		{
-			UINT head;
-			UINT body;
-			UINT lefthand;
-			UINT righthand;
-			UINT accessory[8];
-			int  accessories;
-		};
-		structCostume Costume;
+		Costume Costume;
 		int iVoiceID;
 		int iDunnoLoadout[4];
 		//class std::list<struct CollisionGroupDesc> collision;
