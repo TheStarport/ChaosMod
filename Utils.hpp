@@ -378,60 +378,41 @@ namespace Utils
         USER_SCREEN_SHOT
     };
 
-    // Random
-    template <typename RandomGenerator = std::default_random_engine>
-    struct random_selector
+    static void ForEachShip(std::function<void(CShip*)> func)
     {
-            // On most platforms, you probably want to use std::random_device("/dev/urandom")()
-            random_selector(RandomGenerator g = RandomGenerator(std::random_device()())) : gen(g) {}
+        if (auto* obj = dynamic_cast<CShip*>(CObject::FindFirst(CObject::CSHIP_OBJECT)))
+        {
+            func(obj);
 
-            template <typename Iter>
-            Iter select(Iter start, Iter end)
+            CShip* next;
+            do
             {
-                std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
-                std::advance(start, dis(gen));
-                return start;
+                next = dynamic_cast<CShip*>(CObject::FindNext());
+                if (next)
+                {
+                    func(next);
+                }
             }
+            while (next);
+        }
+    }
 
-            // convenience function
-            template <typename Iter>
-            Iter operator()(Iter start, Iter end)
-            {
-                return select(start, end);
-            }
-
-            // convenience function that works on anything with a sensible begin() and end(), and returns with a ref to the value type
-            template <typename Container>
-            auto operator()(const Container& c) -> decltype(*begin(c))&
-            {
-                return *select(begin(c), end(c));
-            }
-
-        private:
-            RandomGenerator gen;
-    };
-
-    template <class Key, class Value, int N>
-    class CompileTimeMap
+    static void ForEachSolar(std::function<void(CSolar*)> func)
     {
-        public:
-            struct KV
+        if (auto* obj = dynamic_cast<CSolar*>(CObject::FindFirst(CObject::CSOLAR_OBJECT)))
+        {
+            func(obj);
+
+            CSolar* next;
+            do
             {
-                    Key key;
-                    Value value;
-            };
-
-            constexpr Value operator[](Key key) const { return Get(key); }
-
-        private:
-            constexpr Value Get(Key key, int i = 0) const { return i == N ? KeyNotFound() : pairs[i].key == key ? pairs[i].value : Get(key, i + 1); }
-
-            static Value KeyNotFound() // not constexpr
-            {
-                return {};
+                next = dynamic_cast<CSolar*>(CObject::FindNext());
+                if (next)
+                {
+                    func(next);
+                }
             }
-
-        public:
-            KV pairs[N];
-    };
+            while (next);
+        }
+    }
 } // namespace Utils

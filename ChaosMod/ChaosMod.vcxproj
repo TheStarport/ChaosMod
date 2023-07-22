@@ -204,6 +204,7 @@
     <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
+    <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp" />

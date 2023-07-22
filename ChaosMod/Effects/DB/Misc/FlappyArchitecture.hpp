@@ -37,44 +37,6 @@ class FlappyArchitecture final : public ActiveEffect
             }
         }
 
-        static void ForEachShip(std::function<void(CShip*)> func)
-        {
-            if (auto* obj = dynamic_cast<CShip*>(CObject::FindFirst(CObject::CSHIP_OBJECT)))
-            {
-                func(obj);
-
-                CShip* next;
-                do
-                {
-                    next = dynamic_cast<CShip*>(CObject::FindNext());
-                    if (next)
-                    {
-                        func(obj);
-                    }
-                }
-                while (next);
-            }
-        }
-
-        static void ForEachSolar(std::function<void(CSolar*)> func)
-        {
-            if (auto* obj = dynamic_cast<CSolar*>(CObject::FindFirst(CObject::CSOLAR_OBJECT)))
-            {
-                func(obj);
-
-                CSolar* next;
-                do
-                {
-                    next = dynamic_cast<CSolar*>(CObject::FindNext());
-                    if (next)
-                    {
-                        func(next);
-                    }
-                }
-                while (next);
-            }
-        }
-
         static void ProcessAnimation(AnimationData& anim)
         {
             if (anim.state == BayState::Opening)
@@ -115,15 +77,15 @@ class FlappyArchitecture final : public ActiveEffect
             }
         }
 
-        const std::array<const char*, 15> validDockingTargets = {
+        const std::array<const char*, 16> validDockingTargets = {
             "sc_open dock",  "sc_open dock1", "sc_open dock2", "sc_open dock3", "sc_open dock4", "sc_open dock5",  "sc_open dock6",  "sc_open dock7",
-            "sc_open dock8", "sc_open dock9", "sc_open dockA", "sc_open dockB", "sc_open dockC", "sc_open dock a", "sc_open dock b",
+            "sc_open dock8", "sc_open dock9", "sc_open dockA", "sc_open dockB", "sc_open dockC", "sc_open dock a", "sc_open dock b", "sc_extend wing",
         };
 
         void Update(float delta) override
         {
-            ForEachShip([](CShip* sh) { FlipBay(sh); });
-            ForEachSolar(
+            Utils::ForEachShip([](CShip* sh) { FlipBay(sh); });
+            Utils::ForEachSolar(
                 [this](CSolar* solar)
                 {
                     auto anim = objectAnimations.find(solar);
@@ -165,12 +127,12 @@ class FlappyArchitecture final : public ActiveEffect
 
         void End() override
         {
-            ForEachShip([](CShip* sh) { FlipBay(sh, true); });
-            for (auto& solar : objectAnimations)
+            Utils::ForEachShip([](CShip* sh) { FlipBay(sh, true); });
+            for (auto& val : objectAnimations | std::views::values)
             {
-                for (auto& anim : solar.second)
+                for (auto& [id, state, close] : val)
                 {
-                    anim.close = true;
+                    close = true;
                 }
             }
 

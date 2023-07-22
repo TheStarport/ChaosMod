@@ -182,6 +182,9 @@
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\Screaming.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -222,6 +225,9 @@
     </Filter>
     <Filter Include="Effects\DB\Misc">
       <UniqueIdentifier>{6e43c5d9-59bc-43b1-87b1-bcb142a468c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\NPC">
+      <UniqueIdentifier>{44a54550-ee5c-42a6-a496-249e623c3d9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

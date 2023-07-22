@@ -9,7 +9,8 @@ enum class EffectType
     Audio,
     StatManipulation,
     Meta,
-    Misc
+    Misc,
+    Npc,
 };
 
 class ActiveEffect

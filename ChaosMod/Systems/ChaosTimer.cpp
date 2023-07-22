@@ -17,6 +17,7 @@
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
+#include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "Effects/DB/StatManipulation/SpectatorMode.hpp"
@@ -189,6 +190,9 @@ void ChaosTimer::RegisterAllEffects()
 
     // Misc
     Ef(FlappyArchitecture);
+
+    // Npc
+    Ef(Screaming);
 
 #undef Ef
 }
