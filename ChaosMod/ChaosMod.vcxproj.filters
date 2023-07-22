@@ -179,6 +179,9 @@
     <ClInclude Include="Effects\DB\Interface\NoHud.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -216,6 +219,9 @@
     </Filter>
     <Filter Include="Effects\DB\Meta">
       <UniqueIdentifier>{42da5ebb-c094-4271-a1a8-7be896b93c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Misc">
+      <UniqueIdentifier>{6e43c5d9-59bc-43b1-87b1-bcb142a468c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

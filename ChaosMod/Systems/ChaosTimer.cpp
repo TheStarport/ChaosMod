@@ -16,6 +16,7 @@
 #include "Effects/DB/Meta/DoubleEffectTime.hpp"
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
+#include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "Effects/DB/StatManipulation/SpectatorMode.hpp"
@@ -185,6 +186,9 @@ void ChaosTimer::RegisterAllEffects()
     Ef(FakeCrash);
     Ef(DoubleTime);
     Ef(DoubleEffectTime);
+
+    // Misc
+    Ef(FlappyArchitecture);
 
 #undef Ef
 }

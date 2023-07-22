@@ -3297,6 +3297,13 @@ enum StrafeDir
 	SD_DOWN = 4,
 };
 
+enum class BayState
+{
+    Closed,
+    Closing,
+    Open,
+    Opening
+};
 
 struct IMPORT CShip : public CEqObj, public PhySys::Controller
 {

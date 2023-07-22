@@ -8,7 +8,8 @@ enum class EffectType
     Teleport,
     Audio,
     StatManipulation,
-    Meta
+    Meta,
+    Misc
 };
 
 class ActiveEffect
