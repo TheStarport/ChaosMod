@@ -170,6 +170,9 @@
     <ClInclude Include="Systems\EventManager.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
