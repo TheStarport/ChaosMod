@@ -11,6 +11,7 @@
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
+#include "Effects/DB/Interface/NoHud.hpp"
 #include "Effects/DB/Meta/BoxOfChocolates.hpp"
 #include "Effects/DB/Meta/DoubleEffectTime.hpp"
 #include "Effects/DB/Meta/DoubleTime.hpp"
@@ -164,6 +165,7 @@ void ChaosTimer::RegisterAllEffects()
     // Interface
     Ef(Lgbtui);
     Ef(BuggyInterface);
+    Ef(NoHud);
 
     // Audio
     Ef(AllTheNewsThatsFitForYou);
