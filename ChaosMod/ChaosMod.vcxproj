@@ -214,6 +214,7 @@
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />

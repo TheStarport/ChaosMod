@@ -27,6 +27,7 @@
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
+#include "Effects/DB/StatManipulation/Hyperlanes.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
@@ -199,6 +200,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(WiffleBats);
     Ef(RandomisedProjectiles);
     Ef(GodMode);
+    Ef(Hyperlanes);
 
     // Meta
     Ef(BoxOfChocolates);

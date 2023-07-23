@@ -16,6 +16,9 @@ enum class AddressTable : DWORD
     TotalBarWidth = 0x1D7E58,
 
     // Visual
+
+    // Other
+    TradelaneSpeed = 0x13F3CC
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)

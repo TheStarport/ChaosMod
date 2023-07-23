@@ -209,6 +209,9 @@
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
