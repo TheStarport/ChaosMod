@@ -17,6 +17,7 @@
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
+#include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
@@ -206,6 +207,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SpectatorMode);
     Ef(LaggyPlayer);
     Ef(SelfDestruct);
+    Ef(IAmFiringMyLasers);
 
     // Movement
     Ef(Yeet);
