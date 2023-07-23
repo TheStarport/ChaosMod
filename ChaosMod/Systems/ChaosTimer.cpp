@@ -17,6 +17,7 @@
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
+#include "Effects/DB/Misc/LaggyPlayer.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
@@ -192,6 +193,7 @@ void ChaosTimer::RegisterAllEffects()
 
     // Misc
     Ef(FlappyArchitecture);
+    Ef(LaggyPlayer);
 
     // Npc
     Ef(Screaming);

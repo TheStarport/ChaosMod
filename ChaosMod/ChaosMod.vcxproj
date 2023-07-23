@@ -204,6 +204,7 @@
     <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
+    <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
