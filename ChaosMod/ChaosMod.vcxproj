@@ -205,12 +205,13 @@
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
+    <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
+    <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />

@@ -164,9 +164,6 @@
     <ClInclude Include="Utilities\Detour.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\SpectatorMode.hpp">
-      <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
     <ClInclude Include="Systems\EventManager.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -192,6 +189,12 @@
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Movement\Yeet.hpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
   </ItemGroup>

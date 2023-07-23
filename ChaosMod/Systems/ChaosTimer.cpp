@@ -18,12 +18,13 @@
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
+#include "Effects/DB/Misc/SpectatorMode.hpp"
+#include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
-#include "Effects/DB/StatManipulation/SpectatorMode.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "UiManager.hpp"
 
@@ -183,7 +184,6 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LonniganCameThrough);
     Ef(GetHumbled);
     Ef(WiffleBats);
-    Ef(SpectatorMode);
 
     // Meta
     Ef(BoxOfChocolates);
@@ -193,7 +193,11 @@ void ChaosTimer::RegisterAllEffects()
 
     // Misc
     Ef(FlappyArchitecture);
+    Ef(SpectatorMode);
     Ef(LaggyPlayer);
+
+    // Movement
+    Ef(Yeet);
 
     // Npc
     Ef(Screaming);

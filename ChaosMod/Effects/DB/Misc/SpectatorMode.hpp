@@ -35,5 +35,5 @@ class SpectatorMode final : public ActiveEffect
         void End() override { SetCloak(false); }
 
     public:
-        DefEffectInfo("Spectator Mode", 1.0f, EffectType::StatManipulation);
+        DefEffectInfo("Spectator Mode", 1.0f, EffectType::Misc);
 };

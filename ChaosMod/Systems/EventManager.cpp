@@ -2,7 +2,7 @@
 
 #include "EventManager.hpp"
 
-#include "Effects/DB/StatManipulation/SpectatorMode.hpp"
+#include "Effects/DB/Misc/SpectatorMode.hpp"
 
 std::unique_ptr<FunctionDetour<EventManager::OnLaunch>> EventManager::launchDetour;
 
