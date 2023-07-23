@@ -2939,7 +2939,7 @@ public:
 	virtual bool get_sub_obj_relative_health(unsigned short, float &)const;
 	virtual unsigned short inst_to_subobj_id(long)const;
 	virtual long sub_obj_id_to_inst(unsigned short)const;
-	virtual void destroy_sub_objs(struct DamageList const &, bool);
+	virtual void destroy_sub_objs(struct DamageList const *, bool);
 	virtual int enumerate_sub_objs(void)const;
 
 protected:

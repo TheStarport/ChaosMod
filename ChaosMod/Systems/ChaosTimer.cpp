@@ -16,6 +16,7 @@
 #include "Effects/DB/Meta/DoubleEffectTime.hpp"
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
+#include "Effects/DB/Misc/CaveatEmptor.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
@@ -203,6 +204,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(GodMode);
     Ef(Hyperlanes);
     Ef(TryRepairing);
+    Ef(CaveatEmptor);
 
     // Meta
     Ef(BoxOfChocolates);
