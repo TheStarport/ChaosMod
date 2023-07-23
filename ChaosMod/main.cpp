@@ -85,6 +85,9 @@ void RequiredMemEdits()
 
     std::array<byte, 1> holdDownMissiles = { 0x0 };
     Utils::Memory::WriteProcMem(fl + 0x11D281, holdDownMissiles.data(), 1);
+
+    std::array<byte, 1> planetsKeepOnSpinning = { 0xEB };
+    Utils::Memory::WriteProcMem(common + 0x0E698E, planetsKeepOnSpinning.data(), 1);
 }
 
 void* ScriptLoadHook(const char* script)

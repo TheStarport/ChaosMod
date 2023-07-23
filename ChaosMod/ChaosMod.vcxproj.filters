@@ -215,6 +215,10 @@
     <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp" />
+    <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

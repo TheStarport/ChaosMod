@@ -415,4 +415,23 @@ namespace Utils
             while (next);
         }
     }
+
+    static void ForEachAsteroid(std::function<void(CAsteroid*)> func)
+    {
+        if (auto* obj = dynamic_cast<CAsteroid*>(CObject::FindFirst(CObject::CASTEROID_OBJECT)))
+        {
+            func(obj);
+
+            CAsteroid* next;
+            do
+            {
+                next = dynamic_cast<CAsteroid*>(CObject::FindNext());
+                if (next)
+                {
+                    func(next);
+                }
+            }
+            while (next);
+        }
+    }
 } // namespace Utils

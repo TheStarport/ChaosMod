@@ -23,6 +23,7 @@
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
+#include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
@@ -221,6 +222,7 @@ void ChaosTimer::RegisterAllEffects()
 
     // Movement
     Ef(Yeet);
+    Ef(YouSpinMeRightRound);
 
     // Npc
     Ef(Screaming);
