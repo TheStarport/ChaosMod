@@ -26,6 +26,7 @@
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
+#include "Effects/DB/StatManipulation/GodMode.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
@@ -196,6 +197,8 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LonniganCameThrough);
     Ef(GetHumbled);
     Ef(WiffleBats);
+    Ef(RandomisedProjectiles);
+    Ef(GodMode);
 
     // Meta
     Ef(BoxOfChocolates);
@@ -209,7 +212,6 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LaggyPlayer);
     Ef(SelfDestruct);
     Ef(IAmFiringMyLasers);
-    Ef(RandomisedProjectiles);
 
     // Movement
     Ef(Yeet);
