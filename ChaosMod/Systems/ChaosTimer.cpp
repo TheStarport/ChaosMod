@@ -30,6 +30,7 @@
 #include "Effects/DB/StatManipulation/Hyperlanes.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
+#include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "UiManager.hpp"
 
@@ -201,6 +202,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(RandomisedProjectiles);
     Ef(GodMode);
     Ef(Hyperlanes);
+    Ef(TryRepairing);
 
     // Meta
     Ef(BoxOfChocolates);

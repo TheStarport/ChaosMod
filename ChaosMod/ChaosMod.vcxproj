@@ -217,6 +217,7 @@
     <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
