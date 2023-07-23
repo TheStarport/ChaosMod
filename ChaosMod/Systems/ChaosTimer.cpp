@@ -19,6 +19,7 @@
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
+#include "Effects/DB/Misc/RandomisedProjectiles.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
@@ -208,6 +209,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LaggyPlayer);
     Ef(SelfDestruct);
     Ef(IAmFiringMyLasers);
+    Ef(RandomisedProjectiles);
 
     // Movement
     Ef(Yeet);

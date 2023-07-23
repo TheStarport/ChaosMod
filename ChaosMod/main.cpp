@@ -82,6 +82,9 @@ void RequiredMemEdits()
     // Cloaking devices can be internal equipment
     std::array<byte, 3> cloakingDevicesAsInternalEquipment = { 0x40, 0x17, 0x2D };
     Utils::Memory::WriteProcMem(common + 0x139B74, cloakingDevicesAsInternalEquipment.data(), cloakingDevicesAsInternalEquipment.size());
+
+    std::array<byte, 1> holdDownMissiles = { 0x0 };
+    Utils::Memory::WriteProcMem(fl + 0x11D281, holdDownMissiles.data(), 1);
 }
 
 void* ScriptLoadHook(const char* script)

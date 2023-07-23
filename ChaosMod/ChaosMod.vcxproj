@@ -206,6 +206,7 @@
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
     <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp" />
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
+    <ClInclude Include="Effects\DB\Misc\RandomisedProjectiles.hpp" />
     <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
