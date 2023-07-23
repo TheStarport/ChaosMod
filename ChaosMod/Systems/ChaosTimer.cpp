@@ -18,6 +18,7 @@
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
+#include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
@@ -104,9 +105,18 @@ void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }
 void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)
+
     if (!Utils::GetCShip())
     {
-        // Clear any ongoing effects
+        uint base;
+        pub::Player::GetBase(1, base);
+        // If they are not in a base, and don't have a ship we assume they are in the death screen
+        if (!base)
+        {
+            return;
+        }
+
+        // Clear any ongoing effects if they are docked on a base
         if (!activeEffects.empty())
         {
             for (const auto& key : activeEffects | std::views::keys)
@@ -195,6 +205,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(FlappyArchitecture);
     Ef(SpectatorMode);
     Ef(LaggyPlayer);
+    Ef(SelfDestruct);
 
     // Movement
     Ef(Yeet);

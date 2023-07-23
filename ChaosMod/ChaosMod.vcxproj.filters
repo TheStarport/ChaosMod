@@ -197,6 +197,9 @@
     <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
