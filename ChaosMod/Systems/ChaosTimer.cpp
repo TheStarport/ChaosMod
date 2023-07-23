@@ -19,7 +19,6 @@
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
-#include "Effects/DB/Misc/RandomisedProjectiles.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
@@ -28,6 +27,7 @@
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
+#include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "UiManager.hpp"
 

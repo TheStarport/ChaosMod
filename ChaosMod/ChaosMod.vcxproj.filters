@@ -203,8 +203,8 @@
     <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\RandomisedProjectiles.hpp">
-      <Filter>Effects\DB\Misc</Filter>
+    <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
