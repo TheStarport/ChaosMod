@@ -34,6 +34,7 @@
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
+#include "Effects/DB/Visual/QuakeFOV.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -228,6 +229,9 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Screaming);
     Ef(IAmRobot);
     Ef(PlanetOfTheApes);
+
+    // Visual
+    Ef(QuakeFov);
 
 #undef Ef
 }

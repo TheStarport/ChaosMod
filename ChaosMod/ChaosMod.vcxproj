@@ -166,6 +166,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Systems\CameraController.cpp" />
     <ClCompile Include="Systems\ChaosTimer.cpp" />
     <ClCompile Include="Systems\ConfigManager.cpp" />
     <ClCompile Include="Systems\DirectX\D3DBase.cpp" />
@@ -221,8 +222,10 @@
     <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
+    <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
+    <ClInclude Include="Systems\CameraController.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
     <ClInclude Include="Systems\ConfigManager.hpp" />
     <ClInclude Include="Systems\DirectX\d3d.hpp" />

@@ -1,4 +1,6 @@
 #include "PCH.hpp"
+
+#include "Systems/CameraController.hpp"
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/EventManager.hpp"
 #include "Systems/UiManager.hpp"
@@ -21,6 +23,7 @@ void Init()
     init = true;
     ChaosTimer::RegisterAllEffects();
     EventManager::i()->SetupDetours();
+    CameraController::i();
 }
 
 void RequiredMemEdits()
@@ -88,6 +91,9 @@ void RequiredMemEdits()
 
     std::array<byte, 1> planetsKeepOnSpinning = { 0xEB };
     Utils::Memory::WriteProcMem(common + 0x0E698E, planetsKeepOnSpinning.data(), 1);
+
+    float nearPlaneFrustum = 0.05f;
+    Utils::Memory::WriteProcMem(fl + 0x210530, &nearPlaneFrustum, sizeof(float));
 }
 
 void* ScriptLoadHook(const char* script)

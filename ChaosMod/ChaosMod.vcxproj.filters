@@ -67,6 +67,9 @@
     <ClCompile Include="Systems\EventManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\CameraController.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -221,6 +224,12 @@
     <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\CameraController.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -264,6 +273,9 @@
     </Filter>
     <Filter Include="Effects\DB\NPC">
       <UniqueIdentifier>{44a54550-ee5c-42a6-a496-249e623c3d9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Visual">
+      <UniqueIdentifier>{df6d2e3d-14e8-4391-8c85-a38e586b9727}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
