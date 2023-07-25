@@ -120,6 +120,7 @@ void __cdecl Update(const double delta)
         timeCounter -= SixtyFramesPerSecond;
     }
 
+    ChaosTimer::i()->FrameUpdate(static_cast<float>(SixtyFramesPerSecond));
     Utils::Memory::UnDetour((PBYTE)globalTimingFunction, data);
     globalTimingFunction(delta);
     Utils::Memory::Detour((PBYTE)globalTimingFunction, Update, data);

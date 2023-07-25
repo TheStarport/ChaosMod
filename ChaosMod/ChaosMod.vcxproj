@@ -210,6 +210,7 @@
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
     <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
+    <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
     <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />

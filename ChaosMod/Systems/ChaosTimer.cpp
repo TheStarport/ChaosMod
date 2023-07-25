@@ -22,6 +22,7 @@
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
+#include "Effects/DB/Misc/XboxEdition.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
@@ -109,6 +110,14 @@ void ChaosTimer::TriggerSpecificEffect(ActiveEffect* effect) { TriggerChaos(effe
 
 void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
 void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }
+
+void ChaosTimer::FrameUpdate(const float delta)
+{
+    for (const auto& key : activeEffects | std::views::keys)
+    {
+        key->FrameUpdate(delta);
+    }
+}
 
 void ChaosTimer::Update(const float delta)
 {
@@ -220,6 +229,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(LaggyPlayer);
     Ef(SelfDestruct);
     Ef(IAmFiringMyLasers);
+    Ef(XboxEdition);
 
     // Movement
     Ef(Yeet);

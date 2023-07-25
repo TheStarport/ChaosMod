@@ -21,6 +21,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         void ToggleDoubleTime();
         void AdjustModifier(float modifier);
         void Update(float delta);
+        void FrameUpdate(float delta);
         static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
         static void RegisterAllEffects();
 };

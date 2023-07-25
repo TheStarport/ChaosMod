@@ -32,6 +32,7 @@ class ActiveEffect
 
         virtual void Begin() {}
         virtual void Update(float delta) {}
+        virtual void FrameUpdate(float delta) {}
         virtual void End() {}
         virtual ~ActiveEffect() = default;
 

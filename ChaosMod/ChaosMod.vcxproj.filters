@@ -230,6 +230,9 @@
     <ClInclude Include="Systems\CameraController.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
