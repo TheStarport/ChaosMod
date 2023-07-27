@@ -216,6 +216,7 @@
     <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
     <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp" />
+    <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
+    <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\Detour.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />
     <ClInclude Include="Utilities\Singleton.hpp" />

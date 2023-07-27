@@ -278,6 +278,12 @@
     <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\ChatConsole.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

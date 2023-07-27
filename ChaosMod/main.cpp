@@ -5,6 +5,7 @@
 #include "Systems/EventManager.hpp"
 #include "Systems/HudInterface.hpp"
 #include "Systems/UiManager.hpp"
+#include "Utilities/ChatConsole.hpp"
 
 static PBYTE thornLoadData;
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
@@ -95,6 +96,19 @@ void RequiredMemEdits()
 
     float nearPlaneFrustum = 0.05f;
     Utils::Memory::WriteProcMem(fl + 0x210530, &nearPlaneFrustum, sizeof(float));
+
+    ProtectExecuteReadWrite((void*)0x46b650, 5);
+    *(PBYTE)(0x46b650) = 0xe9;
+    *(PDWORD)(0x46b651) = (DWORD)(0x46b580) - (DWORD)(0x46b651) - 4;
+
+    // bypass the single player tests preventing chat
+    std::array<byte, 1> bypassSpChecks = { 0x0 };
+    Utils::Memory::WriteProcMem(0x46a11f + 1, bypassSpChecks.data(), 1);
+    Utils::Memory::WriteProcMem(0x437374 + 1, bypassSpChecks.data(), 1);
+    Utils::Memory::WriteProcMem(0x54ae67 + 1, bypassSpChecks.data(), 1);
+    Utils::Memory::WriteProcMem(0x574b91 + 1, bypassSpChecks.data(), 1);
+    Utils::Memory::WriteProcMem(0x574c43 + 1, bypassSpChecks.data(), 1);
+    Utils::Memory::WriteProcMem(0x574f74 + 1, bypassSpChecks.data(), 1);
 }
 
 void* ScriptLoadHook(const char* script)

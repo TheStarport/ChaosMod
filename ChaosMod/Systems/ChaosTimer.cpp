@@ -28,6 +28,7 @@
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
+#include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
@@ -243,6 +244,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Screaming);
     Ef(IAmRobot);
     Ef(PlanetOfTheApes);
+    Ef(MultiplayerExperience);
 
     // Visual
     Ef(QuakeFov);
