@@ -202,6 +202,7 @@
     <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
     <ClInclude Include="Effects\DB\Interface\NoHud.hpp" />
+    <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp" />
     <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />

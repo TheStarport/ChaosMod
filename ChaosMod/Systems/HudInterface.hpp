@@ -73,6 +73,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
         }
 
         HudInterface();
+        ~HudInterface() { FreeLibrary(GetModuleHandleA("Hud.dll")); }
 
         void __stdcall Draw(TControl* sender) override;
         void __stdcall Update(TControl* sender) override;

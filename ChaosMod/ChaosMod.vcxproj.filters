@@ -275,6 +275,9 @@
     <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

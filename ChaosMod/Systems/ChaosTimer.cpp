@@ -13,6 +13,7 @@
 #include "Effects/DB/Interface/FlippedInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
 #include "Effects/DB/Interface/NoHud.hpp"
+#include "Effects/DB/Interface/StickyKeys.hpp"
 #include "Effects/DB/Meta/BoxOfChocolates.hpp"
 #include "Effects/DB/Meta/DoubleEffectTime.hpp"
 #include "Effects/DB/Meta/DoubleTime.hpp"
@@ -201,6 +202,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(BuggyInterface);
     Ef(NoHud);
     Ef(FlippedUi);
+    Ef(StickyKeys);
 
     // Audio
     Ef(AllTheNewsThatsFitForYou);

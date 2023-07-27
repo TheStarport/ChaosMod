@@ -153,7 +153,6 @@ void HudInterface::ReplaceColorOnControl(TControl* control)
     byte g = (currentColor >> 8) & 0xff;
     byte b = (currentColor)&0xff;
 
-    auto q = control->GetName();
     const auto text = static_cast<TText*>(control); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
     if (const auto el = replacedColors.find(text); el != replacedColors.end())
     {
