@@ -77,8 +77,8 @@ namespace Utils
             return szBuf;
         }
 
-        /// Convert UINT to string.
-        std::string itohs(UINT i)
+        /// Convert uint to string.
+        std::string itohs(uint i)
         {
             char szBuf[100];
             sprintf_s(szBuf, "%08X", i);

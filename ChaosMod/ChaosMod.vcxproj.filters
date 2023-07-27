@@ -70,6 +70,9 @@
     <ClCompile Include="Systems\CameraController.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\HudInterface.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -233,6 +236,45 @@
     <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\HudInterface.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\Structures.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TButton.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TCycle.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TScroll.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TShip.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TStatic.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TText.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TTextEdit.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TToggle.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\TWire.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\HudComponents\Interfaces.hpp">
+      <Filter>Systems\HudComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -279,6 +321,9 @@
     </Filter>
     <Filter Include="Effects\DB\Visual">
       <UniqueIdentifier>{df6d2e3d-14e8-4391-8c85-a38e586b9727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\HudComponents">
+      <UniqueIdentifier>{aac35b1d-4fae-42a8-a1d3-44137701c127}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

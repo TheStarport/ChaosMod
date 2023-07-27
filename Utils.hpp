@@ -45,7 +45,7 @@ namespace Utils
         std::string wstos(const std::wstring& wscText);
         std::string itos(int i);
         std::string ftos(float i);
-        std::string itohs(UINT i);
+        std::string itohs(uint i);
         std::wstring GetParam(const std::wstring& wscLine, wchar_t wcSplitChar, uint iPos);
         std::wstring GetParamToEnd(std::wstring wscLine, wchar_t wcSplitChar, uint iPos);
         std::string GetParam(const std::string& scLine, char cSplitChar, int iPos);

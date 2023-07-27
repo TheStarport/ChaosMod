@@ -10,6 +10,7 @@
 #include "Effects/DB/Audio/IDoNotSpeakMorseCode.hpp"
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
+#include "Effects/DB/Interface/FlippedInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
 #include "Effects/DB/Interface/NoHud.hpp"
 #include "Effects/DB/Meta/BoxOfChocolates.hpp"
@@ -199,6 +200,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Lgbtui);
     Ef(BuggyInterface);
     Ef(NoHud);
+    Ef(FlippedUi);
 
     // Audio
     Ef(AllTheNewsThatsFitForYou);

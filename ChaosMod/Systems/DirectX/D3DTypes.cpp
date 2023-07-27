@@ -13,7 +13,7 @@ bool SupportsPalettes()
     return hasPalette;
 }
 
-static UINT CalcTextureSize(UINT Width, UINT Height, UINT Depth, D3DFORMAT Format)
+static uint CalcTextureSize(uint Width, uint Height, uint Depth, D3DFORMAT Format)
 {
     switch (static_cast<DWORD>(Format))
     {

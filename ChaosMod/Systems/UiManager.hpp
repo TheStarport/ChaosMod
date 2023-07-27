@@ -22,7 +22,7 @@ class UiManager final : public Singleton<UiManager>
         HWND window = nullptr;
         std::map<std::string, HCURSOR> mapCursors;
 
-        static LRESULT __stdcall WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static LRESULT __stdcall WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
         static HkMouseState ConvertState(DWORD state);
         void HandleInput();
         static bool WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam);

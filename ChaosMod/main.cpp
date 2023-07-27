@@ -3,6 +3,7 @@
 #include "Systems/CameraController.hpp"
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/EventManager.hpp"
+#include "Systems/HudInterface.hpp"
 #include "Systems/UiManager.hpp"
 
 static PBYTE thornLoadData;
@@ -17,13 +18,13 @@ constexpr double SixtyFramesPerSecond = 1.0 / 60.0;
 double timeCounter;
 
 bool init = false;
-
 void Init()
 {
     init = true;
     ChaosTimer::RegisterAllEffects();
     EventManager::i()->SetupDetours();
     CameraController::i();
+    HudInterface::i();
 }
 
 void RequiredMemEdits()
@@ -150,6 +151,11 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
     DisableThreadLibraryCalls(hModule);
     if (dwReason == DLL_PROCESS_ATTACH)
     {
+        float newX = 0.5f;
+        float newY = 0.5f;
+
+        Utils::Memory::WriteProcMem(0x4dd493, &newX, sizeof(float));
+        Utils::Memory::WriteProcMem(0x4dd49b, &newY, sizeof(float));
         SetupHack();
     }
     return TRUE;

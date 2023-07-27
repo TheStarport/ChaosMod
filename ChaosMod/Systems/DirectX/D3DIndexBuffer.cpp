@@ -60,7 +60,7 @@ DWORD STDMETHODCALLTYPE Direct3DIndexBuffer8::GetPriority() { return ProxyInterf
 void STDMETHODCALLTYPE Direct3DIndexBuffer8::PreLoad() { ProxyInterface->PreLoad(); }
 D3DRESOURCETYPE STDMETHODCALLTYPE Direct3DIndexBuffer8::GetType() { return D3DRTYPE_INDEXBUFFER; }
 
-HRESULT STDMETHODCALLTYPE Direct3DIndexBuffer8::Lock(UINT OffsetToLock, UINT SizeToLock, BYTE** ppbData, DWORD Flags)
+HRESULT STDMETHODCALLTYPE Direct3DIndexBuffer8::Lock(uint OffsetToLock, uint SizeToLock, BYTE** ppbData, DWORD Flags)
 {
     if ((Flags & D3DLOCK_DISCARD) != 0)
     {

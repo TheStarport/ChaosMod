@@ -13,13 +13,13 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
-typedef int(__stdcall* OriginalWndProc)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+typedef int(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
 OriginalWndProc originalProc;
 PBYTE originalProcData = PBYTE(malloc(5));
 
 std::map<UiManager::Font, ImFont*> UiManager::loadedFonts;
 
-LRESULT CALLBACK UiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
 {
     i()->window = hWnd;
 
@@ -78,7 +78,7 @@ void UiManager::HandleInput()
     }
 }
 
-void* WINAPI CreateDirect3D8(UINT SDKVersion)
+void* WINAPI CreateDirect3D8(uint SDKVersion)
 {
     char path[MAX_PATH];
     GetSystemDirectoryA(path, MAX_PATH);
@@ -86,7 +86,7 @@ void* WINAPI CreateDirect3D8(UINT SDKVersion)
 
     /*HMODULE d3ddll = LoadLibraryA(Path);
 
-    typedef IDirect3D9*(WINAPI * D3DProc8)(UINT);
+    typedef IDirect3D9*(WINAPI * D3DProc8)(uint);
     D3DProc8 func = (D3DProc8)GetProcAddress(d3ddll, "Direct3DCreate8");*/
 
     IDirect3D9* const d3d = Direct3DCreate9(D3D_SDK_VERSION);

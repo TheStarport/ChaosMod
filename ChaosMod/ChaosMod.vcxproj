@@ -180,6 +180,7 @@
     <ClCompile Include="Systems\DirectX\D3DVolume.cpp" />
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp" />
     <ClCompile Include="Systems\EventManager.cpp" />
+    <ClCompile Include="Systems\HudInterface.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp" />
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
+    <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
     <ClInclude Include="Effects\DB\Interface\NoHud.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
@@ -234,6 +236,18 @@
     <ClInclude Include="Systems\DirectX\Drawing.hpp" />
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp" />
     <ClInclude Include="Systems\EventManager.hpp" />
+    <ClInclude Include="Systems\HudComponents\Interfaces.hpp" />
+    <ClInclude Include="Systems\HudComponents\Structures.hpp" />
+    <ClInclude Include="Systems\HudComponents\TButton.hpp" />
+    <ClInclude Include="Systems\HudComponents\TCycle.hpp" />
+    <ClInclude Include="Systems\HudComponents\TScroll.hpp" />
+    <ClInclude Include="Systems\HudComponents\TShip.hpp" />
+    <ClInclude Include="Systems\HudComponents\TStatic.hpp" />
+    <ClInclude Include="Systems\HudComponents\TText.hpp" />
+    <ClInclude Include="Systems\HudComponents\TTextEdit.hpp" />
+    <ClInclude Include="Systems\HudComponents\TToggle.hpp" />
+    <ClInclude Include="Systems\HudComponents\TWire.hpp" />
+    <ClInclude Include="Systems\HudInterface.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />

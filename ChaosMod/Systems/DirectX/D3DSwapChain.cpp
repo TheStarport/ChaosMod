@@ -40,7 +40,7 @@ HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::Present(const RECT* pSourceRect, c
 
     return ProxyInterface->Present(pSourceRect, pDestRect, hDestWindowOverride, nullptr, 0);
 }
-HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::GetBackBuffer(UINT iBackBuffer, D3DBACKBUFFER_TYPE Type, Direct3DSurface8** ppBackBuffer)
+HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::GetBackBuffer(uint iBackBuffer, D3DBACKBUFFER_TYPE Type, Direct3DSurface8** ppBackBuffer)
 {
     if (ppBackBuffer == nullptr)
     {

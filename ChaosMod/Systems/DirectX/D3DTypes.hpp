@@ -44,10 +44,10 @@ DECLARE_INTERFACE_(ID3DXBuffer, IUnknown)
 	STDMETHOD_(DWORD, GetBufferSize)(THIS) PURE;
 };*/
 
-/*typedef HRESULT(WINAPI* PFN_D3DXAssembleShader)(LPCSTR pSrcData, UINT SrcDataLen, const D3DXMACRO* pDefines, LPD3DXINCLUDE pInclude, DWORD Flags, LPD3DXBUFFER* ppShader, LPD3DXBUFFER* ppErrorMsgs);
+/*typedef HRESULT(WINAPI* PFN_D3DXAssembleShader)(LPCSTR pSrcData, uint SrcDataLen, const D3DXMACRO* pDefines, LPD3DXINCLUDE pInclude, DWORD Flags, LPD3DXBUFFER* ppShader, LPD3DXBUFFER* ppErrorMsgs);
 typedef HRESULT(WINAPI* PFN_D3DXDisassembleShader)(const DWORD* pShader, BOOL EnableColorCode, LPCSTR pComments, LPD3DXBUFFER* ppDisassembly);
 typedef HRESULT(WINAPI* PFN_D3DXLoadSurfaceFromSurface)(LPDIRECT3DSURFACE9 pDestSurface, const PALETTEENTRY* pDestPalette, const RECT* pDestRect, LPDIRECT3DSURFACE9 pSrcSurface, const PALETTEENTRY* pSrcPalette, const RECT* pSrcRect, DWORD Filter, D3DCOLOR ColorKey);
-typedef HRESULT(WINAPI* PFN_D3DXCreateTextureFromFileInMemory)(LPDIRECT3DDEVICE9 pDevice, LPCVOID pSrcData, UINT srcDataSize, LPDIRECT3DTEXTURE9* ppTexture);
+typedef HRESULT(WINAPI* PFN_D3DXCreateTextureFromFileInMemory)(LPDIRECT3DDEVICE9 pDevice, LPCVOID pSrcData, uint srcDataSize, LPDIRECT3DTEXTURE9* ppTexture);
 typedef HRESULT(WINAPI* PFN_D3DXCreateSprite)(LPDIRECT3DDEVICE9 pDevice, LPD3DXSprite* ppSprite);
 
 extern PFN_D3DXAssembleShader D3DXAssembleShader;
@@ -122,7 +122,7 @@ typedef D3DCLIPSTATUS9 D3DCLIPSTATUS8;
 struct D3DCAPS8
 {
 	D3DDEVTYPE DeviceType;
-	UINT AdapterOrdinal;
+	uint AdapterOrdinal;
 	DWORD Caps, Caps2, Caps3;
 	DWORD PresentationIntervals;
 	DWORD CursorCaps;
@@ -176,8 +176,8 @@ struct D3DVOLUME_DESC8
 	D3DRESOURCETYPE Type;
 	DWORD Usage;
 	D3DPOOL Pool;
-	UINT Size;
-	UINT Width, Height, Depth;
+	uint Size;
+	uint Width, Height, Depth;
 };
 struct D3DSURFACE_DESC8
 {
@@ -185,16 +185,16 @@ struct D3DSURFACE_DESC8
 	D3DRESOURCETYPE Type;
 	DWORD Usage;
 	D3DPOOL Pool;
-	UINT Size;
+	uint Size;
 	D3DMULTISAMPLE_TYPE MultiSampleType;
-	UINT Width, Height;
+	uint Width, Height;
 };
 
 struct D3DPRESENT_PARAMETERS8
 {
-	UINT BackBufferWidth, BackBufferHeight;
+	uint BackBufferWidth, BackBufferHeight;
 	D3DFORMAT BackBufferFormat;
-	UINT BackBufferCount;
+	uint BackBufferCount;
 	D3DMULTISAMPLE_TYPE MultiSampleType;
 	D3DSWAPEFFECT SwapEffect;
 	HWND hDeviceWindow;
@@ -202,7 +202,7 @@ struct D3DPRESENT_PARAMETERS8
 	BOOL EnableAutoDepthStencil;
 	D3DFORMAT AutoDepthStencilFormat;
 	DWORD Flags;
-	UINT FullScreen_RefreshRateInHz, FullScreen_PresentationInterval;
+	uint FullScreen_RefreshRateInHz, FullScreen_PresentationInterval;
 };
 
 struct D3DADAPTER_IDENTIFIER8

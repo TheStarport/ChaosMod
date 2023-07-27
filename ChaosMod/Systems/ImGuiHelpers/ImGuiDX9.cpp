@@ -210,12 +210,12 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
     // Allocate buffers
     CUSTOMVERTEX* vtx_dst;
     ImDrawIdx* idx_dst;
-    if (bd->pVB->Lock(0, (UINT)(draw_data->TotalVtxCount * sizeof(CUSTOMVERTEX)), (void**)&vtx_dst, D3DLOCK_DISCARD) < 0)
+    if (bd->pVB->Lock(0, (uint)(draw_data->TotalVtxCount * sizeof(CUSTOMVERTEX)), (void**)&vtx_dst, D3DLOCK_DISCARD) < 0)
     {
         d3d9_state_block->Release();
         return;
     }
-    if (bd->pIB->Lock(0, (UINT)(draw_data->TotalIdxCount * sizeof(ImDrawIdx)), (void**)&idx_dst, D3DLOCK_DISCARD) < 0)
+    if (bd->pIB->Lock(0, (uint)(draw_data->TotalIdxCount * sizeof(ImDrawIdx)), (void**)&idx_dst, D3DLOCK_DISCARD) < 0)
     {
         bd->pVB->Unlock();
         d3d9_state_block->Release();
@@ -295,7 +295,7 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData* draw_data)
                 bd->pd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,
                                                      pcmd->VtxOffset + global_vtx_offset,
                                                      0,
-                                                     (UINT)cmd_list->VtxBuffer.Size,
+                                                     (uint)cmd_list->VtxBuffer.Size,
                                                      pcmd->IdxOffset + global_idx_offset,
                                                      pcmd->ElemCount / 3);
             }
