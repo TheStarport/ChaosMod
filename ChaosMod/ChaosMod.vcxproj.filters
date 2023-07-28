@@ -73,6 +73,9 @@
     <ClCompile Include="Systems\HudInterface.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\KeyManager.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -283,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp">
       <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\KeyManager.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\RandomisedKeys.hpp">
+      <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

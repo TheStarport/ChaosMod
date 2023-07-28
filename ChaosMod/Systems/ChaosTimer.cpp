@@ -22,6 +22,7 @@
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
+#include "Effects/DB/Misc/RandomisedKeys.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Misc/XboxEdition.hpp"
@@ -235,6 +236,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SelfDestruct);
     Ef(IAmFiringMyLasers);
     Ef(XboxEdition);
+    Ef(RandomisedKeys);
 
     // Movement
     Ef(Yeet);

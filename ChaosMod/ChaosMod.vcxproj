@@ -187,6 +187,7 @@
     <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
+    <ClCompile Include="Systems\KeyManager.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +212,7 @@
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
     <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp" />
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
+    <ClInclude Include="Effects\DB\Misc\RandomisedKeys.hpp" />
     <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
     <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
@@ -256,6 +258,7 @@
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
+    <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\Detour.hpp" />

@@ -4,8 +4,8 @@
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/EventManager.hpp"
 #include "Systems/HudInterface.hpp"
+#include "Systems/KeyManager.hpp"
 #include "Systems/UiManager.hpp"
-#include "Utilities/ChatConsole.hpp"
 
 static PBYTE thornLoadData;
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
@@ -26,6 +26,7 @@ void Init()
     EventManager::i()->SetupDetours();
     CameraController::i();
     HudInterface::i();
+    KeyManager::i();
 }
 
 void RequiredMemEdits()
