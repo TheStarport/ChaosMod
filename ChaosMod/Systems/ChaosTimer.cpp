@@ -9,6 +9,7 @@
 #include "Effects/DB/Audio/DodgeThis.hpp"
 #include "Effects/DB/Audio/IDoNotSpeakMorseCode.hpp"
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
+#include "Effects/DB/Audio/LowBudgetSciFiMovie.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/FlippedInterface.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
@@ -212,6 +213,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IfTrentHadATextToSpeechDevice);
     Ef(IDoNotSpeakMorseCode);
     Ef(DodgeThis);
+    Ef(LowBudgetSciFiMovie);
 
     // Stat Manipulation
     Ef(LonniganCameThrough);

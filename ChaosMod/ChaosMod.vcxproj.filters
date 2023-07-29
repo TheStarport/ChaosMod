@@ -293,6 +293,9 @@
     <ClInclude Include="Effects\DB\Misc\RandomisedKeys.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

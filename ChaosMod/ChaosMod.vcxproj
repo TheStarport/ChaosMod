@@ -199,6 +199,7 @@
     <ClInclude Include="Effects\DB\Audio\DodgeThis.hpp" />
     <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp" />
     <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
+    <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp" />
     <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
