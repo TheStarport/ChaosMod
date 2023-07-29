@@ -307,6 +307,9 @@
     <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp">
       <Filter>Effects\DB\Movement</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\JustLikeThe90s.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

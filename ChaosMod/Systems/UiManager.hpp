@@ -10,6 +10,8 @@
 
 class UiManager final : public Singleton<UiManager>
 {
+        std::optional<HCURSOR> cursorOverride;
+
         struct HkMouseState
         {
                 uint leftDown;
@@ -27,6 +29,7 @@ class UiManager final : public Singleton<UiManager>
         static HkMouseState ConvertState(DWORD state);
         void HandleInput();
         static bool WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam);
+        static bool OnCursorChangeDetour(const char* cursorName, bool hideCursor);
 
         static void LoadWinKey();
 
@@ -37,6 +40,7 @@ class UiManager final : public Singleton<UiManager>
         ScrollingCredits scrollingCredits;
 
     public:
+        void OverrideCursor(std::optional<HCURSOR> cursor);
         void SetCursor(std::string str);
 
         UiManager();

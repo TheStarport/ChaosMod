@@ -12,6 +12,7 @@
 #include "Effects/DB/Audio/LowBudgetSciFiMovie.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/FlippedInterface.hpp"
+#include "Effects/DB/Interface/JustLikeThe90s.hpp"
 #include "Effects/DB/Interface/LGBTUI.hpp"
 #include "Effects/DB/Interface/NoHud.hpp"
 #include "Effects/DB/Interface/RollCredits.hpp"
@@ -210,6 +211,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(FlippedUi);
     Ef(StickyKeys);
     Ef(RollCredits);
+    Ef(JustLikeThe90s);
 
     // Audio
     Ef(AllTheNewsThatsFitForYou);

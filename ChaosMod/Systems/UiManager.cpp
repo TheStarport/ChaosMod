@@ -120,8 +120,15 @@ PBYTE onCursorChangeData = PBYTE(malloc(5));
 
 std::string curCursor;
 
-bool OnCursorChangeDetour(const char* cursorName, bool hideCursor)
+bool UiManager::OnCursorChangeDetour(const char* cursorName, bool hideCursor)
 {
+    if (HCURSOR override = i()->cursorOverride.value_or(nullptr))
+    {
+        ::SetCursor(override);
+        PostMessage(i()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(override));
+        return true;
+    }
+
     std::string name = cursorName;
     if (name == "Cross")
     {
@@ -136,6 +143,16 @@ bool OnCursorChangeDetour(const char* cursorName, bool hideCursor)
     curCursor = name;
     UiManager::i()->SetCursor(name);
     return true;
+}
+
+void UiManager::OverrideCursor(const std::optional<HCURSOR> cursor)
+{
+    cursorOverride = cursor;
+    if (cursor.has_value())
+    {
+        ::SetCursor(cursor.value());
+        PostMessage(i()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cursor.value()));
+    }
 }
 
 void UiManager::SetCursor(const std::string str)
