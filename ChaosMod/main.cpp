@@ -5,6 +5,7 @@
 #include "Systems/EventManager.hpp"
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
+#include "Systems/ShipManipulator.hpp"
 #include "Systems/UiManager.hpp"
 
 static PBYTE thornLoadData;
@@ -27,6 +28,7 @@ void Init()
     CameraController::i();
     HudInterface::i();
     KeyManager::i();
+    ShipManipulator::i();
 }
 
 void RequiredMemEdits()
