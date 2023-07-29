@@ -28,6 +28,7 @@
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Misc/XboxEdition.hpp"
+#include "Effects/DB/Movement/IllTrySpinning.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
@@ -245,6 +246,7 @@ void ChaosTimer::RegisterAllEffects()
     // Movement
     Ef(Yeet);
     Ef(YouSpinMeRightRound);
+    Ef(IllTrySpinning);
 
     // Npc
     Ef(Screaming);
