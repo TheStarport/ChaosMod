@@ -241,7 +241,7 @@ void KeyManager::ToggleRandomisedKeys()
     static std::default_random_engine engine(seed);
     std::ranges::shuffle(keys, engine);
 
-    for (uint i = 0; i < keyMap.size() || i < keys.size(); i++)
+    for (uint i = 0; i < keyMap.size() && i < keys.size(); i++)
     {
         auto it = keyMap.begin();
         std::advance(it, i);
