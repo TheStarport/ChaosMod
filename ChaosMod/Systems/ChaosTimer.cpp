@@ -37,6 +37,7 @@
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
+#include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
 #include "Effects/DB/StatManipulation/Hyperlanes.hpp"
@@ -230,6 +231,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Hyperlanes);
     Ef(TryRepairing);
     Ef(CaveatEmptor);
+    Ef(CoolantLeak);
 
     // Meta
     Ef(BoxOfChocolates);

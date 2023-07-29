@@ -229,6 +229,7 @@
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />

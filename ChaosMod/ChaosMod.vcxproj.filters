@@ -310,6 +310,9 @@
     <ClInclude Include="Effects\DB\Interface\JustLikeThe90s.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
