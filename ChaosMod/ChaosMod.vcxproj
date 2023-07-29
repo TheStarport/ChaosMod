@@ -185,6 +185,7 @@
     <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\ScrollingCredits.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp" />
     <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
     <ClInclude Include="Effects\DB\Interface\NoHud.hpp" />
+    <ClInclude Include="Effects\DB\Interface\RollCredits.hpp" />
     <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
     <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp" />
@@ -257,6 +259,7 @@
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />

@@ -6,6 +6,7 @@
 
 #include "ImguiComponents/Debug.hpp"
 #include "ImguiComponents/ProgressBar.hpp"
+#include "ImguiComponents/ScrollingCredits.hpp"
 
 class UiManager final : public Singleton<UiManager>
 {
@@ -33,6 +34,7 @@ class UiManager final : public Singleton<UiManager>
         DebugMenu debugLog;
         ProgressBar progressBar;
         ActiveEffectsText activeEffectsText;
+        ScrollingCredits scrollingCredits;
 
     public:
         void SetCursor(std::string str);
@@ -54,6 +56,8 @@ class UiManager final : public Singleton<UiManager>
         {
             TitiliumWeb,
             TitiliumWebLarge,
+            TitiliumWebBold,
+            TitiliumWebBoldLarge,
         };
 
     private:

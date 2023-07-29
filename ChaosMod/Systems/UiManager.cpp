@@ -269,7 +269,9 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     }
 
     loadedFonts[Font::TitiliumWeb] = font;
-    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 50);
+    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 42);
+    loadedFonts[Font::TitiliumWebBold] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb-Bold.ttf", 28);
+    loadedFonts[Font::TitiliumWebBoldLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb-Bold.ttf", 42);
 
     io.Fonts->Build();
 }
@@ -289,6 +291,7 @@ void UiManager::Render()
     optionText.Render();
     progressBar.Render();
     activeEffectsText.Render();
+    scrollingCredits.Render();
 
     ImGui::ShowDemoWindow();
 

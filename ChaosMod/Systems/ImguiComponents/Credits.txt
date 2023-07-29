@@ -1,0 +1,431 @@
+R"(FREELANCER
+DIGITAL ANVIL STUDIO, MICROSOFT
+DEVELOPMENT TEAM
+Producer: Phil Wattenbarger
+Lead Designer: Jorg Neumann
+
+Lead Programmer: Paul Isaac
+Lead Programmer: Ed Maurer
+Lead Programmer: Tony Bratton
+Art Director: Bruce Lemons
+Audio Director: Martin Galway
+In-Game Cinematics Director: Harry Jarvis
+Test Lead: Evan Brandt
+
+ENGINE PROGRAMMING
+Aaron Otstott
+Gary Scott Smith
+Mark Kness
+Scott Stevens
+Simon Travis
+Brad Thrift (Volt)
+
+GAME PROGRAMMING
+Andrew Sega
+Brandon Rowlett
+Joel Willard
+Taylor Brown
+Peter Carter (Volt)
+
+MULTIPLAYER PROGRAMMING
+Stephen Nichols
+
+ART
+Bob Frye
+Johari Templin
+John P. Funk
+Steve Pietzsch
+Steven Stahlberg
+Wade Mulhern
+Lead Animator: Eric Lalumiere
+Frank Bonniwell
+Michael Pearce
+Crispin Broadhurst (Volt)
+
+DESIGN
+Adam Foshko
+Brian Hackert
+David Chang
+Dustin Cryer
+Jacob Crow
+Will Dougherty
+Eric Willmar (VMC Consulting Corp)
+John Sripan (VMC Consulting Corp)
+Scott Shelton (VMC Consulting Corp)
+Todd D. Degani (VMC Consulting Corp)
+Chris Todd (Murder of Crows)
+Jesse Benitez-Steiner (Volt)
+
+IN-GAME CINEMATICS
+Adam N. Joseph - Visual Supervisor
+Bobby Moldavan (VMC Consulting Corp)
+John Alderson (VMC Consulting Corp)
+Kathy Bateman (VMC Consulting Corp)
+Milena Grozeva (VMC Consulting Corp)
+Patrick Sanchez (VMC Consulting Corp)
+Paul Hiaumet (VMC Consulting Corp)
+Ray Cobo (VMC Consulting Corp)
+Rey Barrera (VMC Consulting Corp)
+Rick Hartman (VMC Consulting Corp)
+Séamus Rail (VMC Consulting Corp)
+
+AUDIO
+Bill Munyon (Volt)
+Clark Crawford (Volt)
+Eric Friend (Volt)
+Jeff Shoemaker (Volt)
+Kyle Scribner (Volt)
+Lisa Elliott (Volt)
+Mark Packard (Volt)
+Mat Mitchell (Volt)
+
+INTRO CINEMATIC
+Chris Olivia
+Dean McCall
+John Sommer
+Mark Goldsworthy
+Pauline Saab
+Rhett Bennatt
+Scott Peterson
+Sarma Vanguri
+Curtis Neal - Editor
+Marc Baird - Storyboards
+
+ORIGINAL CONCEPT
+Chris Roberts
+Phil Wattenbarger
+
+STORY SCRIPT
+Adam Foshko
+Jorg Neumann
+
+TEST TEAM
+Jamie Gibbs
+Bruce Rogers (Volt)
+Chris Parker (Volt)
+Cody Thomas (Volt)
+Erik Ellison (Volt)
+Lee Boubel (Volt)
+Mike Weber (Volt)
+Mark Richards (Volt)
+Nigel Gandy (Volt)
+Richard North (Volt)
+Steve Hernandez (Volt)
+
+STUDIO MANAGER
+Alan Hartman
+
+ASSISTANT PM - TRANSLATIONS
+Ray Cobo (VMC Consulting Corp)
+
+CORE LIBRARY DEVELOPMENT
+Paul Bleisch
+Yuichi Ito
+Mike Stembera (Volt)
+Tim Perry (Volt)
+
+MICROSOFT GAMES STUDIO
+PRODUCT PLANNING
+Jon Kimmich
+
+SETUP DEVELOPMENT
+Robbie Booth
+Julie McCormack
+Dan Wallace (Siemens Business Services Inc)
+Jason Brown (Siemens Business Services)
+
+MARKETING PRODUCT MANAGEMENT
+Rick Mehler
+Darren Trencher
+Chris Di Cesare
+
+PUBLIC RELATIONS
+Michelle Jacob
+Kristen McEntire
+Genevieve Ostergard
+Dana Trujillo (Kelly Services Inc)
+Brian Kemp (Edelman PR Worldwide)
+Wiebke Vallentin (AEG)
+
+PACKAGING AND ADVERTISING
+Lisa Krost
+Eli Friedman
+
+MICROSOFT WEB SITE
+Bradley Shelton
+Courtney Bailey
+Tom Brush (Volt)
+
+INTERNATIONAL MARKETING
+Peter Kingsley
+Stephanie Peterson
+
+SALES AND OPERATIONS
+Chris Black
+Steve Levy
+USER EXPERIENCE
+Aaron Conners
+Alan Theurer
+Brent Metcalfe
+John Pecorelli (Volt)
+Kevin Wright (Volt)
+
+PRINT PRODUCTION
+Jeannie Voirin
+Chris Burns (Art Source)
+
+LOCALIZATION - REDMOND
+Lief Thompson - Program Manager
+Kazuyuki Shibuya - Software Design Engineer
+
+LOCALIZATION - IRELAND
+Peter Fitzpatrick - Program Manager
+Bernard Morgan - Test
+David Foster - Test
+John Twomey - Software Engineer
+Verõ Levente - Software Engineer
+Steve Belton - Audio Lead
+Eilis O'Hagan - Documentation
+Barry Comyn - Packaging
+
+LOCALIZATION - KOREA
+Chae Seong Lim - Progam Manager
+Yoonhee Jung - Localization Program Manager
+Sang Kyu Rhee - Software Test Engineer
+Suk Hyun Yi - Product Manager
+
+LOCALIZATION - TAIWAN
+Lana Peng - Program Manager
+Christine Lin - Localization Program Manager
+Wen-Chin Deng - Test Lead
+Lilia Lee - Software Test Engineer
+
+PRODUCT SUPPORT
+Greg Frankovic
+Diana Leon
+Lonny Washburn
+
+LEGAL
+Hubert Cheng
+Jama Cantrell
+Sue Stickney
+MGS TEST MANAGEMENT
+Matt Gradwohl
+Scott Gerlach
+
+USER-TESTING TEAM
+Marcos Nunes-Ueno - User-testing Project Lead
+Michael Medlock - User-testing Group Lead
+Kevin Keeker, Bill Fulton - User-testing Managers
+Ramon Romero, Mark Burdick, Kevin Goebel (Volt), David Quiroz (Siemens Business Services Inc) - User-testing Assistants
+
+BETA TEST TEAM
+Matt Ployhar
+Matt Alderman
+Rhonda Warnke
+Bernie Stokes (VMC Consulting Corp)
+All the Beta Test volunteers
+
+RECON TEST TEAM
+Craig Marshall
+John Potter (Volt), Lance Rowley (Volt), Mori Marchany (Volt), James Evans (Volt), Robert Minnick (Volt), Vicente Lujan (Volt), Blake Dodson (Volt), 
+Michael Robinson (Volt), Timothy Williams (Volt), Jeremy Morgan (Volt), David Green (Volt), Chris Green (Volt), Joseph Ezell (Volt), Brandon Baker (Volt)
+
+MULTIPLAYER TEST TEAM
+TJ Duez
+Bret Fenton (Volt)
+Jason Wohlfeil (Volt)
+Shawn Johnson (Volt)
+
+PC CONFIGURATION TEST TEAM
+Jason Mangold
+Patrick Ascolese
+Dan Hitchcock (Volt)
+Jeff Felker (Volt)
+Yaqub Bandey (Volt)
+Eric Johnson (VMC Consulting Corp)
+
+MGS SERVER & NETWORK OPERATIONS
+Jennifer Harrison
+Shane Nelson
+Jason Reiner
+Judd O'Bannon (VMC Consulting Services)
+Jeff Seaman (VMC Consulting Services)
+Rob Markosek (VMC Consulting Services)
+Kevin Cuillard (VMC Consulting Services)
+Dan Grant (Siemens Business Services)
+
+EXTERNAL PRODUCTION
+CONCEPT ART
+Adam Medhurst - Concept Art Director/Production Designer
+Harald Belker - Space Object Designer
+Carlos Ezquerra - Characters and Costumes
+Craig Mullins - Concept Artist
+James Doh - Architectural Illustrator
+John Blood - Architectural Illustrator
+
+CITYSCAPES - ILLUSTRATION AND PRODUCTION ART
+Digital Firepower
+
+ROOM PRODUCTION ART
+Luminosity Entertainment / Boston Animation
+Alexander Chayka - 3D Architect / Project Manager
+Yaroslav Grabovsky - 3D Architect / Concept Artist
+Tatyana Piven - Texture Painting / Concept Artist
+Vladimir Druzenk, Igor Gorbunov, Olga Malko, Alexander Kompanets, Vitaly Dorohov - 3D Architect
+Andrew Didenko, Yurij Pulkiv, Alexey Luchko, Yaroslav Loginsky, Oleg Korejba, Victor Onishchenko, Oleg Vasyanovich - Texture Painting
+
+MOTION CAPTURE
+The Jim Henson Company
+House of Moves Motion Capture Studios, LLC
+Locomotion Studios
+Motion Analysis Studios
+Pyros Pictures, Inc
+
+MUSIC
+James Hannigan
+Andrew Sega (The Alpha Conspiracy)
+
+“Zeno's Paradox” by the Alpha Conspiracy appears courtesy of Diffusion Records.
+
+Visual Music
+Tom Seufert - Creative Director / Composer
+Cato
+Tim Kelly
+Dean Grinsfelder
+Osamu Kitajima
+
+SOUND AND POST-PRODUCTION
+Soundelux DMG
+Scott Martin Gershin - Sound Supervisor
+Becky Allen - Producer
+Alan Rankin, Bryan Celano, Bryan Bowen, Dutch Hill, Glynna Grimala, Peter Zinda - Sound Designers
+
+Scorpio Sound
+Gregory J. Hainer - Creative Director
+Mike Reagan - Creative Director
+DIALOGUE PRODUCTION
+Carole Ruggier - Vocal Director
+Julie Morgavi - Vocal Director
+Peter Marquardt (Volt) - Vocal Director
+
+Soundelux DMG
+Amanda Wyatt - Project Manager
+Lisle Engle, Tom Ozanich - Recording Engineers
+James Tabb, Sara Huddleston, Justin Langley - Asset Managers
+
+Screen Music Studios
+Vickie Spensieri - Studio Manager
+Paul Andris - Chief Engineer
+
+PRINCIPAL CAST
+Fred Ballard
+Hazel Beasley
+Jeff Glenn Bennett
+Xander Berkeley
+Susan Blakeslee
+Corey Burton
+Katherine Catmull
+Travis Dean
+Mitch Diaz
+Greg Dorchak
+Adam Dudley
+Kathryn Feller
+John Finan
+Michael Foster
+Brian Gaston
+Jennifer Hale
+Eric Henshaw
+James Horan
+John Horan
+Tony Jay
+John Kassir
+Maurice Lamarche
+Christopher Lee
+Kenneth Mars
+Marie Marshall
+Marc Menchaca
+Phil Morris
+Bernadette Nason
+Robert Newell
+Marco Noyola
+Phillip Owen
+Ben Pascoe
+Rob Paulsen
+Garry Peters
+John Rhys-Davies
+Kevin M. Richardson
+Jessica Robertson
+Stephen Sanders
+Charles Schaunessy
+J. C. Shakespeare
+Cree Summer
+George Takei
+Michael T. Weiss
+Katherine Willis
+Ryun Yu
+Ian Ziering
+
+SPECIAL THANKS
+Chris Roberts
+
+THANKS
+Kevin Albers
+Liz Becker
+Paul Bernstein
+Jared Carr
+Jeff Davis
+Art DiBianca
+Jay Dunn
+Beth Featherstone
+Andrew Franklin
+Ed Fries
+Andre Garcia
+Arvee Garde
+Johnny Guentzel
+Ben Hanson
+Matthew Hurrell
+Lorin Jameson
+Rich Lawrence
+Jim Magill
+Katie Marye
+April McKee
+James Mitchell
+Stuart Moulder
+Andy O'Brien
+T.J. O'Leary
+Pete Parsons
+Kelcey Privett
+Kent Raffray
+Jake Rodgers
+John Thomas
+Mark Thomas
+Alex Toader
+Sam Yeates
+Jason Yenawine
+Lancer's Reactor
+
+Abrams Artists
+Acclaim Talent Agency Austin
+Association Of Performing Artists
+Barbara Gray Talent Austin
+Pop Art Voices
+Innovative Artists L.A.
+International Creative Management L.A.
+Sutton, Barth & Vennari
+VOX U.S.A.
+William Morris Agency
+
+Havok
+Lua
+
+Kyoto
+Las Manitas
+
+Our wives, friends, and children!
+
+On February 1, 2003 tragedy struck the Columbia Space Shuttle mission STS-107. The Freelancer Team would like to express their condolences to the seven astronauts who lost their lives.
+Rick Husband, William McCool, Michael Anderson, Kalpana Chawla, David Brown, Laurel Clark, and Ilan Ramon. 
+
+Additionally, we would like to express our appreciation to all the brave pioneers of the world wide space program who have inspired us all by living their dream.
+)"
