@@ -319,6 +319,9 @@
     <ClInclude Include="Effects\DB\NPC\Cardamine.hpp">
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
