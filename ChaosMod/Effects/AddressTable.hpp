@@ -18,7 +18,8 @@ enum class AddressTable : DWORD
     // Visual
 
     // Other
-    TradelaneSpeed = 0x13F3CC
+    TradelaneSpeed = 0x13F3CC,
+    CollisionDamage = 0x18D184,
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)

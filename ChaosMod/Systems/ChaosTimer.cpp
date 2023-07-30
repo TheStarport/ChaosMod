@@ -43,6 +43,7 @@
 #include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
 #include "Effects/DB/NPC/YouAreFamous.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
+#include "Effects/DB/StatManipulation/DemolitionDerby.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
 #include "Effects/DB/StatManipulation/Hyperlanes.hpp"
@@ -238,6 +239,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(TryRepairing);
     Ef(CaveatEmptor);
     Ef(CoolantLeak);
+    Ef(DemolitionDerby);
 
     // Meta
     Ef(BoxOfChocolates);

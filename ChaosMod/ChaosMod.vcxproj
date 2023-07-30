@@ -235,6 +235,7 @@
     <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
     <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />

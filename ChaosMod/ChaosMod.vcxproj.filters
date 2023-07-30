@@ -331,6 +331,9 @@
     <ClInclude Include="Effects\DB\NPC\SwissDiplomacy.hpp">
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
