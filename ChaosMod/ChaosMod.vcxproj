@@ -225,6 +225,7 @@
     <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
     <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp" />
+    <ClInclude Include="Effects\DB\NPC\Cardamine.hpp" />
     <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />

@@ -33,6 +33,7 @@
 #include "Effects/DB/Movement/InvertVelocity.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
+#include "Effects/DB/NPC/Cardamine.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
@@ -261,6 +262,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(PlanetOfTheApes);
     Ef(MultiplayerExperience);
     Ef(Wanted);
+    Ef(Cardamine);
 
     // Visual
     Ef(QuakeFov);
