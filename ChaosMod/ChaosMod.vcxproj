@@ -230,7 +230,9 @@
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
+    <ClInclude Include="Effects\DB\NPC\SwissDiplomacy.hpp" />
     <ClInclude Include="Effects\DB\NPC\Wanted.hpp" />
+    <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
     <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />

@@ -38,7 +38,9 @@
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
+#include "Effects/DB/NPC/SwissDiplomacy.hpp"
 #include "Effects/DB/NPC/Wanted.hpp"
+#include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
 #include "Effects/DB/NPC/YouAreFamous.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
@@ -266,6 +268,8 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Wanted);
     Ef(Cardamine);
     Ef(YouAreFamous);
+    Ef(XenosAreMyFriendsNow);
+    Ef(SwissDiplomacy);
 
     // Visual
     Ef(QuakeFov);
