@@ -37,6 +37,7 @@
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
+#include "Effects/DB/NPC/Wanted.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
@@ -259,6 +260,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IAmRobot);
     Ef(PlanetOfTheApes);
     Ef(MultiplayerExperience);
+    Ef(Wanted);
 
     // Visual
     Ef(QuakeFov);

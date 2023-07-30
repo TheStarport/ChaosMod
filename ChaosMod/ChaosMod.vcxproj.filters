@@ -313,6 +313,9 @@
     <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\Wanted.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
