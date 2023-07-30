@@ -736,35 +736,8 @@ void SetCursorPosition(int x, int y)
     SetConsoleCursorPosition(hOut, coord);
 }
 
-int line = 0;
-DrawingHelper* dxDrawing;
-ID3DXFont* pFont;
-
-void WriteText(const std::string& text)
-{
-    dxDrawing->String(50, 20 * (line + 1) + 60, D3DCOLOR_RGBA(255, 255, 255, 255), pFont, true, (char*)text.c_str());
-    SetCursorPosition(0, line++);
-    std::cout << text << "                                                                               ";
-}
-
 HRESULT STDMETHODCALLTYPE Direct3DDevice8::EndScene()
 {
-    if (!pFont)
-    {
-        D3DXCreateFont(ProxyInterface,
-                       18,
-                       0,
-                       FW_NORMAL,
-                       0,
-                       FALSE,
-                       DEFAULT_CHARSET,
-                       OUT_DEFAULT_PRECIS,
-                       DEFAULT_QUALITY,
-                       DEFAULT_PITCH | FF_DONTCARE,
-                       TEXT("Arial"),
-                       &pFont);
-    }
-
     POINT point;
     GetCursorPos(&point);
     ScreenToClient(hwnd, &point);
@@ -775,9 +748,10 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::EndScene()
 
     ::ShowCursor(true);
 
-    UiManager::i()->Render();
+    // DrawingHelper::i()->GradientBox(0, 0, 1000, 1000, D3DCOLOR_RGBA(0, 0, 0, 255), D3DCOLOR_XRGB(255, 255, 255), true);
 
-    line = 0;
+    DrawingHelper::i()->Draw();
+    UiManager::i()->Render();
 
     return ProxyInterface->EndScene();
 }

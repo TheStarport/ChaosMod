@@ -49,6 +49,7 @@
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
+#include "Effects/DB/Visual/Screensaver.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -268,6 +269,7 @@ void ChaosTimer::RegisterAllEffects()
 
     // Visual
     Ef(QuakeFov);
+    Ef(Screensaver);
 
 #undef Ef
 }
