@@ -51,6 +51,7 @@
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
+#include "Effects/DB/StatManipulation/Zoomies.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "UiManager.hpp"
@@ -240,6 +241,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(CaveatEmptor);
     Ef(CoolantLeak);
     Ef(DemolitionDerby);
+    Ef(Zoomies);
 
     // Meta
     Ef(BoxOfChocolates);

@@ -112,6 +112,10 @@ void RequiredMemEdits()
     Utils::Memory::WriteProcMem(0x574b91 + 1, bypassSpChecks.data(), 1);
     Utils::Memory::WriteProcMem(0x574c43 + 1, bypassSpChecks.data(), 1);
     Utils::Memory::WriteProcMem(0x574f74 + 1, bypassSpChecks.data(), 1);
+
+    // Remove cruise speed display limit
+    std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
+    Utils::Memory::WriteProcMem(0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
 }
 
 void* ScriptLoadHook(const char* script)
