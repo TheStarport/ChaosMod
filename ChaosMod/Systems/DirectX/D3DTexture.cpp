@@ -8,14 +8,14 @@ Direct3DTexture8::Direct3DTexture8(Direct3DDevice8* Device, IDirect3DTexture9* P
 }
 Direct3DTexture8::~Direct3DTexture8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DTexture8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DTexture8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown) || riid == __uuidof(Direct3DResource8) || riid == __uuidof(Direct3DBaseTexture8))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown) || rid == __uuidof(Direct3DResource8) || rid == __uuidof(Direct3DBaseTexture8))
     {
         AddRef();
         *ppvObj = this;
@@ -23,10 +23,10 @@ HRESULT STDMETHODCALLTYPE Direct3DTexture8::QueryInterface(REFIID riid, void** p
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;
@@ -117,14 +117,14 @@ Direct3DCubeTexture8::Direct3DCubeTexture8(Direct3DDevice8* device, IDirect3DCub
 }
 Direct3DCubeTexture8::~Direct3DCubeTexture8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DCubeTexture8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DCubeTexture8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown) || riid == __uuidof(Direct3DResource8) || riid == __uuidof(Direct3DBaseTexture8))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown) || rid == __uuidof(Direct3DResource8) || rid == __uuidof(Direct3DBaseTexture8))
     {
         AddRef();
         *ppvObj = this;
@@ -132,10 +132,10 @@ HRESULT STDMETHODCALLTYPE Direct3DCubeTexture8::QueryInterface(REFIID riid, void
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;
@@ -230,14 +230,14 @@ Direct3DVolumeTexture8::Direct3DVolumeTexture8(Direct3DDevice8* device, IDirect3
 }
 Direct3DVolumeTexture8::~Direct3DVolumeTexture8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DVolumeTexture8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DVolumeTexture8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown) || riid == __uuidof(Direct3DResource8) || riid == __uuidof(Direct3DBaseTexture8))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown) || rid == __uuidof(Direct3DResource8) || rid == __uuidof(Direct3DBaseTexture8))
     {
         AddRef();
         *ppvObj = this;
@@ -245,10 +245,10 @@ HRESULT STDMETHODCALLTYPE Direct3DVolumeTexture8::QueryInterface(REFIID riid, vo
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;

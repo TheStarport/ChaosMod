@@ -7,7 +7,7 @@ class SelfDestruct final : public ActiveEffect
         {
             if (const CShip* ship = Utils::GetCShip())
             {
-                pub::SpaceObj::Destroy(ship->iID, FUSE);
+                pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
             }
         }
 

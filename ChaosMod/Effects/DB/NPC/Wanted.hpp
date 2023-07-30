@@ -22,7 +22,7 @@ class Wanted final : public ActiveEffect
                     int reputation;
                     pub::Player::GetRep(1, reputation);
                     int npcReputation;
-                    pub::SpaceObj::GetRep(npc->iID, npcReputation);
+                    pub::SpaceObj::GetRep(npc->id, npcReputation);
                     pub::Reputation::SetAttitude(npcReputation, reputation, -0.9f);
                 });
         }

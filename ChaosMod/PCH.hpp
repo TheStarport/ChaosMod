@@ -29,11 +29,9 @@ using u64 = unsigned long long;
 #include <unordered_set>
 #include <vector>
 
-#include <FLCoreDALib.h>
-#include <FLCoreServer.h>
-
-#pragma comment(lib, "flcoreserver.lib")
-#pragma comment(lib, "flcoredalib.lib")
+#include <flhook-sdk/include/FLCore/FLCoreCommon.h>
+#include <flhook-sdk/include/FLCore/FLCoreDALib.h>
+#include <flhook-sdk/include/FLCore/FLCoreServer.h>
 
 #include "../Utils.hpp"
 #include "Utilities/Detour.hpp"

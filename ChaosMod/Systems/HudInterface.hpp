@@ -40,7 +40,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
         HRESULT result = NOERROR;
 
     public:
-        HRESULT __stdcall QueryInterface(const IID& riid, LPVOID* ppvObj) override
+        HRESULT __stdcall QueryInterface(const IID& rid, LPVOID* ppvObj) override
         {
             // Always set out parameter to NULL, validating it first.
             if (!ppvObj)
@@ -48,7 +48,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
                 return E_INVALIDARG;
             }
             *ppvObj = nullptr;
-            if (riid == __uuidof(IHud) || riid == __uuidof(PointerHandler))
+            if (rid == __uuidof(IHud) || rid == __uuidof(PointerHandler))
             {
                 // Increment the reference count and return the pointer.
                 *ppvObj = static_cast<LPVOID>(this);

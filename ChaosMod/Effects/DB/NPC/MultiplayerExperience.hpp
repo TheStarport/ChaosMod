@@ -69,7 +69,7 @@ class MultiplayerExperience final : public ActiveEffect
                 const auto line = lines[Random::i()->Uniform(0u, lines.size() - 1)];
 
                 int rep;
-                pub::SpaceObj::GetRep(ship->iID, rep);
+                pub::SpaceObj::GetRep(ship->id, rep);
                 FmtStr name1(0, nullptr);
                 FmtStr name2(0, nullptr);
                 const ushort* str = nullptr;

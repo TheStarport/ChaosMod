@@ -32,15 +32,11 @@ class IAmFiringMyLasers final : public ActiveEffect
 
                         const auto range = launcher->GetMunitionRange();
                         Vector target = launcher->GetBarrelDirWS(0);
-                        const auto [x, y, z] = launcher->GetBarrelPosWS(0);
-                        target.x *= range;
-                        target.x += x;
-                        target.y *= range;
-                        target.y += y;
-                        target.z *= range;
-                        target.z += z;
+                        const auto pos = launcher->GetBarrelPosWS(0);
+                        target += range;
+                        target = target + pos;
 
-                        if (!launcher->RefireDelayElapsed() && launcher->CanFire(target))
+                        if (!launcher->RefireDelayElapsed() || launcher->CanFire(target) != FireResult::Success)
                         {
                             equip = GetEquipManager(ship)->Traverse(tr);
                             continue;

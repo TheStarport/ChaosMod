@@ -14,14 +14,14 @@ AddressLookupTable::~AddressLookupTable()
     }
 }
 
-void GenericQueryInterface(REFIID riid, LPVOID* ppvObj, Direct3DDevice8* pDevice)
+void GenericQueryInterface(REFIID rid, LPVOID* ppvObj, Direct3DDevice8* pDevice)
 {
     if (ppvObj == nullptr || *ppvObj == nullptr || pDevice == nullptr)
     {
         return;
     }
 
-    if (riid == __uuidof(Direct3D8))
+    if (rid == __uuidof(Direct3D8))
     {
         Direct3D8* pD3D8 = nullptr;
         if (SUCCEEDED(pDevice->GetDirect3D(&pD3D8)) && pD3D8)
@@ -32,14 +32,14 @@ void GenericQueryInterface(REFIID riid, LPVOID* ppvObj, Direct3DDevice8* pDevice
         }
     }
 
-    if (riid == __uuidof(Direct3DDevice8))
+    if (rid == __uuidof(Direct3DDevice8))
     {
         *ppvObj = pDevice;
         return;
     }
 
 #define QUERY_INTERFACE(x)                                                   \
-    if (riid == __uuidof(x))                                                 \
+    if (rid == __uuidof(x))                                                 \
     {                                                                        \
         *ppvObj = pDevice->ProxyAddressLookupTable->FindAddress<x>(*ppvObj); \
         return;                                                              \
@@ -55,47 +55,47 @@ void GenericQueryInterface(REFIID riid, LPVOID* ppvObj, Direct3DDevice8* pDevice
     QUERY_INTERFACE(Direct3DSwapChain8);
 }
 
-REFIID ConvertREFIID(REFIID riid)
+REFIID ConvertREFIID(REFIID rid)
 {
-    if (riid == __uuidof(Direct3D8))
+    if (rid == __uuidof(Direct3D8))
     {
         return IID_IDirect3D9;
     }
-    if (riid == __uuidof(Direct3DDevice8))
+    if (rid == __uuidof(Direct3DDevice8))
     {
         return IID_IDirect3DDevice9;
     }
-    if (riid == __uuidof(Direct3DTexture8))
+    if (rid == __uuidof(Direct3DTexture8))
     {
         return IID_IDirect3DTexture9;
     }
-    if (riid == __uuidof(Direct3DCubeTexture8))
+    if (rid == __uuidof(Direct3DCubeTexture8))
     {
         return IID_IDirect3DCubeTexture9;
     }
-    if (riid == __uuidof(Direct3DVolumeTexture8))
+    if (rid == __uuidof(Direct3DVolumeTexture8))
     {
         return IID_IDirect3DVolumeTexture9;
     }
-    if (riid == __uuidof(Direct3DVertexBuffer8))
+    if (rid == __uuidof(Direct3DVertexBuffer8))
     {
         return IID_IDirect3DVertexBuffer9;
     }
-    if (riid == __uuidof(Direct3DIndexBuffer8))
+    if (rid == __uuidof(Direct3DIndexBuffer8))
     {
         return IID_IDirect3DIndexBuffer9;
     }
-    if (riid == __uuidof(Direct3DSurface8))
+    if (rid == __uuidof(Direct3DSurface8))
     {
         return IID_IDirect3DSurface9;
     }
-    if (riid == __uuidof(Direct3DVolume8))
+    if (rid == __uuidof(Direct3DVolume8))
     {
         return IID_IDirect3DVolume9;
     }
-    if (riid == __uuidof(Direct3DSwapChain8))
+    if (rid == __uuidof(Direct3DSwapChain8))
     {
         return IID_IDirect3DSwapChain9;
     }
-    return riid;
+    return rid;
 }

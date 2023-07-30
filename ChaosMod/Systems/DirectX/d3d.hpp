@@ -34,7 +34,7 @@ class Direct3D8 : public IUnknown
 
         IDirect3D9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -69,7 +69,6 @@ class Direct3DDevice8 : public IUnknown
 {
         Direct3DDevice8(const Direct3DDevice8&) = delete;
         Direct3DDevice8& operator=(const Direct3DDevice8&) = delete;
-        DXDrawing* drawing;
         HWND hwnd;
 
     public:
@@ -78,7 +77,7 @@ class Direct3DDevice8 : public IUnknown
 
         IDirect3DDevice9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -225,7 +224,7 @@ class Direct3DSwapChain8 : public IUnknown, public AddressLookupTableObject
 
         IDirect3DSwapChain9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -268,7 +267,7 @@ class Direct3DTexture8 : public Direct3DBaseTexture8, public AddressLookupTableO
 
         IDirect3DTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -306,7 +305,7 @@ class Direct3DCubeTexture8 : public Direct3DBaseTexture8, public AddressLookupTa
 
         IDirect3DCubeTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -344,7 +343,7 @@ class Direct3DVolumeTexture8 : public Direct3DBaseTexture8, public AddressLookup
 
         IDirect3DVolumeTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -383,7 +382,7 @@ class Direct3DSurface8 : public IUnknown, public AddressLookupTableObject
 
         IDirect3DSurface9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -391,7 +390,7 @@ class Direct3DSurface8 : public IUnknown, public AddressLookupTableObject
         virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData);
         virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid);
-        virtual HRESULT STDMETHODCALLTYPE GetContainer(REFIID riid, void** ppContainer);
+        virtual HRESULT STDMETHODCALLTYPE GetContainer(REFIID rid, void** ppContainer);
         virtual HRESULT STDMETHODCALLTYPE GetDesc(D3DSURFACE_DESC8* pDesc);
         virtual HRESULT STDMETHODCALLTYPE LockRect(D3DLOCKED_RECT* pLockedRect, const RECT* pRect, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE UnlockRect();
@@ -412,7 +411,7 @@ class Direct3DVolume8 : public IUnknown, public AddressLookupTableObject
 
         IDirect3DVolume9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -420,7 +419,7 @@ class Direct3DVolume8 : public IUnknown, public AddressLookupTableObject
         virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData);
         virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid);
-        virtual HRESULT STDMETHODCALLTYPE GetContainer(REFIID riid, void** ppContainer);
+        virtual HRESULT STDMETHODCALLTYPE GetContainer(REFIID rid, void** ppContainer);
         virtual HRESULT STDMETHODCALLTYPE GetDesc(D3DVOLUME_DESC8* pDesc);
         virtual HRESULT STDMETHODCALLTYPE LockBox(D3DLOCKED_BOX* pLockedVolume, const D3DBOX* pBox, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE UnlockBox();
@@ -441,7 +440,7 @@ class Direct3DVertexBuffer8 : public Direct3DResource8, public AddressLookupTabl
 
         IDirect3DVertexBuffer9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -474,7 +473,7 @@ class Direct3DIndexBuffer8 : public Direct3DResource8, public AddressLookupTable
 
         IDirect3DIndexBuffer9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) override;
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
         virtual ULONG STDMETHODCALLTYPE AddRef() override;
         virtual ULONG STDMETHODCALLTYPE Release() override;
 
@@ -607,8 +606,8 @@ struct AddressLookupTable::AddressCacheIndex<Direct3DSwapChain8>
         typedef IDirect3DSwapChain9 Type9;
 };
 
-void GenericQueryInterface(REFIID riid, LPVOID* ppvObj, class Direct3DDevice8* pDevice);
+void GenericQueryInterface(REFIID rid, LPVOID* ppvObj, class Direct3DDevice8* pDevice);
 
-REFIID ConvertREFIID(REFIID riid);
+REFIID ConvertREFIID(REFIID rid);
 
 extern IDirect3DDevice9* device;

@@ -12,14 +12,12 @@ class YouSpinMeRightRound final : public ActiveEffect
 
         void Update(float delta) override
         {
-            const auto ship = Utils::GetCShip();
-            if (ship)
+            if (const auto ship = Utils::GetCShip())
             {
-                const auto directive = ship->get_behavior_interface()->get_current_directive();
-                if (const auto op = directive->op; op == pub::AI::OP_TYPE::M_DOCK || op == pub::AI::OP_TYPE::M_FACE)
                 {
-                    const auto newOp = pub::AI::DirectiveIdleOp();
-                    ship->get_behavior_interface()->set_current_directive(*directive, &newOp);
+                    auto newOp = pub::AI::DirectiveIdleOp();
+                    newOp.fireWeapons = 0;
+                    pub::AI::SubmitDirective(ship->id, &newOp);
                 }
             }
         }

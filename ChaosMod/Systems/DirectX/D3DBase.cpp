@@ -34,14 +34,14 @@ Direct3D8::Direct3D8(IDirect3D9* ProxyInterface)
 }
 Direct3D8::~Direct3D8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3D8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3D8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown))
     {
         AddRef();
         *ppvObj = this;
@@ -49,7 +49,7 @@ HRESULT STDMETHODCALLTYPE Direct3D8::QueryInterface(REFIID riid, void** ppvObj)
         return S_OK;
     }
 
-    return ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    return ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
 }
 ULONG STDMETHODCALLTYPE Direct3D8::AddRef() { return ProxyInterface->AddRef(); }
 ULONG STDMETHODCALLTYPE Direct3D8::Release()

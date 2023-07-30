@@ -1,18 +1,6 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
-#include <FLCoreDefs.h>
-#include <Windows.h>
-#include <algorithm>
-#include <cctype>
-#include <chrono>
-#include <cmath>
-#include <functional>
-#include <locale>
-#include <random>
-#include <sstream>
-
-#include <FLCoreCommon.h>
 
 #define RadToDeg(x, xx) static_cast<float>(((x / xx) * (180 / M_PI)))
 

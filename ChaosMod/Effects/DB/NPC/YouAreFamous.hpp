@@ -21,14 +21,14 @@ class YouAreFamous final : public ActiveEffect
                     }
 
                     auto newOp = pub::AI::DirectiveGotoOp();
-                    newOp.iGotoType = 0;
-                    newOp.ship_moves1 = true;
-                    newOp.ship_moves2 = true;
-                    newOp.goto_cruise = true;
-                    newOp.iTargetID = ship->iID;
-                    newOp.fRange = 1.0f;
-                    newOp.fThrust = -1.0f;
-                    pub::AI::SubmitDirective(npc->iID, &newOp);
+                    newOp.gotoType = 0;
+                    newOp.shipMoves = true;
+                    newOp.shipMoves2 = true;
+                    newOp.goToCruise = true;
+                    newOp.targetId = ship->id;
+                    newOp.range = 1.0f;
+                    newOp.thrust = -1.0f;
+                    pub::AI::SubmitDirective(npc->id, &newOp);
                 });
         }
 

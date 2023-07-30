@@ -12,9 +12,9 @@ class RandomisedProjectiles final : public ActiveEffect
         {
             auto arch = equip->archetype;
 
-            if (std::ranges::find_if(gunsToOriginalProjectiles, [arch](auto& pair) { return pair.first == arch->iArchID; }) == gunsToOriginalProjectiles.end())
+            if (std::ranges::find_if(gunsToOriginalProjectiles, [arch](auto& pair) { return pair.first == arch->archId; }) == gunsToOriginalProjectiles.end())
             {
-                gunsToOriginalProjectiles.emplace_back(arch->iArchID, dynamic_cast<Archetype::Launcher*>(arch)->iProjectileArchID);
+                gunsToOriginalProjectiles.emplace_back(arch->archId, dynamic_cast<Archetype::Launcher*>(arch)->projectileArchId);
             }
 
             const uint hash = possibleProjectiles[Random::i()->Uniform(0u, possibleProjectiles.size() - 1)];

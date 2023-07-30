@@ -37,7 +37,7 @@ class Screaming final : public ActiveEffect
 
                     ID_String voiceLine{};
                     voiceLine.id = line;
-                    pub::SpaceObj::SendComm(ship->iID, ship->iID, voice, nullptr, 0, reinterpret_cast<uint*>(&voiceLine), 9, 19009, 1.0f, true);
+                    pub::SpaceObj::SendComm(ship->id, ship->id, voice, nullptr, 0, reinterpret_cast<uint*>(&voiceLine), 9, 19009, 1.0f, true);
                 }
             }
         }

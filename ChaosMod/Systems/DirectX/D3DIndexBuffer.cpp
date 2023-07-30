@@ -8,14 +8,14 @@ Direct3DIndexBuffer8::Direct3DIndexBuffer8(Direct3DDevice8* Device, IDirect3DInd
 }
 Direct3DIndexBuffer8::~Direct3DIndexBuffer8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DIndexBuffer8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DIndexBuffer8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown) || riid == __uuidof(Direct3DResource8))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown) || rid == __uuidof(Direct3DResource8))
     {
         AddRef();
         *ppvObj = this;
@@ -23,10 +23,10 @@ HRESULT STDMETHODCALLTYPE Direct3DIndexBuffer8::QueryInterface(REFIID riid, void
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;

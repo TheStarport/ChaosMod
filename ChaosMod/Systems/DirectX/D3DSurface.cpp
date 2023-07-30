@@ -8,14 +8,14 @@ Direct3DSurface8::Direct3DSurface8(Direct3DDevice8* Device, IDirect3DSurface9* P
 }
 Direct3DSurface8::~Direct3DSurface8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DSurface8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DSurface8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown))
     {
         AddRef();
         *ppvObj = this;
@@ -23,10 +23,10 @@ HRESULT STDMETHODCALLTYPE Direct3DSurface8::QueryInterface(REFIID riid, void** p
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;
@@ -56,12 +56,12 @@ HRESULT STDMETHODCALLTYPE Direct3DSurface8::GetPrivateData(REFGUID refguid, void
     return ProxyInterface->GetPrivateData(refguid, pData, pSizeOfData);
 }
 HRESULT STDMETHODCALLTYPE Direct3DSurface8::FreePrivateData(REFGUID refguid) { return ProxyInterface->FreePrivateData(refguid); }
-HRESULT STDMETHODCALLTYPE Direct3DSurface8::GetContainer(REFIID riid, void** ppContainer)
+HRESULT STDMETHODCALLTYPE Direct3DSurface8::GetContainer(REFIID rid, void** ppContainer)
 {
-    const HRESULT hr = ProxyInterface->GetContainer(ConvertREFIID(riid), ppContainer);
+    const HRESULT hr = ProxyInterface->GetContainer(ConvertREFIID(rid), ppContainer);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppContainer, Device);
+        GenericQueryInterface(rid, ppContainer, Device);
     }
 
     return hr;

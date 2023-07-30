@@ -3,8 +3,6 @@
 
 #include "Effects/ActiveEffect.hpp"
 
-#include <FLCoreDALib.h>
-
 class FlappyArchitecture final : public ActiveEffect
 {
         struct AnimationData
@@ -96,7 +94,7 @@ class FlappyArchitecture final : public ActiveEffect
                         for (auto& dock : validDockingTargets)
                         {
                             const int id = DALib::Anim->Open(
-                                solar->get_archetype()->anim, solar->iDunnoEngineObject1, dock, 0, 0); // NOLINT(bugprone-narrowing-conversions)
+                                solar->get_archetype()->anim, solar->dunnoEngineObject1, dock, 0, 0); // NOLINT(bugprone-narrowing-conversions)
 
                             if (id == -1)
                             {

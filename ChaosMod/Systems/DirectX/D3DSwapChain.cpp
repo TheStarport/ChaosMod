@@ -8,14 +8,14 @@ Direct3DSwapChain8::Direct3DSwapChain8(Direct3DDevice8* Device, IDirect3DSwapCha
 }
 Direct3DSwapChain8::~Direct3DSwapChain8() {}
 
-HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown))
     {
         AddRef();
         *ppvObj = this;
@@ -23,10 +23,10 @@ HRESULT STDMETHODCALLTYPE Direct3DSwapChain8::QueryInterface(REFIID riid, void**
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, Device);
+        GenericQueryInterface(rid, ppvObj, Device);
     }
 
     return hr;

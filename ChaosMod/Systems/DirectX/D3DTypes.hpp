@@ -35,7 +35,7 @@ typedef interface ID3DXSprite* LPD3DXSprite;
 DECLARE_INTERFACE_(ID3DXBuffer, IUnknown)
 {
 	// IUnknown
-	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID * ppv) PURE;
+	STDMETHOD(QueryInterface)(THIS_ REFIID id, LPVOID * ppv) PURE;
 	STDMETHOD_(ULONG, AddRef)(THIS) PURE;
 	STDMETHOD_(ULONG, Release)(THIS) PURE;
 

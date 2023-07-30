@@ -18,7 +18,7 @@ class SpectatorMode final : public ActiveEffect
             {
                 EquipDesc e;
                 equip->GetEquipDesc(e);
-                uint q = e.iArchID;
+                uint q = e.archId;
                 if (CECloakingDevice::cast(equip))
                 {
                     equip->Activate(state);

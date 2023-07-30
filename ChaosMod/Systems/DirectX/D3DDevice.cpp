@@ -21,7 +21,7 @@ Direct3DDevice8::Direct3DDevice8(Direct3D8* d3d, IDirect3DDevice9* ProxyInterfac
     Direct3DDevice8::ProxyInterface = ProxyInterface;
     ProxyAddressLookupTable = new AddressLookupTable(this);
     PaletteFlag = SupportsPalettes();
-    drawing = new DXDrawing(ProxyInterface);
+    DrawingHelper::i()->SetDevice(ProxyInterface);
 
     D3DDEVICE_CREATION_PARAMETERS params;
     ProxyInterface->GetCreationParameters(&params);
@@ -31,14 +31,14 @@ Direct3DDevice8::Direct3DDevice8(Direct3D8* d3d, IDirect3DDevice9* ProxyInterfac
 }
 Direct3DDevice8::~Direct3DDevice8() { delete ProxyAddressLookupTable; }
 
-HRESULT STDMETHODCALLTYPE Direct3DDevice8::QueryInterface(REFIID riid, void** ppvObj)
+HRESULT STDMETHODCALLTYPE Direct3DDevice8::QueryInterface(REFIID rid, void** ppvObj)
 {
     if (ppvObj == nullptr)
     {
         return E_POINTER;
     }
 
-    if (riid == __uuidof(this) || riid == __uuidof(IUnknown))
+    if (rid == __uuidof(this) || rid == __uuidof(IUnknown))
     {
         AddRef();
         *ppvObj = this;
@@ -46,10 +46,10 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::QueryInterface(REFIID riid, void** pp
         return S_OK;
     }
 
-    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(riid), ppvObj);
+    const HRESULT hr = ProxyInterface->QueryInterface(ConvertREFIID(rid), ppvObj);
     if (SUCCEEDED(hr))
     {
-        GenericQueryInterface(riid, ppvObj, this);
+        GenericQueryInterface(rid, ppvObj, this);
     }
 
     return hr;
@@ -737,7 +737,7 @@ void SetCursorPosition(int x, int y)
 }
 
 int line = 0;
-DXDrawing* dxDrawing;
+DrawingHelper* dxDrawing;
 ID3DXFont* pFont;
 
 void WriteText(const std::string& text)
@@ -765,8 +765,6 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::EndScene()
                        &pFont);
     }
 
-    // This shit has to go here because the frame hook actually disables itself in some menus
-    // for some fucking reason
     POINT point;
     GetCursorPos(&point);
     ScreenToClient(hwnd, &point);
@@ -780,7 +778,6 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::EndScene()
     UiManager::i()->Render();
 
     line = 0;
-    dxDrawing = this->drawing;
 
     return ProxyInterface->EndScene();
 }

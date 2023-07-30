@@ -30,8 +30,8 @@
 __interface MIDL_INTERFACE_NEW("00000000-0000-0000-C000-000000000046") IUnknownRedef
 {
 public:
-    // In QueryInterace riid ( * 16 bytes passed) must be compared against IHud riid (16 bytes) and when matches do return a pointer at IHud vmt.
-    virtual HRESULT __stdcall QueryInterface(REFIID riid, LPVOID * ppvObj);
+    // In QueryInterace rid ( * 16 bytes passed) must be compared against IHud rid (16 bytes) and when matches do return a pointer at IHud vmt.
+    virtual HRESULT __stdcall QueryInterface(REFIID rid, LPVOID * ppvObj);
     // Nah, easy way is create global variable of the object class and return -1 in this method
     virtual int __stdcall _AddRef();
     // As per above

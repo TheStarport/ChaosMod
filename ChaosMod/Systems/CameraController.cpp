@@ -15,21 +15,21 @@ int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float in
     const auto in = i();
     if (in->fovOverride != 0.0f)
     {
-        camera->fFovX = in->fovOverride;
-        camera->fFovY = in->fovOverride / FovRatio;
-        camera->fSinFovX = std::sinf(in->fovOverride);
-        camera->fSinFovY = std::sinf(in->fovOverride / FovRatio);
-        camera->fCosFovX = std::cosf(in->fovOverride);
-        camera->fCosFovY = std::cosf(in->fovOverride / FovRatio);
+        camera->fovX = in->fovOverride;
+        camera->fovY = in->fovOverride / FovRatio;
+        camera->sinFovX = std::sinf(in->fovOverride);
+        camera->sinFovY = std::sinf(in->fovOverride / FovRatio);
+        camera->cosFovX = std::cosf(in->fovOverride);
+        camera->cosFovY = std::cosf(in->fovOverride / FovRatio);
     }
     else
     {
-        camera->fFovX = DefaultXFov;
-        camera->fFovY = DefaultYFov;
-        camera->fSinFovX = std::sinf(DefaultXFov);
-        camera->fSinFovY = std::sinf(DefaultYFov);
-        camera->fCosFovX = std::cosf(DefaultXFov);
-        camera->fCosFovY = std::cosf(DefaultYFov);
+        camera->fovX = DefaultXFov;
+        camera->fovY = DefaultYFov;
+        camera->sinFovX = std::sinf(DefaultXFov);
+        camera->sinFovY = std::sinf(DefaultYFov);
+        camera->cosFovX = std::cosf(DefaultXFov);
+        camera->cosFovY = std::cosf(DefaultYFov);
     }
 
     chaseCameraDetour->UnDetour();
@@ -43,21 +43,21 @@ int __fastcall CameraController::TurretCamera(Camera* camera, void* edx, float i
     const auto in = i();
     if (in->fovOverride != 0.0f)
     {
-        camera->fFovX = in->fovOverride;
-        camera->fFovY = in->fovOverride / FovRatio;
-        camera->fSinFovX = std::sinf(in->fovOverride);
-        camera->fSinFovY = std::sinf(in->fovOverride / FovRatio);
-        camera->fCosFovX = std::cosf(in->fovOverride);
-        camera->fCosFovY = std::cosf(in->fovOverride / FovRatio);
+        camera->fovX = in->fovOverride;
+        camera->fovY = in->fovOverride / FovRatio;
+        camera->sinFovX = std::sinf(in->fovOverride);
+        camera->sinFovY = std::sinf(in->fovOverride / FovRatio);
+        camera->cosFovX = std::cosf(in->fovOverride);
+        camera->cosFovY = std::cosf(in->fovOverride / FovRatio);
     }
     else
     {
-        camera->fFovX = DefaultXFov;
-        camera->fFovY = DefaultYFov;
-        camera->fSinFovX = std::sinf(DefaultXFov);
-        camera->fSinFovY = std::sinf(DefaultYFov);
-        camera->fCosFovX = std::cosf(DefaultXFov);
-        camera->fCosFovY = std::cosf(DefaultYFov);
+        camera->fovX = DefaultXFov;
+        camera->fovY = DefaultYFov;
+        camera->sinFovX = std::sinf(DefaultXFov);
+        camera->sinFovY = std::sinf(DefaultYFov);
+        camera->cosFovX = std::cosf(DefaultXFov);
+        camera->cosFovY = std::cosf(DefaultYFov);
     }
 
     turretCameraDetour->UnDetour();
@@ -71,21 +71,21 @@ int __fastcall CameraController::CockpitCamera(Camera* camera, void* edx, float 
     const auto in = i();
     if (in->fovOverride != 0.0f)
     {
-        camera->fFovX = in->fovOverride;
-        camera->fFovY = in->fovOverride / FovRatio;
-        camera->fSinFovX = std::sinf(in->fovOverride);
-        camera->fSinFovY = std::sinf(in->fovOverride / FovRatio);
-        camera->fCosFovX = std::cosf(in->fovOverride);
-        camera->fCosFovY = std::cosf(in->fovOverride / FovRatio);
+        camera->fovX = in->fovOverride;
+        camera->fovY = in->fovOverride / FovRatio;
+        camera->sinFovX = std::sinf(in->fovOverride);
+        camera->sinFovY = std::sinf(in->fovOverride / FovRatio);
+        camera->cosFovX = std::cosf(in->fovOverride);
+        camera->cosFovY = std::cosf(in->fovOverride / FovRatio);
     }
     else
     {
-        camera->fFovX = DefaultXFov;
-        camera->fFovY = DefaultYFov;
-        camera->fSinFovX = std::sinf(DefaultXFov);
-        camera->fSinFovY = std::sinf(DefaultYFov);
-        camera->fCosFovX = std::cosf(DefaultXFov);
-        camera->fCosFovY = std::cosf(DefaultYFov);
+        camera->fovX = DefaultXFov;
+        camera->fovY = DefaultYFov;
+        camera->sinFovX = std::sinf(DefaultXFov);
+        camera->sinFovY = std::sinf(DefaultYFov);
+        camera->cosFovX = std::cosf(DefaultXFov);
+        camera->cosFovY = std::cosf(DefaultYFov);
     }
 
     cockpitCameraDetour->UnDetour();
