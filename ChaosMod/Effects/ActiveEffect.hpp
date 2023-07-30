@@ -2,15 +2,15 @@
 
 enum class EffectType
 {
-    Visual,
-    Interface,
-    Movement,
-    Teleport,
     Audio,
-    StatManipulation,
+    Interface,
     Meta,
     Misc,
+    Movement,
     Npc,
+    StatManipulation,
+    Teleport,
+    Visual,
 };
 
 class ActiveEffect
