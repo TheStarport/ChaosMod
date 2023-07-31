@@ -54,6 +54,7 @@
 #include "Effects/DB/StatManipulation/Zoomies.hpp"
 #include "Effects/DB/Visual/HomageToElite.hpp"
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
+#include "Effects/DB/Visual/PortraitMode.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
@@ -284,6 +285,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(HomageToElite);
     Ef(PartyLikeIts95);
     Ef(SleepyPlayer);
+    Ef(PortraitMode);
 
 #undef Ef
 }

@@ -245,6 +245,7 @@
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Zoomies.hpp" />
     <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
+    <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp" />
     <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
     <ClInclude Include="Effects\DB\Visual\Screensaver.hpp" />
     <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
