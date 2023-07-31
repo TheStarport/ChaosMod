@@ -247,6 +247,7 @@
     <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
     <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
     <ClInclude Include="Effects\DB\Visual\Screensaver.hpp" />
+    <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\CameraController.hpp" />

@@ -435,6 +435,18 @@ class DrawingHelper final : public Singleton<DrawingHelper>
             }
         }
 
+        void SetTextureStageState(int stage, const D3DTEXTURESTAGESTATETYPE textureType, DWORD value, const bool before)
+        {
+            if (before)
+            {
+                device->SetTextureStageState(stage, textureType, value);
+            }
+            else
+            {
+                awaitingCalls.emplace_back([this, stage, textureType, value] { device->SetTextureStageState(stage, textureType, value); });
+            }
+        }
+
         [[nodiscard]]
         glm::vec2 GetResolution() const
         {

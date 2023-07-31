@@ -53,6 +53,7 @@
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "Effects/DB/StatManipulation/Zoomies.hpp"
 #include "Effects/DB/Visual/HomageToElite.hpp"
+#include "Effects/DB/Visual/PartyLikeIts95.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "UiManager.hpp"
@@ -280,6 +281,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(QuakeFov);
     Ef(Screensaver);
     Ef(HomageToElite);
+    Ef(PartyLikeIts95);
 
 #undef Ef
 }

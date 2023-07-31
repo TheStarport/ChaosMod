@@ -16,6 +16,9 @@ enum class AddressTable : DWORD
     TotalBarWidth = 0x1D7E58,
 
     // Visual
+    MaxDrawDistanceBases = 0x213EC8,
+    MaxDrawDistancePlanets = 0x014053, // Rendcomp.dll
+    MaxDrawDistanceShips = 0x1C8910,
 
     // Other
     TradelaneSpeed = 0x13F3CC,
