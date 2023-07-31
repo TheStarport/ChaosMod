@@ -226,7 +226,14 @@ UiManager::UiManager()
 UiManager::~UiManager()
 {
     ImGui_ImplWin32_Shutdown();
-    ImGui_ImplDX9_Shutdown();
+
+    // Clear buffer
+    auto io = ImGui::GetIO();
+    io.BackendRendererName = nullptr;
+    io.BackendRendererUserData = nullptr;
+    io.BackendFlags &= ~ImGuiBackendFlags_RendererHasVtxOffset;
+    IM_DELETE(io.BackendRendererUserData);
+
     ImGui::DestroyContext(context);
 }
 
