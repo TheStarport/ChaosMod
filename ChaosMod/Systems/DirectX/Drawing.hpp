@@ -423,6 +423,18 @@ class DrawingHelper final : public Singleton<DrawingHelper>
 
         void SetDevice(IDirect3DDevice9* dev) { device = dev; }
 
+        void SetRenderState(D3DRENDERSTATETYPE renderState, DWORD value, bool before)
+        {
+            if (before)
+            {
+                device->SetRenderState(renderState, value);
+            }
+            else
+            {
+                awaitingCalls.emplace_back([this, renderState, value] { device->SetRenderState(renderState, value); });
+            }
+        }
+
         [[nodiscard]]
         glm::vec2 GetResolution() const
         {

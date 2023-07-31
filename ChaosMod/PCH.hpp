@@ -40,3 +40,5 @@ using u64 = unsigned long long;
 #include "Utilities/Random.hpp"
 
 void Log(const std::string& log);
+
+void SetWireFrames();
