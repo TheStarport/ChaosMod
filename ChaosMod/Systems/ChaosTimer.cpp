@@ -56,6 +56,7 @@
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
+#include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -282,6 +283,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(Screensaver);
     Ef(HomageToElite);
     Ef(PartyLikeIts95);
+    Ef(SleepyPlayer);
 
 #undef Ef
 }
