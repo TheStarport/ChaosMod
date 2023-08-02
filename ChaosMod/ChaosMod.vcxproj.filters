@@ -349,6 +349,9 @@
     <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp">
       <Filter>Effects\DB\Visual</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

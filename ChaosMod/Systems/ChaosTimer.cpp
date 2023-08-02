@@ -52,6 +52,7 @@
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "Effects/DB/StatManipulation/Zoomies.hpp"
+#include "Effects/DB/Visual/AllWeKnowIsThatThereWereTwoSides.hpp"
 #include "Effects/DB/Visual/HomageToElite.hpp"
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
 #include "Effects/DB/Visual/PortraitMode.hpp"
@@ -286,6 +287,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(PartyLikeIts95);
     Ef(SleepyPlayer);
     Ef(PortraitMode);
+    Ef(AllWeKnowIsThatThereWereTwoSides);
 
 #undef Ef
 }

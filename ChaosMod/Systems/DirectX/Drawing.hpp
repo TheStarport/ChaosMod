@@ -18,11 +18,18 @@ class DrawingHelper final : public Singleton<DrawingHelper>
         LPDIRECT3DVERTEXBUFFER9 vertexBuffer = nullptr; // Buffer to hold vertices
         LPDIRECT3DINDEXBUFFER9 indexBuffer = nullptr;   // Buffer to hold indices
 
+        LPD3DXSPRITE videoSprite = nullptr;
+        LPDIRECT3DTEXTURE9 videoTexture = nullptr; // Buffer to hold the two sides
+        CRITICAL_SECTION section{};
+
         LPD3DXSPRITE sprite = nullptr;
 
         std::vector<std::function<void()>> awaitingCalls;
 
     public:
+        DrawingHelper() { InitializeCriticalSection(&section); }
+        ~DrawingHelper() { DeleteCriticalSection(&section); }
+
         enum class CircleType
         {
             Full,
@@ -458,11 +465,49 @@ class DrawingHelper final : public Singleton<DrawingHelper>
 
         void Draw()
         {
+            EnterCriticalSection(&section);
+            if (videoTexture && videoSprite)
+            {
+                videoSprite->Begin(NULL);
+                videoSprite->Draw(videoTexture, nullptr, nullptr, nullptr, D3DCOLOR_ARGB(126, 200, 0, 100));
+                videoSprite->End();
+            }
+            LeaveCriticalSection(&section);
+
             for (auto& call : awaitingCalls)
             {
                 call();
             }
 
             awaitingCalls.clear();
+        }
+
+        IDirect3DDevice9* GetDeviceHandle() const { return device; }
+
+        std::pair<IDirect3DSurface9*, CRITICAL_SECTION*> GetVideoSurface()
+        {
+            if (!videoTexture)
+            {
+                IDirect3D9* d3d;
+                device->GetDirect3D(&d3d);
+                D3DDISPLAYMODE dm;
+
+                d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dm);
+                auto res = GetResolution();
+                device->CreateTexture(static_cast<UINT>(res.x),
+                                      static_cast<UINT>(res.y),
+                                      1,
+                                      0,
+                                      dm.Format,
+                                      D3DPOOL_DEFAULT /* default pool - usually video memory */,
+                                      &videoTexture,
+                                      nullptr);
+                D3DXCreateSprite(device, &videoSprite);
+            }
+
+            IDirect3DSurface9* surface;
+            videoTexture->GetSurfaceLevel(0, &surface);
+
+            return { surface, &section };
         }
 };
