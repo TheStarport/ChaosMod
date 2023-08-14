@@ -493,6 +493,12 @@ class DrawingHelper final : public Singleton<DrawingHelper>
 
         IDirect3DDevice9* GetDeviceHandle() const { return device; }
 
+        void ClearVideoTexture()
+        {
+            videoTexture->Release();
+            videoTexture = nullptr;
+        }
+
         IDirect3DTexture9* GetVideoSurface()
         {
             if (!videoTexture)

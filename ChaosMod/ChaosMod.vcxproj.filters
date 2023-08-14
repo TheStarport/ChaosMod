@@ -76,8 +76,12 @@
     <ClCompile Include="Systems\KeyManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ScrollingCredits.cpp" />
-    <ClCompile Include="Systems\ShipManipulator.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\ScrollingCredits.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ShipManipulator.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -298,9 +302,6 @@
     <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp">
       <Filter>Effects\DB\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\RollCredits.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp" />
-    <ClInclude Include="Systems\ShipManipulator.hpp" />
     <ClInclude Include="Effects\DB\Movement\IllTrySpinning.hpp">
       <Filter>Effects\DB\Movement</Filter>
     </ClInclude>
@@ -352,6 +353,18 @@
     <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp">
       <Filter>Effects\DB\Visual</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ShipManipulator.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Interface\RollCredits.hpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -401,6 +414,9 @@
     </Filter>
     <Filter Include="Systems\HudComponents">
       <UniqueIdentifier>{aac35b1d-4fae-42a8-a1d3-44137701c127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\SystemComponents">
+      <UniqueIdentifier>{3dbd9db1-4026-4f53-a078-58f88cdc2c73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

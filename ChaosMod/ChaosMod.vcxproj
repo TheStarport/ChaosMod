@@ -282,6 +282,7 @@
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
+    <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\Detour.hpp" />
