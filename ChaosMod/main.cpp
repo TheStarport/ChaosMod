@@ -29,6 +29,8 @@ void Init()
     HudInterface::i();
     KeyManager::i();
     ShipManipulator::i();
+
+    ChaosTimer::i()->InitEffects();
 }
 
 void RequiredMemEdits()

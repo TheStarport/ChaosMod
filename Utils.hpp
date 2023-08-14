@@ -422,4 +422,114 @@ namespace Utils
             while (next);
         }
     }
+
+    class Stopwatch
+    {
+        public:
+            // Initialize the stopwatch to a safe initial state
+            Stopwatch() noexcept;
+
+            // Clear the stopwatch state
+            void Reset() noexcept;
+
+            // Start measuring time.
+            // When finished, call Stop().
+            // Can call ElapsedTime() also before calling Stop(): in this case,
+            // the elapsed time is measured since the Start() call.
+            void Start() noexcept;
+
+            // Stop measuring time.
+            // Call ElapsedSeconds() to get the elapsed time from the Start() call.
+            void Stop() noexcept;
+
+            // Return elapsed time interval duration, in seconds.
+            // Can be called both after Stop() and before it.
+            // (Start() must have been called to initiate time interval measurements).
+            double ElapsedSeconds() const noexcept;
+
+            //
+            // Ban copy
+            //
+        private:
+            Stopwatch(const Stopwatch&) = delete;
+            Stopwatch& operator=(const Stopwatch&) = delete;
+
+            //
+            // *** IMPLEMENTATION ***
+            //
+        private:
+            bool m_running;           // is the timer running?
+            double m_start;           // start tick count
+            double m_finish;          // end tick count
+            const double m_frequency; // cached frequency value
+
+            //
+            // According to MSDN documentation:
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ms644905(v=vs.85).aspx
+            //
+            // The frequency of the performance counter is fixed at system boot and
+            // is consistent across all processors.
+            // Therefore, the frequency need only be queried upon application
+            // initialization, and the result can be cached.
+            //
+
+            // Wrapper to Win32 API QueryPerformanceCounter()
+            static double Counter() noexcept;
+
+            // Wrapper to Win32 API QueryPerformanceFrequency()
+            static double Frequency() noexcept;
+
+            // Calculate elapsed time in seconds,
+            // given a start tick and end tick counts.
+            double ElapsedSeconds(double start, double finish) const noexcept;
+    };
+
+    inline Stopwatch::Stopwatch() noexcept : m_running{ false }, m_start{ 0 }, m_finish{ 0 }, m_frequency{ Frequency() } {}
+
+    inline void Stopwatch::Reset() noexcept
+    {
+        m_finish = m_start = 0;
+        m_running = false;
+    }
+
+    inline void Stopwatch::Start() noexcept
+    {
+        m_running = true;
+        m_finish = 0;
+
+        m_start = Counter();
+    }
+
+    inline void Stopwatch::Stop() noexcept
+    {
+        m_finish = Counter();
+        m_running = false;
+    }
+
+    inline double Stopwatch::ElapsedSeconds() const noexcept
+    {
+        if (m_running)
+        {
+            const double current{ Counter() };
+            return ElapsedSeconds(m_start, current);
+        }
+
+        return ElapsedSeconds(m_start, m_finish);
+    }
+
+    inline double Stopwatch::Counter() noexcept
+    {
+        LARGE_INTEGER li;
+        ::QueryPerformanceCounter(&li);
+        return static_cast<double>(li.QuadPart);
+    }
+
+    inline double Stopwatch::Frequency() noexcept
+    {
+        LARGE_INTEGER li;
+        ::QueryPerformanceFrequency(&li);
+        return static_cast<double>(li.QuadPart);
+    }
+
+    inline double Stopwatch::ElapsedSeconds(double start, double finish) const noexcept { return ((finish - start)) / m_frequency; }
 } // namespace Utils

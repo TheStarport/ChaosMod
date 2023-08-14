@@ -16,29 +16,9 @@ class EffectSelectorWindow final
         void Render();
 };
 
-// Wrapper around ImGui Memory Editor
-class HexWindow final
-{
-        class MemoryEditor* editor = nullptr;
-        std::array<byte, 0x10000> hexBuffer{};
-        size_t currentOffset = 0;
-        size_t currentMin = 0;
-        size_t currentMax = 0;
-
-    public:
-        void Render();
-
-        ~HexWindow();
-        HexWindow();
-
-        void Refresh();
-        void GoTo(DWORD address, size_t len);
-};
-
 class ActiveAddressList final
 {
         std::vector<MemoryEffect::MemoryAddress> addressList;
-        HexWindow hexWindow{};
         bool keepHexWindowUpdated = false;
 
     public:

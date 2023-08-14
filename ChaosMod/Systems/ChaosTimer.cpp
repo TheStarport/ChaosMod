@@ -123,7 +123,12 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     effect->Begin();
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
-    const float timing = info.isTimed ? modifiers * (info.timingModifier * ConfigManager::i()->defaultEffectDuration) : 30.0f;
+    float timing = info.isTimed ? modifiers * (info.timingModifier * ConfigManager::i()->defaultEffectDuration) : 30.0f;
+
+    if (info.fixedTimeOverride != 0.0f)
+    {
+        timing = info.fixedTimeOverride;
+    }
 
     activeEffects[effect] = timing;
     PlayNextEffect();
@@ -139,6 +144,15 @@ void ChaosTimer::FrameUpdate(const float delta)
     for (const auto& key : activeEffects | std::views::keys)
     {
         key->FrameUpdate(delta);
+    }
+}
+
+void ChaosTimer::InitEffects()
+{
+    const auto possibleEffects = ActiveEffect::GetAllEffects();
+    for (const auto& effect : possibleEffects)
+    {
+        effect->Init();
     }
 }
 
@@ -193,13 +207,13 @@ void ChaosTimer::Update(const float delta)
     while (effect != std::end(activeEffects))
     {
         auto& info = effect->first->GetEffectInfo();
+
         if (info.isTimed)
         {
             effect->first->Update(delta);
         }
 
         effect->second -= delta;
-
         if (effect->second <= 0)
         {
             effect->first->End();

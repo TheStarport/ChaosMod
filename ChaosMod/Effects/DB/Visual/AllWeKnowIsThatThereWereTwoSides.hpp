@@ -2,270 +2,327 @@
 #include "Effects/ActiveEffect.hpp"
 #include "Systems/DirectX/Drawing.hpp"
 
-#include <atlbase.h>
-#include <dshow.h>
-#include <stdio.h>
-#include <thread>
-#include <vmr9.h>
+extern "C"
+{
+#include <libavcodec/avcodec.h>
+#include <libavdevice/avdevice.h>
+#include <libavfilter/avfilter.h>
+#include <libavformat/avformat.h>
+#include <libavformat/avio.h>
+#include <libavutil/avutil.h>
+#include <libavutil/frame.h>
+#include <libavutil/imgutils.h>
+#include <libswresample/swresample.h>
+#include <libswscale/swscale.h>
+}
+
+#define MINIAUDIO_IMPLEMENTATION
+#include <miniaudio.h>
 
 class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
 {
-#pragma comment(lib, "Strmiids.lib");
+        const char* fileName = "C:\\Users\\laz\\Downloads\\fl_intro_en_hd.wmv";
 
-        // locks a critical section, and unlocks it automatically
-        // when the lock goes out of scope
-        class CAutoLock final
+        int videoStream = -1;
+        AVFormatContext* pFormatCtx = nullptr;
+        AVCodecParameters* pCodecParameters = nullptr;
+        const AVCodec* pCodec = nullptr;
+        AVCodecContext* pCodecCtx = nullptr;
+        AVFrame* pFrame = nullptr;
+        SwsContext* swsCtx = nullptr;
+        IDirect3DTexture9* texture = nullptr;
+
+        inline static ma_stream_layout streamLayout;
+        inline static std::vector<byte> audioBuffer;
+        inline static ma_engine engine;
+        inline static ma_audio_buffer miniAudioBuffer;
+        inline static ma_sound miniAudioSound;
+
+        size_t totalDecodedFrames = 0;
+
+        Utils::Stopwatch* stopwatch;
+
+        void FrameUpdate(float delta) override
         {
-                // make copy constructor and assignment operator inaccessible
-                CAutoLock(const CAutoLock& refAutoLock);
-                CAutoLock& operator=(const CAutoLock& refAutoLock);
+            long long e = stopwatch->ElapsedSeconds();
+            auto ee = av_q2d(av_inv_q(pCodecCtx->framerate));
 
-            protected:
-                CRITICAL_SECTION* lock;
-
-            public:
-                CAutoLock(CRITICAL_SECTION* plock)
-                {
-                    lock = plock;
-                    EnterCriticalSection(lock);
-                };
-
-                ~CAutoLock() { LeaveCriticalSection(lock); };
-        };
-
-        class VmrAllocator final : public IVMRSurfaceAllocator9, IVMRImagePresenter9
-        {
-                void DeleteSurfaces()
-                {
-                    CAutoLock Lock(section);
-
-                    for (size_t i = 0; i < m_surfaces.size(); ++i)
-                    {
-                        m_surfaces[i] = nullptr;
-                    }
-                }
-
-            public:
-                VmrAllocator(CRITICAL_SECTION* section, IDirect3DDevice9* device, IDirect3DSurface9* surface)
-                    : section(section), resultSurface(surface), device(device)
-                {}
-
-                // IVMRSurfaceAllocator9
-                HRESULT __stdcall InitializeDevice(DWORD_PTR dwUserID, VMR9AllocationInfo* lpAllocInfo, DWORD* lpNumBuffers) override
-                {
-                    DWORD dwWidth = 1;
-                    DWORD dwHeight = 1;
-
-                    if (lpNumBuffers == nullptr)
-                    {
-                        return E_POINTER;
-                    }
-
-                    if (m_lpIVMRSurfAllocNotify == nullptr)
-                    {
-                        return E_FAIL;
-                    }
-
-                    HRESULT hr = S_OK;
-
-                    auto res = DrawingHelper::i()->GetResolution();
-
-                    lpAllocInfo->dwWidth = res.x;
-                    lpAllocInfo->dwHeight = res.y;
-
-                    // NOTE:
-                    // we need to make sure that we create textures because
-                    // surfaces can not be textured onto a primitive.
-                    lpAllocInfo->dwFlags |= VMR9AllocFlag_TextureSurface;
-
-                    DeleteSurfaces();
-                    m_surfaces.resize(*lpNumBuffers);
-                    hr = m_lpIVMRSurfAllocNotify->AllocateSurfaceHelper(lpAllocInfo, lpNumBuffers, &m_surfaces.at(0));
-
-                    return S_OK;
-                }
-
-                HRESULT __stdcall TerminateDevice(DWORD_PTR dwID) override { return S_OK; }
-
-                HRESULT __stdcall GetSurface(DWORD_PTR dwUserID, DWORD SurfaceIndex, DWORD SurfaceFlags, IDirect3DSurface9** lplpSurface) override
-                {
-                    if (lplpSurface == nullptr)
-                    {
-                        return E_POINTER;
-                    }
-
-                    if (SurfaceIndex >= m_surfaces.size())
-                    {
-                        return E_FAIL;
-                    }
-
-                    CAutoLock Lock(section);
-
-                    return m_surfaces[SurfaceIndex].CopyTo(lplpSurface);
-                }
-
-                HRESULT __stdcall AdviseNotify(IVMRSurfaceAllocatorNotify9* lpIVMRSurfAllocNotify) override
-                {
-                    CAutoLock Lock(section);
-
-                    m_lpIVMRSurfAllocNotify = lpIVMRSurfAllocNotify;
-
-                    IDirect3D9* d3d;
-                    device->GetDirect3D(&d3d);
-                    HMONITOR hMonitor = d3d->GetAdapterMonitor(D3DADAPTER_DEFAULT);
-                    m_lpIVMRSurfAllocNotify->SetD3DDevice(device, hMonitor);
-
-                    d3d->Release();
-
-                    return S_OK;
-                }
-
-                HRESULT __stdcall StartPresenting(DWORD_PTR dwUserID) override { return S_OK; }
-
-                HRESULT __stdcall StopPresenting(DWORD_PTR dwUserID) override { return S_OK; }
-
-                HRESULT __stdcall PresentImage(DWORD_PTR dwUserID, VMR9PresentationInfo* lpPresInfo) override
-                {
-                    CAutoLock Lock(section);
-
-                    device->StretchRect(lpPresInfo->lpSurf, nullptr, resultSurface.p, nullptr, D3DTEXF_NONE);
-
-                    return S_OK;
-                }
-
-                // IUnknown
-                HRESULT __stdcall QueryInterface(REFIID riid, void** ppvObject) override
-                {
-                    HRESULT hr = E_NOINTERFACE;
-
-                    if (ppvObject == nullptr)
-                    {
-                        hr = E_POINTER;
-                    }
-                    else if (riid == IID_IVMRSurfaceAllocator9)
-                    {
-                        *ppvObject = static_cast<IVMRSurfaceAllocator9*>(this);
-                        AddRef();
-                        hr = S_OK;
-                    }
-                    else if (riid == IID_IVMRImagePresenter9)
-                    {
-                        *ppvObject = static_cast<IVMRImagePresenter9*>(this);
-                        AddRef();
-                        hr = S_OK;
-                    }
-                    else if (riid == IID_IUnknown)
-                    {
-                        *ppvObject = static_cast<IUnknown*>(static_cast<IVMRSurfaceAllocator9*>(this));
-                        AddRef();
-                        hr = S_OK;
-                    }
-
-                    return hr;
-                }
-
-                ULONG __stdcall AddRef() override { return InterlockedIncrement(&refCount); }
-
-                ULONG __stdcall Release() override
-                {
-                    ULONG ret = InterlockedDecrement(&refCount);
-                    if (ret == 0)
-                    {
-                        delete this;
-                    }
-
-                    return ret;
-                }
-
-            private:
-                // needed to make this a thread safe object
-                CRITICAL_SECTION* section;
-                long refCount = 0;
-
-                CComPtr<IVMRSurfaceAllocatorNotify9> m_lpIVMRSurfAllocNotify;
-                std::vector<CComPtr<IDirect3DSurface9>> m_surfaces;
-                CComPtr<IDirect3DSurface9> resultSurface;
-                IDirect3DDevice9* device;
-        };
-
-        DWORD_PTR g_userId = 0xACDCACDC;
-
-        CComPtr<IGraphBuilder> g_graph;
-        CComPtr<IBaseFilter> g_filter;
-        CComPtr<IMediaControl> g_mediaControl;
-        CComPtr<IVMRSurfaceAllocator9> g_allocator;
-
-        const wchar_t* wFileName = L"C:\\Users\\laz\\Downloads\\fl_intro.mpg";
-
-        void SetAllocatorPresenter(CComPtr<IBaseFilter> filter)
-        {
-            if (filter == nullptr)
+            auto currentFrame = static_cast<int>((double)stopwatch->ElapsedSeconds() / av_q2d(av_inv_q(pCodecCtx->framerate))) + 1;
+            while (totalDecodedFrames < (currentFrame + 1))
             {
-                return;
-            }
+                static AVPacket packet;
+                static auto sws_ctx = sws_getContext(pCodecCtx->width,
+                                                     pCodecCtx->height,
+                                                     pCodecCtx->pix_fmt,
+                                                     pCodecCtx->width,
+                                                     pCodecCtx->height,
+                                                     AV_PIX_FMT_RGB24,
+                                                     SWS_BILINEAR,
+                                                     nullptr,
+                                                     nullptr,
+                                                     nullptr);
 
-            HRESULT hr;
-
-            CComPtr<IVMRSurfaceAllocatorNotify9> lpIVMRSurfAllocNotify;
-            filter->QueryInterface(IID_IVMRSurfaceAllocatorNotify9, reinterpret_cast<void**>(&lpIVMRSurfAllocNotify));
-
-            const auto drawing = DrawingHelper::i();
-            auto [surface, section] = drawing->GetVideoSurface();
-
-            g_allocator.Attach(new VmrAllocator(section, drawing->GetDeviceHandle(), surface));
-
-            // let the allocator and the notify know about each other
-            lpIVMRSurfAllocNotify->AdviseSurfaceAllocator(g_userId, g_allocator);
-            g_allocator->AdviseNotify(lpIVMRSurfAllocNotify);
-        }
-
-        std::thread thread;
-
-        void InitMovie()
-        {
-            CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-            if (g_mediaControl != nullptr)
-            {
-                OAFilterState state;
-                do
+                if (av_read_frame(pFormatCtx, &packet) < 0)
                 {
-                    g_mediaControl->Stop();
-                    g_mediaControl->GetState(0, &state);
+                    return;
                 }
-                while (state != State_Stopped);
+
+                if (packet.stream_index == videoStream)
+                {
+                    int res = avcodec_send_packet(pCodecCtx, &packet);
+                    if (res < 0)
+                    {
+                        av_packet_unref(&packet);
+                        return;
+                    }
+
+                    res = avcodec_receive_frame(pCodecCtx, pFrame);
+
+                    AVFrame* frame = av_frame_alloc();
+                    frame->format = AV_PIX_FMT_RGB24;
+                    frame->width = pFrame->width;
+                    frame->height = pFrame->height;
+                    av_frame_get_buffer(frame, 32);
+
+                    sws_scale(sws_ctx, pFrame->data, pFrame->linesize, 0, frame->height, frame->data, frame->linesize);
+
+                    D3DLOCKED_RECT lockedRect;
+                    if (HRESULT l; (l = texture->LockRect(0, &lockedRect, nullptr, D3DLOCK_DISCARD)) == S_OK)
+                    {
+                        unsigned char* dest = static_cast<unsigned char*>(lockedRect.pBits);
+
+                        for (int i = 0; i < pFrame->width * pFrame->height * 3; i += 3)
+                        {
+                            *dest++ = frame->data[0][i];
+                            *dest++ = frame->data[0][i + 1];
+                            *dest++ = frame->data[0][i + 2];
+                            *dest++ = 126;
+                        }
+
+                        texture->UnlockRect(0);
+                    }
+
+                    av_frame_free(&frame);
+                    totalDecodedFrames++;
+                }
+
+                av_packet_unref(&packet);
             }
-
-            HRESULT hr;
-
-            g_graph.CoCreateInstance(CLSID_FilterGraph);
-
-            g_filter.CoCreateInstance(CLSID_VideoMixingRenderer9, nullptr, CLSCTX_INPROC_SERVER);
-            CComPtr<IVMRFilterConfig9> filterConfig;
-            g_filter->QueryInterface(IID_IVMRFilterConfig9, reinterpret_cast<void**>(&filterConfig));
-
-            filterConfig->SetRenderingMode(VMR9Mode_Renderless);
-
-            filterConfig->SetNumberOfStreams(2);
-
-            SetAllocatorPresenter(g_filter);
-
-            g_graph->AddFilter(g_filter, L"Video Mixing Renderer 9");
-
-            g_graph->QueryInterface(IID_IMediaControl, reinterpret_cast<void**>(&g_mediaControl));
-
-            g_graph->RenderFile(wFileName, nullptr);
-
-            // g_mediaControl->Run();
         }
 
         void Begin() override
         {
-            // thread = std::thread(&AllWeKnowIsThatThereWereTwoSides::InitMovie, this);
-            InitMovie();
+            texture = DrawingHelper::i()->GetVideoSurface();
+
+            int res = avformat_open_input(&pFormatCtx, fileName, nullptr, nullptr);
+            res = avformat_find_stream_info(pFormatCtx, nullptr);
+
+            videoStream = -1;
+
+            for (unsigned int i = 0; i < pFormatCtx->nb_streams; i++)
+            {
+                if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
+                {
+                    videoStream = i;
+                }
+            }
+
+            pCodecParameters = pFormatCtx->streams[videoStream]->codecpar;
+            pCodec = avcodec_find_decoder(pCodecParameters->codec_id);
+            pCodecCtx = avcodec_alloc_context3(pCodec);
+            res = avcodec_parameters_to_context(pCodecCtx, pCodecParameters);
+            res = avcodec_open2(pCodecCtx, pCodec, nullptr);
+
+            pFrame = av_frame_alloc();
+            AVFrame* pFrameRGB = av_frame_alloc();
+
+            const int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
+
+            const uint8_t* buffer = (uint8_t*)av_malloc(numBytes * sizeof(uint8_t));
+
+            res = av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, buffer, AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
+
+            stopwatch->Reset();
+            stopwatch->Start();
+            ma_sound_start(&miniAudioSound);
         }
 
-        void End() override {}
+        void End() override
+        {
+            ma_sound_stop(&miniAudioSound);
+            ma_sound_seek_to_pcm_frame(&miniAudioSound, 0);
+
+            // Set the texture to transparent
+            D3DLOCKED_RECT lockedRect;
+            HRESULT l;
+            if ((l = texture->LockRect(0, &lockedRect, nullptr, D3DLOCK_DISCARD)) == S_OK)
+            {
+                auto* dest = static_cast<unsigned char*>(lockedRect.pBits);
+
+                for (int i = 0; i < pFrame->width * pFrame->height * 3; i += 3)
+                {
+                    *dest++ = 0;
+                    *dest++ = 0;
+                    *dest++ = 0;
+                    *dest++ = 0;
+                }
+
+                texture->UnlockRect(0);
+            }
+
+            avcodec_close(pCodecCtx);
+            avformat_close_input(&pFormatCtx);
+        }
+
+        void Init() override
+        {
+
+            // open video
+            int res = avformat_open_input(&pFormatCtx, fileName, nullptr, nullptr);
+
+            // get video info
+            res = avformat_find_stream_info(pFormatCtx, nullptr);
+            int audioStreamIndex = av_find_best_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+
+            const AVStream* audioStream = pFormatCtx->streams[audioStreamIndex];
+
+            /* find decoder for the stream */
+            const AVCodec* decoder = avcodec_find_decoder(audioStream->codecpar->codec_id);
+
+            /* Allocate a codec context for the decoder */
+            AVCodecContext* decoderContext = avcodec_alloc_context3(decoder);
+
+            /* Copy codec parameters from input stream to output codec context */
+            avcodec_parameters_to_context(decoderContext, audioStream->codecpar);
+
+            /* Init the decoders */
+            avcodec_open2(decoderContext, decoder, nullptr);
+
+            AVFrame* frame = av_frame_alloc();
+            AVPacket* packet = av_packet_alloc();
+
+            // Read the packets in a loop
+            while (av_read_frame(pFormatCtx, packet) >= 0)
+            {
+                if (packet->stream_index != audioStreamIndex)
+                {
+                    av_packet_unref(packet);
+                    continue;
+                }
+
+                int ret = 0;
+
+                // submit the packet to the decoder
+                ret = avcodec_send_packet(decoderContext, packet);
+                if (ret < 0)
+                {
+                    av_packet_unref(packet);
+                    continue;
+                }
+
+                // get all the available frames from the decoder
+                while (ret >= 0)
+                {
+                    ret = avcodec_receive_frame(decoderContext, frame);
+                    if (ret < 0)
+                    {
+                        // those two return values are special and mean there is no output
+                        // frame available, but there were no errors during decoding
+                        if (ret == AVERROR_EOF || ret == AVERROR(EAGAIN))
+                        {
+                            // TODO: Handle
+                        }
+                        av_frame_unref(frame);
+                        continue;
+                    }
+
+                    // Time to write our raw audio
+                    const size_t rawLineSize = frame->nb_samples * av_get_bytes_per_sample(static_cast<AVSampleFormat>(frame->format));
+                    const size_t curSize = audioBuffer.size();
+                    audioBuffer.resize(curSize + rawLineSize);
+                    std::memcpy(audioBuffer.data() + curSize, frame->extended_data[0], rawLineSize);
+
+                    av_frame_unref(frame);
+                }
+
+                av_packet_unref(packet);
+            }
+
+            ma_format format;
+            switch (decoderContext->sample_fmt)
+            {
+                case AV_SAMPLE_FMT_U8:
+                    format = ma_format_u8;
+                    streamLayout = ma_stream_layout_interleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_S16:
+                    format = ma_format_s16;
+                    streamLayout = ma_stream_layout_interleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_S32:
+                    format = ma_format_s32;
+                    streamLayout = ma_stream_layout_interleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_FLT:
+                    format = ma_format_f32;
+                    streamLayout = ma_stream_layout_interleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_U8P:
+                    format = ma_format_u8;
+                    streamLayout = ma_stream_layout_deinterleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_S16P:
+                    format = ma_format_s16;
+                    streamLayout = ma_stream_layout_deinterleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_S32P:
+                    format = ma_format_s32;
+                    streamLayout = ma_stream_layout_deinterleaved;
+                    break;
+
+                case AV_SAMPLE_FMT_FLTP:
+                    format = ma_format_f32;
+                    streamLayout = ma_stream_layout_deinterleaved;
+                    break;
+
+                default:
+                    format = ma_format_unknown;
+                    streamLayout = ma_stream_layout_deinterleaved;
+                    break;
+            }
+
+            ma_engine_init(nullptr, &engine);
+            ma_engine_set_volume(&engine, 0.4f);
+
+            auto audioBufferConfig = ma_audio_buffer_config_init(format,
+                                                                 audioStream->codecpar->ch_layout.nb_channels,
+                                                                 audioBuffer.size() / audioStream->codecpar->ch_layout.nb_channels,
+                                                                 audioBuffer.data(),
+                                                                 nullptr);
+            audioBufferConfig.sampleRate = decoderContext->sample_rate / 2;
+            ma_audio_buffer_init(&audioBufferConfig, &miniAudioBuffer);
+            ma_sound_init_from_data_source(&engine, &miniAudioBuffer, MA_SOUND_FLAG_NO_SPATIALIZATION, nullptr, &miniAudioSound);
+
+            avformat_close_input(&pFormatCtx);
+        }
 
     public:
-        DefEffectInfo("Portrait Mode", 1.0f, EffectType::Visual);
+        AllWeKnowIsThatThereWereTwoSides() { stopwatch = new Utils::Stopwatch(); }
+
+        ~AllWeKnowIsThatThereWereTwoSides() override
+        {
+            if (engine.pDevice)
+            {
+                ma_sound_stop(&miniAudioSound);
+                ma_audio_buffer_uninit(&miniAudioBuffer);
+                ma_engine_uninit(&engine);
+            }
+        }
+        DefEffectInfoFixed("All We Know...", 223.0f, EffectType::Visual);
 };

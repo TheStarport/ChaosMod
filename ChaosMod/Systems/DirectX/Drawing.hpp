@@ -14,22 +14,24 @@ class DrawingHelper final : public Singleton<DrawingHelper>
                 DWORD color;
         };
 
+        struct Vertex2D
+        {
+                float x, y, z, w;
+                float u, v;
+        };
+
         LPDIRECT3DDEVICE9 device = nullptr;
         LPDIRECT3DVERTEXBUFFER9 vertexBuffer = nullptr; // Buffer to hold vertices
         LPDIRECT3DINDEXBUFFER9 indexBuffer = nullptr;   // Buffer to hold indices
 
-        LPD3DXSPRITE videoSprite = nullptr;
+        LPDIRECT3DVERTEXBUFFER9 videoBuffer = nullptr;
         LPDIRECT3DTEXTURE9 videoTexture = nullptr; // Buffer to hold the two sides
-        CRITICAL_SECTION section{};
 
         LPD3DXSPRITE sprite = nullptr;
 
         std::vector<std::function<void()>> awaitingCalls;
 
     public:
-        DrawingHelper() { InitializeCriticalSection(&section); }
-        ~DrawingHelper() { DeleteCriticalSection(&section); }
-
         enum class CircleType
         {
             Full,
@@ -465,14 +467,21 @@ class DrawingHelper final : public Singleton<DrawingHelper>
 
         void Draw()
         {
-            EnterCriticalSection(&section);
-            if (videoTexture && videoSprite)
+            if (videoTexture)
             {
-                videoSprite->Begin(NULL);
-                videoSprite->Draw(videoTexture, nullptr, nullptr, nullptr, D3DCOLOR_ARGB(126, 200, 0, 100));
-                videoSprite->End();
+                D3DXMATRIX identity;
+                D3DXMatrixIdentity(&identity);
+
+                device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+                device->SetTransform(D3DTS_VIEW, &identity);
+                device->SetTransform(D3DTS_PROJECTION, &identity);
+                device->SetTexture(0, videoTexture);
+
+                // maybe some stuff with setting texture stages, unsure
+                device->SetStreamSource(0, videoBuffer, 0, sizeof(Vertex2D));
+                device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
+                device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
             }
-            LeaveCriticalSection(&section);
 
             for (auto& call : awaitingCalls)
             {
@@ -484,30 +493,32 @@ class DrawingHelper final : public Singleton<DrawingHelper>
 
         IDirect3DDevice9* GetDeviceHandle() const { return device; }
 
-        std::pair<IDirect3DSurface9*, CRITICAL_SECTION*> GetVideoSurface()
+        IDirect3DTexture9* GetVideoSurface()
         {
             if (!videoTexture)
             {
-                IDirect3D9* d3d;
-                device->GetDirect3D(&d3d);
-                D3DDISPLAYMODE dm;
+                const auto res = GetResolution();
+                device->CreateTexture(1440u, 960u, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &videoTexture, nullptr);
 
-                d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dm);
-                auto res = GetResolution();
-                device->CreateTexture(static_cast<UINT>(res.x),
-                                      static_cast<UINT>(res.y),
-                                      1,
-                                      0,
-                                      dm.Format,
-                                      D3DPOOL_DEFAULT /* default pool - usually video memory */,
-                                      &videoTexture,
-                                      nullptr);
-                D3DXCreateSprite(device, &videoSprite);
+                // clang-format off
+                static Vertex2D vertices[] = 
+                {
+                    { 0.0f,0.0f - res.y * 0.33f, 0.0f, 1.0f, 0.0f,0.0f, },
+                    { res.x, 0.0f - res.y * 0.33f, 0.0f, 1.0f, 1.0f, 0.0f, }, 
+                    { 0.0f, res.y * 1.33f,  0.0f, 1.0f, 0.0f, 1.0f, },
+                    {  res.x, res.y * 1.33f, 0.0f, 1.0f, 1.0f, 1.0f, },
+                };
+                // clang-format on
+
+                constexpr uint size = sizeof(Vertex2D) * 4;
+                device->CreateVertexBuffer(size, NULL, D3DFVF_XYZRHW | D3DFVF_TEX1, D3DPOOL_DEFAULT, &videoBuffer, nullptr);
+
+                void* data;
+                videoBuffer->Lock(0, size, &data, D3DLOCK_DISCARD);
+                memcpy_s(data, size, vertices, size);
+                videoBuffer->Unlock();
             }
 
-            IDirect3DSurface9* surface;
-            videoTexture->GetSurfaceLevel(0, &surface);
-
-            return { surface, &section };
+            return videoTexture;
         }
 };

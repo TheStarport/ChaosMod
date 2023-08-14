@@ -7,7 +7,7 @@
 #include "Systems/ConfigManager.hpp"
 
 #include <imgui-club/imgui_memory_editor/imgui_memory_editor.h>
-#include <magic_enum.hpp>
+#include <magic_enum_all.hpp>
 
 void EffectSelectorWindow::Refresh()
 {
@@ -74,30 +74,6 @@ void EffectSelectorWindow::Render()
     ImGui::End();
 }
 
-void HexWindow::Render() { editor->DrawWindow("Hex View", hexBuffer.data(), hexBuffer.size(), currentOffset); }
-HexWindow::~HexWindow() { delete editor; }
-HexWindow::HexWindow() { editor = new MemoryEditor(); }
-void HexWindow::Refresh()
-{
-    DWORD range = currentMax - currentMin;
-    if (range != 0x10000)
-    {
-        range += std::abs((int)range - 0x10000);
-    }
-
-    Utils::Memory::ReadProcMem(PBYTE(currentMin), PBYTE(hexBuffer.data()), range);
-}
-
-void HexWindow::GoTo(const DWORD address, const size_t len)
-{
-    currentMin = address < 0x8000 ? 0 : address - 0x8000;
-    currentMax = address + 0x8000 - 1;
-    currentOffset = address;
-
-    Refresh();
-    editor->GotoAddrAndHighlight(0x8000, 0x8000 + len);
-}
-
 void ActiveAddressList::Render()
 {
     if (!show)
@@ -127,10 +103,7 @@ void ActiveAddressList::Render()
             static bool selected = false;
             std::string str = std::format("{:#010x} ({})", module + offset, length);
             ImGui::PushStyleColor(ImGuiCol_HeaderHovered, 0x660500FF);
-            if (ImGui::Selectable(str.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
-            {
-                hexWindow.GoTo(module + offset, length);
-            }
+            ImGui::Selectable(str.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick);
             ImGui::PopStyleColor();
             selected = false;
         }
@@ -138,13 +111,6 @@ void ActiveAddressList::Render()
 
     ImGui::EndChild();
     ImGui::End();
-
-    if (keepHexWindowUpdated)
-    {
-        hexWindow.Refresh();
-    }
-
-    hexWindow.Render();
 }
 
 void ActiveAddressList::Refresh() { addressList = MemoryEffect::GetMemoryEffects(); }
