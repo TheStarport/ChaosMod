@@ -13,7 +13,11 @@ ScrollingCredits::ScrollingCredits()
     const std::string allLines =
 #include "Credits.txt"
         ;
-    credits = Utils::String::Split(allLines, '\n');
+
+    for (auto line : StringUtils::GetParams(allLines, '\n'))
+    {
+        credits.emplace_back(line);
+    }
 }
 
 void ScrollingCredits::ToggleVisibility()

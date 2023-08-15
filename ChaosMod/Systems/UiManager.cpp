@@ -13,13 +13,12 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
-typedef int(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
-OriginalWndProc originalProc;
-PBYTE originalProcData = PBYTE(malloc(5));
+typedef LRESULT(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
+FunctionDetour wndProcDetour(reinterpret_cast<OriginalWndProc>(0x5B2570));
 
 std::map<UiManager::Font, ImFont*> UiManager::loadedFonts;
 
-LRESULT CALLBACK UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
 {
     i()->window = hWnd;
 
@@ -36,9 +35,9 @@ LRESULT CALLBACK UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM l
         return true;
     }
 
-    Utils::Memory::UnDetour(PBYTE(originalProc), originalProcData);
-    const LRESULT result = originalProc(hWnd, msg, wParam, lParam);
-    Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
+    wndProcDetour.UnDetour();
+    const LRESULT result = wndProcDetour.GetOriginalFunc()(hWnd, msg, wParam, lParam);
+    wndProcDetour.Detour(WndProc);
     return result;
 }
 
@@ -115,8 +114,7 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
 }
 
 typedef bool(__cdecl* OnCursorChange)(const char* cursorName, bool hideCursor);
-OnCursorChange onCursorChange;
-PBYTE onCursorChangeData = PBYTE(malloc(5));
+FunctionDetour cursorDetour(reinterpret_cast<OnCursorChange>(0x41DDE0));
 
 std::string curCursor;
 
@@ -165,9 +163,8 @@ void UiManager::SetCursor(const std::string str)
     }
 }
 
-PBYTE winKeyOriginalMem;
 typedef bool(__cdecl* WinKeyType)(uint msg, WPARAM wParam, LPARAM lParam);
-WinKeyType winKeyOriginal;
+FunctionDetour winKeyDetour(reinterpret_cast<WinKeyType>(0x577850));
 
 bool UiManager::WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam)
 {
@@ -183,17 +180,12 @@ bool UiManager::WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam)
             }
         default: break;
     }
-    Utils::Memory::UnDetour(PBYTE(winKeyOriginal), winKeyOriginalMem);
-    auto result = winKeyOriginal(msg, wParam, lParam);
-    Utils::Memory::Detour(PBYTE(winKeyOriginal), WinKeyDetour, winKeyOriginalMem);
-    return result;
-}
 
-void UiManager::LoadWinKey()
-{
-    winKeyOriginalMem = PBYTE(malloc(5));
-    winKeyOriginal = WinKeyType(0x577850);
-    Utils::Memory::Detour(PBYTE(winKeyOriginal), WinKeyDetour, winKeyOriginalMem);
+    winKeyDetour.UnDetour();
+    const auto result = winKeyDetour.GetOriginalFunc()(msg, wParam, lParam);
+    winKeyDetour.Detour(WinKeyDetour);
+
+    return result;
 }
 
 UiManager::UiManager()
@@ -211,16 +203,13 @@ UiManager::UiManager()
     const auto rp8 = reinterpret_cast<char*>(LoadLibrary(L"RP8.dll"));
     char* pAddress = rp8 + 0x5E188;
     auto fpD3D8CreateHook = reinterpret_cast<FARPROC>(CreateDirect3D8);
-    Utils::Memory::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
+    MemUtils::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
 
-    onCursorChange = reinterpret_cast<OnCursorChange>(0x41DDE0);
-    Utils::Memory::Detour(reinterpret_cast<PBYTE>(onCursorChange), OnCursorChangeDetour, onCursorChangeData);
-
-    originalProc = OriginalWndProc(0x5B2570);
-    Utils::Memory::Detour(PBYTE(originalProc), WndProc, originalProcData);
+    winKeyDetour.Detour(WinKeyDetour);
+    cursorDetour.Detour(OnCursorChangeDetour);
+    wndProcDetour.Detour(WndProc);
 
     LoadCursors();
-    LoadWinKey();
 }
 
 UiManager::~UiManager()
@@ -246,7 +235,7 @@ void UiManager::LoadCursors()
 
         for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS"))
         {
-            if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !Utils::String::EndsWith(entry.path().generic_string(), ".cur"))
+            if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !(entry.path().generic_string().ends_with(".cur")))
             {
                 continue;
             }

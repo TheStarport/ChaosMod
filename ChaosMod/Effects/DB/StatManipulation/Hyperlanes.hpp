@@ -14,7 +14,7 @@ class Hyperlanes final : public MemoryEffect
             MemoryEffect::Begin();
 
             float newSpeed = 20000.0f;
-            Utils::Memory::WriteProcMem(offsets[0].module + offsets[0].offset, &newSpeed, sizeof(float));
+            MemUtils::WriteProcMem(offsets[0].module + offsets[0].offset, &newSpeed, sizeof(float));
         }
 
     public:

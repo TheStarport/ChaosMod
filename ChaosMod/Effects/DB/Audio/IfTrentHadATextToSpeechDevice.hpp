@@ -8,7 +8,6 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
         std::string ttsLinesRaw =
 #include "TTS.txt"
             ;
-
         std::vector<std::string> ttsLines{};
 
         std::jthread ttsThread{};
@@ -21,7 +20,7 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
             ttsThread = std::jthread(
                 [line]
                 {
-                    const std::wstring wide = Utils::String::stows(line);
+                    const std::wstring wide = StringUtils::stows(line);
                     ISpVoice *pVoice = nullptr;
                     if (const HRESULT hr = CoCreateInstance(CLSID_SpVoice, nullptr, CLSCTX_ALL, IID_ISpVoice, (void **)&pVoice); SUCCEEDED(hr))
                     {
@@ -33,7 +32,13 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
         }
 
     public:
-        IfTrentHadATextToSpeechDevice() { ttsLines = Utils::String::Split(ttsLinesRaw, '#'); }
+        IfTrentHadATextToSpeechDevice()
+        {
+            for (auto line : StringUtils::GetParams(ttsLinesRaw, '#'))
+            {
+                ttsLines.emplace_back(line);
+            }
+        }
 
         DefEffectInfo("If Trent Had A Text To Speech Device", 0.0f, EffectType::Audio);
 };

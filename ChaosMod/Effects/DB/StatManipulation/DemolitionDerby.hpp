@@ -13,7 +13,7 @@ class DemolitionDerby final : public MemoryEffect
             MemoryEffect::Begin();
             const auto [module, offset, length, originalData] = offsets[0];
             float newCollisionDamageFactor = 40.0f; // original is .25f;
-            Utils::Memory::WriteProcMem(module + offset, &newCollisionDamageFactor, sizeof(float));
+            MemUtils::WriteProcMem(module + offset, &newCollisionDamageFactor, sizeof(float));
         }
 
     public:

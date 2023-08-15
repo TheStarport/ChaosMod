@@ -73,13 +73,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(ProjectDir);$(SolutionDir)Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor\flhook-sdk\vendor;$(SolutionDir)vendor\flhook-sdk\include;$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(ProjectDir);$(SolutionDir)Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)vendor\flhook-sdk\lib;$(SolutionDir)vcpkg_installed\x86-windows\x86-windows\lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor\flhook-sdk\vendor;$(SolutionDir)vendor\flhook-sdk\include;$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)Include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)Include;$(SolutionDir)vcpkg_installed\x86-windows\x86-windows\lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -285,9 +285,7 @@
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
-    <ClInclude Include="Utilities\Detour.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />
-    <ClInclude Include="Utilities\Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\vcpkg.json" />

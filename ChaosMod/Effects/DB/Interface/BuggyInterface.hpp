@@ -26,10 +26,10 @@ class BuggyInterface final : public MemoryEffect
 
             MemoryEffect::Begin();
             auto info = offsets[0];
-            Utils::Memory::WriteProcMem(info.module + info.offset, &height, info.length);
+            MemUtils::WriteProcMem(info.module + info.offset, &height, info.length);
 
             info = offsets[1];
-            Utils::Memory::WriteProcMem(info.module + info.offset, &width, info.length);
+            MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
         }
 
         void Update(const float delta) override
@@ -55,10 +55,10 @@ class BuggyInterface final : public MemoryEffect
             }
 
             auto info = offsets[0];
-            Utils::Memory::WriteProcMem(info.module + info.offset, &height, info.length);
+            MemUtils::WriteProcMem(info.module + info.offset, &height, info.length);
 
             info = offsets[1];
-            Utils::Memory::WriteProcMem(info.module + info.offset, &width, info.length);
+            MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
         }
 
         DefEffectInfo("Buggy Interface", 1.0f, EffectType::Interface);

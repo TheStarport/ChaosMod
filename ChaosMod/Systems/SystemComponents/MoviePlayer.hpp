@@ -46,7 +46,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
         size_t totalDecodedFrames = 0;
 
-        Utils::Stopwatch* stopwatch = nullptr;
+        TimeUtils::Stopwatch* stopwatch = nullptr;
 
         ma_sound miniAudioSound{};
         ma_engine engine{};
@@ -198,7 +198,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
         MoviePlayer()
         {
-            stopwatch = new Utils::Stopwatch();
+            stopwatch = new TimeUtils::Stopwatch();
 
             ma_engine_init(nullptr, &engine);
             ma_engine_set_volume(&engine, 0.4f);

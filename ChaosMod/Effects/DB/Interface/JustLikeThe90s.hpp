@@ -17,7 +17,7 @@ class JustLikeThe90s final : public ActiveEffect
             for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS/CHAOS"))
             {
                 if (!entry.is_regular_file() || entry.file_size() > UINT_MAX ||
-                    (!Utils::String::EndsWith(entry.path().generic_string(), ".cur") && !Utils::String::EndsWith(entry.path().generic_string(), ".ani")))
+                    (!(entry.path().generic_string().ends_with(".cur")) && !(entry.path().generic_string().ends_with(".ani"))))
                 {
                     continue;
                 }

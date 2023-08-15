@@ -80,7 +80,7 @@ class Lgbtui final : public MemoryEffect
 
             for (auto& [module, address, length, originalData] : GetMemoryAddresses())
             {
-                Utils::Memory::WriteProcMem(module + address, bytes.data(), bytes.size());
+                MemUtils::WriteProcMem(module + address, bytes.data(), bytes.size());
             }
 
             HudInterface::i()->SetUiColor(((r & 0xff) << 16) + ((g & 0xFF) << 8) + (b & 0xFF));

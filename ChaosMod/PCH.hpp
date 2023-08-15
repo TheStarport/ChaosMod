@@ -21,6 +21,7 @@ using u64 = unsigned long long;
 #include <list>
 #include <map>
 #include <memory>
+#include <ranges>
 #include <set>
 #include <sstream>
 #include <string>
@@ -29,15 +30,16 @@ using u64 = unsigned long long;
 #include <unordered_set>
 #include <vector>
 
-#include <flhook-sdk/include/FLCore/FLCoreCommon.h>
-#include <flhook-sdk/include/FLCore/FLCoreDALib.h>
-#include <flhook-sdk/include/FLCore/FLCoreServer.h>
+#include <FLCore/FLCoreCommon.h>
+#include <FLCore/FLCoreDALib.h>
+#include <FLCore/FLCoreServer.h>
+#include <Singleton.hpp>
 
 #include "../Utils.hpp"
-#include "Utilities/Detour.hpp"
-#include "Utilities/Singleton.hpp"
-
 #include "Utilities/Random.hpp"
+
+#include <Utils/Detour.hpp>
+#include <Utils/Utils.hpp>
 
 void Log(const std::string& log);
 

@@ -29,7 +29,7 @@ void MemoryEffect::Begin()
     for (auto& [module, offset, length, originalData] : GetMemoryAddresses())
     {
         originalData.resize(length);
-        Utils::Memory::ReadProcMem(module + offset, originalData.data(), length);
+        MemUtils::ReadProcMem(module + offset, originalData.data(), length);
     }
 
     memoryChanges.emplace_back(this);
@@ -39,7 +39,7 @@ void MemoryEffect::End()
 {
     for (auto& [module, offset, length, originalData] : GetMemoryAddresses())
     {
-        Utils::Memory::WriteProcMem(module + offset, originalData.data(), length);
+        MemUtils::WriteProcMem(module + offset, originalData.data(), length);
     }
 
     std::erase(memoryChanges, this);

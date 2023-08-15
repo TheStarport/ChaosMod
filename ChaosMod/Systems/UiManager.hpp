@@ -31,8 +31,6 @@ class UiManager final : public Singleton<UiManager>
         static bool WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam);
         static bool OnCursorChangeDetour(const char* cursorName, bool hideCursor);
 
-        static void LoadWinKey();
-
         ChaosOptionText optionText;
         DebugMenu debugLog;
         ProgressBar progressBar;

@@ -80,7 +80,7 @@ KeyManager::KeyManager()
     BYTE patch[] = { 0xB9, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xE1 }; // mov ecx HkCb_HandleKeyCmdNaked, jmp ecx
     auto address = reinterpret_cast<PDWORD>(reinterpret_cast<char*>(&patch) + 1);
     *address = reinterpret_cast<DWORD>(PVOID(HandleKeyNaked));
-    Utils::Memory::WriteProcMem(reinterpret_cast<char*>(0x576410), &patch, 7);
+    MemUtils::WriteProcMem(reinterpret_cast<char*>(0x576410), &patch, 7);
 
     // Setup possible values
     possibleKeys = { Utils::USER_PAUSE,

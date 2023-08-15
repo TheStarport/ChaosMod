@@ -15,14 +15,14 @@ class PartyLikeIts95 final : public MemoryEffect
         {
             auto offset = offsets[0];
             float maxDistance = 4000.0f;
-            Utils::Memory::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
+            MemUtils::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
 
             offset = offsets[1];
-            Utils::Memory::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
+            MemUtils::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
 
             offset = offsets[2];
             maxDistance = 20'000.0f;
-            Utils::Memory::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
+            MemUtils::WriteProcMem(offset.module + offset.offset, &maxDistance, sizeof(float));
         }
 
         void FrameUpdate(float delta) override
