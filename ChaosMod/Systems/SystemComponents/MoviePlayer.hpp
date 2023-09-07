@@ -36,6 +36,8 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
         std::unordered_map<Movie, MovieData> movies;
 
+        uint transparency = 0;
+
         int videoStream = -1;
         AVFormatContext* formatContext = nullptr;
         AVCodecParameters* codecParameters = nullptr;
@@ -71,8 +73,9 @@ class MoviePlayer final : public Singleton<MoviePlayer>
             currentPlayingMovie = std::nullopt;
         }
 
-        void StartMovie(const Movie movie)
+        void StartMovie(const Movie movie, const float transparencyPercent = 0.5f)
         {
+            transparency = static_cast<uint>(255.0f * transparencyPercent);
             if (currentPlayingMovie.has_value())
             {
                 StopMovie();
@@ -177,10 +180,10 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
                         for (int i = 0; i < swapFrame->width * swapFrame->height * 3; i += 3)
                         {
-                            *dest++ = swapFrame->data[0][i];
-                            *dest++ = swapFrame->data[0][i + 1];
                             *dest++ = swapFrame->data[0][i + 2];
-                            *dest++ = 126;
+                            *dest++ = swapFrame->data[0][i + 1];
+                            *dest++ = swapFrame->data[0][i];
+                            *dest++ = transparency;
                         }
 
                         texture->UnlockRect(0);
