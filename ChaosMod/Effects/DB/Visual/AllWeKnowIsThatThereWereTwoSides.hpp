@@ -15,7 +15,7 @@ class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
     public:
         const EffectInfo& GetEffectInfo() override
         {
-            static const EffectInfo ef = { "All We Know...", 223.0f, EffectType::Visual, 0.0f, EffectExclusion::Movie };
+            static const EffectInfo ef = { "All We Know...", 0.0f, EffectType::Visual, 223.0f, EffectExclusion::Movie };
             return ef;
         };
 };
