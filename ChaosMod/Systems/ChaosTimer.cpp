@@ -77,11 +77,22 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    for (uint attempts = 0; attempts < 5; attempts++)
+    for (uint attempts = 0; attempts < 15; attempts++)
     {
         const auto val = Random::i()->Uniform(0u, possibleEffects.size() - 1);
         auto effect = possibleEffects[val];
         if (activeEffects.contains(effect))
+        {
+            continue;
+        }
+
+        auto effectInfo = effect->GetEffectInfo();
+        if (effectInfo.exclusion != EffectExclusion::None && std::ranges::any_of(activeEffects,
+                                                                                 [&effectInfo](auto existingEffect)
+                                                                                 {
+                                                                                     auto existingInfo = existingEffect.first->GetEffectInfo();
+                                                                                     return existingInfo.exclusion == effectInfo.exclusion;
+                                                                                 }))
         {
             continue;
         }

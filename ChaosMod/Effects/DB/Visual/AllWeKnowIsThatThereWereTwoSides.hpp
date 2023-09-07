@@ -13,5 +13,9 @@ class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
         void Init() override { MoviePlayer::i()->RegisterMovie(Movie::OriginalIntro, "../DATA/MOVIES/intro_hd.mp4"); }
 
     public:
-        DefEffectInfoFixed("All We Know...", 223.0f, EffectType::Visual);
+        const EffectInfo& GetEffectInfo() override
+        {
+            static const EffectInfo ef = { "All We Know...", 223.0f, EffectType::Visual, 0.0f, EffectExclusion::Movie };
+            return ef;
+        };
 };

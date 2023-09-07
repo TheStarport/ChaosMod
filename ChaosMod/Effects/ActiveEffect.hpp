@@ -13,6 +13,12 @@ enum class EffectType
     Visual,
 };
 
+enum class EffectExclusion
+{
+    None,
+    Movie
+};
+
 class ActiveEffect
 {
         static std::vector<std::unique_ptr<ActiveEffect>> allEffects;
@@ -20,9 +26,10 @@ class ActiveEffect
     public:
         struct EffectInfo
         {
-                EffectInfo(std::string name, const float timeModifier, const EffectType category, const float fixedTimeOverride = 0.0f)
+                EffectInfo(std::string name, const float timeModifier, const EffectType category, const float fixedTimeOverride = 0.0f,
+                           const EffectExclusion exclusion = EffectExclusion::None)
                     : effectName(std::move(name)), isTimed(timeModifier > 0.0f || fixedTimeOverride != 0.0f), category(category), timingModifier(timeModifier),
-                      fixedTimeOverride(fixedTimeOverride)
+                      fixedTimeOverride(fixedTimeOverride), exclusion(exclusion)
                 {}
 
                 std::string effectName{};
@@ -30,6 +37,7 @@ class ActiveEffect
                 EffectType category;
                 float timingModifier = 1.0f;
                 float fixedTimeOverride = 0.0f;
+                EffectExclusion exclusion;
         };
 
         virtual void Init() {}
