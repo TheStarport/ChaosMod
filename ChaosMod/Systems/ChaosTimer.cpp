@@ -40,6 +40,7 @@
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
+#include "Effects/DB/NPC/SwiftNPCs.hpp"
 #include "Effects/DB/NPC/SwissDiplomacy.hpp"
 #include "Effects/DB/NPC/Wanted.hpp"
 #include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
@@ -356,6 +357,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(YouAreFamous);
     Ef(XenosAreMyFriendsNow);
     Ef(SwissDiplomacy);
+    Ef(SwiftNPCs);
 
     // Teleports
     Ef(TakeABreak);

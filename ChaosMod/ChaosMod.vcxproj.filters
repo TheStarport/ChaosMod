@@ -392,6 +392,9 @@
     <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp">
       <Filter>Effects\DB\Teleports</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

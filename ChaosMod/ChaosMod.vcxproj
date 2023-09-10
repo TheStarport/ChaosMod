@@ -233,6 +233,7 @@
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
+    <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp" />
     <ClInclude Include="Effects\DB\NPC\SwissDiplomacy.hpp" />
     <ClInclude Include="Effects\DB\NPC\Wanted.hpp" />
     <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
