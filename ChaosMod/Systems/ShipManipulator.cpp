@@ -87,11 +87,9 @@ void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
                     return;
                 }
 
-                otherShip->get_behavior_interface()->update_current_behavior_engage_engine(false);
-
                 static constexpr float maxForce = 6000;
 
-                const float forceFallOffPercentage = 1 - std::clamp((length-minFalloffDistance) / (maxFalloffDistance - minFalloffDistance), 0.0f, 1.0f);
+                const float forceFallOffPercentage = 1 - std::clamp((length - minFalloffDistance) / (maxFalloffDistance - minFalloffDistance), 0.0f, 1.0f);
 
                 const auto unitVector = vectorDiff / length;
                 // Apply the force then invert (to push away)
