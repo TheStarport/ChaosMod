@@ -224,6 +224,7 @@
     <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
     <ClInclude Include="Effects\DB\Movement\IllTrySpinning.hpp" />
     <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp" />
+    <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
     <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp" />
     <ClInclude Include="Effects\DB\NPC\Cardamine.hpp" />

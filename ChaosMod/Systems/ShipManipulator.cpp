@@ -62,6 +62,41 @@ void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
             });
     }
 
+    if (i()->personalSpace)
+    {
+
+        Utils::ForEachShip(
+            [ship](CShip* otherShip)
+            {
+                if (ship == otherShip)
+                {
+                    return;
+                }
+
+                const auto playerPos = ship->position;
+                const auto otherPos = otherShip->position;
+
+                const auto vectorDiff = playerPos - otherPos;
+                const auto length = glm::length(vectorDiff);
+
+                if (std::abs(length) > 750)
+                {
+                    return;
+                }
+
+                otherShip->get_behavior_interface()->update_current_behavior_engage_engine(false);
+
+                static constexpr float maxForce = 500;
+
+                const auto unitVector = vectorDiff / length;
+                // Apply the force then invert (to push away)
+                const auto forceVector = -(unitVector * maxForce);
+
+                const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(otherShip) + 84)) + 152);
+                *reinterpret_cast<Vector*>(ptr + 164) = forceVector;
+            });
+    }
+
     detour->UnDetour();
     PhySys::Update(system, delta);
     detour->Detour(PhysicsUpdate);
@@ -72,6 +107,8 @@ ShipManipulator::ShipManipulator()
     detour = std::make_unique<FunctionDetour<OnPhysicsUpdate>>(PhySys::Update);
     detour->Detour(PhysicsUpdate);
 }
+
+void ShipManipulator::SetPersonalSpace(const bool should) { personalSpace = should; }
 
 void ShipManipulator::OverridePlayerAngularVelocity(const std::optional<Vector> override) { playerAngularVelocityOverride = override; }
 void ShipManipulator::MakeShipsSpin(const bool shouldSpin) { spin = shouldSpin; }

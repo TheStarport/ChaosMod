@@ -32,6 +32,7 @@
 #include "Effects/DB/Misc/XboxEdition.hpp"
 #include "Effects/DB/Movement/IllTrySpinning.hpp"
 #include "Effects/DB/Movement/InvertVelocity.hpp"
+#include "Effects/DB/Movement/PersonalSpace.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
 #include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/Cardamine.hpp"
@@ -337,6 +338,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(YouSpinMeRightRound);
     Ef(IllTrySpinning);
     Ef(InvertVelocity);
+    Ef(PersonalSpace);
 
     // Npc
     Ef(Screaming);

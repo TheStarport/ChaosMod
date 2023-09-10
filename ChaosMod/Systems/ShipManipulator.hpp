@@ -11,6 +11,7 @@ class ShipManipulator final : public Singleton<ShipManipulator>
         static void SetPosition(CShip* ship, Vector pos);
 
         bool spin = false;
+        bool personalSpace = false;
 
         std::optional<Vector> playerAngularVelocityOverride;
         inline static std::unique_ptr<FunctionDetour<OnPhysicsUpdate>> detour;
@@ -18,6 +19,7 @@ class ShipManipulator final : public Singleton<ShipManipulator>
     public:
         ShipManipulator();
 
+        void SetPersonalSpace(bool should);
         void MakeShipsSpin(bool shouldSpin);
         void OverridePlayerAngularVelocity(std::optional<Vector> override);
 };
