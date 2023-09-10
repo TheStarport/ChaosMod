@@ -190,6 +190,7 @@
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
+    <ClCompile Include="Systems\Teleporter.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +247,12 @@
     <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Zoomies.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\FakeTeleport.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\AintThatOneABeauty.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\RandomSystem.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\TakeABreak.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.hpp" />
+    <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp" />
     <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp" />
     <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
     <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp" />
@@ -286,6 +293,7 @@
     <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
+    <ClInclude Include="Systems\Teleporter.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />

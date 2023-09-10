@@ -54,6 +54,12 @@
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
 #include "Effects/DB/StatManipulation/Zoomies.hpp"
+#include "Effects/DB/Teleport/AintThatOneABeauty.hpp"
+#include "Effects/DB/Teleport/FakeTeleport.hpp"
+#include "Effects/DB/Teleport/RandomSystem.hpp"
+#include "Effects/DB/Teleport/TakeABreak.hpp"
+#include "Effects/DB/Teleport/TheStarsReallyAreBeautiful.hpp"
+#include "Effects/DB/Teleport/UrgenRelativeVisit.hpp"
 #include "Effects/DB/Visual/AllWeKnowIsThatThereWereTwoSides.hpp"
 #include "Effects/DB/Visual/HomageToElite.hpp"
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
@@ -350,6 +356,14 @@ void ChaosTimer::RegisterAllEffects()
     Ef(YouAreFamous);
     Ef(XenosAreMyFriendsNow);
     Ef(SwissDiplomacy);
+
+    // Teleports
+    Ef(TakeABreak);
+    Ef(UrgentRelativeVisit);
+    Ef(RandomSystem);
+    Ef(AintThatOneABeauty);
+    Ef(TheStarsReallyAreBeautiful);
+    Ef(FakeTeleport);
 
     // Visual
     Ef(QuakeFov);

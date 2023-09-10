@@ -82,6 +82,9 @@
     <ClCompile Include="Systems\ShipManipulator.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\Teleporter.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -368,6 +371,27 @@
     <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp">
       <Filter>Effects\DB\Movement</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\Teleporter.hpp">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\TakeABreak.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\AintThatOneABeauty.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\RandomSystem.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\FakeTeleport.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp">
+      <Filter>Effects\DB\Teleports</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -420,6 +444,9 @@
     </Filter>
     <Filter Include="Systems\SystemComponents">
       <UniqueIdentifier>{3dbd9db1-4026-4f53-a078-58f88cdc2c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Teleports">
+      <UniqueIdentifier>{2dbd0b97-e4cf-4985-b050-fd71617db5cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
