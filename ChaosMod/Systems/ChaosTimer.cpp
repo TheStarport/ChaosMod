@@ -10,6 +10,7 @@
 #include "Effects/DB/Audio/IDoNotSpeakMorseCode.hpp"
 #include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
 #include "Effects/DB/Audio/LowBudgetSciFiMovie.hpp"
+#include "Effects/DB/Audio/SadViolin.hpp"
 #include "Effects/DB/Interface/BuggyInterface.hpp"
 #include "Effects/DB/Interface/FlippedInterface.hpp"
 #include "Effects/DB/Interface/JustLikeThe90s.hpp"
@@ -81,6 +82,18 @@ ActiveEffect* ChaosTimer::SelectEffect()
     {
         const auto val = Random::i()->Uniform(0u, possibleEffects.size() - 1);
         auto effect = possibleEffects[val];
+
+        if (const auto persistent = dynamic_cast<PersistentEffect*>(effect))
+        {
+            if (persistent->Persisting())
+            {
+                continue;
+            }
+
+            // If its not already persisting, lets start the effect!
+            effect->Begin();
+        }
+
         if (activeEffects.contains(effect))
         {
             continue;
@@ -156,6 +169,14 @@ void ChaosTimer::FrameUpdate(const float delta)
     {
         key->FrameUpdate(delta);
     }
+
+    for (const auto& effect : persistentEffects)
+    {
+        if (effect->Persisting())
+        {
+            effect->FrameUpdate(delta);
+        }
+    }
 }
 
 void ChaosTimer::InitEffects()
@@ -164,6 +185,11 @@ void ChaosTimer::InitEffects()
     for (const auto& effect : possibleEffects)
     {
         effect->Init();
+
+        if (const auto persistent = dynamic_cast<PersistentEffect*>(effect))
+        {
+            persistentEffects.emplace_back(persistent);
+        }
     }
 }
 
@@ -186,7 +212,11 @@ void ChaosTimer::Update(const float delta)
         {
             for (const auto& key : activeEffects | std::views::keys)
             {
-                key->End();
+                // Don't clear persistent effects
+                if (!dynamic_cast<PersistentEffect*>(key))
+                {
+                    key->End();
+                }
             }
 
             activeEffects.clear();
@@ -227,12 +257,25 @@ void ChaosTimer::Update(const float delta)
         effect->second -= delta;
         if (effect->second <= 0)
         {
-            effect->first->End();
+            // If its not a persistent effect call the end
+            if (!dynamic_cast<PersistentEffect*>(effect->first))
+            {
+                effect->first->End();
+            }
             effect = activeEffects.erase(effect);
         }
         else
         {
             ++effect;
+        }
+    }
+
+    // For every persistent effect we should play its update too
+    for (const auto persistent : persistentEffects)
+    {
+        if (persistent->Persisting())
+        {
+            persistent->Update(delta);
         }
     }
 }
@@ -259,6 +302,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IDoNotSpeakMorseCode);
     Ef(DodgeThis);
     Ef(LowBudgetSciFiMovie);
+    Ef(SadViolin);
 
     // Stat Manipulation
     Ef(LonniganCameThrough);

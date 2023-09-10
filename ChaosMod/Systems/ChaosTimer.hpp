@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Effects/ActiveEffect.hpp"
+#include "Effects/PersistentEffect.hpp"
 
 class ChaosTimer final : public Singleton<ChaosTimer>
 {
@@ -15,6 +16,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         ActiveEffect* SelectEffect();
         void TriggerChaos(ActiveEffect* effect = nullptr);
         std::unordered_map<ActiveEffect*, float> activeEffects;
+        std::vector<PersistentEffect*> persistentEffects;
 
     public:
         void TriggerSpecificEffect(ActiveEffect* effect);

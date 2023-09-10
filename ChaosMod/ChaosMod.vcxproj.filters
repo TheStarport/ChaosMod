@@ -359,6 +359,9 @@
     <ClInclude Include="Effects\DB\Interface\RollCredits.hpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\PersistentEffect.hpp">
+      <Filter>Effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

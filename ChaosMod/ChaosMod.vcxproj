@@ -252,6 +252,7 @@
     <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
     <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
+    <ClInclude Include="Effects\PersistentEffect.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\CameraController.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
