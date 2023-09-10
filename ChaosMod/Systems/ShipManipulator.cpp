@@ -79,21 +79,28 @@ void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
                 const auto vectorDiff = playerPos - otherPos;
                 const auto length = glm::length(vectorDiff);
 
-                if (std::abs(length) > 750)
+                constexpr float maxFalloffDistance = 400.0f;
+                constexpr float minFalloffDistance = 200.0f;
+
+                if (std::abs(length) > maxFalloffDistance)
                 {
                     return;
                 }
 
                 otherShip->get_behavior_interface()->update_current_behavior_engage_engine(false);
 
-                static constexpr float maxForce = 500;
+                static constexpr float maxForce = 6000;
+
+                const float forceFallOffPercentage = 1 - std::clamp((length-minFalloffDistance) / (maxFalloffDistance - minFalloffDistance), 0.0f, 1.0f);
 
                 const auto unitVector = vectorDiff / length;
                 // Apply the force then invert (to push away)
-                const auto forceVector = -(unitVector * maxForce);
+                const auto forceVector = -(unitVector * (maxForce * forceFallOffPercentage));
+
+                const auto newAcceleration = (forceVector / otherShip->shiparch()->mass) + otherShip->get_velocity();
 
                 const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(otherShip) + 84)) + 152);
-                *reinterpret_cast<Vector*>(ptr + 164) = forceVector;
+                *reinterpret_cast<Vector*>(ptr + 164) = newAcceleration;
             });
     }
 
