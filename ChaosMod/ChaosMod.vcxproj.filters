@@ -362,6 +362,9 @@
     <ClInclude Include="Effects\PersistentEffect.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Audio\SadViolin.hpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
