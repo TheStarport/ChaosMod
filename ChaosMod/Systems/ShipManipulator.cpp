@@ -53,53 +53,54 @@ void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
 
     if (i()->spin)
     {
-        Utils::ForEachShip(
-            [](auto ship)
-            {
-                Vector vel = GetAngularVelocity(ship);
-                vel.z = 4.0f;
-                SetAngularVelocity(ship, vel);
-            });
+        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+                                    [](auto ship)
+                                    {
+                                        Vector vel = GetAngularVelocity(ship);
+                                        vel.z = 4.0f;
+                                        SetAngularVelocity(ship, vel);
+                                    });
     }
 
     if (i()->personalSpace)
     {
 
-        Utils::ForEachShip(
-            [ship](CShip* otherShip)
-            {
-                if (ship == otherShip)
-                {
-                    return;
-                }
+        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+                                    [ship](CShip* otherShip)
+                                    {
+                                        if (ship == otherShip)
+                                        {
+                                            return;
+                                        }
 
-                const auto playerPos = ship->position;
-                const auto otherPos = otherShip->position;
+                                        const auto playerPos = ship->position;
+                                        const auto otherPos = otherShip->position;
 
-                const auto vectorDiff = playerPos - otherPos;
-                const auto length = glm::length(vectorDiff);
+                                        const auto vectorDiff = playerPos - otherPos;
+                                        const auto length = glm::length(vectorDiff);
 
-                constexpr float maxFalloffDistance = 400.0f;
-                constexpr float minFalloffDistance = 200.0f;
+                                        constexpr float maxFalloffDistance = 400.0f;
+                                        constexpr float minFalloffDistance = 200.0f;
 
-                if (std::abs(length) > maxFalloffDistance)
-                {
-                    return;
-                }
+                                        if (std::abs(length) > maxFalloffDistance)
+                                        {
+                                            return;
+                                        }
 
-                static constexpr float maxForce = 6000;
+                                        static constexpr float maxForce = 6000;
 
-                const float forceFallOffPercentage = 1 - std::clamp((length - minFalloffDistance) / (maxFalloffDistance - minFalloffDistance), 0.0f, 1.0f);
+                                        const float forceFallOffPercentage =
+                                            1 - std::clamp((length - minFalloffDistance) / (maxFalloffDistance - minFalloffDistance), 0.0f, 1.0f);
 
-                const auto unitVector = vectorDiff / length;
-                // Apply the force then invert (to push away)
-                const auto forceVector = -(unitVector * (maxForce * forceFallOffPercentage));
+                                        const auto unitVector = vectorDiff / length;
+                                        // Apply the force then invert (to push away)
+                                        const auto forceVector = -(unitVector * (maxForce * forceFallOffPercentage));
 
-                const auto newAcceleration = (forceVector / otherShip->shiparch()->mass) + otherShip->get_velocity();
+                                        const auto newAcceleration = (forceVector / otherShip->shiparch()->mass) + otherShip->get_velocity();
 
-                const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(otherShip) + 84)) + 152);
-                *reinterpret_cast<Vector*>(ptr + 164) = newAcceleration;
-            });
+                                        const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(otherShip) + 84)) + 152);
+                                        *reinterpret_cast<Vector*>(ptr + 164) = newAcceleration;
+                                    });
     }
 
     detour->UnDetour();

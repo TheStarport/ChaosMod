@@ -49,7 +49,7 @@ class MultiplayerExperience final : public ActiveEffect
                 interval = 3.0f;
 
                 std::vector<CShip*> ships = {};
-                Utils::ForEachShip([&ships](CShip* ship) { ships.emplace_back(ship); });
+                Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [&ships](CShip* ship) { ships.emplace_back(ship); });
 
                 if (ships.size() == 1)
                 {

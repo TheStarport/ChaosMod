@@ -7,7 +7,7 @@ class YouSpinMeRightRound final : public ActiveEffect
 
         void Begin() override
         {
-            Utils::ForEachSolar([this](auto solar) { solar->init_physics(vv, v); });
+            Utils::ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT, [this](auto solar) { solar->init_physics(vv, v); });
         }
 
         void Update(float delta) override
@@ -24,7 +24,7 @@ class YouSpinMeRightRound final : public ActiveEffect
 
         void End() override
         {
-            Utils::ForEachSolar([this](auto solar) { PhySys::DeactivatePhysics(solar); });
+            Utils::ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT, [this](auto solar) { PhySys::DeactivatePhysics(solar); });
         }
 
     public:

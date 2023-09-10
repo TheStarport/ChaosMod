@@ -221,7 +221,24 @@ namespace Utils
         USER_SCREEN_SHOT
     };
 
-    void ForEachShip(const std::function<void(CShip*)>& func);
-    void ForEachSolar(const std::function<void(CSolar*)>& func);
-    void ForEachAsteroid(const std::function<void(CAsteroid*)>& func);
+    template <typename T>
+        requires std::is_base_of_v<CObject, T>
+    void ForEachObject(const CObject::Class cls, const std::function<void(T*)>& func)
+    {
+        if (auto* obj = dynamic_cast<T*>(CObject::FindFirst(cls)))
+        {
+            func(obj);
+
+            T* next;
+            do
+            {
+                next = dynamic_cast<T*>(CObject::FindNext());
+                if (next)
+                {
+                    func(next);
+                }
+            }
+            while (next);
+        }
+    }
 } // namespace Utils

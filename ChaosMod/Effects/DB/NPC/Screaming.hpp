@@ -18,16 +18,16 @@ class Screaming final : public ActiveEffect
 
                 activeShips.clear();
 
-                Utils::ForEachShip(
-                    [this](CShip* ship)
-                    {
-                        if (ship->is_player())
-                        {
-                            return;
-                        }
+                Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+                                            [this](CShip* ship)
+                                            {
+                                                if (ship->is_player())
+                                                {
+                                                    return;
+                                                }
 
-                        activeShips.emplace_back(ship);
-                    });
+                                                activeShips.emplace_back(ship);
+                                            });
 
                 if (!activeShips.empty())
                 {

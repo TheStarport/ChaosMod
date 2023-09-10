@@ -82,8 +82,9 @@ class FlappyArchitecture final : public ActiveEffect
 
         void Update(float delta) override
         {
-            Utils::ForEachShip([](CShip* sh) { FlipBay(sh); });
-            Utils::ForEachSolar(
+            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh); });
+            Utils::ForEachObject<CSolar>(
+                CObject::Class::CSOLAR_OBJECT,
                 [this](CSolar* solar)
                 {
                     auto anim = objectAnimations.find(solar);
@@ -125,7 +126,7 @@ class FlappyArchitecture final : public ActiveEffect
 
         void End() override
         {
-            Utils::ForEachShip([](CShip* sh) { FlipBay(sh, true); });
+            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh, true); });
             for (auto& val : objectAnimations | std::views::values)
             {
                 for (auto& [id, state, close] : val)
