@@ -245,6 +245,7 @@
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\NeverSayNoToBacta.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />

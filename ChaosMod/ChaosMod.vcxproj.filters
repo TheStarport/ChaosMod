@@ -398,6 +398,9 @@
     <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\NeverSayNoToBacta.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

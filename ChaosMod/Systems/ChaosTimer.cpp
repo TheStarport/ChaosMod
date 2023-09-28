@@ -70,6 +70,7 @@
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
 #include "Effects/DB/Misc/ThanksIHateIt.hpp"
+#include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
 
 #include <magic_enum.hpp>
 
@@ -325,6 +326,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(CoolantLeak);
     Ef(DemolitionDerby);
     Ef(Zoomies);
+    Ef(NeverSayNoToBacta);
 
     // Meta
     Ef(BoxOfChocolates);
