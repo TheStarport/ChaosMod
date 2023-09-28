@@ -2,10 +2,10 @@
 
 #include "ShipManipulator.hpp"
 
-void ShipManipulator::SetAngularVelocity(CShip* ship, Vector newVelocity)
+void ShipManipulator::SetAngularVelocity(CObject* object, Vector newVelocity)
 {
     const Vector v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);
-    const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(ship) + 84)) + 152);
+    const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(object) + 84)) + 152);
     *reinterpret_cast<Vector*>(ptr + 148) = v;
 }
 
@@ -21,18 +21,18 @@ Vector ShipManipulator::GetVelocity(CShip* ship)
     return *reinterpret_cast<Vector*>(ptr + 164);
 }
 
-void ShipManipulator::SetVelocity(CShip* ship, Vector newVelocity)
+void ShipManipulator::SetVelocity(CObject* object, Vector newVelocity)
 {
     const Vector v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);
-    const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(ship) + 84)) + 152);
+    const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(object) + 84)) + 152);
     *reinterpret_cast<Vector*>(ptr + 164) = v;
 }
 
-void ShipManipulator::SetPosition(CShip* ship, Vector pos)
+void ShipManipulator::SetPosition(CObject* object, Vector pos)
 {
     const Vector v = Vector(pos.x, pos.y, pos.z);
-    *reinterpret_cast<Vector*>(PCHAR(ship) + 44) = v;
-    ship->update_tree();
+    *reinterpret_cast<Vector*>(PCHAR(object) + 44) = v;
+    object->update_tree();
 }
 
 void ShipManipulator::PhysicsUpdate(const uint system, const float delta)

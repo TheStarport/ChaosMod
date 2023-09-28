@@ -233,7 +233,7 @@ void UiManager::LoadCursors()
         char szCurDir[MAX_PATH];
         GetCurrentDirectoryA(sizeof(szCurDir), szCurDir);
 
-        for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS"))
+        for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CHAOS/VANILLA_CURSORS"))
         {
             if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !(entry.path().generic_string().ends_with(".cur")))
             {
@@ -274,7 +274,7 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 
     const auto& io = ImGui::GetIO();
 
-    const auto font = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 28);
+    const auto font = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 28);
     if (!font)
     {
         Log("Unable to load custom fonts!");
@@ -282,9 +282,9 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     }
 
     loadedFonts[Font::TitiliumWeb] = font;
-    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb.ttf", 42);
-    loadedFonts[Font::TitiliumWebBold] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb-Bold.ttf", 28);
-    loadedFonts[Font::TitiliumWebBoldLarge] = io.Fonts->AddFontFromFileTTF("../DATA/FONTS/TitilliumWeb-Bold.ttf", 42);
+    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 42);
+    loadedFonts[Font::TitiliumWebBold] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 28);
+    loadedFonts[Font::TitiliumWebBoldLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 42);
 
     io.Fonts->Build();
 }

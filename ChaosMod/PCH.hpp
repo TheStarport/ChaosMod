@@ -19,6 +19,7 @@ using u64 = unsigned long long;
 #include <fstream>
 #include <future>
 #include <list>
+#include <numbers>
 #include <map>
 #include <memory>
 #include <ranges>

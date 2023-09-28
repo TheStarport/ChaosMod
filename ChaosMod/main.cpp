@@ -1,3 +1,4 @@
+// ReSharper disable CppClangTidyPerformanceNoIntToPtr
 #include "PCH.hpp"
 
 #include "Systems/CameraController.hpp"
@@ -147,11 +148,153 @@ void Init()
             uint bytes[200];
     };
 
-    E* e = (E*)addr;
+    const E* e = (E*)addr;
 
     auto test = (Archetype::Ship**)e->bytes[0];
 
     printf("hi");
+}
+
+const PDWORD screenWidth = ((PDWORD)0x679bc8);
+const PDWORD screenHeight = ((PDWORD)0x679bcc);
+
+uint width, height;
+
+float CalcFov(float fDefaultFOV)
+{
+    constexpr float originalAspectRatio = 4.0f / 3.0f;
+
+    const float newAspectRatio = static_cast<float>(*screenWidth) / static_cast<float>(*screenHeight);
+    return static_cast<float>(atan(newAspectRatio / 2 / (originalAspectRatio / 2 / tan(fDefaultFOV * std::numbers::pi / 180))) * 180 / std::numbers::pi);
+}
+
+__declspec(naked) void LoadPerfIniNaked(void)
+{
+    __asm
+    {
+		mov ecx, [esp + 8]
+		push ecx
+		push [0x5D5088]
+
+		mov ecx, 0x5B38D0
+		call ecx
+
+		mov ecx, [esp + 4]
+		mov esi, width
+		mov [ecx + 0x08], esi
+		mov esi, height
+		mov [ecx + 0x0C], esi
+
+		add esp, 0x08
+		ret
+    }
+}
+
+void PatchResolution()
+{
+    RECT desktop;
+    GetWindowRect(GetDesktopWindow(), &desktop);
+    width = desktop.right - desktop.left;
+    height = desktop.bottom - desktop.top;
+
+    const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+    if (aspectRatio > 2.5f || aspectRatio < 1.3333333f)
+    {
+        height = static_cast<long>(static_cast<float>(width) / 1.3333333f);
+    }
+
+    	// Set the screen dimensions.
+    MemUtils::WriteProcMem(screenWidth, &width, 4);
+    MemUtils::WriteProcMem(screenHeight, &height, 4);
+
+    // Set the FOV for the UI elements on the main screen.
+    const float fov_win = CalcFov(27.216f);
+    MemUtils::WriteProcMem(reinterpret_cast<char*>(0x59d5fd), &fov_win, 4);
+
+    // Patch options menu to display extended resolutions.
+    MemUtils::WriteProcMem(reinterpret_cast<char*>(0x4A9835), &width, 4);
+    MemUtils::WriteProcMem(reinterpret_cast<char*>(0x4A9867), &height, 4);
+
+    // single resolution.
+    for (int i = 0, p = 0x4A9835; i < 5; i++, p += 10)
+    {
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(p), &width, 4);
+    }
+    for (int i = 0, p = 0x4A9867; i < 5; i++, p += 10)
+    {
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(p), &height, 4);
+    }
+
+    {
+
+        // Remove aspect check when we add the widescreen resolution.
+        constexpr std::array<byte, 1> patch = { 0xEB };
+        MemUtils::WriteProcMem(reinterpret_cast<PCHAR>(GetModuleHandle(nullptr)) + 0xAF1E7, patch.data(), 1);
+
+        // Patch energy gauge width
+        const double patch4 = 0.166667f / aspectRatio;
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x5d7e58), &patch4, 9);
+
+        // Patch news ticker width
+        const float patch5 = 0.975f / aspectRatio;
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x5D3FB4), &patch5, 4);
+    }
+
+    // Set the screen dimensions.
+    {
+        const PBYTE fp = reinterpret_cast<PBYTE>(LoadPerfIniNaked) - 0x5B16CD - 5;
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x5B16CD) + 1, &fp, 4);
+    }
+
+    // Change the font sizes ~ Jason Hood. I gave up on my implementation
+    // and used his.
+    {
+        static DWORD fontAdjustedWidth = *screenHeight * 4 / 3;
+        if (aspectRatio >= 1.6)
+        {
+            fontAdjustedWidth = *screenHeight * 5 / 4;
+        }
+
+        const PDWORD adjustedWidth = &fontAdjustedWidth;
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x415cc7), &adjustedWidth, 4);
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x416663), &adjustedWidth, 4);
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x416913), &adjustedWidth, 4);
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x416be3), &adjustedWidth, 4);
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x412e8d), &adjustedWidth, 4);
+    }
+
+    // Change cinematic aspect ratio
+    {
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x5C9020), &aspectRatio, 4);
+    }
+
+    // Adjust the nav map to use height not width
+    {
+        constexpr DWORD patch1 = 0x610854; // height not width
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x499A3B) + 1, &patch1, 4);
+
+        // If greater than 1200 high then use NavMap1600
+        constexpr DWORD patch2 = 1200; // 1600x1200
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x499A43) + 1, &patch2, 4);
+
+        // If greater than/equal 864 high then use NavMap1280 (5D3EA0)
+        const BYTE patch3[] = { 0x60, 0x03, 0x00, 0x00, 0x7C, 0x07, 0x68, 0xA0, 0x3E, 0x5D };
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x499A5C) + 1, &patch3, 10);
+
+        // If greater/equal than 768 high then use NavMap1024 (5D3EB8)
+        const BYTE patch4[] = { 0x00, 0x03, 0x00, 0x00, 0x7C, 0x0E, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x68, 0xB8, 0x3E, 0x5D };
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x499A6A) + 1, &patch4, 17);
+
+        // Otherwise use 800x600 (5D3EAC)
+        constexpr BYTE patch5[] = { 0xAC, 0x3E, 0x5D };
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x499A7F) + 1, &patch5, 3);
+    }
+
+    // Patch navmap to use 4/3 fov
+    {
+        const BYTE patch[] = { 0x68, 0x5d, 0xba, 0xd9, 0x41, 0x90, 0x90, 0x90, 0x90, 0x90 };
+        MemUtils::WriteProcMem(reinterpret_cast<char*>(0x495B88), &patch, 10);
+    }
 }
 
 void RequiredMemEdits()
@@ -160,21 +303,21 @@ void RequiredMemEdits()
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
 
     // Patch out vanilla cursor
-    BYTE NopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
-    MemUtils::WriteProcMem(0x05B1750, NopPatch, 4);
+    BYTE nopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
+    MemUtils::WriteProcMem(0x05B1750, nopPatch, 4);
 
-    BYTE NopPatch2[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    MemUtils::WriteProcMem(0x5B32F2, NopPatch2, 7);
-    MemUtils::WriteProcMem(0x5B1750, NopPatch2, 7);
+    BYTE nopPatch2[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    MemUtils::WriteProcMem(0x5B32F2, nopPatch2, 7);
+    MemUtils::WriteProcMem(0x5B1750, nopPatch2, 7);
 
-    BYTE NopPatch3[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    MemUtils::WriteProcMem(0x42025A, NopPatch3, 13);
+    BYTE nopPatch3[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    MemUtils::WriteProcMem(0x42025A, nopPatch3, 13);
 
-    BYTE NopPatch4[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    MemUtils::WriteProcMem(0x41ECC7, NopPatch4, 16);
+    BYTE nopPatch4[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    MemUtils::WriteProcMem(0x41ECC7, nopPatch4, 16);
 
-    BYTE NopPatch5[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-    MemUtils::WriteProcMem(0x41EAA3, NopPatch5, 20);
+    BYTE nopPatch5[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+    MemUtils::WriteProcMem(0x41EAA3, nopPatch5, 20);
 
     // BYTE NopPatch6[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
     //  MemUtils::WriteProcMem(0x41F7D5, NopPatch6, 17);
@@ -223,9 +366,9 @@ void RequiredMemEdits()
     float nearPlaneFrustum = 0.05f;
     MemUtils::WriteProcMem(fl + 0x210530, &nearPlaneFrustum, sizeof(float));
 
-    ProtectExecuteReadWrite((void*)0x46b650, 5);
-    *(PBYTE)(0x46b650) = 0xe9;
-    *(PDWORD)(0x46b651) = (DWORD)(0x46b580) - (DWORD)(0x46b651) - 4;
+    ProtectExecuteReadWrite(reinterpret_cast<void*>(0x46b650), 5);
+    *reinterpret_cast<PBYTE>(0x46b650) = 0xe9;
+    *reinterpret_cast<PDWORD>(0x46b651) = static_cast<DWORD>(0x46b580) - static_cast<DWORD>(0x46b651) - 4;
 
     // bypass the single player tests preventing chat
     std::array<byte, 1> bypassSpChecks = { 0x0 };
@@ -239,6 +382,8 @@ void RequiredMemEdits()
     // Remove cruise speed display limit
     std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
     MemUtils::WriteProcMem(0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
+
+    PatchResolution();
 }
 
 void* ScriptLoadHook(const char* script)
@@ -280,7 +425,7 @@ void SetupHack()
     UiManager::i();
 
     // Setup hooks
-    HMODULE common = GetModuleHandleA("common");
+    const HMODULE common = GetModuleHandleA("common");
     timingDetour =
         std::make_unique<FunctionDetour<GlobalTimeFunc>>(reinterpret_cast<GlobalTimeFunc>(GetProcAddress(common, "?UpdateGlobalTime@Timing@@YAXN@Z")));
     thornLoadDetour =

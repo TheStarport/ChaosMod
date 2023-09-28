@@ -6,14 +6,14 @@ class DodgeThis final : public ActiveEffect
         using OnCollision = void(__fastcall*)(IServerImpl* impl, void* edx, SSPMunitionCollisionInfo* info, uint a2);
 
         inline static std::unique_ptr<FunctionDetour<OnCollision>> detour = nullptr;
-        inline static bool alt = false;
-        inline static uint sound1 = CreateID("chaos_kickball_1");
-        inline static uint sound2 = CreateID("chaos_kickball_2");
+        inline static std::array<uint, 6> sounds = {
+            CreateID("chaos_bat_1"), CreateID("chaos_bat_2"), CreateID("chaos_bat_3"),
+            CreateID("chaos_bat_4"), CreateID("chaos_bat_5"), CreateID("chaos_bat_6"),
+        };
 
         static void __fastcall Detour(IServerImpl* impl, void* edx, SSPMunitionCollisionInfo* info, uint a2)
         {
-            pub::Audio::PlaySoundEffect(0, alt ? sound1 : sound2);
-            alt = !alt;
+            pub::Audio::PlaySoundEffect(0, sounds[Random::i()->Uniform(0u, sounds.size())]);
 
             detour->UnDetour();
             detour->GetOriginalFunc()(impl, edx, info, a2);

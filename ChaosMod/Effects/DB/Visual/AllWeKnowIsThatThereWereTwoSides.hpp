@@ -10,7 +10,7 @@ class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
 
         void End() override { MoviePlayer::i()->StopMovie(); }
 
-        void Init() override { MoviePlayer::i()->RegisterMovie(Movie::OriginalIntro, "../DATA/MOVIES/intro_hd.mp4"); }
+        void Init() override { MoviePlayer::i()->RegisterMovie(Movie::OriginalIntro, "../DATA/CHAOS/MOVIES/fl_intro.mp4"); }
 
     public:
         const EffectInfo& GetEffectInfo() override

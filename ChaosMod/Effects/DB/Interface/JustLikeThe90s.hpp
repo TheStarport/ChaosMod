@@ -14,7 +14,7 @@ class JustLikeThe90s final : public ActiveEffect
             char szCurDir[MAX_PATH];
             GetCurrentDirectoryA(sizeof(szCurDir), szCurDir);
 
-            for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CURSORS/CHAOS"))
+            for (const auto dir = std::string(szCurDir); const auto& entry : std::filesystem::recursive_directory_iterator(dir + "/../DATA/CHAOS/CURSORS"))
             {
                 if (!entry.is_regular_file() || entry.file_size() > UINT_MAX ||
                     (!(entry.path().generic_string().ends_with(".cur")) && !(entry.path().generic_string().ends_with(".ani"))))
