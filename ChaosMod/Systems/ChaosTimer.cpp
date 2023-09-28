@@ -69,6 +69,7 @@
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
+#include "Effects/DB/Misc/ThanksIHateIt.hpp"
 
 #include <magic_enum.hpp>
 
@@ -339,6 +340,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IAmFiringMyLasers);
     Ef(XboxEdition);
     Ef(RandomisedKeys);
+    Ef(ThanksIHateIt);
 
     // Movement
     Ef(Yeet);

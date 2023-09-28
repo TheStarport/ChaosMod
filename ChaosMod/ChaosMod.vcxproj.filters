@@ -395,6 +395,9 @@
     <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp">
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
