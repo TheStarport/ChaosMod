@@ -85,6 +85,12 @@
     <ClCompile Include="Systems\Teleporter.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\SpaceObjectSpawner.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\PersonalityHelper.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -401,6 +407,15 @@
     <ClInclude Include="Effects\DB\StatManipulation\NeverSayNoToBacta.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\SpaceObjectSpawner.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions\NpcLoadingException.hpp">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\PersonalityHelper.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -456,6 +471,9 @@
     </Filter>
     <Filter Include="Effects\DB\Teleports">
       <UniqueIdentifier>{2dbd0b97-e4cf-4985-b050-fd71617db5cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{013ced59-c368-495e-8987-7c5c2c53d2b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

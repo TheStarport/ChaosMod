@@ -13,7 +13,7 @@ class DodgeThis final : public ActiveEffect
 
         static void __fastcall Detour(IServerImpl* impl, void* edx, SSPMunitionCollisionInfo* info, uint a2)
         {
-            pub::Audio::PlaySoundEffect(0, sounds[Random::i()->Uniform(0u, sounds.size())]);
+            pub::Audio::PlaySoundEffect(0, sounds[Random::i()->Uniform(0u, sounds.size() - 1)]);
 
             detour->UnDetour();
             detour->GetOriginalFunc()(impl, edx, info, a2);

@@ -192,6 +192,8 @@
     <ClCompile Include="Systems\ShipManipulator.cpp" />
     <ClCompile Include="Systems\Teleporter.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
+    <ClCompile Include="Utilities\PersonalityHelper.cpp" />
+    <ClCompile Include="Utilities\SpaceObjectSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -265,6 +267,7 @@
     <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="Effects\PersistentEffect.hpp" />
+    <ClInclude Include="Exceptions\NpcLoadingException.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="Systems\CameraController.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
@@ -299,6 +302,8 @@
     <ClInclude Include="Systems\Teleporter.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
+    <ClInclude Include="Utilities\PersonalityHelper.hpp" />
+    <ClInclude Include="Utilities\SpaceObjectSpawner.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />
   </ItemGroup>
   <ItemGroup>

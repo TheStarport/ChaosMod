@@ -1,4 +1,5 @@
 #pragma once
+#include <Concepts.hpp>
 #include <random>
 
 class Random final : public Singleton<Random>
@@ -23,5 +24,20 @@ class Random final : public Singleton<Random>
         T UniformFloat(T min, T max)
         {
             return std::uniform_real_distribution<T>(min, max)(engine);
+        }
+
+        template <typename T>
+            requires StringRestriction<T>
+        T UniformString(uint length)
+        {
+            std::uniform_int_distribution<short> aToZ('A', 'Z');
+            T retStr;
+            retStr.reserve(length);
+            for (uint i = 0; i < length; i++)
+            {
+                retStr += aToZ(engine);
+            }
+
+            return retStr;
         }
 };
