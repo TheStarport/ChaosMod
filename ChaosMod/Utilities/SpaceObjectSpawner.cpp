@@ -149,16 +149,18 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
     return *this;
 }
 
-std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
+ResourcePtr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
 {
     ValidateSpawn();
 
+    static const auto validateExisting = [](const std::shared_ptr<SpawnedObject>& obj) { return pub::SpaceObj::ExistsAndAlive(obj->spaceObj) == -2; };
+
     if (isNpc)
     {
-        return SpawnNpc();
+        return { SpawnNpc(), validateExisting };
     }
 
-    return SpawnSolar();
+    return { SpawnSolar(), validateExisting };
 }
 
 int SpaceObjectSpawner::SpaceObjectBuilder::CreateSolar(uint& spaceId, pub::SpaceObj::SolarInfo& solarInfo)
@@ -255,7 +257,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
 
         if (secondName != 0)
         {
-            pilotName.append_string(secondName);   
+            pilotName.append_string(secondName);
         }
     }
     else
@@ -332,7 +334,8 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     si.systemId = system.value();
     si.orientation = rotation.value_or(Matrix::Identity());
 
-    si.costume = costumeOverride.value_or(Costume(CreateID("benchmark_male_head"), CreateID("benchmark_male_body")));  // NOLINT(clang-diagnostic-c++20-extensions)
+    si.costume =
+        costumeOverride.value_or(Costume(CreateID("benchmark_male_head"), CreateID("benchmark_male_body"))); // NOLINT(clang-diagnostic-c++20-extensions)
     si.voiceId = voiceOverride.value_or(CreateID("atc_leg_m01"));
 
     si.rep = MakeId(reputation.value_or("").c_str());
@@ -433,8 +436,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     }
 
     auto spawnedObject = std::make_shared<SpawnedObject>();
-    spawnedObject->obj =
-        static_cast<CSimple*>(CObject::Find(spaceId, CObject::Class::CSHIP_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+    spawnedObject->obj = static_cast<CSimple*>(CObject::Find(spaceId, CObject::Class::CSHIP_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
 
     if (!spawnedObject->obj)
     {
@@ -449,7 +451,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 
 void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
 {
-    
+
     if (!Archetype::GetSolar(npcTemplate.archetypeHash) && !Archetype::GetShip(npcTemplate.archetypeHash))
     {
         throw NpcLoadingException(std::format("Ship/Solar archetype not found while building NPC/Station: {}", npcTemplate.archetype));
@@ -469,6 +471,32 @@ void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
     {
         throw NpcLoadingException("Attempting to spawn an NPC/Station without a loadout set.");
     }
+}
+
+void SpaceObjectSpawner::Destroy(ResourcePtr<SpawnedObject> object)
+{
+    auto ptr = object.Acquire();
+    if (!ptr)
+    {
+        std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+        return;
+    }
+
+    pub::SpaceObj::Destroy(ptr->spaceObj, DestroyType::Fuse);
+    std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+}
+
+void SpaceObjectSpawner::Despawn(ResourcePtr<SpawnedObject> object)
+{
+    auto ptr = object.Acquire();
+    if (!ptr)
+    {
+        std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+        return;
+    }
+
+    pub::SpaceObj::Destroy(ptr->spaceObj, DestroyType::Vanish);
+    std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
 }
 
 SpaceObjectSpawner::SpaceObjectSpawner()
