@@ -163,15 +163,6 @@ ResourcePtr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
     return { SpawnSolar(), validateExisting };
 }
 
-int SpaceObjectSpawner::SpaceObjectBuilder::CreateSolar(uint& spaceId, pub::SpaceObj::SolarInfo& solarInfo)
-{
-
-    // Create the Solar
-    const int returnValue = pub::SpaceObj::CreateSolar(spaceId, solarInfo);
-
-    return returnValue;
-}
-
 std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
 {
     const auto shipArch = Archetype::GetShip(npcTemplate.archetypeHash);
@@ -451,7 +442,6 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 
 void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
 {
-
     if (!Archetype::GetSolar(npcTemplate.archetypeHash) && !Archetype::GetShip(npcTemplate.archetypeHash))
     {
         throw NpcLoadingException(std::format("Ship/Solar archetype not found while building NPC/Station: {}", npcTemplate.archetype));
