@@ -8,6 +8,7 @@ enum class EffectType
     Misc,
     Movement,
     Npc,
+    Spawning,
     StatManipulation,
     Teleport,
     Visual,
@@ -42,6 +43,7 @@ class ActiveEffect
 
         virtual void Init() {}
         virtual void Begin() {}
+        virtual void OnLoad() {}
         virtual void Update(float delta) {}
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}

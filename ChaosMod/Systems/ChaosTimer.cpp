@@ -70,6 +70,9 @@
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
 #include "Effects/DB/Misc/ThanksIHateIt.hpp"
+#include "Effects/DB/Spawning/SpawnBigBertha.hpp"
+#include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
+#include "Effects/DB/Spawning/SpawnJesus.hpp"
 #include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
 
 #include <magic_enum.hpp>
@@ -206,8 +209,8 @@ void ChaosTimer::InitEffects()
 void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)
-
-    if (!Utils::GetCShip())
+    const auto currentShip = Utils::GetCShip();
+    if (!currentShip)
     {
         uint base;
         pub::Player::GetBase(1, base);
@@ -234,6 +237,16 @@ void ChaosTimer::Update(const float delta)
         }
 
         return;
+    }
+
+    if (currentShip != lastPlayerShip)
+    {
+        for (const auto effect : activeEffects | std::views::keys)
+        {
+            effect->OnLoad();
+        }
+
+        lastPlayerShip = currentShip;
     }
 
     currentTime += delta;
@@ -362,6 +375,11 @@ void ChaosTimer::RegisterAllEffects()
     Ef(XenosAreMyFriendsNow);
     Ef(SwissDiplomacy);
     Ef(SwiftNPCs);
+
+    // Spawning
+    Ef(SpawnBigBertha);
+    Ef(SpawnJesus);
+    Ef(SpawnExtremeJesus);
 
     // Teleports
     Ef(TakeABreak);

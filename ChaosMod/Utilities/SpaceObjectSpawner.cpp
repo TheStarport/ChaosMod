@@ -153,7 +153,7 @@ ResourcePtr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
 {
     ValidateSpawn();
 
-    static const auto validateExisting = [](const std::shared_ptr<SpawnedObject>& obj) { return pub::SpaceObj::ExistsAndAlive(obj->spaceObj) == -2; };
+    static const auto validateExisting = [](const std::shared_ptr<SpawnedObject>& obj) { return pub::SpaceObj::ExistsAndAlive(obj->spaceObj) != -2; };
 
     if (isNpc)
     {
@@ -168,6 +168,8 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     const auto shipArch = Archetype::GetShip(npcTemplate.archetypeHash);
 
     pub::SpaceObj::ShipInfo si{};
+    std::memset(&si, 0x0, sizeof(pub::SpaceObj::ShipInfo));
+
     si.flag = 1;
 
     si.system = system.value();
@@ -273,11 +275,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     {
         personalityParams.personality = *personalityOverride.value();
     }
-    else
-    {
-        personalityParams.stateGraph = pub::StateGraph::get_state_graph("FIGHTER", pub::StateGraph::TYPE_STANDARD);
-        personalityParams.stateId = true;
-    }
+
+    personalityParams.stateGraph = pub::StateGraph::get_state_graph("FIGHTER", pub::StateGraph::TYPE_STANDARD);
+    personalityParams.stateId = true;
 
     if (reputation.has_value())
     {
@@ -290,8 +290,13 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
         }
     }
 
-    uint spaceObj;
+    uint spaceObj = 0;
     pub::SpaceObj::Create(spaceObj, si);
+
+    if (!spaceObj)
+    {
+        return {};
+    }
 
     // Add the personality to the space obj
     pub::AI::SubmitState(spaceObj, &personalityParams);
@@ -299,11 +304,6 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     auto spawnedObject = std::make_shared<SpawnedObject>();
     spawnedObject->obj =
         static_cast<CSimple*>(CObject::Find(spaceObj, CObject::Class::CSHIP_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-
-    if (!spawnedObject->obj)
-    {
-        return {};
-    }
 
     spawnedObject->spaceObj = spaceObj;
 
@@ -392,11 +392,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     {
         personalityParams.personality = *personalityOverride.value();
     }
-    else
-    {
-        personalityParams.stateGraph = pub::StateGraph::get_state_graph("FIGHTER", pub::StateGraph::TYPE_STANDARD);
-        personalityParams.stateId = true;
-    }
+
+    personalityParams.stateGraph = pub::StateGraph::get_state_graph("STATION", pub::StateGraph::TYPE_STANDARD);
+    personalityParams.stateId = true;
 
     pub::AI::SubmitState(spaceId, &personalityParams);
 
@@ -468,12 +466,12 @@ void SpaceObjectSpawner::Destroy(ResourcePtr<SpawnedObject> object)
     auto ptr = object.Acquire();
     if (!ptr)
     {
-        std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+        std::erase_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
         return;
     }
 
     pub::SpaceObj::Destroy(ptr->spaceObj, DestroyType::Fuse);
-    std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+    std::erase_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
 }
 
 void SpaceObjectSpawner::Despawn(ResourcePtr<SpawnedObject> object)
@@ -481,12 +479,12 @@ void SpaceObjectSpawner::Despawn(ResourcePtr<SpawnedObject> object)
     auto ptr = object.Acquire();
     if (!ptr)
     {
-        std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+        std::erase_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
         return;
     }
 
     pub::SpaceObj::Destroy(ptr->spaceObj, DestroyType::Vanish);
-    std::ranges::remove_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
+    std::erase_if(spawnedObjects, [ptr](auto& spawned) { return ptr->spaceObj == spawned->spaceObj; });
 }
 
 SpaceObjectSpawner::SpaceObjectSpawner()

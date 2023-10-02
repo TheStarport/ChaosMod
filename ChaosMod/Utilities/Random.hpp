@@ -35,7 +35,7 @@ class Random final : public Singleton<Random>
             retStr.reserve(length);
             for (uint i = 0; i < length; i++)
             {
-                retStr += aToZ(engine);
+                retStr += static_cast<char>(aToZ(engine));
             }
 
             return retStr;

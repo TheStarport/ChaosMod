@@ -416,6 +416,15 @@
     <ClInclude Include="Utilities\PersonalityHelper.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -474,6 +483,9 @@
     </Filter>
     <Filter Include="Exceptions">
       <UniqueIdentifier>{013ced59-c368-495e-8987-7c5c2c53d2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\DB\Spawning">
+      <UniqueIdentifier>{3f7dd683-acf2-49e5-a706-ee477341fd76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         float currentTime = 0.0f;
         float modifiers = 1.0f;
         bool doubleTime = false;
+        CShip* lastPlayerShip = nullptr;
 
         static void PlayBadEffect();
         static void PlayEffectSkip();
