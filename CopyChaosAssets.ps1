@@ -1,8 +1,10 @@
 Write-Output "Looking for current instances of Freelancer.exe"
 $freelancer = Get-Process freelancer -ErrorAction SilentlyContinue
 if ($freelancer){
-Write-Output "Stopping current instances of Freelancer.exe"
+Write-Output "Found $freelancer"
+Write-Output "Stopping $freelancer"
 Get-Process "freelancer" | Stop-Process
+$freelancer.WaitForExit()
 }
 Remove-Variable freelancer
 
