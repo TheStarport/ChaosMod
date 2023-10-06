@@ -74,6 +74,23 @@ entities =
 	},
 
 	{
+		entity_name = "confetti_explosion",
+		type = PSYS,
+		template_name = "chaos_confetti_fireworks",
+		lt_grp = 0, srt_grp = 0, usr_flg = 0,
+		flags = LIT_DYNAMIC + LIT_AMBIENT,
+		spatialprops =
+		{
+			pos = { 7880.643, 654.8472, -3196.648 },
+			orient = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }
+		},
+		psysprops =
+		{
+			sparam = 0
+		}
+	},
+
+	{
 		entity_name = "smallstation1_1",
 		type = COMPOUND,
 		template_name = "smallstation1_old",
@@ -1166,6 +1183,48 @@ events =
 		0.000, START_PSYS, { "gf_li_smallengine01_fire_5" },
 		{
 			duration = 2400.000
+		}
+	},
+
+	{
+		5.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
+		}
+	},
+
+	{
+		45.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
+		}
+	},
+
+	{
+		85.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
+		}
+	},
+
+	{
+		105.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
+		}
+	},
+
+	{
+		200.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
+		}
+	},
+
+	{
+		300.000, START_PSYS, { "confetti_explosion" },
+		{
+			duration = 20
 		}
 	},
 
