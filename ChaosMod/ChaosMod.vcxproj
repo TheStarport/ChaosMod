@@ -106,7 +106,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)*.dll" "$(FLHOOK_COPY_PATH)"</Command>
+      <Command>copy /Y "$(TargetDir)*.dll" "$(FLHOOK_COPY_PATH)"
+powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
