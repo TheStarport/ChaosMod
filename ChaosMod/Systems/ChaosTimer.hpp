@@ -5,6 +5,10 @@
 
 class ChaosTimer final : public Singleton<ChaosTimer>
 {
+        inline static FARPROC oldShipDestroyed = nullptr;
+        static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
+        static void NakedShipDestroyed();
+
         float currentTime = 0.0f;
         float modifiers = 1.0f;
         bool doubleTime = false;
@@ -20,6 +24,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         std::vector<PersistentEffect*> persistentEffects;
 
     public:
+        ChaosTimer();
         void TriggerSpecificEffect(ActiveEffect* effect);
         void ToggleDoubleTime();
         void AdjustModifier(float modifier);

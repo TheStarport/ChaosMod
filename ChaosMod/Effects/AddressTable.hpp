@@ -23,6 +23,8 @@ enum class AddressTable : DWORD
     // Other
     TradelaneSpeed = 0x13F3CC,
     CollisionDamage = 0x18D184,
+
+    ShipDestroyedFunction = 0x87274,
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)

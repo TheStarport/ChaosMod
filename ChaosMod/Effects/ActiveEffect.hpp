@@ -44,6 +44,7 @@ class ActiveEffect
         virtual void Init() {}
         virtual void Begin() {}
         virtual void OnLoad() {}
+        virtual void OnShipDestroyed(DamageList* dmgList, CShip* ship) {}
         virtual void Update(float delta) {}
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}

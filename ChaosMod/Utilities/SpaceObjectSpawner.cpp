@@ -26,15 +26,22 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
     return *this;
 }
 
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithArchetype(const uint archetype)
+{
+    npcTemplate.archetypeHash = archetype;
+    return *this;
+}
+
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithLoadout(const std::string& loadout)
 {
-    if (!Loadout::Get(CreateID(loadout.c_str())))
-    {
-        throw NpcLoadingException(std::format("{} loadout was not found while loading NPC.", loadout));
-    }
-
     npcTemplate.loadout = loadout;
     npcTemplate.loadoutHash = CreateID(loadout.c_str());
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithLoadout(uint loadout)
+{
+    npcTemplate.loadoutHash = loadout;
     return *this;
 }
 
@@ -51,6 +58,12 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
         personalityOverride = personality.value();
     }
 
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithPersonality(pub::AI::Personality& personality)
+{
+    personalityOverride = &personality;
     return *this;
 }
 
@@ -125,9 +138,21 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
     return *this;
 }
 
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithName(FmtStr& scannerName, FmtStr& pilotName)
+{
+    names = { scannerName, pilotName };
+    return *this;
+}
+
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithReputation(const std::string& rep)
 {
     reputation = rep;
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithReputation(uint affiliation)
+{
+    this->affiliation = affiliation;
     return *this;
 }
 
@@ -243,7 +268,13 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     // below shows the use of multiple part names.
     FmtStr pilotName(0, nullptr);
     pilotName.begin_mad_lib(16163); // ids of "%s0 %s1"
-    if (name.has_value())
+    if (names.has_value())
+    {
+        auto name = names.value();
+        scannerName = name.first;
+        pilotName = name.second;
+    }
+    else if (name.has_value())
     {
         const auto [firstName, secondName] = name.value();
         pilotName.append_string(firstName);
@@ -279,13 +310,17 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     personalityParams.stateGraph = pub::StateGraph::get_state_graph("FIGHTER", pub::StateGraph::TYPE_STANDARD);
     personalityParams.stateId = true;
 
-    if (reputation.has_value())
+    pub::Reputation::Alloc(si.rep, scannerName, pilotName);
+    if (affiliation.has_value())
+    {
+        pub::Reputation::SetAffiliation(si.rep, affiliation.value());
+    }
+    else if (reputation.has_value())
     {
         uint r;
         pub::Reputation::GetReputationGroup(r, reputation.value().c_str());
         if (r)
         {
-            pub::Reputation::Alloc(si.rep, scannerName, pilotName);
             pub::Reputation::SetAffiliation(si.rep, r);
         }
     }
@@ -458,6 +493,11 @@ void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
     if (!npcTemplate.loadoutHash)
     {
         throw NpcLoadingException("Attempting to spawn an NPC/Station without a loadout set.");
+    }
+
+    if (!Loadout::Get(npcTemplate.loadoutHash))
+    {
+        throw NpcLoadingException(std::format("{} ({}) loadout was not found while loading NPC.", npcTemplate.loadout, npcTemplate.loadoutHash));
     }
 }
 

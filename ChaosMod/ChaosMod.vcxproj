@@ -241,6 +241,7 @@
     <ClInclude Include="Effects\DB\NPC\Wanted.hpp" />
     <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
     <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp" />
+    <ClInclude Include="Effects\DB\Spawning\Hydra.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
     <ClInclude Include="Systems\Teleporter.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
+    <ClInclude Include="Utilities\AssetTracker.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\PersonalityHelper.hpp" />
     <ClInclude Include="Utilities\SpaceObjectSpawner.hpp" />

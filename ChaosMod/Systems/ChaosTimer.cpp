@@ -70,12 +70,38 @@
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
 #include "Effects/DB/Misc/ThanksIHateIt.hpp"
+#include "Effects/DB/Spawning/Hydra.hpp"
 #include "Effects/DB/Spawning/SpawnBigBertha.hpp"
 #include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
 #include "Effects/DB/Spawning/SpawnJesus.hpp"
 #include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
 
 #include <magic_enum.hpp>
+
+void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
+{
+    auto* ship = reinterpret_cast<CShip*>(ecx[4]);
+    for (const auto& key : i()->activeEffects | std::views::keys)
+    {
+        key->OnShipDestroyed(dmgList, ship);
+    }
+}
+
+__declspec(naked) void ChaosTimer::NakedShipDestroyed()
+{
+    __asm {
+        mov eax, [esp+0Ch] ; +4
+        mov edx, [esp+4]
+        push ecx
+        push edx
+        push ecx
+        push eax
+        call ShipDestroyed
+        pop ecx
+        mov eax, [oldShipDestroyed]
+        jmp eax
+    }
+}
 
 void ChaosTimer::PlayBadEffect() { pub::Audio::PlaySoundEffect(1, CreateID("ui_select_remove")); }
 void ChaosTimer::PlayEffectSkip() { pub::Audio::PlaySoundEffect(1, CreateID("ui_open_infocard_button")); }
@@ -169,6 +195,15 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
     activeEffects[effect] = timing;
     PlayNextEffect();
+}
+
+ChaosTimer::ChaosTimer()
+{
+    auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
+
+    const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
+    MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
+    MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
 }
 
 void ChaosTimer::TriggerSpecificEffect(ActiveEffect* effect) { TriggerChaos(effect); }
@@ -377,6 +412,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SwiftNPCs);
 
     // Spawning
+    Ef(Hydra);
     Ef(SpawnBigBertha);
     Ef(SpawnJesus);
     Ef(SpawnExtremeJesus);

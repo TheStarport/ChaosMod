@@ -8,6 +8,7 @@
 #include "Systems/KeyManager.hpp"
 #include "Systems/ShipManipulator.hpp"
 #include "Systems/UiManager.hpp"
+#include "Utilities/AssetTracker.hpp"
 
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
 typedef void (*GlobalTimeFunc)(double delta);
@@ -203,7 +204,7 @@ void PatchResolution()
         height = static_cast<long>(static_cast<float>(width) / 1.3333333f);
     }
 
-    	// Set the screen dimensions.
+    // Set the screen dimensions.
     MemUtils::WriteProcMem(screenWidth, &width, 4);
     MemUtils::WriteProcMem(screenHeight, &height, 4);
 
@@ -418,6 +419,8 @@ void __cdecl Update(const double delta)
 
 void SetupHack()
 {
+    AssetTracker::StartDetours();
+
     // make needed memory edits for chaos mod to work
     RequiredMemEdits();
 
