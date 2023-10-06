@@ -241,4 +241,8 @@ namespace Utils
             while (next);
         }
     }
+
+    IObjInspectImpl* GetInspect(uint shipId);
+    void __stdcall LightFuse(IObjInspectImpl* ship, uint fuseId, float delay, float lifetime, float skip);
+    void __stdcall UnLightFuse(IObjInspectImpl* ship, uint fuseId, float delay);
 } // namespace Utils

@@ -267,6 +267,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
     <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp" />
     <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
+    <ClInclude Include="Effects\DB\Visual\RookieBirthdayParty.hpp" />
     <ClInclude Include="Effects\DB\Visual\Screensaver.hpp" />
     <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
     <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp" />

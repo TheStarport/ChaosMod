@@ -29,6 +29,7 @@
 #include "Effects/DB/Misc/RandomisedKeys.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
+#include "Effects/DB/Misc/ThanksIHateIt.hpp"
 #include "Effects/DB/Misc/XboxEdition.hpp"
 #include "Effects/DB/Movement/IllTrySpinning.hpp"
 #include "Effects/DB/Movement/InvertVelocity.hpp"
@@ -45,12 +46,17 @@
 #include "Effects/DB/NPC/Wanted.hpp"
 #include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
 #include "Effects/DB/NPC/YouAreFamous.hpp"
+#include "Effects/DB/Spawning/Hydra.hpp"
+#include "Effects/DB/Spawning/SpawnBigBertha.hpp"
+#include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
+#include "Effects/DB/Spawning/SpawnJesus.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/DemolitionDerby.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
 #include "Effects/DB/StatManipulation/Hyperlanes.hpp"
 #include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
+#include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
 #include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
 #include "Effects/DB/StatManipulation/TryRepairing.hpp"
 #include "Effects/DB/StatManipulation/WiffleBats.hpp"
@@ -66,15 +72,10 @@
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
 #include "Effects/DB/Visual/PortraitMode.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
+#include "Effects/DB/Visual/RookieBirthdayParty.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
 #include "UiManager.hpp"
-#include "Effects/DB/Misc/ThanksIHateIt.hpp"
-#include "Effects/DB/Spawning/Hydra.hpp"
-#include "Effects/DB/Spawning/SpawnBigBertha.hpp"
-#include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
-#include "Effects/DB/Spawning/SpawnJesus.hpp"
-#include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
 
 #include <magic_enum.hpp>
 
@@ -433,6 +434,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SleepyPlayer);
     Ef(PortraitMode);
     Ef(AllWeKnowIsThatThereWereTwoSides);
+    Ef(RookieBirthdayParty);
 
 #undef Ef
 }
