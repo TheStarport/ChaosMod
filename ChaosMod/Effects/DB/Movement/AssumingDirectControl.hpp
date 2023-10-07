@@ -45,6 +45,15 @@ class AssumingDirectControl final : public ActiveEffect
 
             if (solar)
             {
+                if (Random::i()->Uniform(0u, 1u))
+                {
+                    pub::Audio::PlaySoundEffect(1, CreateID("chaos_assuming_control_01"));
+                }
+                else
+                {
+                    pub::Audio::PlaySoundEffect(1, CreateID("chaos_assuming_control_02"));
+                }
+
                 solarId = solar->id;
                 KeyManager::BlockPlayerInput(true);
 

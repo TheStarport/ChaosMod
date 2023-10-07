@@ -61,7 +61,7 @@ class LowBudgetSciFiMovie final : public ActiveEffect
         LowBudgetSciFiMovie()
         {
             pewHashes.clear();
-            for (int i = 0; i <= 50; i++)
+            for (int i = 1; i <= 50; i++)
             {
                 auto str = std::format("chaos_pew_{:0>2}", i);
                 pewHashes.emplace_back(CreateID(str.c_str()));
