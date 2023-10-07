@@ -5,8 +5,9 @@ class RookieBirthdayParty final : public ActiveEffect
 {
         void OnShipDestroyed(DamageList* dmgList, CShip* ship) override
         {
-            if (dmgList->damageCause != DamageCause::Gun && dmgList->damageCause != DamageCause::Collision && dmgList->damageCause != DamageCause::CruiseDisrupter &&
-                dmgList->damageCause != DamageCause::Mine && dmgList->damageCause != DamageCause::MissileTorpedo)
+            if (dmgList->damageCause != DamageCause::Gun && dmgList->damageCause != DamageCause::Collision &&
+                dmgList->damageCause != DamageCause::CruiseDisrupter && dmgList->damageCause != DamageCause::Mine &&
+                dmgList->damageCause != DamageCause::MissileTorpedo)
             {
                 return;
             }

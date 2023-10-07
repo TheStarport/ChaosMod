@@ -31,6 +31,7 @@
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Misc/ThanksIHateIt.hpp"
 #include "Effects/DB/Misc/XboxEdition.hpp"
+#include "Effects/DB/Movement/AssumingDirectControl.hpp"
 #include "Effects/DB/Movement/IllTrySpinning.hpp"
 #include "Effects/DB/Movement/InvertVelocity.hpp"
 #include "Effects/DB/Movement/PersonalSpace.hpp"
@@ -399,6 +400,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IllTrySpinning);
     Ef(InvertVelocity);
     Ef(PersonalSpace);
+    Ef(AssumingDirectControl);
 
     // Npc
     Ef(Screaming);

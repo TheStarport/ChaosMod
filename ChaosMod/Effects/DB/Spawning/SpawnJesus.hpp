@@ -21,7 +21,7 @@ class SpawnJesus final : public ActiveEffect
                         .WithSystem(ship->system)
                         .WithPosition(ship->get_position(), 1500.f)
                         .WithLevel(50)
-                        .WithPersonality("gunboat_default")
+                        .WithPersonality("pilot_military_ace")
                         .WithReputation("chaos_jesus")
                         .WithName(458757)
                         .Spawn();

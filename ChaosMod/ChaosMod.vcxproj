@@ -227,6 +227,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
     <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp" />
     <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
+    <ClInclude Include="Effects\DB\Movement\AssumingDirectControl.hpp" />
     <ClInclude Include="Effects\DB\Movement\IllTrySpinning.hpp" />
     <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp" />
     <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp" />

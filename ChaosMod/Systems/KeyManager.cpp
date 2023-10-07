@@ -4,6 +4,11 @@
 
 bool __stdcall KeyManager::HandleKey(int keyCmd)
 {
+    if (blockPlayerInput)
+    {
+        return true;
+    }
+
     // ReSharper disable once CppDefaultCaseNotHandledInSwitchStatement
     switch (keyCmd)
     {
@@ -27,7 +32,10 @@ bool __stdcall KeyManager::HandleKey(int keyCmd)
         case Utils::USER_ENTER:
         case Utils::USER_NO:
         case Utils::USER_YES:
-        case Utils::USER_RESET: return false;
+        case Utils::USER_RESET:
+            {
+                return false;
+            }
 
         default: break;
     }
@@ -249,3 +257,5 @@ void KeyManager::ToggleRandomisedKeys()
         it->second = keys[i];
     }
 }
+
+void KeyManager::BlockPlayerInput(const bool input) { blockPlayerInput = input; }
