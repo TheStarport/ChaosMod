@@ -319,6 +319,7 @@ void UiManager::Render()
 void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
 
 void UiManager::DebugLog(const std::string& log) { debugLog.Log(log); }
+void UiManager::SetVotingChoices(const std::vector<std::string>& choices) { optionText.SetOptions(choices); }
 void UiManager::UpdateProgressBar(const float progressPercentage) { progressBar.SetProgressPercentage(progressPercentage); }
 
 ImFont* UiManager::GetFont(const Font font)

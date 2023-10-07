@@ -14,9 +14,12 @@ class ConfigManager : public Singleton<ConfigManager>
         DWORD progressBarColor = 0xFFFFFFFF;
         DWORD progressBarTextColor = 0xFF00FF00;
         bool showTimeRemainingOnEffects = false;
+        uint timeBetweenSavesInSeconds = 300;
+        bool allowAutoSavesDuringCombat = false;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
-                                       enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects);
+                                       enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects,
+                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat);
 
         void Save();
         static ConfigManager* Load();

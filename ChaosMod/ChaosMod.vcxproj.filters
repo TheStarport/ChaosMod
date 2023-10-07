@@ -91,6 +91,9 @@
     <ClCompile Include="Utilities\PersonalityHelper.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -436,6 +439,12 @@
     </ClInclude>
     <ClInclude Include="Effects\DB\Movement\AssumingDirectControl.hpp">
       <Filter>Effects\DB\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SystemComponents\SaveManager.hpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SystemComponents\TwitchVoting.hpp">
+      <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

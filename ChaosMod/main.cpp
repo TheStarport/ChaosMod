@@ -7,8 +7,10 @@
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
 #include "Systems/ShipManipulator.hpp"
+#include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "Systems/UiManager.hpp"
 #include "Utilities/AssetTracker.hpp"
+#include <Systems/SystemComponents/SaveManager.hpp>
 
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
 typedef void (*GlobalTimeFunc)(double delta);
@@ -16,7 +18,7 @@ typedef void (*GlobalTimeFunc)(double delta);
 std::unique_ptr<FunctionDetour<ScriptLoadPtr>> thornLoadDetour;
 std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 
-constexpr double SixtyFramesPerSecond = 1.0 / 60.0;
+constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
 
 std::unordered_set<Archetype::Ship*> ships;
@@ -227,7 +229,6 @@ void PatchResolution()
     }
 
     {
-
         // Remove aspect check when we add the widescreen resolution.
         constexpr std::array<byte, 1> patch = { 0xEB };
         MemUtils::WriteProcMem(reinterpret_cast<PCHAR>(GetModuleHandle(nullptr)) + 0xAF1E7, patch.data(), 1);
@@ -407,11 +408,13 @@ void __cdecl Update(const double delta)
     timeCounter += delta;
     while (timeCounter > SixtyFramesPerSecond)
     {
-        ChaosTimer::i()->Update(static_cast<float>(SixtyFramesPerSecond));
+        SaveManager::SaveTimer(SixtyFramesPerSecond);
+        ChaosTimer::i()->Update(SixtyFramesPerSecond);
         timeCounter -= SixtyFramesPerSecond;
     }
 
-    ChaosTimer::i()->FrameUpdate(static_cast<float>(SixtyFramesPerSecond));
+    TwitchVoting::i()->Poll();
+    ChaosTimer::i()->FrameUpdate(static_cast<float>(delta));
     timingDetour->UnDetour();
     timingDetour->GetOriginalFunc()(delta);
     timingDetour->Detour(Update);

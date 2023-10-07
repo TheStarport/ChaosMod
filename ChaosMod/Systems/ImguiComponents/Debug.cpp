@@ -5,6 +5,7 @@
 
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/ConfigManager.hpp"
+#include "Systems/SystemComponents/TwitchVoting.hpp"
 
 #include <imgui-club/imgui_memory_editor/imgui_memory_editor.h>
 #include <magic_enum_all.hpp>
@@ -60,7 +61,7 @@ void EffectSelectorWindow::Render()
                     static bool selected = false;
                     if (ImGui::Selectable(info.effectName.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
                     {
-                        ChaosTimer::i()->TriggerSpecificEffect(effect);
+                        ChaosTimer::i()->TriggerChaos(effect);
                     }
                     selected = false;
                 }
@@ -140,6 +141,23 @@ void Configurator::Render()
     ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
     ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
     ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->totalAllowedConcurrentEffects), 1, 12);
+    ImGui::SliderInt("Time Between Auto Saves", reinterpret_cast<PINT>(&config->timeBetweenSavesInSeconds), 60 * 3, 60 * 10);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Chaos Mod, by its nature, is unstable. The game might crash or soft lock you. It might set you to be hostile to everyone, "
+                          "or remove all your money.\n"
+                          "For this reason, the game will auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
+    }
+
+    ImGui::SameLine();
+    ImGui::Checkbox("Allow Saving During Combat", &config->allowAutoSavesDuringCombat);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip(
+            "By default, the game will not autosave when hostiles are within 2k of the player. If they are it will push the timer back by 30 seconds.\n"
+            "This is done because this can break mission scripts and NPC spawns in some cases. You can enable it if you want, but you've been warned!");
+    }
+
     ImGui::Separator();
 
     // Meta Settings
@@ -160,6 +178,15 @@ void Configurator::Render()
             "the percentage chance of the Twitch value being selected. If set to 1, Twitch chat's option is guaranteed.\n This option is likely to "
             "be more preferable if you have fewer engaged viewers as to still allow for a degree of randomness.");
     }
+
+    static bool initialized = false;
+    ImGui::BeginDisabled(!config->enableTwitchVoting && !initialized);
+    if (ImGui::Button("Initialize Voting Proxy") && TwitchVoting::i()->Initialize())
+    {
+        initialized = true;
+    }
+    ImGui::EndDisabled();
+
     ImGui::Separator();
 
     // Style Settings

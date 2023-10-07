@@ -17,15 +17,14 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         static void PlayBadEffect();
         static void PlayEffectSkip();
         static void PlayNextEffect();
-
         ActiveEffect* SelectEffect();
-        void TriggerChaos(ActiveEffect* effect = nullptr);
+
         std::unordered_map<ActiveEffect*, float> activeEffects;
         std::vector<PersistentEffect*> persistentEffects;
 
     public:
         ChaosTimer();
-        void TriggerSpecificEffect(ActiveEffect* effect);
+        void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();
         void AdjustModifier(float modifier);
         void Update(float delta);
@@ -33,4 +32,9 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         void InitEffects();
         static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
         static void RegisterAllEffects();
+
+        [[nodiscard]]
+        float GetTimeUntilChaos() const;
+
+        std::vector<ActiveEffect*> GetNextEffects(int count = 3);
 };

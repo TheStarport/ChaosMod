@@ -2,9 +2,9 @@
 
 class ChaosOptionText final
 {
-        bool show = false;
+        std::vector<std::string> options;
 
     public:
-        void ToggleVisibility();
+        void SetOptions(const std::vector<std::string>& options);
         void Render() const;
 };

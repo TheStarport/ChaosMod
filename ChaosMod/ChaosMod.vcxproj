@@ -191,6 +191,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
+    <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp" />
     <ClCompile Include="Systems\Teleporter.cpp" />
     <ClCompile Include="Systems\UiManager.cpp" />
     <ClCompile Include="Utilities\PersonalityHelper.cpp" />
@@ -306,6 +307,8 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
+    <ClInclude Include="Systems\SystemComponents\SaveManager.hpp" />
+    <ClInclude Include="Systems\SystemComponents\TwitchVoting.hpp" />
     <ClInclude Include="Systems\Teleporter.hpp" />
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\AssetTracker.hpp" />

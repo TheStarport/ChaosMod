@@ -2,13 +2,15 @@
 
 #include "ChaosOptionText.hpp"
 
+#include "Systems/UiManager.hpp"
+
 #include <imgui.h>
 
-void ChaosOptionText::ToggleVisibility() { show = !show; }
+void ChaosOptionText::SetOptions(const std::vector<std::string>& options) { this->options = options; }
 
 void ChaosOptionText::Render() const
 {
-    if (!show)
+    if (options.empty())
     {
         return;
     }
@@ -19,7 +21,7 @@ void ChaosOptionText::Render() const
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
 
     auto location = ImGui::GetIO().DisplaySize;
-    location.x = location.x - location.x / 4.0f;
+    location.x = location.x - location.x / 6.0f;
     location.y = 0 + location.y / 6.0f;
 
     ImGui::SetNextWindowPos(location, ImGuiCond_Always);
@@ -29,17 +31,11 @@ void ChaosOptionText::Render() const
         return;
     }
 
-    ImGui::SetWindowFontScale(2.0f);
-    ImGui::Text("1.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("2.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("3.) Spawn Big Bertha");
-    ImGui::NewLine();
-    ImGui::Text("4.) Spawn Big Bertha");
-    ImGui::NewLine();
-
-    ImGui::SetWindowFontScale(1.0f);
+    for (auto& entry : options)
+    {
+        ImGui::Text(entry.c_str()); // NOLINT(clang-diagnostic-format-security)
+        ImGui::NewLine();
+    }
 
     ImGui::End();
 }

@@ -51,6 +51,7 @@ class UiManager final : public Singleton<UiManager>
 
         void ToggleDebugConsole();
         void DebugLog(const std::string& log);
+        void SetVotingChoices(const std::vector<std::string>& choices);
 
         void UpdateProgressBar(float progressPercentage);
 

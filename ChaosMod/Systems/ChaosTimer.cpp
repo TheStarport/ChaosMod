@@ -87,6 +87,14 @@ void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
     {
         key->OnShipDestroyed(dmgList, ship);
     }
+
+    for (const auto& effect : i()->persistentEffects)
+    {
+        if (effect->Persisting())
+        {
+            effect->OnShipDestroyed(dmgList, ship);
+        }
+    }
 }
 
 __declspec(naked) void ChaosTimer::NakedShipDestroyed()
@@ -154,12 +162,14 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return effect;
     }
 
-    Log("Failed to select effect after 5 attempts.");
+    Log("Failed to select effect after 15 attempts.");
     return nullptr;
 }
 
 void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 {
+    currentTime = 0.0f;
+
     if (!effect)
     {
         effect = SelectEffect();
@@ -208,8 +218,6 @@ ChaosTimer::ChaosTimer()
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
 }
 
-void ChaosTimer::TriggerSpecificEffect(ActiveEffect* effect) { TriggerChaos(effect); }
-
 void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
 void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }
 
@@ -231,8 +239,7 @@ void ChaosTimer::FrameUpdate(const float delta)
 
 void ChaosTimer::InitEffects()
 {
-    const auto possibleEffects = ActiveEffect::GetAllEffects();
-    for (const auto& effect : possibleEffects)
+    for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
     {
         effect->Init();
 
@@ -241,6 +248,25 @@ void ChaosTimer::InitEffects()
             persistentEffects.emplace_back(persistent);
         }
     }
+}
+
+float ChaosTimer::GetTimeUntilChaos() const { return ConfigManager::i()->timeBetweenChaos * modifiers - currentTime; }
+
+std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
+{
+    std::vector<ActiveEffect*> effects;
+    for (int i = 0; i < count; i++)
+    {
+        const auto effect = SelectEffect();
+        if (!effect)
+        {
+            continue;
+        }
+
+        effects.emplace_back(effect);
+    }
+
+    return effects;
 }
 
 void ChaosTimer::Update(const float delta)
@@ -288,10 +314,10 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    const float nextTime = ConfigManager::i()->timeBetweenChaos * modifiers;
-    if (currentTime > nextTime)
+    const float nextTime = GetTimeUntilChaos();
+
+    if (!ConfigManager::i()->enableTwitchVoting && currentTime > nextTime)
     {
-        currentTime = 0.0f;
         TriggerChaos();
 
         if (doubleTime)
