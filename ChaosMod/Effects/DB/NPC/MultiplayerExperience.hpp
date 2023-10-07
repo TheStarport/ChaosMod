@@ -81,7 +81,7 @@ class MultiplayerExperience final : public ActiveEffect
                 }
 
                 auto color = Random::i()->Uniform(0u, 0xFFFFFFu);
-                color += (0x40 & 0xFF);
+                color += (0x40 << 24);
                 ChatConsole::i()->Tra(color, -1);
                 ChatConsole::i()->Print(std::format(L"{}:", std::wstring(reinterpret_cast<const wchar_t*>(str))), false);
                 ChatConsole::i()->Style(static_cast<USHORT>(ChatConsole::Style::Dialog));
