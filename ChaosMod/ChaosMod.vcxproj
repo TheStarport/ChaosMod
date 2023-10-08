@@ -211,6 +211,9 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreCommon.h" />
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreDefs.h" />
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreRemoteClient.h" />
     <ClInclude Include="Effects\ActiveEffect.hpp" />
     <ClInclude Include="Effects\AddressTable.hpp" />
     <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp" />

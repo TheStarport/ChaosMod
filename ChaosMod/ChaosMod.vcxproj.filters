@@ -450,6 +450,15 @@
     <ClInclude Include="Effects\DB\NPC\Pacifist.hpp">
       <Filter>Effects\DB\NPC</Filter>
     </ClInclude>
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreCommon.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreDefs.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreRemoteClient.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -511,6 +520,9 @@
     </Filter>
     <Filter Include="Effects\DB\Spawning">
       <UniqueIdentifier>{3f7dd683-acf2-49e5-a706-ee477341fd76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{05f6c393-73cd-4869-97c4-fe7c34888ad9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
