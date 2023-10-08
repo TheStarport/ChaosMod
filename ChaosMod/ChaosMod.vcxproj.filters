@@ -447,6 +447,9 @@
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Effects\DB\NPC\Pacifist.hpp">
+      <Filter>Effects\DB\NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

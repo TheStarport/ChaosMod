@@ -40,6 +40,7 @@
 #include "Effects/DB/NPC/Cardamine.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
+#include "Effects/DB/NPC/Pacifist.hpp"
 #include "Effects/DB/NPC/PlanetOfTheApes.hpp"
 #include "Effects/DB/NPC/Screaming.hpp"
 #include "Effects/DB/NPC/SwiftNPCs.hpp"
@@ -216,6 +217,14 @@ ChaosTimer::ChaosTimer()
     const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
     MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
+}
+
+void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, float delay)
+{
+    if (const auto found = activeEffects.find(effect); found != activeEffects.end())
+    {
+        found->second += delay;
+    }
 }
 
 void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
@@ -439,6 +448,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(XenosAreMyFriendsNow);
     Ef(SwissDiplomacy);
     Ef(SwiftNPCs);
+    Ef(Pacifist);
 
     // Spawning
     Ef(Hydra);

@@ -249,6 +249,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\NPC\Cardamine.hpp" />
     <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
+    <ClInclude Include="Effects\DB\NPC\Pacifist.hpp" />
     <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
     <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
     <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp" />
