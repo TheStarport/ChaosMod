@@ -80,14 +80,14 @@ void TwitchVoting::Cleanup()
 }
 
 TwitchVoting::~TwitchVoting() { Cleanup(); }
-constexpr auto bufferSize = 256u;
+constexpr auto BufferSize = 256u;
 
 bool TwitchVoting::Initialize()
 {
     SpawnVotingProxy();
 
     pipeHandle = CreateNamedPipe(
-        LR"(\\.\pipe\ChaosModVVotingPipe)", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, bufferSize, bufferSize, 0, nullptr);
+        LR"(\\.\pipe\ChaosModVVotingPipe)", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BufferSize, BufferSize, 0, nullptr);
 
     if (pipeHandle == INVALID_HANDLE_VALUE)
     {
@@ -142,9 +142,9 @@ void TwitchVoting::Poll()
         }
     }
 
-    char buffer[bufferSize];
+    char buffer[BufferSize];
     DWORD bytesRead;
-    if (!ReadFile(pipeHandle, buffer, bufferSize, &bytesRead, nullptr))
+    if (!ReadFile(pipeHandle, buffer, BufferSize, &bytesRead, nullptr))
     {
         return;
     }
@@ -245,13 +245,12 @@ void TwitchVoting::HandleMsg(std::string_view message)
         }
 
         const std::string identifier = receivedJson["Identifier"];
-        Log(identifier);
         if (identifier == "voteresult")
         {
             int result = receivedJson["SelectedOption"];
 
             hasReceivedResult = true;
-            
+
             Log(std::format("Pipe (voteresult): {}", result));
             selectedResult = result;
         }

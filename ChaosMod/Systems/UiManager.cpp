@@ -273,7 +273,15 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 
     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
 
-    const auto& io = ImGui::GetIO();
+    char path[MAX_PATH];
+    GetUserDataPath(path);
+
+    auto& io = ImGui::GetIO();
+
+    const static std::string ini = std::format("{}/imgui.ini", path);
+    const static std::string log = std::format("{}/imgui.log", path);
+    io.IniFilename = ini.c_str();
+    io.LogFilename = log.c_str();
 
     const auto font = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 28);
     if (!font)
@@ -322,7 +330,17 @@ void UiManager::Render()
 
 void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
 
-void UiManager::DebugLog(const std::string& log) { debugLog.Log(log); }
+void UiManager::DebugLog(const std::string& log)
+{
+    debugLog.Log(log);
+
+    static char path[MAX_PATH];
+    GetUserDataPath(path);
+    static std::ofstream file(std::format("{}/chaos.log", path), std::ios::beg | std::ios::trunc);
+
+    auto now = std::chrono::system_clock::now();
+    file << std::format("{0:%F_%T}: ", now) << log << std::endl;
+}
 void UiManager::SetVotingChoices(const std::vector<std::string>& choices) { optionText.SetOptions(choices); }
 void UiManager::UpdateProgressBar(const float progressPercentage) { progressBar.SetProgressPercentage(progressPercentage); }
 

@@ -16,7 +16,6 @@ ScrollingCredits::ScrollingCredits()
 
     for (auto line : StringUtils::GetParams(allLines, '\n'))
     {
-        bool empty = line.empty();
         credits.emplace_back(line);
     }
 }
