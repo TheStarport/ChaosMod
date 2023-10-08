@@ -10,8 +10,7 @@ class SadViolin final : public PersistentEffect
         inline static uint deathMusicHash = CreateID("music_death");
 
         inline static std::vector<uint> deathReplacements = {
-            CreateID("chaos_death_titanic"), CreateID("chaos_sad_violin"),   CreateID("chaos_xp_shutdown"),
-            CreateID("chaos_you_died"),      CreateID("chaos_coffin_dance"),
+            CreateID("chaos_titanic"), CreateID("chaos_sad_violin"), CreateID("chaos_xp_shutdown"), CreateID("chaos_you_died"), CreateID("chaos_coffin_dance"),
         };
 
         static int Detour(const uint client, const pub::Audio::Tryptich& audio)
