@@ -245,4 +245,13 @@ namespace Utils
     IObjInspectImpl* GetInspect(uint shipId);
     void __stdcall LightFuse(IObjInspectImpl* ship, uint fuseId, float delay, float lifetime, float skip);
     void __stdcall UnLightFuse(IObjInspectImpl* ship, uint fuseId, float delay);
+
+    enum class ResourceIds : uint
+    {
+        DefaultPerfOptions = 101,
+        CopyPastaStart = 1000,
+        CopyPastaEnd = 1000,
+    };
+
+    std::string GetResourceString(ResourceIds id);
 } // namespace Utils

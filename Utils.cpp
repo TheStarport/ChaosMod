@@ -69,4 +69,21 @@ namespace Utils
             ret 12
         }
     }
+
+    std::string GetResourceString(ResourceIds id)
+    {
+        HMODULE hModule = nullptr;
+        GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)GetResourceString, &hModule);
+
+        // One megabyte static buffer to hold any resources we need to load. This is excessive, but we do not know the size until load time.
+        static std::array<char, 1'049'000> buffer;
+
+        const auto len = LoadStringA(hModule, static_cast<uint>(id), buffer.data(), buffer.size());
+        if (len == -1)
+        {
+            return {};
+        }
+
+        return { buffer.data(), static_cast<uint>(len) };
+    }
 } // namespace Utils

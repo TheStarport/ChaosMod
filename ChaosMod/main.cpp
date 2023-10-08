@@ -383,7 +383,7 @@ void RequiredMemEdits()
 
     // Remove cruise speed display limit
     std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
-    MemUtils::WriteProcMem(0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
+    MemUtils::WriteProcMem(fl + 0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
 
     PatchResolution();
 }
@@ -420,8 +420,33 @@ void __cdecl Update(const double delta)
     timingDetour->Detour(Update);
 }
 
+void CreateDefaultPerfOptions()
+{
+    char path[MAX_PATH];
+    GetUserDataPath(path);
+    const std::string filePath = std::format("{}/PerfOptions.ini", path);
+    if (std::filesystem::exists(filePath))
+    {
+        return;
+    }
+
+    const auto str = GetResourceString(Utils::ResourceIds::DefaultPerfOptions);
+    if (str.empty())
+    {
+        return;
+    }
+
+    std::ofstream file(filePath, std::ios::beg | std::ios::trunc);
+    file << str << std::endl;
+}
+
 void SetupHack()
 {
+    // The very first thing we do is change the saved data folder so we can save and load properly
+    std::string newSavedDataFolder = "FLChaosMod";
+    MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
+
+    CreateDefaultPerfOptions();
     AssetTracker::StartDetours();
 
     // make needed memory edits for chaos mod to work

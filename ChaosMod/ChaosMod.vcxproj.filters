@@ -446,6 +446,7 @@
     <ClInclude Include="Systems\SystemComponents\TwitchVoting.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -511,5 +512,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources.rc" />
   </ItemGroup>
 </Project>
