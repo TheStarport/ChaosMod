@@ -21,7 +21,7 @@ void ChaosOptionText::Render() const
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_Always);
 
     auto location = ImGui::GetIO().DisplaySize;
-    location.x = location.x - location.x / 6.0f;
+    location.x = 0 + location.x / 10.0f;
     location.y = 0 + location.y / 6.0f;
 
     ImGui::SetNextWindowPos(location, ImGuiCond_Always);

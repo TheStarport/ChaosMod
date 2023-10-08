@@ -50,7 +50,13 @@ class DebugMenu final
     public:
         DebugMenu() { lineOffsets.push_back(0); }
 
-        bool show = true;
+        bool show =
+#ifdef _DEBUG
+            true;
+#else
+            false;
+#endif
+
         void Render();
         void Log(std::string);
 };

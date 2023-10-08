@@ -6,6 +6,7 @@
 #include "ConfigManager.hpp"
 #include "ImGuiHelpers/ImGuiDX9.hpp"
 #include "ImGuiHelpers/ImGuiWin32.hpp"
+#include "imgui_internal.h"
 
 #include <iostream>
 #include <shellapi.h>
@@ -71,7 +72,7 @@ void UiManager::HandleInput()
     io.AddMouseButtonEvent(x1, mouse4Down);
     io.AddMouseButtonEvent(x2, mouse5Down);
 
-    if (GetAsyncKeyState(VK_F5))
+    if (GetAsyncKeyState(VK_F5) && !debugLog.show)
     {
         ToggleDebugConsole();
     }
@@ -296,6 +297,9 @@ void UiManager::Render()
     ImGui_ImplDX9_NewFrame();
     ImGui_ImplWin32_NewFrame();
 
+    ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiKey_Tab, ImGuiKeyOwner_None);
+    ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiMod_Shift | ImGuiKey_Tab, ImGuiKeyOwner_None);
+    ImGui::SetShortcutRouting(ImGuiKey_Tab, ImGuiKeyOwner_None);
     ImGui::NewFrame();
 
     ImGui::PushFont(loadedFonts.begin()->second);
