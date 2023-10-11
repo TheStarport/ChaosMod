@@ -28,4 +28,6 @@ else {
 if (!$NoLaunch) {
     Write-Host "Starting Chaos Mod in windowed mode at $time" -ForegroundColor Green
     Start-Process -FilePath "$env:FLHOOK_COPY_PATH\Freelancer.exe" -ArgumentList "-w"
+    Start-Sleep -Seconds 3
+    Get-Content $env:LOCALAPPDATA\Freelancer\FLSpew.txt -Wait
 }
