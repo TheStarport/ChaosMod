@@ -57,6 +57,22 @@ entities =
 		}
 	},
 	{
+		entity_name = "jesus_halo",
+		type = PSYS,
+		template_name = "chaos_jesus_halo",
+		lt_grp = 0, srt_grp = 0, usr_flg = 0,
+		flags = LIT_DYNAMIC + LIT_AMBIENT,
+		spatialprops =
+		{
+			pos = { 7322.942, -10000.1707, -3207.746 },
+			orient = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }
+		},
+		psysprops =
+		{
+			sparam = 0
+		}
+	},
+	{
 		entity_name = "christ_engine",
 		type = PSYS,
 		template_name = "gf_rh_largeengine01",
@@ -1185,6 +1201,12 @@ events =
 			duration = 2400.000
 		}
 	},
+	{
+		0.000, START_PSYS, { "jesus_halo" },
+		{
+			duration = 2400.000
+		}
+	},
 
 	{
 		5.000, START_PSYS, { "confetti_explosion" },
@@ -1236,6 +1258,18 @@ events =
 			up = Y_AXIS,
 			front = NEG_Z_AXIS,
 			target_part = "hpengine02",
+			target_type = HARDPOINT,
+			flags = POSITION + ORIENTATION
+		}
+	},
+	{
+		0.000, ATTACH_ENTITY, { "jesus_halo", "chaos_christ" },
+		{
+			duration = 2400.000,
+			offset = { 0, 0, 0 },
+			up = Y_AXIS,
+			front = NEG_Z_AXIS,
+			target_part = "HpTractor_Source",
 			target_type = HARDPOINT,
 			flags = POSITION + ORIENTATION
 		}
