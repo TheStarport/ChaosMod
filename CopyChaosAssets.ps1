@@ -1,15 +1,19 @@
 param ($NoLaunch)
+$time = Get-Date -Format "yyyy/MM/dd HH:mm:ss"
 
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
 $freelancer = Get-Process freelancer -ErrorAction SilentlyContinue
 if ($freelancer) {
-    Write-Host "Found $freelancer" -ForegroundColor Yellow
-    Write-Host "Stopping $freelancer" -ForegroundColor Yellow
+    $freelancerName = $freelancer.Path
+    $freelancerId = $freelancer.Id
+    Write-Host "Found $freelancerName ($freelancerId)" -ForegroundColor Yellow 
+    Write-Host "Stopping $freelancerName ($freelancerId)" -ForegroundColor Yellow
     Get-Process "freelancer" | Stop-Process
     $freelancer.WaitForExit()
+    Remove-Variable freelancerName
+    Remove-Variable freelancerId
 }
 Remove-Variable freelancer
-
 if ($env:FLHOOK_COPY_PATH) {
     $FullCopyDestination = Resolve-Path $env:FLHOOK_COPY_PATH\..\
     Write-Host "Copying asset files from $PSScriptRoot to $FullCopyDestination" -ForegroundColor Blue
@@ -22,6 +26,6 @@ else {
     exit
 }
 if (!$NoLaunch) {
-    Write-Host "Starting Chaos Mod in windowed mode" -ForegroundColor Green
+    Write-Host "Starting Chaos Mod in windowed mode at $time" -ForegroundColor Green
     Start-Process -FilePath "$env:FLHOOK_COPY_PATH\Freelancer.exe" -ArgumentList "-w"
 }
