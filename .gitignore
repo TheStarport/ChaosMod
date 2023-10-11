@@ -15,6 +15,9 @@
 *.so
 *.dylib
 *.dll
+!Hud.dll
+!dinput8.dll
+!ChaosInfocards.dll
 
 # Fortran module files
 *.mod
