@@ -7,5 +7,5 @@ class QuakeFov final : public ActiveEffect
         void End() override { CameraController::i()->OverrideFov(0.0f); }
 
     public:
-        DefEffectInfo("Quake FOV", 1.0f, EffectType::Visual);
+        DefEffectInfo("Quake FOV", .75f, EffectType::Visual);
 };

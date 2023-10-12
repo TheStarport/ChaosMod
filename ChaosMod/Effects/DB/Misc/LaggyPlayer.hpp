@@ -3,7 +3,7 @@
 
 class LaggyPlayer final : public ActiveEffect
 {
-        float interval = 1.0f;
+        float interval = 1.5f;
         uint state = 0;
 
         Vector pos{};
@@ -12,10 +12,10 @@ class LaggyPlayer final : public ActiveEffect
         void Begin() override
         {
             state = 0;
-            interval = 1.0f;
+            interval = 1.5f;
         }
 
-        void Update(float delta) override
+        void Update(const float delta) override
         {
             interval -= delta;
             if (interval > 0.0f)
@@ -23,7 +23,7 @@ class LaggyPlayer final : public ActiveEffect
                 return;
             }
 
-            interval += 1.0f;
+            interval += 1.5f;
 
             if (++state == 4)
             {
