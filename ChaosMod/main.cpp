@@ -4,6 +4,7 @@
 #include "Systems/CameraController.hpp"
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/EventManager.hpp"
+#include "Systems/GameEvents/OnHit.hpp"
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
 #include "Systems/ShipManipulator.hpp"
@@ -171,6 +172,19 @@ float CalcFov(float fDefaultFOV)
     return static_cast<float>(atan(newAspectRatio / 2 / (originalAspectRatio / 2 / tan(fDefaultFOV * std::numbers::pi / 180))) * 180 / std::numbers::pi);
 }
 
+float __stdcall Fovx(PBYTE camera) { return CalcFov((camera == (PBYTE)0x67dbf8) ? 27.216f : 35.0f); }
+
+__declspec(naked) void HkCb_Fovx_Naked(void)
+{
+    __asm
+    {
+		push esi
+		call Fovx
+		push 0x40F623
+		ret
+    }
+}
+
 __declspec(naked) void LoadPerfIniNaked(void)
 {
     __asm
@@ -209,6 +223,22 @@ void PatchResolution()
     // Set the screen dimensions.
     MemUtils::WriteProcMem(screenWidth, &width, 4);
     MemUtils::WriteProcMem(screenHeight, &height, 4);
+
+    // Disable the reading of the znear/zfar/fovy parameters.
+    {
+        BYTE patch1[] = { 0x00 };
+        MemUtils::WriteProcMem((char*)0x5C8994, &patch1, 1);
+        MemUtils::WriteProcMem((char*)0x5C899C, &patch1, 1);
+        MemUtils::WriteProcMem((char*)0x5C89A4, &patch1, 1);
+    }
+
+    // Force the fovx to predefined values.
+    {
+        BYTE patch6[] = { 0x90, 0xE9 };
+        MemUtils::WriteProcMem((char*)0x40f617, &patch6, 2);
+        PBYTE fpFovx = (PBYTE)HkCb_Fovx_Naked - 0x40f618 - 5;
+        MemUtils::WriteProcMem((char*)0x40f618 + 1, &fpFovx, 4);
+    }
 
     // Set the FOV for the UI elements on the main screen.
     const float fov_win = CalcFov(27.216f);
@@ -447,7 +477,9 @@ void SetupHack()
     MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
 
     CreateDefaultPerfOptions();
+
     AssetTracker::StartDetours();
+    OnHit::Detour();
 
     // make needed memory edits for chaos mod to work
     RequiredMemEdits();

@@ -25,6 +25,14 @@ enum class AddressTable : DWORD
     CollisionDamage = 0x18D184,
 
     ShipDestroyedFunction = 0x87274,
+
+    DamageHit1 = 0x853F4,
+    DamageHit2 = 0x872CC,
+    DamageHit3 = 0x8761C,
+    DamageHit4 = 0x85458,
+    DamageHit5 = 0x87330,
+    DamageHit6 = 0x87680,
+    DamageApply = 0x841EC,
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)

@@ -38,4 +38,6 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         float GetTimeUntilChaos() const;
 
         std::vector<ActiveEffect*> GetNextEffects(int count = 3);
+
+        static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
 };

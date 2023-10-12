@@ -94,6 +94,9 @@
     <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\GameEvents\OnHit.cpp">
+      <Filter>Systems\GameEvents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -459,6 +462,12 @@
     <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreRemoteClient.h">
       <Filter>SDK</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\GameEvents\OnHit.hpp">
+      <Filter>Systems\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -523,6 +532,9 @@
     </Filter>
     <Filter Include="SDK">
       <UniqueIdentifier>{05f6c393-73cd-4869-97c4-fe7c34888ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GameEvents">
+      <UniqueIdentifier>{64321808-476d-4cd8-8abb-2457c202ef92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -54,6 +54,7 @@
 #include "Effects/DB/Spawning/SpawnJesus.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/DemolitionDerby.hpp"
+#include "Effects/DB/StatManipulation/DoubleDamage.hpp"
 #include "Effects/DB/StatManipulation/GetHumbled.hpp"
 #include "Effects/DB/StatManipulation/GodMode.hpp"
 #include "Effects/DB/StatManipulation/Hyperlanes.hpp"
@@ -149,8 +150,8 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        auto effectInfo = effect->GetEffectInfo();
-        if (effectInfo.exclusion != EffectExclusion::None && std::ranges::any_of(activeEffects,
+        if (auto& effectInfo = effect->GetEffectInfo();
+            effectInfo.exclusion != EffectExclusion::None && std::ranges::any_of(activeEffects,
                                                                                  [&effectInfo](auto existingEffect)
                                                                                  {
                                                                                      auto existingInfo = existingEffect.first->GetEffectInfo();
@@ -219,7 +220,7 @@ ChaosTimer::ChaosTimer()
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
 }
 
-void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, float delay)
+void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, const float delay)
 {
     if (const auto found = activeEffects.find(effect); found != activeEffects.end())
     {
@@ -267,8 +268,9 @@ std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
     for (int i = 0; i < count; i++)
     {
         const auto effect = SelectEffect();
-        if (!effect)
+        if (!effect || std::ranges::find(effects, effect) != effects.end())
         {
+            i--;
             continue;
         }
 
@@ -276,6 +278,22 @@ std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
     }
 
     return effects;
+}
+
+void ChaosTimer::OnApplyDamage(const uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, const bool after)
+{
+    for (const auto& key : i()->activeEffects | std::views::keys)
+    {
+        after ? key->OnApplyDamageAfter(hitSpaceObj, dmgList, dmgEntry) : key->OnApplyDamage(hitSpaceObj, dmgList, dmgEntry);
+    }
+
+    for (const auto& effect : i()->persistentEffects)
+    {
+        if (effect->Persisting())
+        {
+            after ? effect->OnApplyDamageAfter(hitSpaceObj, dmgList, dmgEntry) : effect->OnApplyDamage(hitSpaceObj, dmgList, dmgEntry);
+        }
+    }
 }
 
 void ChaosTimer::Update(const float delta)
@@ -323,9 +341,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    const float nextTime = GetTimeUntilChaos();
-
-    if (!ConfigManager::i()->enableTwitchVoting && currentTime > nextTime)
+    if (const float nextTime = GetTimeUntilChaos(); !ConfigManager::i()->enableTwitchVoting && currentTime > nextTime)
     {
         TriggerChaos();
 
@@ -335,7 +351,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    UiManager::i()->UpdateProgressBar(currentTime / nextTime);
+    UiManager::i()->UpdateProgressBar(currentTime / ConfigManager::i()->timeBetweenChaos * modifiers);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);
@@ -412,6 +428,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(DemolitionDerby);
     Ef(Zoomies);
     Ef(NeverSayNoToBacta);
+    Ef(DoubleDamage);
 
     // Meta
     Ef(BoxOfChocolates);

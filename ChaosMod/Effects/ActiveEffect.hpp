@@ -45,6 +45,8 @@ class ActiveEffect
         virtual void Begin() {}
         virtual void OnLoad() {}
         virtual void OnShipDestroyed(DamageList* dmgList, CShip* ship) {}
+        virtual void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry) {}
+        virtual void OnApplyDamageAfter(uint hitSpaceObj, DamageList* dmgList, const DamageEntry& dmgEntry) {}
         virtual void Update(float delta) {}
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}

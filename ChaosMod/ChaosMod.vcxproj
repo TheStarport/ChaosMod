@@ -79,8 +79,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor\flhook-sdk\vendor;$(SolutionDir)vendor\flhook-sdk\include;$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)Include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)Include;$(SolutionDir)vcpkg_installed\x86-windows\x86-windows\lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)vendor\flhook-sdk\vendor;$(SolutionDir)vendor\flhook-sdk\include;$(SolutionDir)vendor;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(ProjectDir);$(SolutionDir)Include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)vendor\flhook-sdk\lib;$(SolutionDir)vcpkg_installed\x86-windows\x86-windows\lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -193,6 +193,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClCompile Include="Systems\DirectX\D3DVolume.cpp" />
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp" />
     <ClCompile Include="Systems\EventManager.cpp" />
+    <ClCompile Include="Systems\GameEvents\OnHit.cpp" />
     <ClCompile Include="Systems\HudInterface.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
@@ -266,6 +267,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp" />
+    <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />
@@ -302,6 +304,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Systems\DirectX\Drawing.hpp" />
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp" />
     <ClInclude Include="Systems\EventManager.hpp" />
+    <ClInclude Include="Systems\GameEvents\OnHit.hpp" />
     <ClInclude Include="Systems\HudComponents\Interfaces.hpp" />
     <ClInclude Include="Systems\HudComponents\Structures.hpp" />
     <ClInclude Include="Systems\HudComponents\TButton.hpp" />
