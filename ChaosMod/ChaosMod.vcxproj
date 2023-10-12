@@ -239,7 +239,6 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
     <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp" />
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
-    <ClInclude Include="Effects\DB\Misc\RandomisedKeys.hpp" />
     <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
     <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
     <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp" />
@@ -249,7 +248,6 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp" />
     <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp" />
     <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
-    <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp" />
     <ClInclude Include="Effects\DB\NPC\Cardamine.hpp" />
     <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp" />
     <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
