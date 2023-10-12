@@ -13,8 +13,7 @@ class SaveManager
             GetUserDataPath(dir);
 
             const std::string path = std::format("{}/Accts/SinglePlayer/", dir);
-            char slot = '0';
-            i64 oldestSlotTimestamp = INT64_MAX;
+            char slot = 47; // 48 = '0'
             for (const auto& file : std::filesystem::directory_iterator(path))
             {
                 auto stem = file.path().filename().stem().generic_string();
@@ -23,11 +22,13 @@ class SaveManager
                     continue;
                 }
 
-                if (file.last_write_time().time_since_epoch().count() < oldestSlotTimestamp)
-                {
-                    oldestSlotTimestamp = file.last_write_time().time_since_epoch().count();
-                    slot = stem[0];
-                }
+                slot = stem[0];
+            }
+
+            slot++;
+            if (slot == ':')
+            {
+                slot = '0';
             }
 
             return slot;
