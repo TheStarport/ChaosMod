@@ -102,6 +102,14 @@ class AssumingDirectControl final : public ActiveEffect
 
         void End() override { KeyManager::BlockPlayerInput(false); }
 
+        void OnShipDestroyed(DamageList* dmgList, CShip* ship) override
+        {
+            if (ship == Utils::GetCShip())
+            {
+                End();
+            }
+        }
+
     public:
         DefEffectInfo("Assuming Direct Control", 1.0f, EffectType::Movement);
 };
