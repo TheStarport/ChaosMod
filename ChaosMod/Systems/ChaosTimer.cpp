@@ -258,7 +258,7 @@ void ChaosTimer::InitEffects()
     }
 }
 
-float ChaosTimer::GetTimeUntilChaos() const { return ConfigManager::i()->timeBetweenChaos * modifiers - currentTime; }
+float ChaosTimer::GetTimeUntilChaos() const { return ConfigManager::i()->timeBetweenChaos - currentTime; }
 
 std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 {
@@ -349,7 +349,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    UiManager::i()->UpdateProgressBar(currentTime / ConfigManager::i()->timeBetweenChaos * modifiers);
+    UiManager::i()->UpdateProgressBar(currentTime / ConfigManager::i()->timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);
