@@ -26,7 +26,6 @@
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
-#include "Effects/DB/Misc/RandomisedKeys.hpp"
 #include "Effects/DB/Misc/SelfDestruct.hpp"
 #include "Effects/DB/Misc/SpectatorMode.hpp"
 #include "Effects/DB/Misc/ThanksIHateIt.hpp"
@@ -36,7 +35,6 @@
 #include "Effects/DB/Movement/InvertVelocity.hpp"
 #include "Effects/DB/Movement/PersonalSpace.hpp"
 #include "Effects/DB/Movement/Yeet.hpp"
-#include "Effects/DB/Movement/YouSpinMeRightRound.hpp"
 #include "Effects/DB/NPC/Cardamine.hpp"
 #include "Effects/DB/NPC/IAmRobot.hpp"
 #include "Effects/DB/NPC/MultiplayerExperience.hpp"
@@ -443,12 +441,10 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SelfDestruct);
     Ef(IAmFiringMyLasers);
     Ef(XboxEdition);
-    Ef(RandomisedKeys);
     Ef(ThanksIHateIt);
 
     // Movement
     Ef(Yeet);
-    Ef(YouSpinMeRightRound);
     Ef(IllTrySpinning);
     Ef(InvertVelocity);
     Ef(PersonalSpace);
