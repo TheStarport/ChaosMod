@@ -123,6 +123,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
             stopwatch->Reset();
             stopwatch->Start();
+            ma_sound_set_volume(&miniAudioSound, 0.2f);
             ma_sound_start(&miniAudioSound);
         }
 
