@@ -43,9 +43,9 @@ function TailFileUntilProcessStops {
         Remove-Job $tailLoopJob
     }
 }
-$infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc to $PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll" 
+$infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc" 
 $frcPath = "$PSScriptRoot\frc.exe"
-Write-Host "Compiling infocards from $infocardXMLPath..." -ForegroundColor Blue
+Write-Host "Compiling infocards from $infocardXMLPath to $PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll..." -ForegroundColor Blue
 Start-Process $frcPath -ArgumentList "$infocardXMLPath", "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
 
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
