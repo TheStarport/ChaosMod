@@ -2,7 +2,9 @@
  .DESCRIPTION: Asset Copy and Run Script for Freelancer Chaos Mod
  .SYNOPSIS: This script checks for running instances of Freelancer.exe, kills them, and then copies files from the 'Assets' folder of the script root over to the pre-defined FLHOOK_COPY_PATH directory. It it's run without the $NoLaunch parameter, it will then launch the applciation from the same directory and pipe FlSpew.txt into the console with log highlighting for warnings and errors until the application is terminated. If the application terminates unexpectedly, it will fetch the application crash event log from the Windows Event Logs for quick debugging.
  .AUTHOR: IrateRedKite, Lazrius 
- .REVISION HISTORY: v1.0 2023-10-12: Initial release
+ .REVISION HISTORY: 
+ v1.0 2023-10-12: Initial release
+ v1.2 2023-10-12: Script now compiles infocards from an frc file using Adoxa's tool on launch
 #>
 Param ($noLaunch)
 $init = { function Get-LogColor {
@@ -41,6 +43,11 @@ function TailFileUntilProcessStops {
         Remove-Job $tailLoopJob
     }
 }
+$infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc to $PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll" 
+$frcPath = "$PSScriptRoot\frc.exe"
+Write-Host "Compiling infocards from $infocardXMLPath..." -ForegroundColor Blue
+Start-Process $frcPath -ArgumentList "$infocardXMLPath", "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
+
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
 $freelancer = Get-Process freelancer -ErrorAction SilentlyContinue
 if ($freelancer) {

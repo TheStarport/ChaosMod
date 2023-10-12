@@ -33,6 +33,7 @@
 *.exe
 *.out
 *.app
+!frc.exe
 
 # Visual Studio
 # User-specific files
