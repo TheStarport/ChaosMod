@@ -124,7 +124,59 @@ entities =
 			category = "Solar",
 		}
 	},
-
+	{
+		entity_name = "chaos_teleport",
+		type = PSYS,
+		template_name = "chaos_teleport",
+		lt_grp = 0, srt_grp = 0, usr_flg = 0,
+		flags = LIT_DYNAMIC + LIT_AMBIENT,
+		spatialprops =
+		{
+			pos = { 6880.643, 754.8472, -3196.648 },
+			orient = { { -0.888476,  0.074153,  0.452892 },
+					   {  0.052570,  0.996808, -0.060079 },
+					   { -0.455901, -0.029570, -0.889539 } }
+		},
+		psysprops =
+		{
+			sparam = 0
+		}
+	},
+	{
+		entity_name = "tumbling_defender",
+		type = COMPOUND,
+		template_name = "li_elite",
+		lt_grp = 4, srt_grp = 0, usr_flg = 0,
+		flags = LIT_DYNAMIC,
+		spatialprops =
+		{
+			pos = { 7760.896, 612.4628, -4250 },
+			orient = { { -0.955097,  0.000000, -0.296293 },
+					   {  0.000000,  1.000000,  0.000000 },
+					   {  0.296293,  0.000000, -0.955097 } }
+		},
+		userprops =
+		{
+			category = "Spaceship",
+			loadout = "li_n_li_elite_loadout01",
+		}
+	},
+	{
+		entity_name = "path_tumbling_defender",
+		type = MOTION_PATH,
+		template_name = "",
+		lt_grp = 0, srt_grp = 0, usr_flg = 0,
+		spatialprops =
+		{
+			pos = { 0, 0, 0 },
+			orient = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }
+		},
+		pathprops =
+		{
+			path_type = "CV_CROrientationSplinePath",
+			path_data = "OPEN,{6880.643, 754.8472, -3196.648}, {1.000000,0.000000,0.000000,0.000000}, {8140.779, 554.3342, -4340.749}, {1.000000,0.000000,0.000000,0.000000}, "
+		}
+	},
 	{
 		entity_name = "gf_gasminer_exhaust_5",
 		type = PSYS,
@@ -1109,6 +1161,39 @@ events =
 		}
 	},
 	{
+		0.000, START_SPATIAL_PROP_ANIM, { "tumbling_defender" },
+		{
+			duration = 2400.000,
+			target_type = ROOT,
+			spatialprops =
+			{
+				axisrot = { 108000, NEG_Z_AXIS }
+			}
+		}
+	},
+	{
+		0.000, START_SPATIAL_PROP_ANIM, { "tumbling_defender" },
+		{
+			duration = 2400.000,
+			target_type = ROOT,
+			spatialprops =
+			{
+				axisrot = { 7200, NEG_X_AXIS }
+			}
+		}
+	},
+	{
+		0.000, START_SPATIAL_PROP_ANIM, { "tumbling_defender" },
+		{
+			duration = 2400.000,
+			target_type = ROOT,
+			spatialprops =
+			{
+				axisrot = { 20000, NEG_Y_AXIS }
+			}
+		}
+	},
+	{
 		0.000, START_PATH_ANIMATION, { "chaos_maxwell_1", "maxwell_path" },
 		{
 			duration = 80.000,
@@ -1202,6 +1287,12 @@ events =
 		}
 	},
 	{
+		70.000, START_PSYS, { "chaos_teleport" },
+		{
+			duration = 5.000
+		}
+	},
+	{
 		0.000, START_PSYS, { "jesus_halo" },
 		{
 			duration = 2400.000
@@ -1262,6 +1353,7 @@ events =
 			flags = POSITION + ORIENTATION
 		}
 	},
+
 	{
 		0.000, ATTACH_ENTITY, { "jesus_halo", "chaos_christ" },
 		{
@@ -1342,7 +1434,7 @@ events =
 			up = Y_AXIS,
 			front = NEG_Z_AXIS,
 			target_part = "hpengine03",
-			target_type = HARDPOINT,
+			target_type = ROOT,
 			flags = POSITION + ORIENTATION
 		}
 	},
@@ -2243,6 +2335,18 @@ events =
 			up = Y_AXIS,
 			front = NEG_Z_AXIS,
 			flags = POSITION + LOOK_AT
+		}
+	},
+	{
+		70.2, START_PATH_ANIMATION, { "tumbling_defender", "path_tumbling_defender" },
+		{
+			duration = 5.000,
+			start_percent = 0,
+			stop_percent = 1,
+			offset = { 0, 0, 0 },
+			up = Y_AXIS,
+			front = NEG_Z_AXIS,
+			flags = POSITION
 		}
 	},
 
