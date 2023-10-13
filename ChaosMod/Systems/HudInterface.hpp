@@ -20,6 +20,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
 
         bool shouldFlip = false;
         std::map<TText*, std::wstring> flippedText;
+
         void FlipUi(TControl*);
         void FlipTextControl(TControl*);
 
@@ -34,6 +35,21 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
         std::map<TText*, ElementColors> replacedColors;
         void OverrideColors(TControl* sender);
         void ReplaceColorOnControl(TControl* control);
+
+        bool shouldMakeInterfaceBuggy = false;
+        struct BuggyInterface
+        {
+                Vector originalPosition{};
+                bool goingRight = false;
+                bool goingDown = false;
+
+                BuggyInterface()
+                {
+                    goingRight = Random::i()->Uniform(0u, 1u);
+                    goingDown = Random::i()->Uniform(0u, 1u);
+                }
+        };
+        std::optional<std::unordered_map<TControl*, BuggyInterface>> buggyInterface;
 
     protected:
         int refs = 1;
@@ -82,6 +98,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
 
         void ToggleFlipping();
         void SetUiColor(DWORD newColor);
+        void SetBuggyInterface(bool buggy);
 };
 
 #undef HudInterfaceId

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Effects/MemoryEffect.hpp"
+#include "Systems/HudInterface.hpp"
 
 class BuggyInterface final : public MemoryEffect
 {
@@ -30,6 +31,8 @@ class BuggyInterface final : public MemoryEffect
 
             info = offsets[1];
             MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
+
+            HudInterface::i()->SetBuggyInterface(true);
         }
 
         void Update(const float delta) override
@@ -59,6 +62,12 @@ class BuggyInterface final : public MemoryEffect
 
             info = offsets[1];
             MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
+        }
+
+        void End() override
+        {
+            MemoryEffect::End();
+            HudInterface::i()->SetBuggyInterface(false);
         }
 
         DefEffectInfo("Buggy Interface", 1.0f, EffectType::Interface);

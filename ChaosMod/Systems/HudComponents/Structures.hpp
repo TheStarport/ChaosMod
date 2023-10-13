@@ -153,53 +153,82 @@ class TControl
             return reinterpret_cast<TControl*>(*reinterpret_cast<PDWORD>(reinterpret_cast<DWORD>(this) + 0x0C));
         }
 
-        bool ControlExists(TControl* control)
+        void ForEachControl(const std::function<void(TControl*)>& action, const bool siblings = false)
         {
-            const auto address = reinterpret_cast<DWORD>(control);
-            if (reinterpret_cast<DWORD>(this) == address)
+            action(this);
+
+            TControl* child = this->GetChildControl();
+            TControl* prev = nullptr;
+            while (child)
+            {
+                if (child == prev)
+                {
+                    break;
+                }
+
+                child->ForEachControl(action, true);
+                prev = child;
+                child = child->GetNextControl();
+            }
+
+            if (siblings)
+            {
+                TControl* next;
+                while ((next = this->GetNextControl()))
+                {
+                    if (next == prev)
+                    {
+                        break;
+                    }
+
+                    next->ForEachControl(action, false);
+                    prev = next;
+                }
+            }
+        }
+
+        bool ControlExists(TControl* control, const bool siblings = true)
+        {
+            if (reinterpret_cast<DWORD>(this) == reinterpret_cast<DWORD>(control))
             {
                 return true;
             }
 
+            TControl* prev = nullptr;
             TControl* child = this->GetChildControl();
             while (child)
             {
-                if (reinterpret_cast<DWORD>(child) == address)
+                if (child == prev)
                 {
-                    return child;
+                    break;
                 }
 
-                TControl* newChild = child->GetChildControl();
-                while (newChild)
+                auto found = child->ControlExists(control, true);
+                if (found)
                 {
-                    if (reinterpret_cast<DWORD>(newChild) == address)
-                    {
-                        return newChild;
-                    }
-
-                    newChild = newChild->GetNextControl();
+                    return found;
                 }
 
+                prev = child;
                 child = child->GetNextControl();
             }
 
-            TControl* next;
-            while ((next = this->GetNextControl()))
+            if (siblings)
             {
-                if (reinterpret_cast<DWORD>(next) == address)
+                TControl* next;
+                while ((next = this->GetNextControl()))
                 {
-                    return next;
-                }
-
-                TControl* newChild = child->GetChildControl();
-                while (newChild)
-                {
-                    if (reinterpret_cast<DWORD>(newChild) == address)
+                    if (next == prev)
                     {
-                        return newChild;
+                        break;
                     }
 
-                    newChild = newChild->GetNextControl();
+                    if (next->ControlExists(control, false))
+                    {
+                        return next;
+                    }
+
+                    prev = next;
                 }
             }
 

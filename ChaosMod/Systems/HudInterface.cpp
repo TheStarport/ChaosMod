@@ -193,8 +193,73 @@ HudInterface::HudInterface()
 }
 
 void HudInterface::Draw(TControl* sender) {}
+
 void HudInterface::Update(TControl* sender)
 {
+    if (shouldMakeInterfaceBuggy)
+    {
+        if (!buggyInterface.has_value())
+        {
+            buggyInterface = std::unordered_map<TControl*, BuggyInterface>();
+        }
+        auto& map = buggyInterface.value();
+
+        if (!map.contains(sender))
+        {
+            sender->ForEachControl([&map](auto control) { map[control].originalPosition = control->GetPosition(); });
+        }
+
+        for (auto& el : buggyInterface.value())
+        {
+            auto& bug = el.second;
+            if (sender->ControlExists(el.first))
+            {
+                Vector pos = el.first->GetPosition();
+                pos.x += bug.goingRight ? 0.001f : -0.001f;
+                pos.y += bug.goingDown ? 0.001f : -0.001f;
+                el.first->SetPosition(pos);
+
+                if (pos.x > 0.5f)
+                {
+                    bug.goingRight = false;
+                }
+                else if (pos.x < -0.5f)
+                {
+                    bug.goingRight = true;
+                }
+
+                if (pos.y > 0.5f)
+                {
+                    bug.goingDown = false;
+                }
+                else if (pos.y < -0.5f)
+                {
+                    bug.goingDown = true;
+                }
+            }
+        }
+    }
+    else if (buggyInterface.has_value())
+    {
+        auto& map = buggyInterface.value();
+
+        for (auto it = map.cbegin(); it != map.cend();)
+        {
+            if (sender->ControlExists(it->first))
+            {
+                it->first->SetPosition(it->second.originalPosition);
+                it = map.erase(it);
+            }
+
+            ++it;
+        }
+
+        if (map.empty())
+        {
+            buggyInterface = std::nullopt;
+        }
+    }
+
     if (shouldFlip)
     {
         FlipUi(sender);
@@ -241,3 +306,4 @@ void HudInterface::Execute(TControl* sender) {}
 void HudInterface::Terminate(TControl* sender) {}
 void HudInterface::ToggleFlipping() { shouldFlip = !shouldFlip; }
 void HudInterface::SetUiColor(const DWORD newColor) { currentColor = newColor; }
+void HudInterface::SetBuggyInterface(const bool buggy) { shouldMakeInterfaceBuggy = buggy; }
