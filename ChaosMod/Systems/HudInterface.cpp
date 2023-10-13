@@ -5,108 +5,20 @@
 #include "HudComponents/TStatic.hpp"
 #include "HudComponents/TText.hpp"
 
-std::vector<std::string> textElementList = {
-    "BtnAcceptText",
-    "BtnDeclineText",
-    "BtnLeaveText",
-    "AttentionTitle",
-    "LoadingProgressText",
-    "WeaponNumberText0",
-    "WeaponText0",
-    "AmmoText0",
-    "WeaponNumberText1",
-    "WeaponText1",
-    "AmmoText1",
-    "WeaponNumberText2",
-    "WeaponText2",
-    "AmmoText2",
-    "WeaponNumberText3",
-    "WeaponText3",
-    "AmmoText3",
-    "WeaponNumberText4",
-    "WeaponText4",
-    "AmmoText4",
-    "WeaponNumberText5",
-    "WeaponText5",
-    "AmmoText5",
-    "WeaponNumberText6",
-    "WeaponText6",
-    "AmmoText6",
-    "WeaponNumberText7",
-    "WeaponText7",
-    "AmmoText7",
-    "WeaponNumberText8",
-    "WeaponText8",
-    "AmmoText8",
-    "WeaponNumberText9",
-    "WeaponText9",
-    "AmmoText9",
-    "RepairCountText",
-    "BatteryCountText",
-    "SpecialModeText",
-    "SpecialModeTextCancel",
-    "TargetShipName",
-    "SubtargetName",
-    "TargetRankText",
-    "VelocityText",
-    "ThrustText",
-    "FormationTitle",
-    "ContactListRangeText0",
-    "ContactListNameText0",
-    "ContactListRangeText1",
-    "ContactListNameText1",
-    "ContactListRangeText2",
-    "ContactListNameText2",
-    "ContactListRangeText3",
-    "ContactListNameText3",
-    "ContactListRangeText4",
-    "ContactListNameText4",
-    "ContactListRangeText5",
-    "ContactListNameText5",
-    "ContactListRangeText6",
-    "ContactListNameText6",
-    "ContactListRangeText7",
-    "ContactListNameText7",
-    "CruiseProgressText",
-    "ReticleRangeText",
-    "PauseTitle",
-    "PauseButtonText0",
-    "PauseButtonText1",
-    "PauseButtonText2",
-    "PauseButtonText3",
-};
-
-void HudInterface::FlipUi(TControl* control)
-{
-    FlipTextControl(control);
-
-    auto child = control->GetChildControl();
-    while (child)
-    {
-        FlipTextControl(child);
-        auto childsChild = child->GetChildControl();
-
-        while (childsChild)
-        {
-            FlipTextControl(childsChild);
-            childsChild = childsChild->GetNextControl();
-        }
-
-        child = child->GetNextControl();
-    }
-}
+constexpr DWORD TextControlVTableAddress = 0x5e476c;
+constexpr DWORD TextControl2VTableAddress = 0x5e4f24;
 
 void HudInterface::FlipTextControl(TControl* control)
 {
-    if (const auto name = control->GetName(); std::ranges::find(textElementList, name) == textElementList.end())
+    auto q = control->GetName();
+    if (const auto address = *reinterpret_cast<PDWORD>(control); address != TextControlVTableAddress && address != TextControl2VTableAddress)
     {
         return;
     }
 
-    auto q = control->GetName();
     const auto text = static_cast<TText*>(control); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    const auto el = flippedText.find(text);
-    if (el != flippedText.end())
+    const auto el = i()->flippedText.find(text);
+    if (el != i()->flippedText.end())
     {
         text->SetTextValue(el->second.c_str());
         return;
@@ -118,7 +30,7 @@ void HudInterface::FlipTextControl(TControl* control)
     if (!str.empty() && !rev.empty())
     {
 
-        flippedText[text] = rev;
+        i()->flippedText[text] = rev;
         text->SetTextValue(rev.c_str());
     }
 }
@@ -144,7 +56,7 @@ void HudInterface::OverrideColors(TControl* sender)
 
 void HudInterface::ReplaceColorOnControl(TControl* control)
 {
-    if (const auto name = control->GetName(); std::ranges::find(textElementList, name) == textElementList.end())
+    if (const auto address = *reinterpret_cast<PDWORD>(control); address != TextControlVTableAddress && address != TextControl2VTableAddress)
     {
         return;
     }
@@ -249,6 +161,7 @@ void HudInterface::Update(TControl* sender)
             {
                 it->first->SetPosition(it->second.originalPosition);
                 it = map.erase(it);
+                continue;
             }
 
             ++it;
@@ -262,22 +175,22 @@ void HudInterface::Update(TControl* sender)
 
     if (shouldFlip)
     {
-        FlipUi(sender);
+        sender->ForEachControl(FlipTextControl);
     }
     else if (!flippedText.empty())
     {
-        for (auto& text : flippedText)
+        for (auto it = flippedText.cbegin(); it != flippedText.cend();)
         {
-            if (!sender->ControlExists(text.first))
+            if (sender->ControlExists(it->first))
             {
+                const std::wstring rev = { it->second.rbegin(), it->second.rend() };
+                it->first->SetTextValue(rev.c_str());
+                it = flippedText.erase(it);
                 continue;
             }
 
-            const std::wstring rev = { text.second.rbegin(), text.second.rend() };
-            text.first->SetTextValue(rev.c_str());
+            ++it;
         }
-
-        flippedText.clear();
     }
 
     if (currentColor)

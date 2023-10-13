@@ -21,8 +21,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
         bool shouldFlip = false;
         std::map<TText*, std::wstring> flippedText;
 
-        void FlipUi(TControl*);
-        void FlipTextControl(TControl*);
+        static void FlipTextControl(TControl*);
 
         struct ElementColors
         {
