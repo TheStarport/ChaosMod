@@ -26,7 +26,7 @@ S 458777 Half Burnt Candles
 S 458778 Spectacle Frames
 S 458779 Depleted AAA Batteries
 S 458780 The Proteus Tome
-S 458781 The Lancer�s Reactor Forum Database
+S 458781 The Lancer's Reactor Forum Database
 S 458782 Zoner Marines
 
 
@@ -40,70 +40,116 @@ H 458756
 	In a world where moral ambiguity reigns supreme, a new faction has emerged from the shadows, led by none other than Jesus Christ himself. Jesus is not here to preach or convert, but to ensure that justice is served in the most direct way possible.
 
 H 458783
-	Spoons
+	\m\bSPOONS\B
+	\l
+	This crate jangles around in your hold and is labelled 'Spoons'.
 
 H 458784
-	Litigation Notices
+	\m\bLITIGATION NOTICES\B
+	\l
+	These boxes of litigation notices are addressed to various individuals from the Starport, demanding an immediate halt to modification of the game and are all signed off by the "Crossfire Legal Team".
 
 H 458785
-	Gamer Girl Bathwater
+	\m\bGAMER GIRL BATHWATER\B
+	\l
+	A steal at $30 a jar.
 
 H 458786
-	Discount Chicken
+	\m\bDISCOUNT CHICKEN\B
+	\l
+	Suspiciously, the label on this box reads 'Chimkin' and the date sticker has been removed.
 
 H 458787
-	Moss Sorted By Colour
+	\m\bMOSS SORTED BY COLOR\B
+	\l
+	These jars of moss are sorted by colour, which is clearly the superior way to do it.
 
 H 458788
-	Moss Sorted By Taste
+	\m\bMOSS SORTED BY TASTE\B
+	\l
+	These jars of moss are sorted by taste, which is clearly the superior way to do it.
 
 H 458789
-	Singular Cabbage
+	\m\bSINGULAR CABBAGE\B
+	\l
+	Comprising several cultivars of Brassica oleracea, is a leafy green, red (purple), or white (pale green) biennial plant grown as an annual vegetable crop for its dense-leaved heads.
 
 H 458790
-	Pack of Playing Cards
+	\m\bPACK OF PLAYING CARDS\B
+	\l
+	If you are proficient with a gaming set, you can add your proficiency bonus to ability checks you make to play a game with that set. Each type of gaming set requires a separate proficiency.
 
 H 458791
-	Dragonchess Set
+	\m\bDRAGONCHESS SET\B
+	\l
+	If you are proficient with a gaming set, you can add your proficiency bonus to ability checks you make to play a game with that set. Each type of gaming set requires a separate proficiency.
 
 H 458792
-	Chunk of Mysterious Meat
+	\m\bCHUNK OF MYSTERIOUS MEAT\B
+	\l
+	Named meat costs quite a bit more I'm afraid.
 
 H 458793
-	Crate of Mason Jars
+	\m\bCRATE OF MASON JARS\B
+	\l
+	This crate of mason jars has had the delivery address scratched out. I wonder who it could be for?
 
 H 458794
-	Gold Juni Statue
+	\m\bGOLD JUNI STATUE\B
+	\l
+	Rendered in loving detail from solid gold.
 
 H 458795
-	Socks
+	\m\bSOCKS\B
+	\l
+	Our men's socks collection is filled with playful prints and themed, embroidered multi-packs.
 
 H 458796
-	Blood From a Cat's Face
+	\m\bBLOOD FROM A CAT'S FACE\B
+	\l
+	Pretty rancid!
 
 H 458797
-	Puppies
+	\m\bPUPPIES\B
+	\l
+	It would be \iterrible\I if something were to happen to the ship carrying this crate.
 
 H 458798
-	Sealed Crate
+	\m\bSEALED CRATE\B
+	\l
+	The label on this crate reads 'Venture Company Supplies".
 
 H 458799
-	Letter from a dead colleague with a question you have not been able to answer
+	\m\bLETTER FROM A DEAD COLLEAGUE WITH A QUESTION YOU HAVE NOT BEEN ABLE TO ANSWER\B
+	\l
+	We're not sure what the question is either.
 
 H 458800
-	Half Burnt Candles
+	\m\bHALF BURNT CANDLES\B
+	\l
+	If you felt like it, you could melt these together into half the number of full candles.
 
 H 458801
-	Spectacle Frames
+	\m\bSPECTACLE FRAMES\B
+	\l
+	Not really much use without the lenses, but they make you look a bit smarter.
 
 H 458802
-	Depleted AAA Batteries
+	\m\bDEPLETED AAA BATTERIES\B
+	\l
+	The AAA battery (or triple-A battery) is a standard size of dry cell battery. One or more AAA batteries are commonly used in low-drain portable electronic devices. These ones are depleted.
 
 H 458803
-	The Proteus Tome
+	\m\bTHE PROTEUS TOME\B
+	\l
+	A sealed titanium cylinder containing the Proteus Tome. I wonder if Tekagi knows he has a fake?
 
 H 458804
-	The Lancer's Reactor Forum Database
+	\m\THE LANCER'S REACTOR FORUM DATABASE\B
+	\l
+	Impossibly hard to find. You probably shouldn't have this!
 
 H 458805
+	\m\bZONER MARINES\B
+	\l
 	Zoner Marines
