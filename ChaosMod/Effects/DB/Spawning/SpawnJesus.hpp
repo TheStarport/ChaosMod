@@ -28,10 +28,9 @@ class SpawnJesus final : public ActiveEffect
 
             if (jesus.Acquire())
             {
-                pub::AI::SetZoneBehaviorParams op;
-                op.range = 25000.f;
-                op.spaceObj = ship->id;
-                op.zoneType = 2;
+                pub::AI::DirectiveTrailOp op;
+                op.x0C = ship->id;
+                op.x10 = 500.f;
                 pub::AI::SubmitDirective(jesus.Acquire()->spaceObj, &op);
             }
         }
