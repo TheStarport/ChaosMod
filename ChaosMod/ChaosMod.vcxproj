@@ -264,6 +264,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp" />
+    <ClInclude Include="Effects\DB\Spawning\YouThinkYourSafe.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp" />
     <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp" />

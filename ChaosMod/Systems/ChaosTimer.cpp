@@ -51,6 +51,7 @@
 #include "Effects/DB/Spawning/SpawnBigBertha.hpp"
 #include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
 #include "Effects/DB/Spawning/SpawnJesus.hpp"
+#include "Effects/DB/Spawning/YouThinkYourSafe.hpp"
 #include "Effects/DB/StatManipulation/CoolantLeak.hpp"
 #include "Effects/DB/StatManipulation/DemolitionDerby.hpp"
 #include "Effects/DB/StatManipulation/DoubleDamage.hpp"
@@ -470,6 +471,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SpawnJesus);
     Ef(SpawnExtremeJesus);
     Ef(JellyTime);
+    Ef(YouThinkYourSafe);
 
     // Teleports
     Ef(TakeABreak);
