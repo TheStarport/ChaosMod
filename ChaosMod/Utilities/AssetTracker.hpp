@@ -10,6 +10,8 @@ class AssetTracker
                 uint level;
         };
 
+        inline static uint flag = 0;
+
     private:
         using ShipCreateType = int (*)(unsigned& id, const pub::SpaceObj::ShipInfo& info);
         inline static FunctionDetour<ShipCreateType> shipCreateType = FunctionDetour(pub::SpaceObj::Create);
@@ -18,6 +20,7 @@ class AssetTracker
 
         static int OnShipCreate(unsigned& id, const pub::SpaceObj::ShipInfo& info)
         {
+            flag = info.flag;
             shipCreateType.UnDetour();
             const auto ret = shipCreateType.GetOriginalFunc()(id, info);
             shipCreateType.Detour(OnShipCreate);
@@ -31,6 +34,8 @@ class AssetTracker
         }
 
     public:
+        static uint GetLastCreationFlag() { return flag == 0 ? 5 : flag; }
+
         static Npc* GetNpcCreationParams(const unsigned id)
         {
             const auto npc = npcMap.find(id);

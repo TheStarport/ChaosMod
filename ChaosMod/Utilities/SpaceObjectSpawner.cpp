@@ -2,6 +2,7 @@
 
 #include "SpaceObjectSpawner.hpp"
 
+#include "AssetTracker.hpp"
 #include "Exceptions/NpcLoadingException.hpp"
 #include "PersonalityHelper.hpp"
 
@@ -193,9 +194,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     const auto shipArch = Archetype::GetShip(npcTemplate.archetypeHash);
 
     pub::SpaceObj::ShipInfo si{};
-    std::memset(&si, 0x0, sizeof(pub::SpaceObj::ShipInfo));
+    std::memset(&si, 0x0, sizeof(pub::SpaceObj::ShipInfo)); // NOLINT
 
-    si.flag = 1;
+    si.flag = AssetTracker::GetLastCreationFlag();
 
     si.system = system.value();
     si.pos = position.value();
@@ -326,7 +327,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     }
 
     uint spaceObj = 0;
-    pub::SpaceObj::Create(spaceObj, si);
+    auto ret = pub::SpaceObj::Create(spaceObj, si);
+
+    Log(std::to_string(ret));
 
     if (!spaceObj)
     {
