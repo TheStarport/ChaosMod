@@ -5,33 +5,33 @@
 
 class SpawnBigBertha final : public ActiveEffect
 {
-        ResourcePtr<SpawnedObject> jesus;
+        ResourcePtr<SpawnedObject> bertha;
         void Spawn()
         {
             const auto ship = Utils::GetCShip();
 
-            if (jesus.Acquire())
+            if (bertha.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(jesus);
+                SpaceObjectSpawner::i()->Despawn(bertha);
             }
 
-            jesus = SpaceObjectSpawner::NewBuilder()
-                .WithArchetype("chaos_big_bertha")
-                .WithLoadout("chaos_big_bertha")
-                .WithSystem(ship->system)
-                .WithPosition(ship->get_position(), 500.f)
-                .WithLevel(50)
-                .WithPersonality("gunboat_default")
-                .WithReputation("gd_gm_grp")
-                .WithName(458754)
-                .Spawn();
+            bertha = SpaceObjectSpawner::NewBuilder()
+                         .WithArchetype("chaos_big_bertha")
+                         .WithLoadout("chaos_big_bertha")
+                         .WithSystem(ship->system)
+                         .WithPosition(ship->get_position(), 500.f)
+                         .WithLevel(50)
+                         .WithPersonality("gunboat_default")
+                         .WithReputation("gd_gm_grp")
+                         .WithName(458754)
+                         .Spawn();
 
-            if (jesus.Acquire())
+            if (bertha.Acquire())
             {
                 pub::AI::DirectiveFollowOp op;
                 op.followSpaceObj = ship->id;
                 op.maxDistance = 0.0f;
-                pub::AI::SubmitDirective(jesus.Acquire()->spaceObj, &op);
+                pub::AI::SubmitDirective(bertha.Acquire()->spaceObj, &op);
             }
         }
 
