@@ -271,9 +271,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     pilotName.begin_mad_lib(16163); // ids of "%s0 %s1"
     if (names.has_value())
     {
-        auto name = names.value();
-        scannerName = name.first;
-        pilotName = name.second;
+        auto [scanner, pilot] = names.value();
+        scannerName = scanner;
+        pilotName = pilot;
     }
     else if (name.has_value())
     {
@@ -501,6 +501,87 @@ void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
     if (!Loadout::Get(npcTemplate.loadoutHash))
     {
         throw NpcLoadingException(std::format("{} ({}) loadout was not found while loading NPC.", npcTemplate.loadout, npcTemplate.loadoutHash));
+    }
+}
+
+void SpaceObjectSpawner::CreateNewLoadout(const std::string& nickname, const std::vector<LoadoutItem>& items)
+{
+    std::string block = std::format("[Loadout]\nnickname = {}\n", nickname);
+    std::ranges::for_each(items,
+                          [&block](auto& item)
+                          {
+                              if (item.count > 0)
+                              {
+                                  block += std::format("cargo = {}, {}\n", item.nickname, item.count);
+                              }
+                              else
+                              {
+                                  if (item.mountedHp.has_value())
+                                  {
+                                      block += std::format("equip = {}, {}\n", item.nickname, item.mountedHp.value());
+                                  }
+                                  else
+                                  {
+                                      block += std::format("equip = {}\n", item.nickname);
+                                  }
+                              }
+                          });
+
+    INI_Reader ini;
+    if (!ini.open_memory(block.data(), block.size()))
+    {
+        Log("Failed to open in-memory INI loadout entry");
+        return;
+    }
+
+    const auto id = CreateID(nickname.c_str());
+    struct DataPair
+    {
+            uint id;
+            ID_String unk;
+    };
+
+    DataPair v25 = { id, {} };
+
+    using CreateLoadout = int(__thiscall*)(void* thisPtr, char** unk, DataPair* unk2);
+    const auto sub6311Db0 = reinterpret_cast<CreateLoadout>(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0xB1DB0);
+
+    const auto unkClass = reinterpret_cast<PDWORD>(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x19D2A8);
+    static char* output;
+    sub6311Db0(unkClass, &output, &v25);
+    const auto v3 = output + 16;
+    *reinterpret_cast<DWORD*>(output + 16) = id;
+
+    ini.find_header("Loadout");
+    while (ini.read_value())
+    {
+        if (ini.is_value("equip"))
+        {
+            EquipDesc v8;
+            auto* vec = reinterpret_cast<st6::vector<EquipDesc>*>(v3 + 4);
+            vec->insert(*reinterpret_cast<st6::vector<EquipDesc>::iterator*>(v3 + 12), 1, v8);
+            using ReadEquipLine = bool (*)(INI_Reader&, EquipDesc*);
+            reinterpret_cast<ReadEquipLine>(reinterpret_cast<DWORD>(Loadout::ReadEquipLine))(
+                ini, reinterpret_cast<EquipDesc*>(*reinterpret_cast<DWORD*>(v3 + 12) - 32));
+            const auto shieldId = reinterpret_cast<SubObjectID::ShieldIdMaker*>(v3 + 20)->CreateShieldID();
+            reinterpret_cast<EquipDesc*>(*reinterpret_cast<DWORD*>(v3 + 12) - 32)->set_id(shieldId);
+        }
+        else if (ini.is_value("cargo"))
+        {
+            EquipDesc v28;
+            Loadout::ReadCargoLine(ini, v28);
+
+            bool v18 = arch_is_combinable(CreateID(ini.get_value_string(0)));
+            if (!v28.is_internal())
+            {
+                v18 = false;
+            }
+            if (!reinterpret_cast<EquipDescVector*>(v3 + 4)->add_equipment_item(v28, v18))
+            {
+                const auto shieldId = reinterpret_cast<SubObjectID::ShieldIdMaker*>(v3 + 20)->CreateShieldID();
+                reinterpret_cast<EquipDesc*>(*reinterpret_cast<DWORD*>(v3 + 12) - 32)->set_id(shieldId);
+            }
+        }
     }
 }
 

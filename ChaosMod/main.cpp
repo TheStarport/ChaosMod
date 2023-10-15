@@ -13,6 +13,9 @@
 #include "Utilities/AssetTracker.hpp"
 #include <Systems/SystemComponents/SaveManager.hpp>
 
+const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc"));
+const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));
+
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
 typedef void (*GlobalTimeFunc)(double delta);
 

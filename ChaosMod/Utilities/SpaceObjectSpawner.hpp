@@ -87,6 +87,19 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
                 SpaceObjectBuilder() = default;
         };
 
+        struct LoadoutItem
+        {
+                std::string nickname;
+                std::optional<std::string> mountedHp;
+                uint count;
+
+                explicit LoadoutItem(const std::string& nickname, const uint count = 0, const std::optional<std::string>& hp = {})
+                    : nickname(nickname), mountedHp(hp), count(count)
+                {}
+        };
+
+        static void CreateNewLoadout(const std::string& nickname, const std::vector<LoadoutItem>& items);
+
         static SpaceObjectBuilder NewBuilder() { return {}; }
 
         void Destroy(ResourcePtr<SpawnedObject> object);
