@@ -47,6 +47,7 @@
 #include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
 #include "Effects/DB/NPC/YouAreFamous.hpp"
 #include "Effects/DB/Spawning/Hydra.hpp"
+#include "Effects/DB/Spawning/JellyTime.hpp"
 #include "Effects/DB/Spawning/SpawnBigBertha.hpp"
 #include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
 #include "Effects/DB/Spawning/SpawnJesus.hpp"
@@ -468,6 +469,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(SpawnBigBertha);
     Ef(SpawnJesus);
     Ef(SpawnExtremeJesus);
+    Ef(JellyTime);
 
     // Teleports
     Ef(TakeABreak);

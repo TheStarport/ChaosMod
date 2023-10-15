@@ -260,6 +260,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
     <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp" />
     <ClInclude Include="Effects\DB\Spawning\Hydra.hpp" />
+    <ClInclude Include="Effects\DB\Spawning\JellyTime.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp" />
     <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp" />

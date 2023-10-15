@@ -239,9 +239,6 @@
     <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\YouSpinMeRightRound.hpp">
-      <Filter>Effects\DB\Movement</Filter>
-    </ClInclude>
     <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
@@ -304,9 +301,6 @@
     </ClInclude>
     <ClInclude Include="Systems\KeyManager.hpp">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\RandomisedKeys.hpp">
-      <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp">
       <Filter>Effects\DB\Audio</Filter>
@@ -467,6 +461,9 @@
     </ClInclude>
     <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp">
       <Filter>Effects\DB\StatManipulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Spawning\JellyTime.hpp">
+      <Filter>Effects\DB\Spawning</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
