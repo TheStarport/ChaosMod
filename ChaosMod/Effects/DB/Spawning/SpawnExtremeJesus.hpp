@@ -31,6 +31,8 @@ class SpawnExtremeJesus final : public ActiveEffect
                 pub::AI::DirectiveTrailOp op;
                 op.x0C = ship->id;
                 op.x10 = 500.f;
+                op.x14 = true;
+                op.fireWeapons = true;
                 pub::AI::SubmitDirective(jesus.Acquire()->spaceObj, &op);
             }
         }
