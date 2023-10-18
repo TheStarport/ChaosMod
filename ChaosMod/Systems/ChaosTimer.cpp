@@ -23,6 +23,7 @@
 #include "Effects/DB/Meta/DoubleTime.hpp"
 #include "Effects/DB/Meta/FakeCrash.hpp"
 #include "Effects/DB/Misc/CaveatEmptor.hpp"
+#include "Effects/DB/Misc/DrunkShopping.hpp"
 #include "Effects/DB/Misc/FlappyArchitecture.hpp"
 #include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
 #include "Effects/DB/Misc/LaggyPlayer.hpp"
@@ -444,6 +445,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IAmFiringMyLasers);
     Ef(XboxEdition);
     Ef(ThanksIHateIt);
+    Ef(DrunkShopping);
 
     // Movement
     Ef(Yeet);
