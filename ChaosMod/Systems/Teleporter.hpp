@@ -50,6 +50,7 @@ class Teleporter : public Singleton<Teleporter>
         static void ChangeSystem(uint newSystem, Vector pos, Matrix orient);
 
     public:
+        static void QueueTeleportEffect(float timer = 1.0f);
         void WarpToSolar(CSolar* solar) const;
         void WaypointWarp();
         void WarpToRandomStar(bool inSystem);

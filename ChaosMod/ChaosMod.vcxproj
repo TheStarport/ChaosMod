@@ -236,6 +236,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />
     <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
     <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp" />
+    <ClInclude Include="Effects\DB\Misc\DrunkShopping.hpp" />
     <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
     <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp" />
     <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
@@ -326,6 +327,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
+    <ClInclude Include="Systems\SystemComponents\GlobalTimers.hpp" />
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />
     <ClInclude Include="Systems\SystemComponents\SaveManager.hpp" />
     <ClInclude Include="Systems\SystemComponents\TwitchVoting.hpp" />

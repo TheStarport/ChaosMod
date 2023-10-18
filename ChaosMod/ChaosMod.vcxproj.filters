@@ -468,6 +468,12 @@
     <ClInclude Include="Effects\DB\Spawning\YouThinkYourSafe.hpp">
       <Filter>Effects\DB\Spawning</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\SystemComponents\GlobalTimers.hpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\DB\Misc\DrunkShopping.hpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

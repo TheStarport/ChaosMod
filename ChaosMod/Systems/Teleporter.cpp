@@ -2,6 +2,8 @@
 
 #include "Teleporter.hpp"
 
+#include "SystemComponents/GlobalTimers.hpp"
+
 #include <magic_enum_flags.hpp>
 
 using namespace magic_enum::bitwise_operators;
@@ -114,9 +116,34 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector pos, Matrix ori
 
     // Set new system switch
     *(PUINT)0x67977c = newSystem;
+
+    QueueTeleportEffect();
 }
 
-void Teleporter::WarpToSolar(CSolar* solar) const
+void Teleporter::QueueTeleportEffect(float timer)
+{
+    GlobalTimers::i()->AddTimer(
+        [](auto delta)
+        {
+            auto ship = Utils::GetCShip();
+            if (!ship)
+            {
+                return true;
+            }
+
+            const auto inspect = Utils::GetInspect(ship->id);
+            static uint id = CreateID("chaos_teleport_fx");
+            Utils::UnLightFuse(inspect, id, 0.0f);
+            Utils::LightFuse(inspect, id, 0.0f, 5.0f, 0.0f);
+
+            pub::Audio::PlaySoundEffect(1, CreateID("chaos_transmission"));
+
+            return true;
+        },
+        timer);
+}
+
+void Teleporter::WarpToSolar(CSolar* solar)
 {
     auto ship = Utils::GetCShip();
 
@@ -259,6 +286,8 @@ void Teleporter::WarpToSolar(CSolar* solar) const
     }
 
     pub::SpaceObj::Relocate(ship->id, ship->system, newPos, newRot);
+
+    QueueTeleportEffect();
 }
 
 void Teleporter::WaypointWarp()
@@ -328,13 +357,16 @@ void Teleporter::WarpToRandomSolar(const bool inSystem)
 void Teleporter::WarpToRandomSystem()
 {
     const auto ship = Utils::GetCShip();
-    static std::vector bannedSystems = { CreateID("st01"), CreateID("st02"), CreateID("st03"), CreateID("st02c"), CreateID("st03b") };
+    static std::vector bannedSystems = { CreateID("st01"), CreateID("st02"), CreateID("st03"), CreateID("st02c"), CreateID("st03b"), CreateID("FP7_System") };
 
     std::vector<Universe::ISystem*> systems;
     auto system = Universe::GetFirstSystem();
     while (system)
     {
-        systems.emplace_back(system);
+        if (std::ranges::all_of(bannedSystems, [system](auto id) { return system->id != id; }))
+        {
+            systems.emplace_back(system);
+        }
         system = Universe::GetNextSystem();
     }
 

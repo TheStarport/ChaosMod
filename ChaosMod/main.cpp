@@ -8,6 +8,7 @@
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
 #include "Systems/ShipManipulator.hpp"
+#include "Systems/SystemComponents/GlobalTimers.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "Systems/UiManager.hpp"
 #include "Utilities/AssetTracker.hpp"
@@ -443,6 +444,7 @@ void __cdecl Update(const double delta)
     {
         SaveManager::SaveTimer(SixtyFramesPerSecond);
         ChaosTimer::i()->Update(SixtyFramesPerSecond);
+        GlobalTimers::i()->Update(SixtyFramesPerSecond);
         timeCounter -= SixtyFramesPerSecond;
     }
 
