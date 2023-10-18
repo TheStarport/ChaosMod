@@ -79,8 +79,23 @@ void Teleporter::SwitchOutDoneHook()
     reinterpret_cast<DisplaySystem>(0x45b490)();
 }
 
-void Teleporter::ChangeSystem(const uint newSystem, const Vector pos, Matrix orient)
+void Teleporter::ChangeSystem(const uint newSystem, const Vector pos, Matrix orient, bool checkTradeLane)
 {
+    if (const auto ship = Utils::GetCShip(); ship && checkTradeLane && ship->is_using_tradelane())
+    {
+        ship->request_exit_tradelane();
+
+        GlobalTimers::i()->AddTimer(
+            [newSystem, pos, orient](float delta)
+            {
+                ChangeSystem(newSystem, pos, orient, false);
+                return true;
+            },
+            3.0f);
+
+        return;
+    }
+
     const auto patch = PBYTE(DWORD(GetModuleHandleA("server.dll")) + 0xf600);
     patch[0x0d7] = 0xeb; // ignore exit object
     patch[0x0d8] = 0x40;
@@ -143,12 +158,25 @@ void Teleporter::QueueTeleportEffect(float timer)
         timer);
 }
 
-void Teleporter::WarpToSolar(CSolar* solar)
+void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
 {
     auto ship = Utils::GetCShip();
 
     if (!ship)
     {
+        return;
+    }
+
+    if (checkForTradelane && ship->is_using_tradelane())
+    {
+        ship->request_exit_tradelane();
+        GlobalTimers::i()->AddTimer(
+            [solar](float delta)
+            {
+                WarpToSolar(solar, false);
+                return true;
+            },
+            3.0f);
         return;
     }
 

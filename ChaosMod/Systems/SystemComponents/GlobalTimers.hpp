@@ -3,13 +3,10 @@
 
 class GlobalTimers : public Singleton<GlobalTimers>
 {
-    public:
-        typedef bool (*GlobalTimerFunc)(float delta);
-
     private:
         struct GlobalTimer
         {
-                GlobalTimerFunc func;
+                std::function<bool(float delta)> func;
                 float timeBetweenExecutions;
                 float countdown;
         };
@@ -40,7 +37,7 @@ class GlobalTimers : public Singleton<GlobalTimers>
             }
         }
 
-        int AddTimer(const GlobalTimerFunc func, const float timeBetweenExecutions)
+        int AddTimer(const std::function<bool(float)>& func, const float timeBetweenExecutions)
         {
             while (true)
             {
@@ -50,7 +47,7 @@ class GlobalTimers : public Singleton<GlobalTimers>
                     continue;
                 }
 
-                timers[id] = { func, timeBetweenExecutions, 0.0f };
+                timers[id] = { func, timeBetweenExecutions, timeBetweenExecutions };
                 return id;
             }
         }

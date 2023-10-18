@@ -47,11 +47,11 @@ class Teleporter : public Singleton<Teleporter>
         static void* __stdcall EnterSystemHook(EntryStack* stack);
         static void SwitchOutDoneHook();
 
-        static void ChangeSystem(uint newSystem, Vector pos, Matrix orient);
+        static void ChangeSystem(uint newSystem, Vector pos, Matrix orient, bool checkTradeLane = true);
 
     public:
-        static void QueueTeleportEffect(float timer = 1.0f);
-        void WarpToSolar(CSolar* solar) const;
+        static void QueueTeleportEffect(float timer = .3f);
+        static void WarpToSolar(CSolar* solar, bool checkForTradelane = true);
         void WaypointWarp();
         void WarpToRandomStar(bool inSystem);
         void WarpToRandomSolar(bool inSystem);
