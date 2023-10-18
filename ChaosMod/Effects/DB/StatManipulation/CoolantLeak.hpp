@@ -21,8 +21,8 @@ class CoolantLeak final : public ActiveEffect
                 powerIncrease += power->GetChargeRate() * fps;
             }
 
-            // Half the power regen of the ship
-            auto currentPower = ship->get_power();
+            // Set the regen of the ship to 40% of what it should be
+            const auto currentPower = ship->get_power();
             ship->set_power(currentPower - (powerIncrease * 0.4f));
         }
 
