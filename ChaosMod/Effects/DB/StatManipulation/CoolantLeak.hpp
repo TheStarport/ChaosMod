@@ -3,6 +3,7 @@
 
 class CoolantLeak final : public ActiveEffect
 {
+        static constexpr float fps = 1.0f / 60.0f;
         void Update(float delta) override
         {
             CShip* ship = Utils::GetCShip();
@@ -11,7 +12,18 @@ class CoolantLeak final : public ActiveEffect
                 return;
             }
 
-            ship->set_power(0.0f);
+            CEquipTraverser tr(Power);
+            const CEquip* equip;
+            float powerIncrease = 0.0f;
+            while ((equip = GetEquipManager((ship))->Traverse(tr)))
+            {
+                const auto power = static_cast<const CEPower*>(equip);
+                powerIncrease += power->GetChargeRate() * fps;
+            }
+
+            // Half the power regen of the ship
+            auto currentPower = ship->get_power();
+            ship->set_power(currentPower - (powerIncrease * 0.4f));
         }
 
     public:
