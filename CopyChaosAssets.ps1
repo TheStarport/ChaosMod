@@ -5,6 +5,7 @@
  .REVISION HISTORY: 
  v1.0 2023-10-12: Initial release
  v1.2 2023-10-12: Script now compiles infocards from an frc file using Adoxa's tool on launch
+ v1.3 2023-10-19: Include XML -> ALE pipeline utilizing the Freelancer XML project
 #>
 Param ($noLaunch)
 $init = { function Get-LogColor {
@@ -43,10 +44,35 @@ function TailFileUntilProcessStops {
         Remove-Job $tailLoopJob
     }
 }
+function XMLtoALE {
+    Get-ChildItem "$effectXMLPath" -Filter *.ale.xml | Foreach-Object {
+        Write-Output "Converting $($_.FullName) to .ale format"
+        .\XMLUTF.exe -O $effectPackedPath $_.FullName
+    }
+}
+function ALEtoXML {
+    Get-ChildItem "$effectPackedPath" -Filter *.ale | Foreach-Object {
+        Write-Output "Converting $($_.FullName) to .xml format"
+        .\UTFXML.exe -o $effectXMLPath $_.FullName
+    }
+}
+
 $infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc" 
 $frcPath = "$PSScriptRoot\frc.exe"
 Write-Host "Compiling infocards from $infocardXMLPath to $PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll..." -ForegroundColor Blue
 Start-Process $frcPath -ArgumentList "$infocardXMLPath", "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
+
+$effectXMLPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX\XML"
+$effectPackedPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX"
+
+if (!$editingXMLAle) {
+    Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
+    ALEtoXML
+    Write-Host "ALE assets unpacked!" -ForegroundColor Green
+}
+Write-Host "Packing ALE assets for build..." -ForegroundColor Green
+XMLtoALE
+Write-Host "ALE assets packed!" -ForegroundColor Green
 
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
 $freelancer = Get-Process freelancer -ErrorAction SilentlyContinue
