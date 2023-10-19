@@ -22,5 +22,5 @@ class NoHud final : public ActiveEffect
         void Begin() override { ToggleHud(false); }
         void End() override { ToggleHud(true); }
 
-        DefEffectInfo("No Hud", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("No Hud", EffectType::Interface);
 };

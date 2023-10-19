@@ -29,5 +29,5 @@ class SwiftNPCs final : public ActiveEffect
         void End() override { detour->UnDetour(); }
 
     public:
-        DefEffectInfo("Swift NPCs", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("Swift NPCs", EffectType::Npc);
 };

@@ -27,5 +27,5 @@ class Yeet final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("YEET", 0.05f, EffectType::Movement);
+        AbsoluteEffectInfo("YEET", EffectType::Movement, 4.0f);
 };

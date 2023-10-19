@@ -89,5 +89,5 @@ class SleepyPlayer final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Sleepy Player", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("Sleepy Player", EffectType::Visual);
 };

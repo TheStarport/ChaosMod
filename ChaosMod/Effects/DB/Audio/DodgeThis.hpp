@@ -31,5 +31,5 @@ class DodgeThis final : public ActiveEffect
             detour = std::make_unique<FunctionDetour<OnCollision>>(collision);
         }
 
-        DefEffectInfo("Dodge This", 1.0f, EffectType::Audio);
+        DefaultEffectInfo("Dodge This", EffectType::Audio);
 };

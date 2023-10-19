@@ -93,5 +93,5 @@ class Lgbtui final : public MemoryEffect
         }
 
     public:
-        DefEffectInfo("LGBTUI+", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("LGBTUI+", EffectType::Interface);
 };

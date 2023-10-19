@@ -90,5 +90,5 @@ class MultiplayerExperience final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("The Multiplayer Experience", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("The Multiplayer Experience", EffectType::Npc);
 };

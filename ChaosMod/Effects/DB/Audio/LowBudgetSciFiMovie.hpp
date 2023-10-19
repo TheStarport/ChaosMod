@@ -72,5 +72,5 @@ class LowBudgetSciFiMovie final : public ActiveEffect
             detourCreateSound->Detour(DetourCreateSound);
         }
 
-        DefEffectInfo("Low Budget Sci-fi Movie", 1.0f, EffectType::Audio);
+        DefaultEffectInfo("Low Budget Sci-fi Movie", EffectType::Audio);
 };

@@ -9,5 +9,5 @@ class TheStarsReallyAreBeautiful final : public ActiveEffect
         void Begin() override { Teleporter::i()->WarpToRandomStar(Random::i()->Uniform(0u, 3u) < 3); }
 
     public:
-        DefEffectInfo("The Stars Really Are Beautiful", 0.0f, EffectType::Teleport)
+        OneShotEffectInfo("The Stars Really Are Beautiful", EffectType::Teleport)
 };

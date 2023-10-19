@@ -32,5 +32,5 @@ class JustLikeThe90s final : public ActiveEffect
             }
         }
 
-        DefEffectInfo("Just Like The 90s", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("Just Like The 90s", EffectType::Interface);
 };

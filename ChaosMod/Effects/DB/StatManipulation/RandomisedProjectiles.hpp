@@ -107,5 +107,5 @@ class RandomisedProjectiles final : public ActiveEffect
             }
         }
 
-        DefEffectInfo("Randomised Projectiles", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Randomised Projectiles", EffectType::StatManipulation);
 };

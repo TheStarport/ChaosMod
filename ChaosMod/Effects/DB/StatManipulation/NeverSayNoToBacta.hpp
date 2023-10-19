@@ -23,5 +23,5 @@ class NeverSayNoToBacta final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Never Say No To Bacta", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Never Say No To Bacta", EffectType::StatManipulation);
 };

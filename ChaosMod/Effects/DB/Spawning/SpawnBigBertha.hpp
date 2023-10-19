@@ -39,5 +39,5 @@ class SpawnBigBertha final : public ActiveEffect
         void OnLoad() override { Spawn(); }
 
     public:
-        DefEffectInfo("Spawn Big Bertha", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("Spawn Big Bertha", EffectType::Spawning, 2.0f);
 };

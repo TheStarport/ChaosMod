@@ -27,5 +27,5 @@ class CoolantLeak final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Coolant Leak", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Coolant Leak", EffectType::StatManipulation);
 };

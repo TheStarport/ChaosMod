@@ -37,5 +37,5 @@ class DrunkShopping final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Drunk Shopping", 0.0f, EffectType::Misc);
+        OneShotEffectInfo("Drunk Shopping", EffectType::Misc);
 };

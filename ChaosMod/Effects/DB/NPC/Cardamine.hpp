@@ -20,5 +20,5 @@ class Cardamine final : public ActiveEffect
         void End() override { detour->UnDetour(); }
 
     public:
-        DefEffectInfo("Cardamine, Cardamine.", 2.0f, EffectType::Npc);
+        RelativeEffectInfo("Cardamine, Cardamine.", EffectType::Npc, 2.0f);
 };

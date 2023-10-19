@@ -47,5 +47,5 @@ class Screensaver final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Screensaver", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("Screensaver", EffectType::Visual);
 };

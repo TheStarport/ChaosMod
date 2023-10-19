@@ -8,5 +8,5 @@ class BoxOfChocolates final : public ActiveEffect
         void End() override { ActiveEffectsText::BoxOfChocolates(); }
 
     public:
-        DefEffectInfo("Box Of Chocolates", 1.0f, EffectType::Meta);
+        DefaultEffectInfo("Box Of Chocolates", EffectType::Meta);
 };

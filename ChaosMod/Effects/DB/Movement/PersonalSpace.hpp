@@ -7,5 +7,5 @@ class PersonalSpace final : public ActiveEffect
         void End() override { ShipManipulator::i()->SetPersonalSpace(false); }
 
     public:
-        DefEffectInfo("Personal Space", 1.0f, EffectType::Movement);
+        DefaultEffectInfo("Personal Space", EffectType::Movement);
 };

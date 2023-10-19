@@ -43,5 +43,5 @@ class LaggyPlayer final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Laggy Player", 1.0f, EffectType::Misc);
+        DefaultEffectInfo("Laggy Player", EffectType::Misc);
 };

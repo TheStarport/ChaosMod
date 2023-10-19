@@ -13,5 +13,5 @@ class GetHumbled final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Get Humbled", 0.0f, EffectType::StatManipulation);
+        OneShotEffectInfo("Get Humbled", EffectType::StatManipulation);
 };

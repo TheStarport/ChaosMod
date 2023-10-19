@@ -50,5 +50,5 @@ class YouThinkYourSafe final : public ActiveEffect
         void OnLoad() override { Spawn(); }
 
     public:
-        DefEffectInfo("You Think Your Safe", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("You Think Your Safe", EffectType::Spawning, 2.0f);
 };

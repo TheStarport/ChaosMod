@@ -53,5 +53,5 @@ class Hydra final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Hydra", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("Hydra", EffectType::Spawning, 2.0f);
 };

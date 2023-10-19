@@ -65,5 +65,5 @@ class FakeCrash final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("", 0.0f, EffectType::Meta);
+        OneShotEffectInfo("", EffectType::Meta);
 };

@@ -25,5 +25,5 @@ class IDoNotSpeakMorseCode final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("I Do Not Speak Morse Code", 1.0f, EffectType::Audio);
+        DefaultEffectInfo("I Do Not Speak Morse Code", EffectType::Audio);
 };

@@ -9,5 +9,5 @@ class UrgentRelativeVisit final : public ActiveEffect
         void Begin() override { Teleporter::i()->BeamToRandomBase(false); }
 
     public:
-        DefEffectInfo("Urgent Relative Visit", 0.0f, EffectType::Teleport)
+        OneShotEffectInfo("Urgent Relative Visit", EffectType::Teleport)
 };

@@ -33,5 +33,5 @@ class YouAreFamous final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("You Are Famous", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("You Are Famous", EffectType::Npc);
 };

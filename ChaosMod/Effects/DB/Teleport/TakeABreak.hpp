@@ -10,5 +10,5 @@ class TakeABreak final : public ActiveEffect
         void End() override { Teleporter::i()->RestorePreviousPosition(); }
 
     public:
-        DefEffectInfo("Take A Break", 2.0f, EffectType::Teleport)
+        RelativeEffectInfo("Take A Break", EffectType::Teleport, 2.0f)
 };

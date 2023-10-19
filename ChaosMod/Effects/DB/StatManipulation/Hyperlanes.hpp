@@ -18,5 +18,5 @@ class Hyperlanes final : public MemoryEffect
         }
 
     public:
-        DefEffectInfo("Hyperlanes", 2.0f, EffectType::StatManipulation);
+        RelativeEffectInfo("Hyperlanes", EffectType::StatManipulation, 2.0f);
 };

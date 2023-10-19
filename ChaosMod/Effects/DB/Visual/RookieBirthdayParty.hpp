@@ -20,5 +20,5 @@ class RookieBirthdayParty final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Rookie Birthday Party", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("Rookie Birthday Party", EffectType::Visual);
 };

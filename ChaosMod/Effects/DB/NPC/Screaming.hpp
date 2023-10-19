@@ -74,5 +74,5 @@ class Screaming final : public ActiveEffect
             };
         }
 
-        DefEffectInfo("SCREAMING", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("SCREAMING", EffectType::Npc);
 };

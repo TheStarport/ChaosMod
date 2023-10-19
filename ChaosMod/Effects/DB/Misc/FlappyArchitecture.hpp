@@ -140,5 +140,5 @@ class FlappyArchitecture final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Flappy Architecture", 1.0f, EffectType::Misc);
+        DefaultEffectInfo("Flappy Architecture", EffectType::Misc);
 };

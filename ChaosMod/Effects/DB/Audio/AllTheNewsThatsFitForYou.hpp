@@ -15,5 +15,5 @@ class AllTheNewsThatsFitForYou final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("All The News That's Fit For You", 1.0f, EffectType::Audio);
+        DefaultEffectInfo("All The News That's Fit For You", EffectType::Audio);
 };

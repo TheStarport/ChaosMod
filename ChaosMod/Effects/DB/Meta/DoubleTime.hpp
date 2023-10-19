@@ -8,5 +8,5 @@ class DoubleTime final : public ActiveEffect
         void End() override { ChaosTimer::i()->ToggleDoubleTime(); }
 
     public:
-        DefEffectInfo("Double Time", 1.0f, EffectType::Meta);
+        DefaultEffectInfo("Double Time", EffectType::Meta);
 };

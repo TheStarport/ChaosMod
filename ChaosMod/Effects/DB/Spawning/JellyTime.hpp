@@ -56,5 +56,5 @@ class JellyTime final : public ActiveEffect
         void OnLoad() override { Spawn(); }
 
     public:
-        DefEffectInfo("Jelly Time", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("Jelly Time", EffectType::Spawning, 2.0f);
 };

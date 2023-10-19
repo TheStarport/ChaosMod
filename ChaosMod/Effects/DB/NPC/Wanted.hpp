@@ -28,5 +28,5 @@ class Wanted final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("WANTED", 0.0f, EffectType::Npc);
+        OneShotEffectInfo("WANTED", EffectType::Npc);
 };

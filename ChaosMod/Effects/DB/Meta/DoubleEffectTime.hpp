@@ -8,5 +8,5 @@ class DoubleEffectTime final : public ActiveEffect
         void End() override { ChaosTimer::i()->AdjustModifier(-1.0f); }
 
     public:
-        DefEffectInfo("Double Effect Duration", 1.0f, EffectType::Meta);
+        DefaultEffectInfo("Double Effect Duration", EffectType::Meta);
 };

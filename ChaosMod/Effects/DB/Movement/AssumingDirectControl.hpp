@@ -111,5 +111,5 @@ class AssumingDirectControl final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Assuming Direct Control", 1.0f, EffectType::Movement);
+        DefaultEffectInfo("Assuming Direct Control", EffectType::Movement);
 };

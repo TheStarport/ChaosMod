@@ -26,5 +26,5 @@ class IAmRobot final : public ActiveEffect
             sendCommDetour = std::make_unique<FunctionDetour<SendCommType>>(orig);
         }
 
-        DefEffectInfo("I Am Robot", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("I Am Robot", EffectType::Npc);
 };

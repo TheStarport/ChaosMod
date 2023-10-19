@@ -27,12 +27,6 @@ class ActiveEffect
     public:
         struct EffectInfo
         {
-                EffectInfo(std::string name, const float timeModifier, const EffectType category, const float fixedTimeOverride = 0.0f,
-                           const EffectExclusion exclusion = EffectExclusion::None)
-                    : effectName(std::move(name)), isTimed(timeModifier > 0.0f || fixedTimeOverride != 0.0f), category(category), timingModifier(timeModifier),
-                      fixedTimeOverride(fixedTimeOverride), exclusion(exclusion)
-                {}
-
                 std::string effectName{};
                 bool isTimed;
                 EffectType category;
@@ -69,17 +63,87 @@ class ActiveEffect
         {
             allEffects.emplace_back(std::make_unique<Effect>(Effect()));
         }
+
+    protected:
+        struct EffectInfoBuilder
+        {
+                explicit EffectInfoBuilder(const std::string& effectName, EffectType effectType)
+                {
+                    name = effectName;
+                    category = effectType;
+                }
+
+                EffectInfoBuilder& WithOneShot()
+                {
+                    relativeTime = 0.0f;
+                    absoluteTime = 0.0f;
+                    return *this;
+                }
+
+                EffectInfoBuilder& WithRelativeTime(const float time)
+                {
+                    relativeTime = time;
+                    return *this;
+                }
+
+                EffectInfoBuilder& WithAbsoluteTime(const float time)
+                {
+                    absoluteTime = time;
+                    return *this;
+                }
+
+                EffectInfoBuilder& WithWeight(const uint newWeight)
+                {
+                    weight = newWeight;
+                    return *this;
+                }
+
+                EffectInfoBuilder& WithExclusion(const EffectExclusion effectExclusion)
+                {
+                    exclusion = effectExclusion;
+                    return *this;
+                }
+
+                [[nodiscard]]
+                EffectInfo Create() const
+                {
+                    return { name, relativeTime == 0.0f && absoluteTime == 0.0f, category, relativeTime, absoluteTime, exclusion };
+                }
+
+            private:
+                EffectType category;
+                EffectExclusion exclusion = EffectExclusion::None;
+                uint weight = 100;
+                float relativeTime = 1.0f;
+                float absoluteTime = 0.0f;
+                std::string name;
+        };
 };
 
-#define DefEffectInfo(name, timeModifier, category)                    \
-    const EffectInfo& GetEffectInfo()                                  \
-    {                                                                  \
-        static const EffectInfo ef = { name, timeModifier, category }; \
-        return ef;                                                     \
+#define DefaultEffectInfo(name, category)                                        \
+    const EffectInfo& GetEffectInfo() override                                   \
+    {                                                                            \
+        static const EffectInfo ef = EffectInfoBuilder(name, category).Create(); \
+        return ef;                                                               \
     }
-#define DefEffectInfoFixed(name, absoluteTime, category)                     \
-    const EffectInfo& GetEffectInfo()                                        \
-    {                                                                        \
-        static const EffectInfo ef = { name, 0.0f, category, absoluteTime }; \
-        return ef;                                                           \
+
+#define OneShotEffectInfo(name, category)                                                      \
+    const EffectInfo& GetEffectInfo() override                                                 \
+    {                                                                                          \
+        static const EffectInfo ef = EffectInfoBuilder(name, category).WithOneShot().Create(); \
+        return ef;                                                                             \
+    }
+
+#define RelativeEffectInfo(name, category, time)                                                        \
+    const EffectInfo& GetEffectInfo() override                                                          \
+    {                                                                                                   \
+        static const EffectInfo ef = EffectInfoBuilder(name, category).WithRelativeTime(time).Create(); \
+        return ef;                                                                                      \
+    }
+
+#define AbsoluteEffectInfo(name, category, time)                                                        \
+    const EffectInfo& GetEffectInfo() override                                                          \
+    {                                                                                                   \
+        static const EffectInfo ef = EffectInfoBuilder(name, category).WithAbsoluteTime(time).Create(); \
+        return ef;                                                                                      \
     }

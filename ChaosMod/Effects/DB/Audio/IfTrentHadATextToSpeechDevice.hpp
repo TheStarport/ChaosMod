@@ -40,5 +40,5 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
             }
         }
 
-        DefEffectInfo("If Trent Had A Text To Speech Device", 0.0f, EffectType::Audio);
+        OneShotEffectInfo("If Trent Had A Text To Speech Device", EffectType::Audio);
 };

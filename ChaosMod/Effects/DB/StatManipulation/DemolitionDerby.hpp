@@ -17,5 +17,5 @@ class DemolitionDerby final : public MemoryEffect
         }
 
     public:
-        DefEffectInfo("Demolition Derby", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Demolition Derby", EffectType::StatManipulation);
 };

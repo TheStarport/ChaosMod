@@ -42,5 +42,5 @@ class InvertVelocity final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Invert Velocity", .75f, EffectType::Movement);
+        RelativeEffectInfo("Invert Velocity", EffectType::Movement, .75f);
 };

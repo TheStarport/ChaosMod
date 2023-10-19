@@ -28,5 +28,5 @@ class PlanetOfTheApes final : public ActiveEffect
             sendCommDetour = std::make_unique<FunctionDetour<SendCommType>>(orig);
         }
 
-        DefEffectInfo("Planet Of The Apes", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("Planet Of The Apes", EffectType::Npc);
 };

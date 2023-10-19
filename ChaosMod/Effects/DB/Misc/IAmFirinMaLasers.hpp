@@ -69,5 +69,5 @@ class IAmFiringMyLasers final : public ActiveEffect
             weirdFreelancerClassMap.clear();
         }
 
-        DefEffectInfo("I'm Firin Ma Lasers", 1.0f, EffectType::Misc);
+        DefaultEffectInfo("I'm Firin Ma Lasers", EffectType::Misc);
 };

@@ -20,5 +20,5 @@ class IllTrySpinning final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("I'll Try Spinning!", 1.0f, EffectType::Movement);
+        DefaultEffectInfo("I'll Try Spinning!", EffectType::Movement);
 };

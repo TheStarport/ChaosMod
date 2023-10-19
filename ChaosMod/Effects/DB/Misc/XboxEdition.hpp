@@ -23,5 +23,5 @@ class XboxEdition final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Xbox Edition", 1.0f, EffectType::Misc);
+        DefaultEffectInfo("Xbox Edition", EffectType::Misc);
 };

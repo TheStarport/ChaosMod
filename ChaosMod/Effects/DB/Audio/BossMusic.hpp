@@ -48,5 +48,5 @@ class BossMusic final : public ActiveEffect
             currentBattleOffset = reinterpret_cast<PDWORD>(RelOfs("freelancer.exe", AddressTable::CurrentSystemBattle));
         }
 
-        DefEffectInfo("Why Do I Hear Boss Music?", 1.0f, EffectType::Audio);
+        DefaultEffectInfo("Why Do I Hear Boss Music?", EffectType::Audio);
 };

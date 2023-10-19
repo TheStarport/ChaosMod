@@ -8,5 +8,5 @@ class FlippedUi final : public ActiveEffect
         void End() override { HudInterface::i()->ToggleFlipping(); }
 
     public:
-        DefEffectInfo("Flipped Interface", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("Flipped Interface", EffectType::Interface);
 };

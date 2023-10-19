@@ -41,5 +41,5 @@ class SadViolin final : public PersistentEffect
     public:
         SadViolin() { playMusicDetour = std::make_unique<FunctionDetour<PlayMusicFunction>>(pub::Audio::SetMusic); }
 
-        DefEffectInfo("Sad Violin", 0.0f, EffectType::Audio);
+        OneShotEffectInfo("Sad Violin", EffectType::Audio);
 };

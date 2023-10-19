@@ -19,5 +19,5 @@ class StickyKeys final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Sticky Keys", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("Sticky Keys", EffectType::Interface);
 };

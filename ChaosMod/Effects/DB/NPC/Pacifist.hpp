@@ -38,5 +38,5 @@ class Pacifist final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Pacifist", 1.0f, EffectType::Npc);
+        DefaultEffectInfo("Pacifist", EffectType::Npc);
 };

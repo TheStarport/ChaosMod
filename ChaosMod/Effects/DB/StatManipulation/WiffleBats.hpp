@@ -20,5 +20,5 @@ class WiffleBats final : public ActiveEffect
             detour = std::make_unique<FunctionDetour<OnCollision>>(collision);
         }
 
-        DefEffectInfo("Wiffle Bats", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Wiffle Bats", EffectType::StatManipulation);
 };

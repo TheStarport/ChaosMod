@@ -36,5 +36,5 @@ class ThanksIHateIt final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Thanks I Hate It", 0.0f, EffectType::Misc);
+        OneShotEffectInfo("Thanks I Hate It", EffectType::Misc);
 };

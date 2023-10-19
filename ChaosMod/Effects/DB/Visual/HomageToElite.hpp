@@ -7,5 +7,5 @@ class HomageToElite final : public ActiveEffect
         void End() override { DrawingHelper::i()->SetRenderState(D3DRS_FILLMODE, 3, true); }
 
     public:
-        DefEffectInfo("Homage To Elite", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("Homage To Elite", EffectType::Visual);
 };

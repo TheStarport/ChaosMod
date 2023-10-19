@@ -20,5 +20,5 @@ class CaveatEmptor final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Caveat Emptor", 0.0f, EffectType::Misc);
+        OneShotEffectInfo("Caveat Emptor", EffectType::Misc);
 };

@@ -9,5 +9,5 @@ class AintThatOneABeauty final : public ActiveEffect
         void Begin() override { Teleporter::i()->WarpToRandomSolar(Random::i()->Uniform(0u, 3u) < 3); }
 
     public:
-        DefEffectInfo("Ain't That One A Beauty", 0.0f, EffectType::Teleport)
+        OneShotEffectInfo("Ain't That One A Beauty", EffectType::Teleport)
 };

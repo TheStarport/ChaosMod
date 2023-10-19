@@ -7,5 +7,5 @@ class Zoomies final : public ActiveEffect
         void End() override { EngineEquipConsts::CRUISING_SPEED *= 0.5f; }
 
     public:
-        DefEffectInfo("Zoomies", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Zoomies", EffectType::StatManipulation);
 };

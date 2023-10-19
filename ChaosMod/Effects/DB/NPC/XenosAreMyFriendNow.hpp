@@ -46,5 +46,5 @@ class XenosAreMyFriendsNow final : public ActiveEffect
             }
         }
 
-        DefEffectInfo("Xenos Are My Friends Now", 0.0f, EffectType::Npc);
+        OneShotEffectInfo("Xenos Are My Friends Now", EffectType::Npc);
 };

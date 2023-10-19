@@ -70,5 +70,5 @@ class BuggyInterface final : public MemoryEffect
             HudInterface::i()->SetBuggyInterface(false);
         }
 
-        DefEffectInfo("Buggy Interface", 1.0f, EffectType::Interface);
+        DefaultEffectInfo("Buggy Interface", EffectType::Interface);
 };

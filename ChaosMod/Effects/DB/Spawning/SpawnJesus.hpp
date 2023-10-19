@@ -41,5 +41,5 @@ class SpawnJesus final : public ActiveEffect
         void OnLoad() override { Spawn(); }
 
     public:
-        DefEffectInfo("Spawn Griefer Jesus", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("Spawn Griefer Jesus", EffectType::Spawning, 2.0f);
 };

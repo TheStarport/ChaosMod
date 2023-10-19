@@ -7,5 +7,5 @@ class RollCredits final : public ActiveEffect
         void Begin() override { ScrollingCredits::ToggleVisibility(); }
 
     public:
-        DefEffectInfo("Roll Credits", 0.0f, EffectType::Interface);
+        OneShotEffectInfo("Roll Credits", EffectType::Interface);
 };

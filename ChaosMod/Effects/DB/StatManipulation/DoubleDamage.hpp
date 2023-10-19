@@ -8,5 +8,5 @@ class DoubleDamage final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Double Damage", 1.0f, EffectType::StatManipulation);
+        DefaultEffectInfo("Double Damage", EffectType::StatManipulation);
 };

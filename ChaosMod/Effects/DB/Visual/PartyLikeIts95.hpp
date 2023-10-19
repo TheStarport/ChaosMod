@@ -44,5 +44,5 @@ class PartyLikeIts95 final : public MemoryEffect
         }
 
     public:
-        DefEffectInfo("PartyLikeIts95", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("PartyLikeIts95", EffectType::Visual);
 };

@@ -33,5 +33,5 @@ class TryRepairing final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Try Repairing", 0.0f, EffectType::StatManipulation);
+        OneShotEffectInfo("Try Repairing", EffectType::StatManipulation);
 };

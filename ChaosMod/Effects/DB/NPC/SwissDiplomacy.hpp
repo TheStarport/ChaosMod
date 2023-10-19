@@ -42,5 +42,5 @@ class SwissDiplomacy final : public ActiveEffect
             }
         }
 
-        DefEffectInfo("Swiss Diplomacy", 0.0f, EffectType::Npc);
+        OneShotEffectInfo("Swiss Diplomacy", EffectType::Npc);
 };

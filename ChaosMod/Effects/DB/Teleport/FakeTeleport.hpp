@@ -14,5 +14,5 @@ class FakeTeleport final : public ActiveEffect
         void End() override { Teleporter::i()->RestorePreviousPosition(); }
 
     public:
-        DefEffectInfoFixed("Fake Teleport", 7.0f, EffectType::Teleport)
+        AbsoluteEffectInfo("Fake Teleport", EffectType::Teleport, 5.0f)
 };

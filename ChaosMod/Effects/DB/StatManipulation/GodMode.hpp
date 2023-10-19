@@ -18,5 +18,5 @@ class GodMode final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("God Mode", 0.5f, EffectType::StatManipulation);
+        RelativeEffectInfo("God Mode", EffectType::StatManipulation, 0.5f);
 };

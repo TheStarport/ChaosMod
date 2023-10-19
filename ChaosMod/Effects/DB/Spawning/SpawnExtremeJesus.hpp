@@ -41,5 +41,5 @@ class SpawnExtremeJesus final : public ActiveEffect
         void OnLoad() override { Spawn(); }
 
     public:
-        DefEffectInfo("Spawn Extreme Greifer Jesus", 2.0f, EffectType::Spawning);
+        RelativeEffectInfo("Spawn Extreme Greifer Jesus", EffectType::Spawning, 2.0f);
 };

@@ -12,5 +12,5 @@ class SelfDestruct final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Self Destruct", 0.1f, EffectType::Misc);
+        AbsoluteEffectInfo("Self Destruct", EffectType::Misc, 4.0f);
 };

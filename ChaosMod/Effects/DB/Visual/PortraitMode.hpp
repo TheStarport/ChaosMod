@@ -17,5 +17,5 @@ class PortraitMode final : public ActiveEffect
         }
 
     public:
-        DefEffectInfo("Portrait Mode", 1.0f, EffectType::Visual);
+        DefaultEffectInfo("Portrait Mode", EffectType::Visual);
 };
