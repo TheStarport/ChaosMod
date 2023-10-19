@@ -292,6 +292,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Effects\DB\Visual\Screensaver.hpp" />
     <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
     <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp" />
+    <ClInclude Include="Effects\DB\Visual\WideBoi.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="Effects\PersistentEffect.hpp" />
     <ClInclude Include="Exceptions\NpcLoadingException.hpp" />

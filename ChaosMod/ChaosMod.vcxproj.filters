@@ -474,6 +474,9 @@
     <ClInclude Include="Effects\DB\Misc\DrunkShopping.hpp">
       <Filter>Effects\DB\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Effects\DB\Visual\WideBoi.hpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

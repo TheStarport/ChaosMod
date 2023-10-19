@@ -79,6 +79,7 @@
 #include "Effects/DB/Visual/RookieBirthdayParty.hpp"
 #include "Effects/DB/Visual/Screensaver.hpp"
 #include "Effects/DB/Visual/SleepyPlayer.hpp"
+#include "Effects/DB/Visual/WideBoi.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -503,6 +504,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(PortraitMode);
     Ef(AllWeKnowIsThatThereWereTwoSides);
     Ef(RookieBirthdayParty);
+    Ef(WideBoi);
 
 #undef Ef
 }
