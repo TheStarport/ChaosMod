@@ -353,7 +353,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    if (const float nextTime = GetTimeUntilChaos(); !ConfigManager::i()->enableTwitchVoting && currentTime > nextTime)
+    if (!ConfigManager::i()->enableTwitchVoting && currentTime > ConfigManager::i()->timeBetweenChaos)
     {
         TriggerChaos();
 
