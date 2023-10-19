@@ -132,7 +132,18 @@ ActiveEffect* ChaosTimer::SelectEffect()
 
     for (uint attempts = 0; attempts < 15; attempts++)
     {
-        const auto val = Random::i()->Uniform(0u, possibleEffects.size() - 1);
+        static std::vector<uint> weights;
+        if (weights.empty())
+        {
+            std::ranges::for_each(possibleEffects,
+                                  [](auto* effect)
+                                  {
+                                      auto& info = effect->GetEffectInfo();
+                                      weights.emplace_back(info.weight);
+                                  });
+        }
+
+        const auto val = Random::i()->Weighted(weights.begin(), weights.end());
         auto effect = possibleEffects[val];
 
         if (const auto persistent = dynamic_cast<PersistentEffect*>(effect))

@@ -33,6 +33,7 @@ class ActiveEffect
                 float timingModifier = 1.0f;
                 float fixedTimeOverride = 0.0f;
                 EffectExclusion exclusion;
+                uint weight = 100;
         };
 
         virtual void Init() {}
@@ -107,7 +108,7 @@ class ActiveEffect
                 [[nodiscard]]
                 EffectInfo Create() const
                 {
-                    return { name, relativeTime == 0.0f && absoluteTime == 0.0f, category, relativeTime, absoluteTime, exclusion };
+                    return { name, relativeTime == 0.0f && absoluteTime == 0.0f, category, relativeTime, absoluteTime, exclusion, weight };
                 }
 
             private:

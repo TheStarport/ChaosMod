@@ -40,4 +40,11 @@ class Random final : public Singleton<Random>
 
             return retStr;
         }
+
+        template <typename Iterator>
+            requires std::random_access_iterator<Iterator>
+        uint Weighted(Iterator start, Iterator end)
+        {
+            return std::discrete_distribution<>(start, end)(engine);
+        }
 };
