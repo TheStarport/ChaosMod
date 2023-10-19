@@ -419,6 +419,12 @@ void RequiredMemEdits()
     std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
     MemUtils::WriteProcMem(fl + 0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
 
+    // Remove level requirements when buying ships and equipment
+    std::array<byte, 1> removeLevelRequirement = { 0xEB };
+    MemUtils::WriteProcMem(fl + 0x080499, removeLevelRequirement.data(), removeLevelRequirement.size());
+    MemUtils::WriteProcMem(fl + 0x082E95, removeLevelRequirement.data(), removeLevelRequirement.size());
+    MemUtils::WriteProcMem(fl + 0xB948D, removeLevelRequirement.data(), removeLevelRequirement.size());
+
     PatchResolution();
 }
 
