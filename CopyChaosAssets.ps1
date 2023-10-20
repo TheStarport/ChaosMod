@@ -6,7 +6,9 @@
  v1.0 2023-10-12: Initial release
  v1.2 2023-10-12: Script now compiles infocards from an frc file using Adoxa's tool on launch
  v1.3 2023-10-19: Include XML -> ALE pipeline utilizing the Freelancer XML project
+ v1.4 2023-10-20: Fixed the XML -> ALE pipeline, up to 500 jobs now run in parallel when unpacking and packing files. Add timers and some additional checks.
 #>
+
 Param ($noLaunch)
 $init = { function Get-LogColor {
         Param([Parameter(Position = 0)]
@@ -44,36 +46,87 @@ function TailFileUntilProcessStops {
         Remove-Job $tailLoopJob
     }
 }
-function XMLtoALE {
-    Get-ChildItem "$effectXMLPath" -Filter *.ale.xml | Foreach-Object {
-        Write-Output "Converting $($_.FullName) to .ale format"
-        .\XMLUTF.exe -O $effectPackedPath $_.FullName
-    }
+
+$func = {
+    param(     
+        [Parameter(Mandatory)]   
+        [string]$proc,
+        [Parameter(Mandatory)]
+        [string]$params
+    )
+    Start-Process -FilePath "$proc" -Wait -ArgumentList $params
 }
-function ALEtoXML {
-    Get-ChildItem "$effectPackedPath" -Filter *.ale | Foreach-Object {
-        Write-Output "Converting $($_.FullName) to .xml format"
-        .\UTFXML.exe -o $effectXMLPath $_.FullName
+
+function Convert {
+    param(     
+        [Parameter(Mandatory)]   
+        [boolean]$toXml
+    )
+
+    $source = if ($toXml -eq $true) { $effectPackedPath } else { $effectXMLPath }
+    $destination = if ($toXml -eq $true) { $effectXMLPath } else { $effectALEOutputPath }
+    $exePath = if ($toXml -eq $true) { "UTFXML.exe" } else { "XMLUTF.exe" }
+    $filter = if ($toXml -eq $true) { ".ale" } else { ".ale.xml" }
+
+    $files = Get-ChildItem "$source" -Filter "*$filter"
+
+    $counter = [pscustomobject] @{ Value = 0 }
+    $groupSize = 100
+
+    $groups = $files | Group-Object -Property { [math]::Floor($counter.Value++ / $groupSize) }
+    
+    foreach ($group in $groups) {
+        $jobs = foreach ($file in $group.Group) {
+            Start-Job -ScriptBlock $func -Arg @("$PSScriptRoot\$exePath", "-o $destination $($file.FullName)")
+            $trimmedDestination = $destination.TrimStart("$PSScriptRoot")
+            Write-Host "Converting $($file) and writing it to $trimmedDestination"
+        }
+        Receive-Job $jobs -Wait -AutoRemoveJob
     }
 }
 
+#Define a timer
+$watch = New-Object System.Diagnostics.Stopwatch
+
+#Set infocard directories and compile them from the .frc file.
 $infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc" 
 $frcPath = "$PSScriptRoot\frc.exe"
-Write-Host "Compiling infocards from $infocardXMLPath to $PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll..." -ForegroundColor Blue
-Start-Process $frcPath -ArgumentList "$infocardXMLPath", "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
+$trimmedinfocardXMLPath = $infocardXMLPath.TrimStart("$PSScriptRoot")
+$infocardDestinationPath = "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
+$trimmedinfocardDestinationPath = $infocardDestinationPath.TrimStart("$PSScriptRoot")
 
+Write-Host "Compiling infocards from $trimmedinfocardXMLPath to $trimmedinfocardDestinationPath..." -ForegroundColor Blue
+$watch.Start() 
+Start-Process -Wait $frcPath -ArgumentList "$infocardXMLPath", "$infocardDestinationPath"
+$watch.Stop()
+$time = Write-Output $watch.Elapsed.TotalSeconds
+$watch.reset()
+Write-Host "Infocards compiled in $time seconds!" -ForegroundColor Green
+
+#Set ALE and XML directories
 $effectXMLPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX\XML"
 $effectPackedPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX"
+$effectALEOutputPath = "$PSScriptRoot\Assets\DATA"
 
-if (!$editingXMLAle) {
-    Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
-    ALEtoXML
-    Write-Host "ALE assets unpacked!" -ForegroundColor Green
-}
-Write-Host "Packing ALE assets for build..." -ForegroundColor Green
-XMLtoALE
-Write-Host "ALE assets packed!" -ForegroundColor Green
+#Unpack the ALE files to XML for source control
+Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
+$watch.Start() 
+Convert -toXml $true
+$watch.Stop()
+$time = Write-Output $watch.Elapsed.TotalSeconds
+Write-Host "ALE assets unpacked in $time seconds!" -ForegroundColor Green
+$watch.reset()
 
+#Repack the XML files to ALE for build
+Write-Host "Packing ALE assets for build..." -ForegroundColor Blue
+$watch.Start() 
+Convert -toXml $false
+$watch.Stop()
+$time = Write-Output $watch.Elapsed.TotalSeconds
+Write-Host "ALE assets packed in $time seconds!" -ForegroundColor Green
+$watch.reset()
+
+#Look for Freelancer.exe and terminate the process if it exists.
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
 $freelancer = Get-Process freelancer -ErrorAction SilentlyContinue
 if ($freelancer) {
@@ -84,23 +137,41 @@ if ($freelancer) {
     Get-Process "freelancer" | Stop-Process
     $freelancer.WaitForExit()
 }
+
+#Checks if FLHOOK_COPY_PATH doesn't exist and then prompts the user to enter it for this session.
+if (!$env:FLHOOK_COPY_PATH) {
+    $env:FLHOOK_COPY_PATH = Read-Host -Prompt "Enter the full path for the EXE folder of the Freelancer instance you wish to run. This environment variable will only persist for the duration of this PowerShell session and should be set permanently using the System.Environment class."
+    $checkCopyPath = Test-Path -Path $env:FLHOOK_COPY_PATH
+    if($checkCopyPath -eq $false){
+        Write-Host "The FLHOOK_COPY_PATH environment variable has been set to a path that does not exist. Asset copy may fail!" -ForegroundColor Red
+    }
+    Write-Host "FLHOOK_COPY_PATH has been set to $env:FLHOOK_COPY_PATH" -ForegroundColor Blue
+}
+
+#Check the FLHOOK_COPY_PATH environment variable exists and if so, copy the files over to the application's directory.
 if ($env:FLHOOK_COPY_PATH) {
     $fullCopyDestination = Resolve-Path $env:FLHOOK_COPY_PATH\..\
-    Write-Host "Copying asset files from $PSScriptRoot to $fullCopyDestination" -ForegroundColor Blue
+    Write-Host "Copying asset files from $PSScriptRoot\ to $fullCopyDestination" -ForegroundColor Blue
+    $watch.Start() 
     Copy-Item -Path "$PSScriptRoot\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
     Copy-Item -Path "$PSScriptRoot\Assets\EXE\" -Destination "$fullCopyDestination" -Recurse -Force
+    $watch.Stop()
+    $time = Write-Output $watch.Elapsed.TotalSeconds
+    Write-Host "Asset files copied over in $time seconds!" -ForegroundColor Green
+    $watch.reset()
 }
 else {
     Write-Host "The FLHOOK_COPY_PATH environment variable is not set! Aborting..." -ForegroundColor Red
     exit
 }
+#Launch the application and filter the logs into the PowerShell console.
 if (!$noLaunch) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
     $spewLocation = "$env:LOCALAPPDATA\Freelancer\FLSpew.txt"
     $freelancerJob = Start-Process -PassThru -FilePath "$env:FLHOOK_COPY_PATH\Freelancer.exe" -ArgumentList "-w"
     $freelancerJobId = $freelancerJob.Id
     Write-Host "Starting Chaos Mod in windowed mode at $startTime with PID $freelancerJobId" -ForegroundColor Green
-    Write-Host "Logging $spewLocation to console" -ForegroundColor Blue
+    Write-Host "Logging $spewLocation to console" -ForegroundColor Magenta
     TailFileUntilProcessStops -processID $freelancerJob.id -filepath $spewLocation
     $endTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"  
     $hexJobId = ('0x{0:x}' -f $freelancerJobId)
