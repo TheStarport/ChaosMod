@@ -30,6 +30,23 @@ S 458781 The Lancer's Reactor Forum Database
 S 458782 Zoner Marines
 S 458806 Secret Agent
 S 458807 Omicron Minor Jump Hole
+S 458808 Wand of Fireball
+S 458809 Super Saiyan
+S 458810 Clown Gun
+S 458811 Yeet-O-Matic
+S 458812 Sludge Launcher
+S 458813 Memesile
+S 458814 Memesile Launcher
+S 458815 Blunderbuss
+S 458816 Asteroid Gun
+S 458817 Supercharged Shield LF
+S 458818 Supercharged Shield HF
+S 458819 Supercharged Shield Fr
+S 458820 Superhard Shield LF
+S 458821 Superhard Shield HF
+S 458822 Superhard Shield Fr
+S 458823 Hyperspeed Thruster
+S 458824 Ancient Gallian Thruster
 
 H 458756
 	\bALLIES:\B
@@ -154,3 +171,54 @@ H 458805
 	\m\bZONER MARINES\B
 	\l
 	Zoner Marines
+
+H 458825
+	Wand of Fireball Placeholder Description
+
+H 458826
+	Super Saiyan Placeholder Description
+
+H 458827
+	Clown Gun Placeholder Description
+
+H 458828
+	Yeet-O-Matic Placeholder Description
+
+H 458829
+	Sludge Launcher Placeholder Description
+
+H 458830
+	Memesile Placeholder Description
+
+H 458831
+	Memesile Launcher Placeholder Description
+
+H 458832
+	Blunderbuss Placeholder Description
+
+H 458833
+	Asteroid Gun Placeholder Description
+
+H 458834
+	Supercharged Shield LF Placeholder Description
+
+H 458835
+	Supercharged Shield HF Placeholder Description
+
+H 458836
+	Supercharged Shield Fr Placeholder Description
+
+H 458837
+	Superhard Shield LF Placeholder Description
+
+H 458838
+	Superhard Shield HF Placeholder Description
+
+H 458839
+	Superhard Shield Fr Placeholder Description
+
+H 458840
+	Hyperspeed Thruster Placeholder Description
+
+H 458841
+	Ancient Gallian Thruster Placeholder Description
