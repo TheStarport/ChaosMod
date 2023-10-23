@@ -215,6 +215,7 @@ void RequiredMemEdits()
     const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
+    const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
 
     // Patch out vanilla cursor
     BYTE nopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
@@ -319,6 +320,37 @@ void RequiredMemEdits()
     std::memcpy(regenerateRestartFl.data() + 35, &ptr, 4);
 
     MemUtils::WriteProcMem(server + 0x6900F, regenerateRestartFl.data(), regenerateRestartFl.size());
+
+    // disable PlayerEnemyClamp altogether; instead making NPC enemy target selection random.
+    std::array<byte, 2> disableNpcClamp = { 0xEB, 0x39 };
+    MemUtils::WriteProcMem(common + 0x08E86A, disableNpcClamp.data(), disableNpcClamp.size());
+
+    // NPCs use scanner (enables CMs).
+    std::array<byte, 1> useScanner = { 0x00 };
+    MemUtils::WriteProcMem(common + 0x013E52C, useScanner.data(), useScanner.size());
+
+    // Allow the fc_n_grp faction to drop [phantom_loot] loot..
+    std::array<byte, 1> nomadPhantom = { 0x01 };
+    MemUtils::WriteProcMem(content + 0x0BD2D8, nomadPhantom.data(), nomadPhantom.size());
+
+    //  Adjust cruise speed according to drag_modifier.
+    std::array<byte, 1> cruiseDragModifier = { 0xEB };
+    MemUtils::WriteProcMem(common + 0x053796, cruiseDragModifier.data(), cruiseDragModifier.size());
+
+    // Enable thruster sounds when going backwards
+    std::array<byte, 6> thrusterSounds1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xE4, 0x08 };
+    MemUtils::WriteProcMem(fl + 0x012F217, thrusterSounds1.data(), thrusterSounds1.size());
+
+    std::array<byte, 1> thrusterSounds2 = { 0x00 };
+    MemUtils::WriteProcMem(fl + 0x012F221, thrusterSounds2.data(), thrusterSounds2.size());
+
+    // Ensure that drag modifier works even if inside
+    std::array<byte, 2> dragModifierAllZone = { 0x41, 0x74 };
+    MemUtils::WriteProcMem(common + 0x0DAD24, dragModifierAllZone.data(), dragModifierAllZone.size());
+
+    // Allow the fc_n_grp faction to drop [phantom_loot] loot..
+    int missileFlag = 15;
+    MemUtils::WriteProcMem(content + 0x0F20F0, &missileFlag, sizeof(int));
 
     PatchResolution();
 }
