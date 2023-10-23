@@ -26,111 +26,6 @@ std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
 
-std::unordered_set<Archetype::Ship*> ships;
-
-// template<typename T>
-// struct Node
-//{
-//         Node* prev;
-//         Node* childLeft;
-//         Node* childRight;
-//         uint key;
-//         T value;
-// };
-//
-// template<typename T>
-// struct BinarySearchTree
-//{
-//         Node<T>* root;
-//         Node<T>* unk;
-//         Node<T>* unk2;
-//
-//     void TraverseTree(std::function<void(std::pair<uint, T> val)> func) { TraverseTree(root, nullptr, func); }
-//
-// private:
-//     bool TraverseTree(Node<T>* node, const Node<T>* previousNode, std::function<void(std::pair<uint, T> val)> func)
-//     {
-//         if (node->arch == nullptr)
-//         {
-//             func(previousNode->key, previousNode->value);
-//             return false;
-//         }
-//
-//         Node<T>* nextNode = node->childLeft == previousNode ? node->prev : node->childLeft;
-//         if (!TraverseTree(nextNode, node))
-//         {
-//             return TraverseTree(node->childRight, node);
-//         }
-//
-//         return true;
-//     }
-// };
-//
-// bool TraverseTree(Node* node, const Node* previousNode)
-//{
-//     if (node->arch == nullptr)
-//     {
-//         ships.insert(previousNode->arch);
-//         return false;
-//     }
-//
-//     Node* nextNode = node->childLeft == previousNode ? node->prev : node->childLeft;
-//     if (!TraverseTree(nextNode, node))
-//     {
-//         return TraverseTree(node->childRight, node);
-//     }
-//
-//     return true;
-// }
-//
-// DWORD* sub_62FCFB0(DWORD* DWORD_63FCAC0, DWORD hashPtr)
-//{
-//     LinkedListHeader* header = (LinkedListHeader*)DWORD_63FCAC0[1];
-//
-//     // result = DWORD_63FCAC0->h; // result = (*63FCAC0) + 4
-//     // v3 = result->unk;               // v3 = (*(*63FCAC0) + 4) + 4
-//     // v4 = DWORD_63FCAC0->end;
-//
-//     const size_t size = DWORD_63FCAC0[4];
-//
-//     Node<Archetype::Ship*>* root = header->root;
-//     TraverseTree(root, nullptr);
-//
-//     printf("Hi");
-//
-//     // while (v3 != v4)
-//     //{
-//     //     struct P
-//     //     {
-//     //             uint i[4];
-//     //     };
-//     //     auto e0 = (P*)DWORD_63FCAC0;
-//     //     auto e1 = (P*)v3;
-//     //     auto e2 = (P*)v4;
-//     //     auto e3 = (P*)result;
-//
-//     //    auto ship = (Archetype::Ship**)(DWORD(v3) + 0x10);
-//
-//     //    auto v6 = e1->i[0];
-//     //    auto v7 = e1->i[2];
-//
-//     //    auto possibleNext = (Archetype::Ship**)(DWORD(v6) + 0x10);
-//     //    auto possibleNext2 = (Archetype::Ship**)(DWORD(v7) + 0x10);
-//
-//     //    if (v3->hash >= hashPtr)
-//     //    {
-//     //        result = v3;
-//     //        v3 = v3->prev;
-//     //    }
-//     //    else
-//     //    {
-//     //        v3 = v3->next; // v3 = (*v3) + 8)
-//     //    }
-//     //}
-//     auto ship = (Archetype::Ship**)(DWORD(1) + 0x10);
-//     return 0;
-// }
-
 bool init = false;
 void Init()
 {
@@ -143,24 +38,6 @@ void Init()
     ShipManipulator::i();
 
     ChaosTimer::i()->InitEffects();
-
-    DWORD* addr = PDWORD(0x063FCAC0);
-
-    // DWORD* res = sub_62FCFB0(PDWORD(addr), 2151746432);
-    // auto ss = (Archetype::Ship**)(DWORD(res) + 0x10);
-
-    auto ships1 = (st6::map<uint, Archetype::Ship*>*)addr;
-    auto ships2 = (st6::vector<Archetype::Ship*>*)addr;
-    struct E
-    {
-            uint bytes[200];
-    };
-
-    const E* e = (E*)addr;
-
-    auto test = (Archetype::Ship**)e->bytes[0];
-
-    printf("hi");
 }
 
 const PDWORD screenWidth = ((PDWORD)0x679bc8);
