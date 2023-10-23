@@ -108,7 +108,7 @@ class ActiveEffect
                 [[nodiscard]]
                 EffectInfo Create() const
                 {
-                    return { name, relativeTime == 0.0f && absoluteTime == 0.0f, category, relativeTime, absoluteTime, exclusion, weight };
+                    return { name, !(relativeTime == 0.0f && absoluteTime == 0.0f), category, relativeTime, absoluteTime, exclusion, weight };
                 }
 
             private:
