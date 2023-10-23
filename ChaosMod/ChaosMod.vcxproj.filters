@@ -477,6 +477,9 @@
     <ClInclude Include="Effects\DB\Visual\WideBoi.hpp">
       <Filter>Effects\DB\Visual</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\Constants.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

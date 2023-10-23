@@ -107,7 +107,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)*.dll" "$(FLHOOK_COPY_PATH)"
-powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true</Command>
+powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0809</Culture>
@@ -336,6 +336,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\AssetTracker.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
+    <ClInclude Include="Utilities\Constants.hpp" />
     <ClInclude Include="Utilities\PersonalityHelper.hpp" />
     <ClInclude Include="Utilities\SpaceObjectSpawner.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />

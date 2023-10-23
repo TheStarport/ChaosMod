@@ -1,5 +1,6 @@
 #pragma once
 #include "Effects/ActiveEffect.hpp"
+#include "Utilities/Constants.hpp"
 
 class XenosAreMyFriendsNow final : public ActiveEffect
 {
@@ -9,8 +10,14 @@ class XenosAreMyFriendsNow final : public ActiveEffect
             int rep;
             pub::Player::GetRep(1, rep);
 
-            for (auto id : ids)
+            for (auto& id : ids)
             {
+                // Ignore story factions
+                if (std::ranges::any_of(Constants::StoryFactions(), [&id](auto faction) { return MakeId(id.c_str()) == faction; }))
+                {
+                    continue;
+                }
+
                 unsigned npc;
                 pub::Reputation::GetReputationGroup(npc, id.c_str());
                 pub::Reputation::SetReputation(rep, npc, -0.9f);

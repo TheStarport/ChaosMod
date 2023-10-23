@@ -1,5 +1,6 @@
 #pragma once
 #include "Effects/ActiveEffect.hpp"
+#include "Utilities/Constants.hpp"
 
 class SwissDiplomacy final : public ActiveEffect
 {
@@ -11,6 +12,11 @@ class SwissDiplomacy final : public ActiveEffect
 
             for (auto id : ids)
             {
+                if (std::ranges::any_of(Constants::StoryFactions(), [&id](auto faction) { return MakeId(id.c_str()) == faction; }))
+                {
+                    continue;
+                }
+
                 unsigned npc;
                 pub::Reputation::GetReputationGroup(npc, id.c_str());
                 pub::Reputation::SetReputation(rep, npc, 0.0f);

@@ -9,7 +9,7 @@
  v1.4 2023-10-20: Fixed the XML -> ALE pipeline, up to 500 jobs now run in parallel when unpacking and packing files. Add timers and some additional checks.
 #>
 
-Param ($noLaunch)
+Param ($noLaunch, $noXml)
 $init = { function Get-LogColor {
         Param([Parameter(Position = 0)]
             [String]$logEntry)
@@ -103,28 +103,31 @@ $time = Write-Output $watch.Elapsed.TotalSeconds
 $watch.reset()
 Write-Host "Infocards compiled in $time seconds!" -ForegroundColor Green
 
-#Set ALE and XML directories
-$effectXMLPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX\XML"
-$effectPackedPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX"
-$effectALEOutputPath = "$PSScriptRoot\Assets\DATA"
+if ($noXml -eq $false)
+{
+    #Set ALE and XML directories
+    $effectXMLPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX\XML"
+    $effectPackedPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX"
+    $effectALEOutputPath = "$PSScriptRoot\Assets\DATA"
 
-#Unpack the ALE files to XML for source control
-Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
-$watch.Start() 
-Convert -toXml $true
-$watch.Stop()
-$time = Write-Output $watch.Elapsed.TotalSeconds
-Write-Host "ALE assets unpacked in $time seconds!" -ForegroundColor Green
-$watch.reset()
+    #Unpack the ALE files to XML for source control
+    Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
+    $watch.Start() 
+    Convert -toXml $true
+    $watch.Stop()
+    $time = Write-Output $watch.Elapsed.TotalSeconds
+    Write-Host "ALE assets unpacked in $time seconds!" -ForegroundColor Green
+    $watch.reset()
 
-#Repack the XML files to ALE for build
-Write-Host "Packing ALE assets for build..." -ForegroundColor Blue
-$watch.Start() 
-Convert -toXml $false
-$watch.Stop()
-$time = Write-Output $watch.Elapsed.TotalSeconds
-Write-Host "ALE assets packed in $time seconds!" -ForegroundColor Green
-$watch.reset()
+    #Repack the XML files to ALE for build
+    Write-Host "Packing ALE assets for build..." -ForegroundColor Blue
+    $watch.Start() 
+    Convert -toXml $false
+    $watch.Stop()
+    $time = Write-Output $watch.Elapsed.TotalSeconds
+    Write-Host "ALE assets packed in $time seconds!" -ForegroundColor Green
+    $watch.reset()
+}
 
 #Look for Freelancer.exe and terminate the process if it exists.
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
@@ -164,6 +167,7 @@ else {
     Write-Host "The FLHOOK_COPY_PATH environment variable is not set! Aborting..." -ForegroundColor Red
     exit
 }
+
 #Launch the application and filter the logs into the PowerShell console.
 if (!$noLaunch) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
