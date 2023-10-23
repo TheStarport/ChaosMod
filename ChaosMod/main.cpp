@@ -214,6 +214,7 @@ void RequiredMemEdits()
 {
     const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
+    const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
 
     // Patch out vanilla cursor
     BYTE nopPatch[] = { 0x90, 0x90, 0x90, 0x90 };
@@ -302,6 +303,23 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(fl + 0x082E95, removeLevelRequirement.data(), removeLevelRequirement.size());
     MemUtils::WriteProcMem(fl + 0xB948D, removeLevelRequirement.data(), removeLevelRequirement.size());
 
+    // Allow ESC to skip cutscenes
+    std::array<byte, 3> skipStory = { 0xEB, 0x0C, 0x90 };
+    MemUtils::WriteProcMem(fl + 0x5685F, skipStory.data(), skipStory.size());
+
+    // Regenerate restart.fl on each launch and ensure that it's only loaded after regeneration
+    // For some reason, this hack can cause crashes with an invalid pointer.
+    // We fix this by creating a static pointer to the string compare function, then writing the bytes into the hack dynamically.
+    // ReSharper disable once CppDeprecatedEntity
+    static auto cmp = reinterpret_cast<PDWORD>(_strcmpi); // NOLINT(clang-diagnostic-deprecated-declarations)
+    const auto ptr = &cmp;
+    std::array<byte, 45> regenerateRestartFl = { 0x8D, 0x8C, 0x24, 0x5C, 0x01, 0x00, 0x00, 0x51, 0x8D, 0x54, 0x24, 0x5C, 0x52, 0xEB, 0x13,
+                                                 0xFF, 0x11, 0x83, 0xC4, 0x08, 0x85, 0xC0, 0x74, 0x11, 0x8B, 0xCD, 0xE8, 0x22, 0xFD, 0xFF,
+                                                 0xFF, 0xEB, 0x0F, 0x90, 0xB9, 0x48, 0x4A, 0xD6, 0x06, 0xEB, 0xE6, 0x83, 0xC4, 0x08, 0xEB };
+    std::memcpy(regenerateRestartFl.data() + 35, &ptr, 4);
+
+    MemUtils::WriteProcMem(server + 0x6900F, regenerateRestartFl.data(), regenerateRestartFl.size());
+
     PatchResolution();
 }
 
@@ -320,7 +338,7 @@ void* ScriptLoadHook(const char* script)
     return res;
 }
 
-void __cdecl Update(const double delta)
+void Update(const double delta)
 {
     timeCounter += delta;
     while (timeCounter > SixtyFramesPerSecond)
