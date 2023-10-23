@@ -46,7 +46,13 @@ S 458820 Superhard Shield LF
 S 458821 Superhard Shield HF
 S 458822 Superhard Shield Fr
 S 458823 Hyperspeed Thruster
-S 458824 Ancient Gallian Thruster
+S 458824 Ancient Gallic Thruster
+S 458842 Wand of Magic Missile
+S 458843 Hand of God
+S 458844 Bigger Hand of God
+S 458845 Shield of Faith
+S 458850 Dart of Force
+S 458851 Fireball
 
 H 458756
 	\bALLIES:\B
@@ -135,7 +141,7 @@ H 458797
 H 458798
 	\m\bSEALED CRATE\B
 	\l
-	The label on this crate reads 'Venture Company Supplies".
+	The label on this crate reads "Venture Company Supplies".
 
 H 458799
 	\m\bLETTER FROM A DEAD COLLEAGUE WITH A QUESTION YOU HAVE NOT BEEN ABLE TO ANSWER\B
@@ -218,7 +224,34 @@ H 458839
 	Superhard Shield Fr Placeholder Description
 
 H 458840
-	Hyperspeed Thruster Placeholder Description
+	\m\bHYPERSPEED THRUSTER\B
+	\l
+	I am speed.
+	\l
 
 H 458841
 	Ancient Gallian Thruster Placeholder Description
+
+H 458846
+	\m\bWAND OF MAGIC MISSILE\B
+	\l
+	"You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4 + 1 force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several."
+	\l
+
+H 458847
+	\m\bHAND OF GOD\B
+	\l
+	"The Lord shall smite thee in the knees, and in the legs, with a sore botch that cannot be healed, from the sole of thy foot unto the top of thy head."
+	\l
+
+H 458848
+	\m\bBIGGER HAND OF GOD\B
+	\l
+	"The Lord shall smite thee with a consumption, and with a fever, and with an inflammation, and with an extreme burning, and with the sword, and with blasting, and with mildew; and they shall pursue thee until thou perish."
+	\l
+
+H 458849
+	\m\bSHIELD OF FAITH\B
+	\l
+	"But You, O Lord, are a shield for me, my glory and the One who lifts up my head."
+	\l
