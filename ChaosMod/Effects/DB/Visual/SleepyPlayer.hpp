@@ -1,4 +1,5 @@
 #pragma once
+#include "FLCore/FLCoreCommon.h"
 #include "Systems/DirectX/Drawing.hpp"
 
 class SleepyPlayer final : public ActiveEffect
@@ -77,10 +78,12 @@ class SleepyPlayer final : public ActiveEffect
                     break;
             }
 
-            if (alpha > 200)
+            const auto behaviour = ship->get_behavior_interface();
+            if (const auto op = behaviour->get_current_directive()->op;
+                alpha > 200 && (op == pub::AI::FreeFlight || op == pub::AI::Goto || op == pub::AI::None))
             {
                 // As the eyes start to close start turning the players ship
-                Vector* steering = reinterpret_cast<Vector*>(reinterpret_cast<PCHAR>(ship->get_behavior_interface()) + 292);
+                Vector* steering = reinterpret_cast<Vector*>(reinterpret_cast<const PCHAR>(behaviour) + 292);
                 steering->x = direction.x;
                 steering->y = direction.y;
             }
