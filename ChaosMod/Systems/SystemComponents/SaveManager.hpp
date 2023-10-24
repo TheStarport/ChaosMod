@@ -14,6 +14,7 @@ class SaveManager
 
             const std::string path = std::format("{}/Accts/SinglePlayer/", dir);
             char slot = 47; // 48 = '0'
+            i64 lastFileWriteTime = 0;
             for (const auto& file : std::filesystem::directory_iterator(path))
             {
                 auto stem = file.path().filename().stem().generic_string();
@@ -22,7 +23,11 @@ class SaveManager
                     continue;
                 }
 
-                slot = stem[0];
+                if (const i64 fileTime = file.last_write_time().time_since_epoch().count(); fileTime > lastFileWriteTime)
+                {
+                    lastFileWriteTime = fileTime;
+                    slot = stem[0];
+                }
             }
 
             slot++;
@@ -44,7 +49,7 @@ class SaveManager
 
             slot++;
             std::wstring slotStr(1, slot);
-            if (slotStr == L":") // : comes after 9 in the ascii table
+            if (slot == ':') // : comes after 9 in the ascii table
             {
                 slotStr = L"10";
             }
