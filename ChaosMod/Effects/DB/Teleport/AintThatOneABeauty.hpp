@@ -9,5 +9,9 @@ class AintThatOneABeauty final : public ActiveEffect
         void Begin() override { Teleporter::i()->WarpToRandomSolar(Random::i()->Uniform(0u, 3u) < 3); }
 
     public:
-        OneShotEffectInfo("Ain't That One A Beauty", EffectType::Teleport)
+        const EffectInfo& GetEffectInfo() override
+        {
+            static const EffectInfo ef = EffectInfoBuilder("Ain't That One A Beauty", EffectType::Teleport).WithOneShot().WithWeight(50).Create();
+            return ef;
+        }
 };

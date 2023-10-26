@@ -10,5 +10,9 @@ class TakeABreak final : public ActiveEffect
         void End() override { Teleporter::i()->RestorePreviousPosition(); }
 
     public:
-        RelativeEffectInfo("Take A Break", EffectType::Teleport, 2.0f)
+        const EffectInfo& GetEffectInfo() override
+        {
+            static const EffectInfo ef = EffectInfoBuilder("Take A Break", EffectType::Teleport).WithRelativeTime(2.0f).WithWeight(50).Create();
+            return ef;
+        }
 };
