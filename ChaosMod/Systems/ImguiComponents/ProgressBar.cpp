@@ -10,7 +10,10 @@ void ProgressBar::SetProgressPercentage(const float percent) { progress = percen
 
 void ProgressBar::Render() const
 {
-    ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGui::GetColorU32(0x000000FF));
+    ImGui::PushStyleColor(ImGuiCol_Text, 0x0);
+    ImGui::PushStyleColor(ImGuiCol_MenuBarBg, 0x0);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, 0x0);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::GetColorU32(::ImGuiCol_FrameBg, 0.7f));
     if (ImGui::BeginMainMenuBar())
     {
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
@@ -18,5 +21,5 @@ void ProgressBar::Render() const
         ImGui::PopStyleColor();
         ImGui::EndMainMenuBar();
     }
-    ImGui::PopStyleColor();
+    ImGui::PopStyleColor(4);
 }

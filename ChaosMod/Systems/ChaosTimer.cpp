@@ -441,7 +441,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(DemolitionDerby);
     Ef(Zoomies);
     Ef(NeverSayNoToBacta);
-    Ef(DoubleDamage);
+    // TODO: Ef(DoubleDamage);
 
     // Meta
     Ef(BoxOfChocolates);
@@ -464,7 +464,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(IllTrySpinning);
     Ef(InvertVelocity);
     Ef(PersonalSpace);
-    Ef(AssumingDirectControl);
+    // TODO: Ef(AssumingDirectControl);
 
     // Npc
     Ef(Screaming);
