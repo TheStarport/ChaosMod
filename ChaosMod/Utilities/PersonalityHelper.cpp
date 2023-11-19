@@ -908,6 +908,8 @@ void PersonalityHelper::LoadJob(INI_Reader& ini)
 {
     pub::AI::Personality::JobStruct data;
     std::string nick;
+    uint attackPrefCounter = 0;
+    uint attackSubTargetCounter = 0;
 
     // attack_preference = anything, 5000, GUNS | GUIDED | UNGUIDED
 
@@ -1014,6 +1016,109 @@ void PersonalityHelper::LoadJob(INI_Reader& ini)
         {
             GetDifficulty(ini, data.scene_toughness_threshold);
         }
+        else if (ini.is_value("attack_subtarget_order"))
+        {
+
+            std::string val = StringUtils::ToLower(std::string(ini.get_value_string(0)));
+            int flag;
+            if (val == "anything")
+            {
+                flag = 6;
+            }
+            else if (val == "guns")
+            {
+                flag = 0;
+            }
+            else if (val == "turrets")
+            {
+                flag = 1;
+            }
+            else if (val == "launchers")
+            {
+                flag = 2;
+            }
+            else if (val == "towers")
+            {
+                flag = 3;
+            }
+            else if (val == "engines")
+            {
+                flag = 4;
+            }
+            else if (val == "hull")
+            {
+                flag = 5;
+            }
+
+            data.attack_subtarget_order[attackPrefCounter] = flag;
+            attackSubTargetCounter++;
+        }
+        else if (ini.is_value("attack_preference"))
+        {
+            std::string shipType = StringUtils::ToLower(std::string(ini.get_value_string(0)));
+            uint shipIndex = 0;
+            if (shipType == "fighter")
+            {
+                shipIndex = 0;
+            }
+            else if (shipType == "freighter")
+            {
+                shipIndex = 1;
+            }
+            else if (shipType == "transport")
+            {
+                shipIndex = 2;
+            }
+            else if (shipType == "gunboat")
+            {
+                shipIndex = 3;
+            }
+            else if (shipType == "cruiser")
+            {
+                shipIndex = 4;
+            }
+            else if (shipType == "capital")
+            {
+                shipIndex = 5;
+            }
+            else if (shipType == "weapons_platform")
+            {
+                shipIndex = 8;
+            }
+            else if (shipType == "solar")
+            {
+                shipIndex = 10;
+            }
+            else if (shipType == "anything")
+            {
+                shipIndex = 11;
+            }
+
+            int flag = 0;
+            std::string flagText = StringUtils::ToLower(std::string(ini.get_value_string(2)));
+            if (flagText.find("guns") != std::string::npos)
+            {
+                flag += 1;
+            }
+            if (flagText.find("guided") != std::string::npos)
+            {
+                flag += 2;
+            }
+            if (flagText.find("unguided") != std::string::npos)
+            {
+                flag += 4;
+            }
+            if (flagText.find("torpedo") != std::string::npos)
+            {
+                flag += 8;
+            }
+
+            pub::AI::Personality::JobStruct::Tattack_order& atkOrder = data.attack_order[attackPrefCounter];
+            atkOrder.distance = ini.get_value_float(1);
+            atkOrder.flag = flag;
+            atkOrder.type = static_cast<int>(shipIndex);
+            attackPrefCounter++;
+        }
     }
 
     if (!nick.empty())
@@ -1088,7 +1193,31 @@ void PersonalityHelper::LoadPilot(INI_Reader& ini)
         {
             nick = ini.get_value_string();
         }
-        if (ini.is_value("gun_id"))
+        else if (ini.is_value("inherit"))
+        {
+            auto personality = Get(ini.get_value_string());
+            if (personality.has_value())
+            {
+                auto& value = personality.value();
+                data.BuzzHeadTowardUse = value->BuzzHeadTowardUse;
+                data.BuzzPassByUse = value->BuzzPassByUse;
+                data.CountermeasureUse = value->CountermeasureUse;
+                data.DamageReaction = value->DamageReaction;
+                data.EngineKillUse = value->EngineKillUse;
+                data.EvadeBreakUse = value->EvadeBreakUse;
+                data.EvadeDodgeUse = value->EvadeDodgeUse;
+                data.FormationUse = value->FormationUse;
+                data.GunUse = value->GunUse;
+                data.Job = value->Job;
+                data.MineUse = value->MineUse;
+                data.MissileUse = value->MissileUse;
+                data.MissileReaction = value->MissileReaction;
+                data.RepairUse = value->RepairUse;
+                data.StrafeUse = value->StrafeUse;
+                data.TrailUse = value->TrailUse;
+            }
+        }
+        else if (ini.is_value("gun_id"))
         {
             if (const auto entity = gun.find(ini.get_value_string()); entity != gun.end())
             {
@@ -1205,17 +1334,14 @@ void PersonalityHelper::LoadPilot(INI_Reader& ini)
     pilots[std::move(nick)] = data;
 }
 
-PersonalityHelper::PersonalityHelper()
+void PersonalityHelper::LoadFile(std::string file)
 {
-
     INI_Reader ini;
-    if (!ini.open(R"(..\DATA\MISSIONS\pilots_population.ini)", false))
+    if (!ini.open(file.c_str(), false))
     {
         Log("Unable to parse pilot_population");
         return;
     }
-
-    Log("Parsing Pilot Population");
 
     while (ini.read_header())
     {
@@ -1286,6 +1412,25 @@ PersonalityHelper::PersonalityHelper()
         else if (ini.is_header("Pilot"))
         {
             LoadPilot(ini);
+        }
+    }
+}
+
+PersonalityHelper::PersonalityHelper()
+{
+    static std::array<std::string, 2> dirs = { "../DATA/MISSIONS/", "../DATA/CHAOS" };
+    for (auto dir : dirs)
+    {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(dir))
+        {
+            std::string path = entry.path().generic_string();
+            if (!entry.is_regular_file() || entry.file_size() > UINT_MAX ||
+                (path.find("npcships") == std::string::npos && path.find("pilots_") == std::string::npos))
+            {
+                continue;
+            }
+
+            LoadFile(path);
         }
     }
 
