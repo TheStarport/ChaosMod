@@ -4,7 +4,7 @@
 
 #include "Systems/ConfigManager.hpp"
 
-#include <imgui.h>
+#include <imgui/imgui.h>
 
 void ProgressBar::SetProgressPercentage(const float percent) { progress = percent; }
 

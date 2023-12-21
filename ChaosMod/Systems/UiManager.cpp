@@ -6,13 +6,18 @@
 #include "ConfigManager.hpp"
 #include "ImGuiHelpers/ImGuiDX9.hpp"
 #include "ImGuiHelpers/ImGuiWin32.hpp"
-#include "imgui_internal.h"
+#include "imgui/imgui_internal.h"
 
 #include <iostream>
 #include <shellapi.h>
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
+
+// Very hacky way to stop reshade from polluting ImGui
+#define RESHADE_API_LIBRARY_EXPORT
+#include "ReshadeManager.hpp"
+#undef RESHADE_API_LIBRARY_EXPORT
 
 typedef LRESULT(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
 FunctionDetour wndProcDetour(reinterpret_cast<OriginalWndProc>(0x5B2570));
@@ -110,6 +115,8 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
             return nullptr;
         }
     }
+
+    ReshadeManager::i()->InitReshade();
 
     return new Direct3D8(d3d);
 }

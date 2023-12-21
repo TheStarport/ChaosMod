@@ -1,6 +1,6 @@
 <#
  .DESCRIPTION: Asset Copy and Run Script for Freelancer Chaos Mod
- .SYNOPSIS: This script checks for running instances of Freelancer.exe, kills them, and then copies files from the 'Assets' folder of the script root over to the pre-defined FLHOOK_COPY_PATH directory. It it's run without the $NoLaunch parameter, it will then launch the applciation from the same directory and pipe FlSpew.txt into the console with log highlighting for warnings and errors until the application is terminated. If the application terminates unexpectedly, it will fetch the application crash event log from the Windows Event Logs for quick debugging.
+ .SYNOPSIS: This script checks for running instances of Freelancer.exe, kills them, and then copies files from the 'Assets' folder of the script root over to the pre-defined FL_CHAOS_MOD directory. It it's run without the $NoLaunch parameter, it will then launch the applciation from the same directory and pipe FlSpew.txt into the console with log highlighting for warnings and errors until the application is terminated. If the application terminates unexpectedly, it will fetch the application crash event log from the Windows Event Logs for quick debugging.
  .AUTHOR: IrateRedKite, Lazrius 
  .REVISION HISTORY: 
  v1.0 2023-10-12: Initial release
@@ -141,19 +141,19 @@ if ($freelancer) {
     $freelancer.WaitForExit()
 }
 
-#Checks if FLHOOK_COPY_PATH doesn't exist and then prompts the user to enter it for this session.
-if (!$env:FLHOOK_COPY_PATH) {
-    $env:FLHOOK_COPY_PATH = Read-Host -Prompt "Enter the full path for the EXE folder of the Freelancer instance you wish to run. This environment variable will only persist for the duration of this PowerShell session and should be set permanently using the System.Environment class."
-    $checkCopyPath = Test-Path -Path $env:FLHOOK_COPY_PATH
+#Checks if FL_CHAOS_MOD doesn't exist and then prompts the user to enter it for this session.
+if (!$env:FL_CHAOS_MOD) {
+    $env:FL_CHAOS_MOD = Read-Host -Prompt "Enter the full path for the EXE folder of the Freelancer instance you wish to run. This environment variable will only persist for the duration of this PowerShell session and should be set permanently using the System.Environment class."
+    $checkCopyPath = Test-Path -Path $env:FL_CHAOS_MOD
     if($checkCopyPath -eq $false){
-        Write-Host "The FLHOOK_COPY_PATH environment variable has been set to a path that does not exist. Asset copy may fail!" -ForegroundColor Red
+        Write-Host "The FL_CHAOS_MOD environment variable has been set to a path that does not exist. Asset copy may fail!" -ForegroundColor Red
     }
-    Write-Host "FLHOOK_COPY_PATH has been set to $env:FLHOOK_COPY_PATH" -ForegroundColor Blue
+    Write-Host "FL_CHAOS_MOD has been set to $env:FL_CHAOS_MOD" -ForegroundColor Blue
 }
 
-#Check the FLHOOK_COPY_PATH environment variable exists and if so, copy the files over to the application's directory.
-if ($env:FLHOOK_COPY_PATH) {
-    $fullCopyDestination = Resolve-Path $env:FLHOOK_COPY_PATH\..\
+#Check the FL_CHAOS_MOD environment variable exists and if so, copy the files over to the application's directory.
+if ($env:FL_CHAOS_MOD) {
+    $fullCopyDestination = Resolve-Path $env:FL_CHAOS_MOD\..\
     Write-Host "Copying asset files from $PSScriptRoot\ to $fullCopyDestination" -ForegroundColor Blue
     $watch.Start() 
     Copy-Item -Path "$PSScriptRoot\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
@@ -164,7 +164,7 @@ if ($env:FLHOOK_COPY_PATH) {
     $watch.reset()
 }
 else {
-    Write-Host "The FLHOOK_COPY_PATH environment variable is not set! Aborting..." -ForegroundColor Red
+    Write-Host "The FL_CHAOS_MOD environment variable is not set! Aborting..." -ForegroundColor Red
     exit
 }
 
@@ -172,7 +172,7 @@ else {
 if (!$noLaunch) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
     $spewLocation = "$env:LOCALAPPDATA\Freelancer\FLSpew.txt"
-    $freelancerJob = Start-Process -PassThru -FilePath "$env:FLHOOK_COPY_PATH\Freelancer.exe" -ArgumentList "-w"
+    $freelancerJob = Start-Process -PassThru -FilePath "$env:FL_CHAOS_MOD\Freelancer.exe" -ArgumentList "-w"
     $freelancerJobId = $freelancerJob.Id
     Write-Host "Starting Chaos Mod in windowed mode at $startTime with PID $freelancerJobId" -ForegroundColor Green
     Write-Host "Logging $spewLocation to console" -ForegroundColor Magenta

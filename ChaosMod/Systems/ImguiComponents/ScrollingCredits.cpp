@@ -6,7 +6,7 @@
 #include "Systems/ConfigManager.hpp"
 #include "Systems/UiManager.hpp"
 
-#include <imgui.h>
+#include <imgui/imgui.h>
 
 ScrollingCredits::ScrollingCredits()
 {

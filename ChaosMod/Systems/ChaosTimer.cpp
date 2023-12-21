@@ -73,6 +73,7 @@
 #include "Effects/DB/Teleport/UrgenRelativeVisit.hpp"
 #include "Effects/DB/Visual/AllWeKnowIsThatThereWereTwoSides.hpp"
 #include "Effects/DB/Visual/HomageToElite.hpp"
+#include "Effects/DB/Visual/Nightvision.hpp"
 #include "Effects/DB/Visual/PartyLikeIts95.hpp"
 #include "Effects/DB/Visual/PortraitMode.hpp"
 #include "Effects/DB/Visual/QuakeFOV.hpp"
@@ -505,6 +506,7 @@ void ChaosTimer::RegisterAllEffects()
     Ef(AllWeKnowIsThatThereWereTwoSides);
     Ef(RookieBirthdayParty);
     Ef(WideBoi);
+    Ef(Nightvision);
 
 #undef Ef
 }

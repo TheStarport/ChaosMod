@@ -4,7 +4,7 @@
 
 #include "Systems/UiManager.hpp"
 
-#include <imgui.h>
+#include <imgui/imgui.h>
 
 void ChaosOptionText::SetOptions(const std::vector<std::string>& options) { this->options = options; }
 

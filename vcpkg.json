@@ -1,32 +1,28 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "name": "fl-chaos-mod",
-  "version": "1.0",
-  "builtin-baseline": "a109b7ccb27f0b90871c560647bbbc7ecd3da127",
-  "dependencies": [
-    {
-      "name": "imgui",
-      "version>=": "1.88"
-    },
-    {
-      "name": "magic-enum",
-      "version>=": "0.8.2"
-    },
-    {
-      "name": "nlohmann-json",
-      "version>=": "3.11.2"
-    },
-    {
-      "name": "glm",
-      "version>=": "0.9.9.8#2"
-    },
-    {
-      "name": "ffmpeg",
-      "version>=": "5.1.2"
-    },
-    {
-      "name": "miniaudio",
-      "version>=": "0.11.11"
-    }
-  ]
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "fl-chaos-mod",
+    "version": "1.0",
+    "builtin-baseline": "a109b7ccb27f0b90871c560647bbbc7ecd3da127",
+    "dependencies": [
+        {
+            "name": "magic-enum",
+            "version>=": "0.8.2"
+        },
+        {
+            "name": "nlohmann-json",
+            "version>=": "3.11.2"
+        },
+        {
+            "name": "glm",
+            "version>=": "0.9.9.8#2"
+        },
+        {
+            "name": "ffmpeg",
+            "version>=": "5.1.2"
+        },
+        {
+            "name": "miniaudio",
+            "version>=": "0.11.11"
+        }
+    ]
 }

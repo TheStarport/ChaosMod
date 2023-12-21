@@ -95,7 +95,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;ImTextureID=ImU64;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -106,7 +106,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)*.dll" "$(FLHOOK_COPY_PATH)"
+      <Command>copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
 powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true</Command>
     </PostBuildEvent>
     <ResourceCompile>
@@ -122,7 +122,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;RESHADE_API_LIBRARY_EXPORT;RESHADE_ADDON;ImTextureID=ImU64;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -141,7 +141,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)*.dll" "$(FLHOOK_COPY_PATH)"
+      <Command>copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
 powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -177,6 +177,11 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Utils.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Effects\MemoryEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PCH.cpp">
@@ -207,6 +212,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
+    <ClCompile Include="Systems\ReshadeManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
     <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp" />
     <ClCompile Include="Systems\Teleporter.cpp" />
@@ -219,6 +225,12 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreCommon.h" />
     <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreDefs.h" />
     <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreRemoteClient.h" />
+    <ClInclude Include="..\vendor\imgui\imconfig.h" />
+    <ClInclude Include="..\vendor\imgui\imgui.h" />
+    <ClInclude Include="..\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Effects\ActiveEffect.hpp" />
     <ClInclude Include="Effects\AddressTable.hpp" />
     <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp" />
@@ -290,6 +302,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp" />
     <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp" />
     <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
+    <ClInclude Include="Effects\DB\Visual\Nightvision.hpp" />
     <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp" />
     <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
     <ClInclude Include="Effects\DB\Visual\RookieBirthdayParty.hpp" />
@@ -331,6 +344,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />
+    <ClInclude Include="Systems\ReshadeManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
     <ClInclude Include="Systems\SystemComponents\GlobalTimers.hpp" />
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp" />

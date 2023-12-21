@@ -14,6 +14,9 @@
 #include "Utilities/AssetTracker.hpp"
 #include <Systems/SystemComponents/SaveManager.hpp>
 
+#include <Systems/ReshadeManager.hpp>
+#include <reshade/reshade.hpp>
+
 const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc"));
 const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));
 
@@ -447,6 +450,12 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
         MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
         MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
         SetupHack();
+
+        ReshadeManager::i()->SetHModule(hModule);
+    }
+    else if (dwReason == DLL_PROCESS_DETACH)
+    {
+        reshade::unregister_addon(hModule);
     }
     return TRUE;
 }
