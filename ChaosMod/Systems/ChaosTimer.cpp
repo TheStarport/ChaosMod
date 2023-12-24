@@ -4,83 +4,7 @@
 
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
-#include "Effects/DB/Audio/AllTheNewsThatsFitForYou.hpp"
-#include "Effects/DB/Audio/BossMusic.hpp"
-#include "Effects/DB/Audio/DodgeThis.hpp"
-#include "Effects/DB/Audio/IDoNotSpeakMorseCode.hpp"
-#include "Effects/DB/Audio/IfTrentHadATextToSpeechDevice.hpp"
-#include "Effects/DB/Audio/LowBudgetSciFiMovie.hpp"
-#include "Effects/DB/Audio/SadViolin.hpp"
-#include "Effects/DB/Interface/BuggyInterface.hpp"
-#include "Effects/DB/Interface/FlippedInterface.hpp"
-#include "Effects/DB/Interface/JustLikeThe90s.hpp"
-#include "Effects/DB/Interface/LGBTUI.hpp"
-#include "Effects/DB/Interface/NoHud.hpp"
-#include "Effects/DB/Interface/RollCredits.hpp"
-#include "Effects/DB/Interface/StickyKeys.hpp"
-#include "Effects/DB/Meta/BoxOfChocolates.hpp"
-#include "Effects/DB/Meta/DoubleEffectTime.hpp"
-#include "Effects/DB/Meta/DoubleTime.hpp"
-#include "Effects/DB/Meta/FakeCrash.hpp"
-#include "Effects/DB/Misc/CaveatEmptor.hpp"
-#include "Effects/DB/Misc/DrunkShopping.hpp"
-#include "Effects/DB/Misc/FlappyArchitecture.hpp"
-#include "Effects/DB/Misc/IAmFirinMaLasers.hpp"
-#include "Effects/DB/Misc/LaggyPlayer.hpp"
-#include "Effects/DB/Misc/SelfDestruct.hpp"
-#include "Effects/DB/Misc/SpectatorMode.hpp"
-#include "Effects/DB/Misc/ThanksIHateIt.hpp"
-#include "Effects/DB/Misc/XboxEdition.hpp"
-#include "Effects/DB/Movement/AssumingDirectControl.hpp"
-#include "Effects/DB/Movement/IllTrySpinning.hpp"
-#include "Effects/DB/Movement/InvertVelocity.hpp"
-#include "Effects/DB/Movement/PersonalSpace.hpp"
-#include "Effects/DB/Movement/Yeet.hpp"
-#include "Effects/DB/NPC/Cardamine.hpp"
-#include "Effects/DB/NPC/IAmRobot.hpp"
-#include "Effects/DB/NPC/MultiplayerExperience.hpp"
-#include "Effects/DB/NPC/Pacifist.hpp"
-#include "Effects/DB/NPC/PlanetOfTheApes.hpp"
-#include "Effects/DB/NPC/Screaming.hpp"
-#include "Effects/DB/NPC/SwiftNPCs.hpp"
-#include "Effects/DB/NPC/SwissDiplomacy.hpp"
-#include "Effects/DB/NPC/Wanted.hpp"
-#include "Effects/DB/NPC/XenosAreMyFriendNow.hpp"
-#include "Effects/DB/NPC/YouAreFamous.hpp"
-#include "Effects/DB/Spawning/Hydra.hpp"
-#include "Effects/DB/Spawning/JellyTime.hpp"
-#include "Effects/DB/Spawning/SpawnBigBertha.hpp"
-#include "Effects/DB/Spawning/SpawnExtremeJesus.hpp"
-#include "Effects/DB/Spawning/SpawnJesus.hpp"
-#include "Effects/DB/Spawning/YouThinkYourSafe.hpp"
-#include "Effects/DB/StatManipulation/CoolantLeak.hpp"
-#include "Effects/DB/StatManipulation/DemolitionDerby.hpp"
-#include "Effects/DB/StatManipulation/DoubleDamage.hpp"
-#include "Effects/DB/StatManipulation/GetHumbled.hpp"
-#include "Effects/DB/StatManipulation/GodMode.hpp"
-#include "Effects/DB/StatManipulation/Hyperlanes.hpp"
-#include "Effects/DB/StatManipulation/LonniganCameThrough.hpp"
-#include "Effects/DB/StatManipulation/NeverSayNoToBacta.hpp"
-#include "Effects/DB/StatManipulation/RandomisedProjectiles.hpp"
-#include "Effects/DB/StatManipulation/TryRepairing.hpp"
-#include "Effects/DB/StatManipulation/WiffleBats.hpp"
-#include "Effects/DB/StatManipulation/Zoomies.hpp"
-#include "Effects/DB/Teleport/AintThatOneABeauty.hpp"
-#include "Effects/DB/Teleport/FakeTeleport.hpp"
-#include "Effects/DB/Teleport/RandomSystem.hpp"
-#include "Effects/DB/Teleport/TakeABreak.hpp"
-#include "Effects/DB/Teleport/TheStarsReallyAreBeautiful.hpp"
-#include "Effects/DB/Teleport/UrgenRelativeVisit.hpp"
-#include "Effects/DB/Visual/AllWeKnowIsThatThereWereTwoSides.hpp"
-#include "Effects/DB/Visual/HomageToElite.hpp"
-#include "Effects/DB/Visual/Nightvision.hpp"
-#include "Effects/DB/Visual/PartyLikeIts95.hpp"
-#include "Effects/DB/Visual/PortraitMode.hpp"
-#include "Effects/DB/Visual/QuakeFOV.hpp"
-#include "Effects/DB/Visual/RookieBirthdayParty.hpp"
-#include "Effects/DB/Visual/Screensaver.hpp"
-#include "Effects/DB/Visual/SleepyPlayer.hpp"
-#include "Effects/DB/Visual/WideBoi.hpp"
+
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -132,6 +56,8 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
+    auto& configEffects = ConfigManager::i()->toggledEffects;
+
     for (uint attempts = 0; attempts < 15; attempts++)
     {
         static std::vector<uint> weights;
@@ -164,8 +90,24 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        if (auto& effectInfo = effect->GetEffectInfo();
-            effectInfo.exclusion != EffectExclusion::None && std::ranges::any_of(activeEffects,
+        auto& effectInfo = effect->GetEffectInfo();
+        bool effectDisabled = false;
+        for (const auto& category : configEffects)
+        {
+            if (std::ranges::any_of(category.second,
+                                    [effectInfo](const std::pair<std::string, bool>& eff) { return eff.second && eff.first == effectInfo.effectName; }))
+            {
+                effectDisabled = true;
+                break;
+            }
+        }
+
+        if (effectDisabled)
+        {
+            continue;
+        }
+
+        if (effectInfo.exclusion != EffectExclusion::None && std::ranges::any_of(activeEffects,
                                                                                  [&effectInfo](auto existingEffect)
                                                                                  {
                                                                                      auto existingInfo = existingEffect.first->GetEffectInfo();
@@ -406,107 +348,3 @@ void ChaosTimer::Update(const float delta)
 }
 
 const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() { return i()->activeEffects; }
-
-void ChaosTimer::RegisterAllEffects()
-{
-#define Ef(T) ActiveEffect::RegisterEffect<T>()
-
-    // Interface
-    Ef(Lgbtui);
-    Ef(BuggyInterface);
-    Ef(NoHud);
-    Ef(FlippedUi);
-    Ef(StickyKeys);
-    Ef(RollCredits);
-    Ef(JustLikeThe90s);
-
-    // Audio
-    Ef(AllTheNewsThatsFitForYou);
-    Ef(BossMusic);
-    Ef(IfTrentHadATextToSpeechDevice);
-    Ef(IDoNotSpeakMorseCode);
-    Ef(DodgeThis);
-    Ef(LowBudgetSciFiMovie);
-    Ef(SadViolin);
-
-    // Stat Manipulation
-    Ef(LonniganCameThrough);
-    Ef(GetHumbled);
-    Ef(WiffleBats);
-    Ef(RandomisedProjectiles);
-    Ef(GodMode);
-    Ef(Hyperlanes);
-    Ef(TryRepairing);
-    Ef(CaveatEmptor);
-    Ef(CoolantLeak);
-    Ef(DemolitionDerby);
-    Ef(Zoomies);
-    Ef(NeverSayNoToBacta);
-    // TODO: Ef(DoubleDamage);
-
-    // Meta
-    Ef(BoxOfChocolates);
-    Ef(FakeCrash);
-    Ef(DoubleTime);
-    Ef(DoubleEffectTime);
-
-    // Misc
-    Ef(FlappyArchitecture);
-    Ef(SpectatorMode);
-    Ef(LaggyPlayer);
-    Ef(SelfDestruct);
-    Ef(IAmFiringMyLasers);
-    Ef(XboxEdition);
-    Ef(ThanksIHateIt);
-    Ef(DrunkShopping);
-
-    // Movement
-    Ef(Yeet);
-    Ef(IllTrySpinning);
-    Ef(InvertVelocity);
-    Ef(PersonalSpace);
-    // TODO: Ef(AssumingDirectControl);
-
-    // Npc
-    Ef(Screaming);
-    Ef(IAmRobot);
-    Ef(PlanetOfTheApes);
-    Ef(MultiplayerExperience);
-    Ef(Wanted);
-    Ef(Cardamine);
-    Ef(YouAreFamous);
-    Ef(XenosAreMyFriendsNow);
-    Ef(SwissDiplomacy);
-    Ef(SwiftNPCs);
-    Ef(Pacifist);
-
-    // Spawning
-    Ef(Hydra);
-    Ef(SpawnBigBertha);
-    Ef(SpawnJesus);
-    Ef(SpawnExtremeJesus);
-    Ef(JellyTime);
-    Ef(YouThinkYourSafe);
-
-    // Teleports
-    Ef(TakeABreak);
-    Ef(UrgentRelativeVisit);
-    Ef(RandomSystem);
-    Ef(AintThatOneABeauty);
-    Ef(TheStarsReallyAreBeautiful);
-    Ef(FakeTeleport);
-
-    // Visual
-    Ef(QuakeFov);
-    Ef(Screensaver);
-    Ef(HomageToElite);
-    Ef(PartyLikeIts95);
-    Ef(SleepyPlayer);
-    Ef(PortraitMode);
-    Ef(AllWeKnowIsThatThereWereTwoSides);
-    Ef(RookieBirthdayParty);
-    Ef(WideBoi);
-    Ef(Nightvision);
-
-#undef Ef
-}

@@ -115,6 +115,24 @@
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp">
       <Filter>Vendor\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\AssumingDirectControl.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\PersonalSpace.cpp">
+      <Filter>Effects\DB\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\Nightvision.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\RookieBirthdayParty.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\SadViolin.cpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -161,114 +179,114 @@
     <ClInclude Include="Effects\ActiveEffect.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp">
+    <ClCompile Include="Effects\DB\Interface\LGBTUI.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\BossMusic.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\BossMusic.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Effects\AddressTable.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp">
+    <ClCompile Include="Effects\DB\Interface\BuggyInterface.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\LonniganCameThrough.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\GetHumbled.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\DoubleTime.cpp">
       <Filter>Effects\DB\Meta</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\FakeCrash.cpp">
       <Filter>Effects\DB\Meta</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\BoxOfChocolates.cpp">
       <Filter>Effects\DB\Meta</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\DoubleEffectTime.cpp">
       <Filter>Effects\DB\Meta</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Utilities\Random.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp">
+    <ClCompile Include="Effects\DB\StatManipulation\WiffleBats.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\EventManager.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp">
+    <ClCompile Include="Effects\DB\Audio\IDoNotSpeakMorseCode.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\DodgeThis.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\DodgeThis.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\NoHud.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Interface\NoHud.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\FlappyArchitecture.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\Screaming.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\Screaming.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\IAmRobot.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\PlanetOfTheApes.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\LaggyPlayer.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\Yeet.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\Yeet.cpp">
       <Filter>Effects\DB\Movement</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\SpectatorMode.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\SelfDestruct.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\IAmFirinMaLasers.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\RandomisedProjectiles.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\GodMode.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\Hyperlanes.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\TryRepairing.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\CaveatEmptor.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\QuakeFOV.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\CameraController.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp">
+    <ClCompile Include="Effects\DB\Misc\XboxEdition.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\HudInterface.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -305,75 +323,75 @@
     <ClInclude Include="Systems\HudComponents\Interfaces.hpp">
       <Filter>Systems\HudComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp">
+    <ClCompile Include="Effects\DB\Interface\FlippedInterface.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Interface\StickyKeys.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Utilities\ChatConsole.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp">
+    <ClCompile Include="Effects\DB\NPC\MultiplayerExperience.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\KeyManager.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp">
+    <ClCompile Include="Effects\DB\Audio\LowBudgetSciFiMovie.cpp">
       <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\IllTrySpinning.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\IllTrySpinning.cpp">
       <Filter>Effects\DB\Movement</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\InvertVelocity.cpp">
       <Filter>Effects\DB\Movement</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\JustLikeThe90s.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Interface\JustLikeThe90s.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\CoolantLeak.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\Wanted.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\Wanted.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\Cardamine.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\Cardamine.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\YouAreFamous.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\Screensaver.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\Screensaver.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\XenosAreMyFriendNow.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\SwissDiplomacy.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\SwissDiplomacy.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\DemolitionDerby.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\Zoomies.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\Zoomies.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\HomageToElite.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\PartyLikeIts95.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\SleepyPlayer.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\PortraitMode.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
@@ -383,48 +401,42 @@
     <ClInclude Include="Systems\ShipManipulator.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Interface\RollCredits.hpp">
+    <ClCompile Include="Effects\DB\Interface\RollCredits.cpp">
       <Filter>Effects\DB\Interface</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Effects\PersistentEffect.hpp">
       <Filter>Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Audio\SadViolin.hpp">
-      <Filter>Effects\DB\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp">
-      <Filter>Effects\DB\Movement</Filter>
     </ClInclude>
     <ClInclude Include="Systems\Teleporter.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\TakeABreak.hpp">
+    <ClCompile Include="Effects\DB\Teleport\TakeABreak.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\AintThatOneABeauty.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Teleport\AintThatOneABeauty.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\RandomSystem.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Teleport\RandomSystem.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\FakeTeleport.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Teleport\FakeTeleport.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Teleport\UrgentRelativeVisit.cpp">
       <Filter>Effects\DB\Teleports</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\NPC\SwiftNPCs.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Misc\ThanksIHateIt.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\NeverSayNoToBacta.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\NeverSayNoToBacta.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Utilities\SpaceObjectSpawner.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -434,26 +446,20 @@
     <ClInclude Include="Utilities\PersonalityHelper.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp">
+    <ClCompile Include="Effects\DB\Spawning\SpawnBigBertha.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\SpawnJesus.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\SpawnExtremeJesus.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\Hydra.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\Hydra.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Utilities\AssetTracker.hpp">
       <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\RookieBirthdayParty.hpp">
-      <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Movement\AssumingDirectControl.hpp">
-      <Filter>Effects\DB\Movement</Filter>
     </ClInclude>
     <ClInclude Include="Systems\SystemComponents\SaveManager.hpp">
       <Filter>Systems\SystemComponents</Filter>
@@ -462,9 +468,9 @@
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Effects\DB\NPC\Pacifist.hpp">
+    <ClCompile Include="Effects\DB\NPC\Pacifist.cpp">
       <Filter>Effects\DB\NPC</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\vendor\flhook-sdk\include\FLCore\FLCoreCommon.h">
       <Filter>SDK</Filter>
     </ClInclude>
@@ -477,24 +483,24 @@
     <ClInclude Include="Systems\GameEvents\OnHit.hpp">
       <Filter>Systems\GameEvents</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp">
+    <ClCompile Include="Effects\DB\StatManipulation\DoubleDamage.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\JellyTime.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\JellyTime.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Spawning\YouThinkYourSafe.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\YouThinkYourSafe.cpp">
       <Filter>Effects\DB\Spawning</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Systems\SystemComponents\GlobalTimers.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Misc\DrunkShopping.hpp">
+    <ClCompile Include="Effects\DB\Misc\DrunkShopping.cpp">
       <Filter>Effects\DB\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\WideBoi.hpp">
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\WideBoi.cpp">
       <Filter>Effects\DB\Visual</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="Utilities\Constants.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -519,8 +525,8 @@
     <ClInclude Include="..\vendor\imgui\imstb_truetype.h">
       <Filter>Vendor\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Effects\DB\Visual\Nightvision.hpp">
-      <Filter>Effects\DB\Visual</Filter>
+    <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

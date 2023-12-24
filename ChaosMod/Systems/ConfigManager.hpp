@@ -16,10 +16,11 @@ class ConfigManager : public Singleton<ConfigManager>
         bool showTimeRemainingOnEffects = false;
         uint timeBetweenSavesInSeconds = 300;
         bool allowAutoSavesDuringCombat = false;
+        std::map<std::string, std::map<std::string, bool>> toggledEffects;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
                                        enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects,
-                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat);
+                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat, toggledEffects);
 
         void Save();
         static ConfigManager* Load();

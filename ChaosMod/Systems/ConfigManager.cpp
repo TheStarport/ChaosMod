@@ -2,6 +2,10 @@
 
 #include "ConfigManager.hpp"
 
+#include "Effects/ActiveEffect.hpp"
+
+#include <magic_enum.hpp>
+
 void ConfigManager::Save()
 {
     std::string path;
@@ -50,6 +54,22 @@ ConfigManager* ConfigManager::Load()
         }
     }
 
-    i()->Save();
-    return i();
+    auto instance = i();
+    if (instance->toggledEffects.empty())
+    {
+        for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
+        {
+            auto& info = effect->GetEffectInfo();
+            auto name = std::string(magic_enum::enum_name<EffectType>(info.category));
+            if (!instance->toggledEffects.contains(name))
+            {
+                instance->toggledEffects[name] = {};
+            }
+
+            instance->toggledEffects[name][info.effectName] = true;
+        }
+    }
+
+    instance->Save();
+    return instance;
 }

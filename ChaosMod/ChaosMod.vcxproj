@@ -106,8 +106,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
-powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true</Command>
+      <Command>
+				copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
+				powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true
+			</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0809</Culture>
@@ -141,8 +143,10 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLa
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
-powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Command>
+      <Command>
+				copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
+				powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1
+			</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -183,6 +187,83 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Effects\MemoryEffect.cpp" />
+    <ClCompile Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.cpp" />
+    <ClCompile Include="Effects\DB\Audio\BossMusic.cpp" />
+    <ClCompile Include="Effects\DB\Audio\DodgeThis.cpp" />
+    <ClCompile Include="Effects\DB\Audio\IDoNotSpeakMorseCode.cpp" />
+    <ClCompile Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.cpp" />
+    <ClCompile Include="Effects\DB\Audio\LowBudgetSciFiMovie.cpp" />
+    <ClCompile Include="Effects\DB\Audio\SadViolin.cpp" />
+    <ClCompile Include="Effects\DB\Interface\BuggyInterface.cpp" />
+    <ClCompile Include="Effects\DB\Interface\FlippedInterface.cpp" />
+    <ClCompile Include="Effects\DB\Interface\JustLikeThe90s.cpp" />
+    <ClCompile Include="Effects\DB\Interface\LGBTUI.cpp" />
+    <ClCompile Include="Effects\DB\Interface\NoHud.cpp" />
+    <ClCompile Include="Effects\DB\Interface\RollCredits.cpp" />
+    <ClCompile Include="Effects\DB\Interface\StickyKeys.cpp" />
+    <ClCompile Include="Effects\DB\Meta\DoubleEffectTime.cpp" />
+    <ClCompile Include="Effects\DB\Meta\DoubleTime.cpp" />
+    <ClCompile Include="Effects\DB\Meta\FakeCrash.cpp" />
+    <ClCompile Include="Effects\DB\Meta\BoxOfChocolates.cpp" />
+    <ClCompile Include="Effects\DB\Misc\CaveatEmptor.cpp" />
+    <ClCompile Include="Effects\DB\Misc\DrunkShopping.cpp" />
+    <ClCompile Include="Effects\DB\Misc\FlappyArchitecture.cpp" />
+    <ClCompile Include="Effects\DB\Misc\IAmFirinMaLasers.cpp" />
+    <ClCompile Include="Effects\DB\Misc\LaggyPlayer.cpp" />
+    <ClCompile Include="Effects\DB\Misc\SpectatorMode.cpp" />
+    <ClCompile Include="Effects\DB\Misc\SelfDestruct.cpp" />
+    <ClCompile Include="Effects\DB\Misc\ThanksIHateIt.cpp" />
+    <ClCompile Include="Effects\DB\Misc\XboxEdition.cpp" />
+    <ClCompile Include="Effects\DB\Movement\AssumingDirectControl.cpp" />
+    <ClCompile Include="Effects\DB\Movement\IllTrySpinning.cpp" />
+    <ClCompile Include="Effects\DB\Movement\InvertVelocity.cpp" />
+    <ClCompile Include="Effects\DB\Movement\PersonalSpace.cpp" />
+    <ClCompile Include="Effects\DB\Movement\Yeet.cpp" />
+    <ClCompile Include="Effects\DB\NPC\Cardamine.cpp" />
+    <ClCompile Include="Effects\DB\NPC\MultiplayerExperience.cpp" />
+    <ClCompile Include="Effects\DB\NPC\IAmRobot.cpp" />
+    <ClCompile Include="Effects\DB\NPC\Pacifist.cpp" />
+    <ClCompile Include="Effects\DB\NPC\PlanetOfTheApes.cpp" />
+    <ClCompile Include="Effects\DB\NPC\Screaming.cpp" />
+    <ClCompile Include="Effects\DB\NPC\SwiftNPCs.cpp" />
+    <ClCompile Include="Effects\DB\NPC\SwissDiplomacy.cpp" />
+    <ClCompile Include="Effects\DB\NPC\Wanted.cpp" />
+    <ClCompile Include="Effects\DB\NPC\XenosAreMyFriendNow.cpp" />
+    <ClCompile Include="Effects\DB\NPC\YouAreFamous.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\Hydra.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\JellyTime.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\SpawnBigBertha.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\SpawnExtremeJesus.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\SpawnJesus.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\YouThinkYourSafe.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\CoolantLeak.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\DemolitionDerby.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\DoubleDamage.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\GetHumbled.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\GodMode.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\Hyperlanes.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\LonniganCameThrough.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\NeverSayNoToBacta.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\RandomisedProjectiles.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\TryRepairing.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\WiffleBats.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\Zoomies.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\FakeTeleport.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\AintThatOneABeauty.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\RandomSystem.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\TakeABreak.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.cpp" />
+    <ClCompile Include="Effects\DB\Teleport\UrgentRelativeVisit.cpp" />
+    <ClCompile Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.cpp" />
+    <ClCompile Include="Effects\DB\Visual\HomageToElite.cpp" />
+    <ClCompile Include="Effects\DB\Visual\Nightvision.cpp" />
+    <ClCompile Include="Effects\DB\Visual\PortraitMode.cpp" />
+    <ClCompile Include="Effects\DB\Visual\QuakeFOV.cpp" />
+    <ClCompile Include="Effects\DB\Visual\RookieBirthdayParty.cpp" />
+    <ClCompile Include="Effects\DB\Visual\Screensaver.cpp" />
+    <ClCompile Include="Effects\DB\Visual\PartyLikeIts95.cpp" />
+    <ClCompile Include="Effects\DB\Visual\SleepyPlayer.cpp" />
+    <ClCompile Include="Effects\DB\Visual\WideBoi.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -205,6 +286,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClCompile Include="Systems\GameEvents\OnHit.cpp" />
     <ClCompile Include="Systems\HudInterface.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
@@ -233,83 +315,6 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClInclude Include="..\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Effects\ActiveEffect.hpp" />
     <ClInclude Include="Effects\AddressTable.hpp" />
-    <ClInclude Include="Effects\DB\Audio\AllTheNewsThatsFitForYou.hpp" />
-    <ClInclude Include="Effects\DB\Audio\BossMusic.hpp" />
-    <ClInclude Include="Effects\DB\Audio\DodgeThis.hpp" />
-    <ClInclude Include="Effects\DB\Audio\IDoNotSpeakMorseCode.hpp" />
-    <ClInclude Include="Effects\DB\Audio\IfTrentHadATextToSpeechDevice.hpp" />
-    <ClInclude Include="Effects\DB\Audio\LowBudgetSciFiMovie.hpp" />
-    <ClInclude Include="Effects\DB\Audio\SadViolin.hpp" />
-    <ClInclude Include="Effects\DB\Interface\BuggyInterface.hpp" />
-    <ClInclude Include="Effects\DB\Interface\FlippedInterface.hpp" />
-    <ClInclude Include="Effects\DB\Interface\JustLikeThe90s.hpp" />
-    <ClInclude Include="Effects\DB\Interface\LGBTUI.hpp" />
-    <ClInclude Include="Effects\DB\Interface\NoHud.hpp" />
-    <ClInclude Include="Effects\DB\Interface\RollCredits.hpp" />
-    <ClInclude Include="Effects\DB\Interface\StickyKeys.hpp" />
-    <ClInclude Include="Effects\DB\Meta\DoubleEffectTime.hpp" />
-    <ClInclude Include="Effects\DB\Meta\DoubleTime.hpp" />
-    <ClInclude Include="Effects\DB\Meta\FakeCrash.hpp" />
-    <ClInclude Include="Effects\DB\Meta\BoxOfChocolates.hpp" />
-    <ClInclude Include="Effects\DB\Misc\CaveatEmptor.hpp" />
-    <ClInclude Include="Effects\DB\Misc\DrunkShopping.hpp" />
-    <ClInclude Include="Effects\DB\Misc\FlappyArchitecture.hpp" />
-    <ClInclude Include="Effects\DB\Misc\IAmFirinMaLasers.hpp" />
-    <ClInclude Include="Effects\DB\Misc\LaggyPlayer.hpp" />
-    <ClInclude Include="Effects\DB\Misc\SpectatorMode.hpp" />
-    <ClInclude Include="Effects\DB\Misc\SelfDestruct.hpp" />
-    <ClInclude Include="Effects\DB\Misc\ThanksIHateIt.hpp" />
-    <ClInclude Include="Effects\DB\Misc\XboxEdition.hpp" />
-    <ClInclude Include="Effects\DB\Movement\AssumingDirectControl.hpp" />
-    <ClInclude Include="Effects\DB\Movement\IllTrySpinning.hpp" />
-    <ClInclude Include="Effects\DB\Movement\InvertVelocity.hpp" />
-    <ClInclude Include="Effects\DB\Movement\PersonalSpace.hpp" />
-    <ClInclude Include="Effects\DB\Movement\Yeet.hpp" />
-    <ClInclude Include="Effects\DB\NPC\Cardamine.hpp" />
-    <ClInclude Include="Effects\DB\NPC\MultiplayerExperience.hpp" />
-    <ClInclude Include="Effects\DB\NPC\IAmRobot.hpp" />
-    <ClInclude Include="Effects\DB\NPC\Pacifist.hpp" />
-    <ClInclude Include="Effects\DB\NPC\PlanetOfTheApes.hpp" />
-    <ClInclude Include="Effects\DB\NPC\Screaming.hpp" />
-    <ClInclude Include="Effects\DB\NPC\SwiftNPCs.hpp" />
-    <ClInclude Include="Effects\DB\NPC\SwissDiplomacy.hpp" />
-    <ClInclude Include="Effects\DB\NPC\Wanted.hpp" />
-    <ClInclude Include="Effects\DB\NPC\XenosAreMyFriendNow.hpp" />
-    <ClInclude Include="Effects\DB\NPC\YouAreFamous.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\Hydra.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\JellyTime.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\SpawnBigBertha.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\SpawnExtremeJesus.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\SpawnJesus.hpp" />
-    <ClInclude Include="Effects\DB\Spawning\YouThinkYourSafe.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\CoolantLeak.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\DemolitionDerby.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\DoubleDamage.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\GetHumbled.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\GodMode.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\Hyperlanes.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\LonniganCameThrough.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\NeverSayNoToBacta.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\RandomisedProjectiles.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\TryRepairing.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\WiffleBats.hpp" />
-    <ClInclude Include="Effects\DB\StatManipulation\Zoomies.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\FakeTeleport.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\AintThatOneABeauty.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\RandomSystem.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\TakeABreak.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\TheStarsReallyAreBeautiful.hpp" />
-    <ClInclude Include="Effects\DB\Teleport\UrgenRelativeVisit.hpp" />
-    <ClInclude Include="Effects\DB\Visual\AllWeKnowIsThatThereWereTwoSides.hpp" />
-    <ClInclude Include="Effects\DB\Visual\HomageToElite.hpp" />
-    <ClInclude Include="Effects\DB\Visual\Nightvision.hpp" />
-    <ClInclude Include="Effects\DB\Visual\PortraitMode.hpp" />
-    <ClInclude Include="Effects\DB\Visual\QuakeFOV.hpp" />
-    <ClInclude Include="Effects\DB\Visual\RookieBirthdayParty.hpp" />
-    <ClInclude Include="Effects\DB\Visual\Screensaver.hpp" />
-    <ClInclude Include="Effects\DB\Visual\PartyLikeIts95.hpp" />
-    <ClInclude Include="Effects\DB\Visual\SleepyPlayer.hpp" />
-    <ClInclude Include="Effects\DB\Visual\WideBoi.hpp" />
     <ClInclude Include="Effects\MemoryEffect.hpp" />
     <ClInclude Include="Effects\PersistentEffect.hpp" />
     <ClInclude Include="Exceptions\NpcLoadingException.hpp" />
@@ -337,6 +342,7 @@ powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1</Comm
     <ClInclude Include="Systems\HudComponents\TWire.hpp" />
     <ClInclude Include="Systems\HudInterface.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />

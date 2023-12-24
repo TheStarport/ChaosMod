@@ -15,4 +15,6 @@ class PersistentEffect : public ActiveEffect
         {
             return persisting;
         }
+
+        explicit PersistentEffect(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
 };

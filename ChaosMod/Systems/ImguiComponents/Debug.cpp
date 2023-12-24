@@ -10,32 +10,11 @@
 #include <imgui-club/imgui_memory_editor/imgui_memory_editor.h>
 #include <magic_enum_all.hpp>
 
-void EffectSelectorWindow::Refresh()
-{
-    for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
-    {
-        auto& info = effect->GetEffectInfo();
-        if (!allEffects.contains(info.category))
-        {
-            allEffects[info.category] = {};
-        }
-
-        allEffects[info.category].emplace_back(effect);
-    }
-}
-
-EffectSelectorWindow::EffectSelectorWindow() { Refresh(); }
-
 void EffectSelectorWindow::Render()
 {
     if (!show)
     {
         return;
-    }
-
-    if (allEffects.empty())
-    {
-        Refresh();
     }
 
     ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_FirstUseEver);
@@ -47,8 +26,8 @@ void EffectSelectorWindow::Render()
             constexpr EffectType category = val;
             const auto categoryName = std::string(magic_enum::enum_name(category));
 
-            const auto effects = allEffects.find(category);
-            if (effects == allEffects.end())
+            const auto effects = allEffects->find(category);
+            if (effects == allEffects->end())
             {
                 return;
             }
@@ -209,11 +188,27 @@ void Configurator::Render()
     ImGui::End();
 }
 
+DebugMenu::DebugMenu()
+{
+    lineOffsets.push_back(0);
+
+    for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
+    {
+        auto& info = effect->GetEffectInfo();
+        if (!allEffects.contains(info.category))
+        {
+            allEffects[info.category] = {};
+        }
+
+        allEffects[info.category].emplace_back(effect);
+    }
+}
 void DebugMenu::Render()
 {
     addressList.Render();
     configurator.Render();
     effectSelector.Render();
+    effectToggler.Render();
 
     if (!show)
     {
@@ -248,6 +243,11 @@ void DebugMenu::Render()
     if (ImGui::Button("Open Debug Event Selector"))
     {
         effectSelector.show = true;
+    }
+
+    if (ImGui::Button("Open Effect Toggler"))
+    {
+        effectToggler.Show();
     }
 
     ImGui::Separator();

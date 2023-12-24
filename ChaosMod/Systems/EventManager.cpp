@@ -2,8 +2,6 @@
 
 #include "EventManager.hpp"
 
-#include "Effects/DB/Misc/SpectatorMode.hpp"
-
 std::unique_ptr<FunctionDetour<EventManager::OnLaunch>> EventManager::launchDetour;
 
 void EventManager::PlayerLaunchDetour(IServerImpl* impl, void* edx, uint client, uint ship)
@@ -11,8 +9,6 @@ void EventManager::PlayerLaunchDetour(IServerImpl* impl, void* edx, uint client,
     launchDetour->UnDetour();
     launchDetour->GetOriginalFunc()(impl, edx, client, ship);
     launchDetour->Detour(PlayerLaunchDetour);
-
-    SpectatorMode::SetCloak(false);
 }
 
 void EventManager::SetupDetours() const

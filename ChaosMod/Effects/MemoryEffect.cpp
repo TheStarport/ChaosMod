@@ -5,7 +5,6 @@
 
 using namespace magic_enum::bitwise_operators;
 
-std::vector<std::unique_ptr<ActiveEffect>> ActiveEffect::allEffects;
 std::vector<MemoryEffect*> MemoryEffect::memoryChanges;
 
 std::vector<MemoryEffect::MemoryAddress> MemoryEffect::GetMemoryEffects()

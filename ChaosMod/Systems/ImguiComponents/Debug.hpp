@@ -1,16 +1,16 @@
 #pragma once
 
+#include "EffectToggler.hpp"
 #include "Effects/MemoryEffect.hpp"
 
 #include <imgui/imgui.h>
 
 class EffectSelectorWindow final
 {
-        std::map<EffectType, std::vector<ActiveEffect*>> allEffects;
+        std::map<EffectType, std::vector<ActiveEffect*>>* allEffects;
 
     public:
-        void Refresh();
-        EffectSelectorWindow();
+        explicit EffectSelectorWindow(std::map<EffectType, std::vector<ActiveEffect*>>* effects) : allEffects(effects) {}
 
         bool show = false;
         void Render();
@@ -39,16 +39,19 @@ class Configurator final
 
 class DebugMenu final
 {
+        std::map<EffectType, std::vector<ActiveEffect*>> allEffects;
+
         ImGuiTextBuffer buf;
         ImGuiTextFilter filter;
         ImVector<int> lineOffsets;
 
         ActiveAddressList addressList{};
         Configurator configurator{};
-        EffectSelectorWindow effectSelector{};
+        EffectSelectorWindow effectSelector{ &allEffects };
+        EffectToggler effectToggler{ &allEffects };
 
     public:
-        DebugMenu() { lineOffsets.push_back(0); }
+        DebugMenu();
 
         bool show =
 #ifdef _DEBUG

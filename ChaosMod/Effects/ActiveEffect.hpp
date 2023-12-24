@@ -17,25 +17,31 @@ enum class EffectType
 enum class EffectExclusion
 {
     None,
-    Movie
+    Movie,
+    Visual,
 };
 
 class ActiveEffect
 {
-        static std::vector<std::unique_ptr<ActiveEffect>> allEffects;
+        inline static std::vector<ActiveEffect*> allEffects;
 
     public:
         struct EffectInfo
         {
                 std::string effectName{};
-                bool isTimed;
-                EffectType category;
+                std::string description;
+                EffectType category = EffectType::Audio;
                 float timingModifier = 1.0f;
                 float fixedTimeOverride = 0.0f;
-                EffectExclusion exclusion;
-                uint weight = 100;
+                bool isTimed = true;
+                EffectExclusion exclusion = EffectExclusion::None;
+                uint weight = 5;
         };
 
+    private:
+        EffectInfo effectInfo;
+
+    public:
         virtual void Init() {}
         virtual void Begin() {}
         virtual void OnLoad() {}
@@ -46,105 +52,37 @@ class ActiveEffect
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}
         virtual ~ActiveEffect() = default;
+        explicit ActiveEffect(EffectInfo effectInfo) : effectInfo(std::move(effectInfo)) { allEffects.emplace_back(this); }
 
-        virtual const EffectInfo& GetEffectInfo() = 0;
+        const EffectInfo& GetEffectInfo() { return effectInfo; }
+        static const std::vector<ActiveEffect*>& GetAllEffects() { return allEffects; }
 
-        static std::vector<ActiveEffect*> GetAllEffects()
-        {
-            std::vector<ActiveEffect*> rawVector;
-            rawVector.reserve(allEffects.size()); //  avoids unnecessary reallocations
-            std::ranges::transform(allEffects, std::back_inserter(rawVector), [](auto& ptr) { return ptr.get(); });
-            return rawVector;
-        }
-
-        template <class Effect>
-            requires std::is_base_of_v<ActiveEffect, Effect>
-
-        static void RegisterEffect()
-        {
-            allEffects.emplace_back(std::make_unique<Effect>(Effect()));
-        }
-
-    protected:
-        struct EffectInfoBuilder
-        {
-                explicit EffectInfoBuilder(const std::string& effectName, EffectType effectType)
-                {
-                    name = effectName;
-                    category = effectType;
-                }
-
-                EffectInfoBuilder& WithOneShot()
-                {
-                    relativeTime = 0.0f;
-                    absoluteTime = 0.0f;
-                    return *this;
-                }
-
-                EffectInfoBuilder& WithRelativeTime(const float time)
-                {
-                    relativeTime = time;
-                    return *this;
-                }
-
-                EffectInfoBuilder& WithAbsoluteTime(const float time)
-                {
-                    absoluteTime = time;
-                    return *this;
-                }
-
-                EffectInfoBuilder& WithWeight(const uint newWeight)
-                {
-                    weight = newWeight;
-                    return *this;
-                }
-
-                EffectInfoBuilder& WithExclusion(const EffectExclusion effectExclusion)
-                {
-                    exclusion = effectExclusion;
-                    return *this;
-                }
-
-                [[nodiscard]]
-                EffectInfo Create() const
-                {
-                    return { name, !(relativeTime == 0.0f && absoluteTime == 0.0f), category, relativeTime, absoluteTime, exclusion, weight };
-                }
-
-            private:
-                EffectType category;
-                EffectExclusion exclusion = EffectExclusion::None;
-                uint weight = 100;
-                float relativeTime = 1.0f;
-                float absoluteTime = 0.0f;
-                std::string name;
-        };
+        ActiveEffect(const ActiveEffect&) = delete;
+        ActiveEffect& operator=(const ActiveEffect&) = delete;
+        ActiveEffect& operator=(ActiveEffect&&) = delete;
+        ActiveEffect(ActiveEffect&&) = delete;
 };
 
-#define DefaultEffectInfo(name, category)                                        \
-    const EffectInfo& GetEffectInfo() override                                   \
-    {                                                                            \
-        static const EffectInfo ef = EffectInfoBuilder(name, category).Create(); \
-        return ef;                                                               \
+#define SetupEffect(type, ...)                                                         \
+    namespace                                                                          \
+    {                                                                                  \
+        RegisterEffect effect(new type(ActiveEffect::EffectInfo(__VA_ARGS__))); \
     }
 
-#define OneShotEffectInfo(name, category)                                                      \
-    const EffectInfo& GetEffectInfo() override                                                 \
-    {                                                                                          \
-        static const EffectInfo ef = EffectInfoBuilder(name, category).WithOneShot().Create(); \
-        return ef;                                                                             \
-    }
+class RegisterEffect final
+{
+        ActiveEffect* effect;
 
-#define RelativeEffectInfo(name, category, time)                                                        \
-    const EffectInfo& GetEffectInfo() override                                                          \
-    {                                                                                                   \
-        static const EffectInfo ef = EffectInfoBuilder(name, category).WithRelativeTime(time).Create(); \
-        return ef;                                                                                      \
-    }
+    public:
+        explicit RegisterEffect(ActiveEffect* effect) : effect(effect)
+        {
+            printf("");
+            printf("");
+        }
+        ~RegisterEffect() { delete effect; }
 
-#define AbsoluteEffectInfo(name, category, time)                                                        \
-    const EffectInfo& GetEffectInfo() override                                                          \
-    {                                                                                                   \
-        static const EffectInfo ef = EffectInfoBuilder(name, category).WithAbsoluteTime(time).Create(); \
-        return ef;                                                                                      \
-    }
+        RegisterEffect(const RegisterEffect&) = delete;
+        RegisterEffect& operator=(const RegisterEffect&) = delete;
+        RegisterEffect& operator=(RegisterEffect&&) = delete;
+        RegisterEffect(RegisterEffect&&) = delete;
+};

@@ -32,7 +32,6 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         void FrameUpdate(float delta);
         void InitEffects();
         static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
-        static void RegisterAllEffects();
 
         [[nodiscard]]
         float GetTimeUntilChaos() const;

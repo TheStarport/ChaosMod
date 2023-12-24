@@ -16,6 +16,7 @@ class MemoryEffect : public ActiveEffect
                 std::vector<byte> originalData;
         };
 
+        explicit MemoryEffect(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
         static std::vector<MemoryAddress> GetMemoryEffects();
 
         void Begin() override;

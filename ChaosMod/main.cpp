@@ -33,7 +33,6 @@ bool init = false;
 void Init()
 {
     init = true;
-    ChaosTimer::RegisterAllEffects();
     EventManager::i()->SetupDetours();
     CameraController::i();
     HudInterface::i();
