@@ -59,7 +59,7 @@ class LowBudgetSciFiMovie final : public ActiveEffect
         void End() override { detourInterceptSound->UnDetour(); }
 
     public:
-        LowBudgetSciFiMovie(const EffectInfo& info) : ActiveEffect(info)
+        explicit LowBudgetSciFiMovie(const EffectInfo& info) : ActiveEffect(info)
         {
             pewHashes.clear();
             for (int i = 1; i <= 50; i++)

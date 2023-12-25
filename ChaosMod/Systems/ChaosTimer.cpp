@@ -56,7 +56,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    auto& configEffects = ConfigManager::i()->toggledEffects;
+    const auto& configEffects = ConfigManager::i()->toggledEffects;
 
     for (uint attempts = 0; attempts < 15; attempts++)
     {

@@ -2,6 +2,8 @@
 
 #include "ReshadeManager.hpp"
 
+#include "SystemComponents/GlobalTimers.hpp"
+
 using namespace reshade;
 using namespace reshade::api;
 
@@ -11,11 +13,53 @@ extern "C" __declspec(dllexport) const char* DESCRIPTION = "Chaos Mod will repla
 
 void ReshadeManager::OnInitEffect(effect_runtime* runtime)
 {
+    if (!i()->runtime)
+    {
+        // Set a timer to disable any active effects one second after start, so they can all init
+        GlobalTimers::i()->AddTimer(
+            [](auto delta)
+            {
+                i()->ToggleTechnique("", false);
+                return true;
+            },
+            1.0f);
+    }
+
     // Assume last created effect runtime is the main one
     i()->runtime = runtime;
 }
 
 void ReshadeManager::OnDestroyEffect(effect_runtime* runtime) { i()->runtime = nullptr; }
+
+std::optional<std::pair<Vector, effect_uniform_variable>> ReshadeManager::GetUniformFloat(const std::string& name, const size_t valueCount) const
+{
+    const auto var = runtime->find_uniform_variable("ChaosMod.fx", name.c_str());
+    if (!var.handle)
+    {
+        return std::nullopt;
+    }
+
+    Vector vec;
+    runtime->get_uniform_value_float(var, reinterpret_cast<float*>(&vec), valueCount);
+
+    return { std::make_pair(vec, var) };
+}
+
+void ReshadeManager::SetUniformFloat(const std::string& name, const Vector& value, const size_t count) const
+{
+    if (!runtime)
+    {
+        return;
+    }
+
+    const auto vector = GetUniformFloat(name, count);
+    if (!vector.has_value())
+    {
+        throw std::runtime_error("Shader variable was not found and could not be set.");
+    }
+
+    runtime->set_uniform_value_float(vector->second, reinterpret_cast<const float*>(&value), count);
+}
 
 void ReshadeManager::ToggleTechnique(const std::string& techniqueName, bool state) const
 {
@@ -30,7 +74,7 @@ void ReshadeManager::ToggleTechnique(const std::string& techniqueName, bool stat
                                       char techniqueArr[MAX_PATH];
                                       effectRuntime->get_technique_name(technique, techniqueArr);
 
-                                      if (const std::string name = techniqueArr; name == techniqueName)
+                                      if (const std::string name = techniqueArr; techniqueName.empty() || name == techniqueName)
                                       {
                                           effectRuntime->set_technique_state(technique, state);
                                       }

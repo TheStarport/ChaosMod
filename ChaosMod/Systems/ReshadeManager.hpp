@@ -28,6 +28,9 @@ class ReshadeManager : public Singleton<ReshadeManager>
         reshade::api::effect_runtime* runtime = nullptr;
 
     public:
+        [[nodiscard]]
+        std::optional<std::pair<Vector, reshade::api::effect_uniform_variable>> GetUniformFloat(const std::string& name, size_t valueCount = 3) const;
+        void SetUniformFloat(const std::string& name, const Vector& value, size_t count) const;
         void ToggleTechnique(const std::string& techniqueName, bool state) const;
         void SetHModule(HMODULE module);
         void InitReshade() const;

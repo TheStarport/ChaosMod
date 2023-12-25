@@ -1,0 +1,16 @@
+float4 TurnTurtlePass(float4 vpos : SV_Position, float2 texcoord : TexCoord) : SV_Target
+{
+    texcoord.x = 1 - texcoord.x; // Flip on the X-Axis
+    texcoord.y = 1 - texcoord.y; // Flip on the Y-Axis
+    float4 color = tex2D(ReShade::BackBuffer, texcoord);
+    return color;
+}
+
+technique TurnTurtle
+{
+    pass
+    {
+        VertexShader = PostProcessVS;
+        PixelShader = TurnTurtlePass;
+    }
+}

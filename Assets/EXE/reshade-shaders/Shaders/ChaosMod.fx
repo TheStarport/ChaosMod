@@ -1,37 +1,56 @@
 #include "ReShade.fxh"
+#include "ReshadeUI.fxh"
 
-uniform float iGlobalTime < source = "timer"; >;
+#include "DrawText.fxh"
+#include "FXShaders/Common.fxh"
+#include "FXShaders/Canvas.fxh"
+#include "FXShaders/Digits.fxh"
+#include "FXShaders/Math.fxh"
 
-float hash(in float n) { return frac(sin(n)*43758.5453123); }
+#undef fmod
+#define fmod(x, y) x - y * floor(x/y)
+
+#define MAX_LINE 5
+#define MAX_PTS 5
+
+#include "RadegastShaders.Depth.fxh"
+#include "RadegastShaders.Transforms.fxh"
+#include "RadegastShaders.BlendingModes.fxh"
+
+uniform float Timer <source = "timer";>;
+
+#define DECLARE_VARIABLE_TEX(name, format) \
+texture name##Tex \
+{ \
+	Format = format; \
+}; \
+\
+sampler name \
+{ \
+	Texture = name##Tex; \
+	MinFilter = POINT; \
+	MagFilter = POINT; \
+	MipFilter = POINT; \
+}
+
+float hash(in float n)
+{
+    return frac(sin(n) * 43758.5453123);
+}
 
 float mod(float x, float y)
 {
-	return x - y * floor (x/y);
+    return x - y * floor(x / y);
 }
 
-float3 PS_Nightvision(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target
-{	
-	float2 p = uv;
-	
-	float2 u = p * 2. - 1.;
-	float2 n = u * float2(BUFFER_ASPECT_RATIO, 1.0);
-	float3 c = tex2D(ReShade::BackBuffer, uv).xyz;
-
-	// flicker, grain, vignette, fade in
-	c += sin(hash(iGlobalTime*0.001)) * 0.01;
-	c += hash((hash(n.x) + n.y) * iGlobalTime*0.001) * 0.5;
-	c *= smoothstep(length(n * n * n * float2(0.0, 0.0)), 1.0, 0.4);
-    c *= smoothstep(0.001, 3.5, iGlobalTime*0.001) * 1.5;
-	
-	c = dot(c, float3(0.2126, 0.7152, 0.0722)) 
-	  * float3(0.2, 1.5 - hash(iGlobalTime*0.001) * 0.1,0.4);
-	
-	return c;
-}
-
-technique Nightvision {
-	pass Nightvision {
-		VertexShader=PostProcessVS;
-		PixelShader=PS_Nightvision;
-	}
-}
+#include "Nightvision.reshade"
+#include "CRT.reshade"
+#include "Drunk.reshade"
+#include "FilmGrain.reshade"
+#include "Magnifier.reshade"
+//#include "Rain.reshade"
+#include "Pong.reshade"
+#include "JPEG.reshade"
+#include "LANoire.reshade"
+#include "TurnTurtle.reshade"
+#include "Vignette.reshade"

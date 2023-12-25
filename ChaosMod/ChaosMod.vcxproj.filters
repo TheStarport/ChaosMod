@@ -133,6 +133,33 @@
     <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\CRT.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\Pong.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\Drunk Flying.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\ReadingGlasses.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\FilmGrain.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\JPEG.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\LANoire.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\TurnTurtle.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Visual\CinematicMode.cpp">
+      <Filter>Effects\DB\Visual</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

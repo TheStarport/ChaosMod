@@ -21,7 +21,7 @@ void ActiveEffectsText::WriteEffect(const std::string& name, const bool isTimed,
     {
         const float fraction = time / (modifier * ConfigManager::i()->defaultEffectDuration);
 
-        ImGui::SameLine(ImGui::GetWindowContentRegionMin().x - 200);
+        ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 200);
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
         ImGui::PushStyleColor(ImGuiCol_Text, ConfigManager::i()->progressBarTextColor);
 

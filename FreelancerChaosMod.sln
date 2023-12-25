@@ -5,6 +5,22 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChaosMod", "ChaosMod\ChaosMod.vcxproj", "{8C714845-BDDF-45A0-AE06-432F13138EC9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA587C39-7860-4936-9BB5-F5768D3E5AB0}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\EXE\reshade-shaders\Shaders\ChaosMod.fx = Assets\EXE\reshade-shaders\Shaders\ChaosMod.fx
+		Assets\EXE\reshade-shaders\Shaders\CRT.reshade = Assets\EXE\reshade-shaders\Shaders\CRT.reshade
+		Assets\EXE\reshade-shaders\Shaders\Drunk.reshade = Assets\EXE\reshade-shaders\Shaders\Drunk.reshade
+		Assets\EXE\reshade-shaders\Shaders\FilmGrain.reshade = Assets\EXE\reshade-shaders\Shaders\FilmGrain.reshade
+		Assets\EXE\reshade-shaders\Shaders\JPEG.reshade = Assets\EXE\reshade-shaders\Shaders\JPEG.reshade
+		Assets\EXE\reshade-shaders\Shaders\LANoire.reshade = Assets\EXE\reshade-shaders\Shaders\LANoire.reshade
+		Assets\EXE\reshade-shaders\Shaders\Magnifier.reshade = Assets\EXE\reshade-shaders\Shaders\Magnifier.reshade
+		Assets\EXE\reshade-shaders\Shaders\Nightvision.reshade = Assets\EXE\reshade-shaders\Shaders\Nightvision.reshade
+		Assets\EXE\reshade-shaders\Shaders\Pong.reshade = Assets\EXE\reshade-shaders\Shaders\Pong.reshade
+		Assets\EXE\reshade-shaders\Shaders\Rain.reshade = Assets\EXE\reshade-shaders\Shaders\Rain.reshade
+		Assets\EXE\reshade-shaders\Shaders\TurnTurtle.reshade = Assets\EXE\reshade-shaders\Shaders\TurnTurtle.reshade
+		Assets\EXE\reshade-shaders\Shaders\Vignette.reshade = Assets\EXE\reshade-shaders\Shaders\Vignette.reshade
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
