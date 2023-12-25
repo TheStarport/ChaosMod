@@ -39,7 +39,7 @@ class SadViolin final : public PersistentEffect
         void End() override { playMusicDetour->UnDetour(); }
 
     public:
-        SadViolin(const EffectInfo& info) : PersistentEffect(info)
+        explicit SadViolin(const EffectInfo& info) : PersistentEffect(info)
         {
             playMusicDetour = std::make_unique<FunctionDetour<PlayMusicFunction>>(pub::Audio::SetMusic);
         }

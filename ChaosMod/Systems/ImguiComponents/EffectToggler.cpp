@@ -98,7 +98,7 @@ void EffectToggler::Render()
 
                 if (ImGui::IsItemHovered())
                 {
-                    ImGui::SetTooltip(info.description.c_str());
+                    ImGui::SetTooltip(info.description.c_str()); // NOLINT(clang-diagnostic-format-security)
                 }
             }
 

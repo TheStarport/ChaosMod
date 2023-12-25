@@ -95,7 +95,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         for (const auto& category : configEffects)
         {
             if (std::ranges::any_of(category.second,
-                                    [effectInfo](const std::pair<std::string, bool>& eff) { return eff.second && eff.first == effectInfo.effectName; }))
+                                    [effectInfo](const std::pair<std::string, bool>& eff) { return !eff.second && eff.first == effectInfo.effectName; }))
             {
                 effectDisabled = true;
                 break;
