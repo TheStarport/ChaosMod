@@ -293,6 +293,7 @@
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp" />
     <ClCompile Include="Systems\EventManager.cpp" />
     <ClCompile Include="Systems\GameEvents\OnHit.cpp" />
+    <ClCompile Include="Systems\GameEvents\OnSound.cpp" />
     <ClCompile Include="Systems\HudInterface.cpp" />
     <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp" />
     <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp" />
     <ClInclude Include="Systems\EventManager.hpp" />
     <ClInclude Include="Systems\GameEvents\OnHit.hpp" />
+    <ClInclude Include="Systems\GameEvents\OnSound.hpp" />
     <ClInclude Include="Systems\HudComponents\Interfaces.hpp" />
     <ClInclude Include="Systems\HudComponents\Structures.hpp" />
     <ClInclude Include="Systems\HudComponents\TButton.hpp" />

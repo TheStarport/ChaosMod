@@ -252,6 +252,27 @@ void ChaosTimer::OnApplyDamage(const uint hitSpaceObj, DamageList* dmgList, Dama
     }
 }
 
+uint ChaosTimer::OnSoundEffect(const uint hash)
+{
+    for (const auto& key : i()->activeEffects | std::views::keys)
+    {
+        if (const uint newHash = key->OnSoundEffect(hash); newHash != hash)
+        {
+            return newHash;
+        }
+    }
+
+    for (const auto& effect : i()->persistentEffects)
+    {
+        if (const uint newHash = effect->OnSoundEffect(hash); newHash != hash)
+        {
+            return newHash;
+        }
+    }
+
+    return hash;
+}
+
 void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)

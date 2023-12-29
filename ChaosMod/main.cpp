@@ -5,6 +5,7 @@
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/EventManager.hpp"
 #include "Systems/GameEvents/OnHit.hpp"
+#include "Systems/GameEvents/OnSound.hpp"
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
 #include "Systems/ShipManipulator.hpp"
@@ -26,6 +27,39 @@ typedef void (*GlobalTimeFunc)(double delta);
 std::unique_ptr<FunctionDetour<ScriptLoadPtr>> thornLoadDetour;
 std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 
+#ifdef _DEBUG
+
+using CreateIdFunc = uint (*)(const char* str);
+std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
+FILE* hashFile = nullptr;
+std::map<std::string, uint> hashMap;
+uint CreateIdDetour(const char* string)
+{
+    if (!string)
+    {
+        return 0;
+    }
+
+    if (!hashFile)
+    {
+        fopen_s(&hashFile, "hashmap.csv", "wb");
+    }
+
+    createIdDetour->UnDetour();
+    const uint hash = CreateID(string);
+
+    if (const std::string str = string; !hashMap.contains(str))
+    {
+        hashMap[str] = hash;
+        fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
+        fflush(hashFile);
+    }
+
+    createIdDetour->Detour(CreateIdDetour);
+    return hash;
+}
+#endif
+
 constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
 
@@ -33,6 +67,9 @@ bool init = false;
 void Init()
 {
     init = true;
+
+    // If any of these are done earlier, we get crashes (bad)
+
     EventManager::i()->SetupDetours();
     CameraController::i();
     HudInterface::i();
@@ -40,6 +77,8 @@ void Init()
     ShipManipulator::i();
 
     ChaosTimer::i()->InitEffects();
+
+    OnSound::Detour();
 }
 
 const PDWORD screenWidth = ((PDWORD)0x679bc8);
@@ -218,6 +257,11 @@ void RequiredMemEdits()
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
     const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
+
+#ifdef _DEBUG
+    createIdDetour = std::make_unique<FunctionDetour<CreateIdFunc>>(CreateID);
+    createIdDetour->Detour(CreateIdDetour);
+#endif
 
     // Patch out vanilla cursor
     BYTE nopPatch[] = { 0x90, 0x90, 0x90, 0x90 };

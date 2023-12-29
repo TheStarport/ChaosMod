@@ -3,11 +3,19 @@
 #include "Effects/ActiveEffect.hpp"
 #include "Effects/PersistentEffect.hpp"
 
+class OnHit;
+class OnSound;
 class ChaosTimer final : public Singleton<ChaosTimer>
 {
+        friend OnHit;
+        friend OnSound;
+
         inline static FARPROC oldShipDestroyed = nullptr;
         static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
         static void NakedShipDestroyed();
+
+        static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
+        static uint OnSoundEffect(uint hash);
 
         float currentTime = 0.0f;
         float modifiers = 1.0f;
@@ -37,6 +45,4 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         float GetTimeUntilChaos() const;
 
         std::vector<ActiveEffect*> GetNextEffects(int count = 3);
-
-        static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
 };

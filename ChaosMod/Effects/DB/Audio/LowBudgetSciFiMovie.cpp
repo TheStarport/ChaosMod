@@ -4,16 +4,6 @@
 
 class LowBudgetSciFiMovie final : public ActiveEffect
 {
-        using CreateSoundType = void* (*)(uint& hash);
-        using PlaySoundType = bool (*)(void* createdSound, int, int);
-        using InterceptSoundType = bool(__fastcall*)(void*);
-        inline static auto createSound = CreateSoundType(0x42ae40);
-        inline static auto playSound = PlaySoundType(0x4285f0);
-        inline static auto interceptSound = InterceptSoundType(0x42B840);
-
-        inline static std::unique_ptr<FunctionDetour<CreateSoundType>> detourCreateSound = nullptr;
-        inline static std::unique_ptr<FunctionDetour<InterceptSoundType>> detourInterceptSound = nullptr;
-
         inline static std::vector<uint> pewHashes{};
         inline static std::vector<uint> replacementHashes = {
             2369019649, 2841267407, 3135368001, 2614337743, 2673861575, 3209977415, 3016016333, 3070855878, 2688758343, 2989019722, 2184583879, 2539423809,
@@ -24,39 +14,15 @@ class LowBudgetSciFiMovie final : public ActiveEffect
             2218246467, 2755079491, 2218211651, 3181500943, 2274858249, 2811724041, 2274848009, 2811721993, 3103709194, 2692360065, 2641025934, 2634505409,
         };
 
-        inline static std::vector<void*> toReplaceSounds{};
-
-        static void* DetourCreateSound(uint& hash)
+        uint OnSoundEffect(const uint hash) override
         {
-            detourCreateSound->UnDetour();
-            const auto ret = detourCreateSound->GetOriginalFunc()(hash);
-
-            if (std::ranges::find(replacementHashes, hash) != replacementHashes.end() && std::ranges::find(toReplaceSounds, ret) == toReplaceSounds.end())
+            if (std::ranges::find(replacementHashes, hash) == replacementHashes.end())
             {
-                toReplaceSounds.emplace_back(ret);
+                return hash;
             }
 
-            detourCreateSound->Detour(DetourCreateSound);
-            return ret;
+            return pewHashes[Random::i()->Uniform(0u, pewHashes.size() - 1)];
         }
-
-        static bool __fastcall InterceptSoundDetour(void* sound)
-        {
-            if (std::ranges::find(toReplaceSounds, sound) != toReplaceSounds.end())
-            {
-                uint hash = pewHashes[Random::i()->Uniform(0u, pewHashes.size() - 1)];
-                const auto newSound = createSound(hash);
-                return playSound(newSound, 0, 0);
-            }
-
-            detourInterceptSound->UnDetour();
-            const auto ret = detourInterceptSound->GetOriginalFunc()(sound);
-            detourInterceptSound->Detour(InterceptSoundDetour);
-            return ret;
-        }
-
-        void Begin() override { detourInterceptSound->Detour(InterceptSoundDetour); }
-        void End() override { detourInterceptSound->UnDetour(); }
 
     public:
         explicit LowBudgetSciFiMovie(const EffectInfo& info) : ActiveEffect(info)
@@ -68,9 +34,11 @@ class LowBudgetSciFiMovie final : public ActiveEffect
                 pewHashes.emplace_back(CreateID(str.c_str()));
             }
 
-            detourCreateSound = std::make_unique<FunctionDetour<CreateSoundType>>(createSound);
-            detourInterceptSound = std::make_unique<FunctionDetour<InterceptSoundType>>(interceptSound);
-            detourCreateSound->Detour(DetourCreateSound);
+            if (pewHashes.empty())
+            {
+                Log("Failed to load any PEW SFX");
+                pewHashes.emplace_back(CreateID("null"));
+            }
         }
 };
 

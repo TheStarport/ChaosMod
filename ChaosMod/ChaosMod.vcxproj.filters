@@ -160,6 +160,9 @@
     <ClCompile Include="Effects\DB\Visual\CinematicMode.cpp">
       <Filter>Effects\DB\Visual</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\GameEvents\OnSound.cpp">
+      <Filter>Systems\GameEvents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -554,6 +557,9 @@
     </ClInclude>
     <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp">
       <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\GameEvents\OnSound.hpp">
+      <Filter>Systems\GameEvents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
