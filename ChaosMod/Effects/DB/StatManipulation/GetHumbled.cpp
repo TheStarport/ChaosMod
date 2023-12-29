@@ -13,6 +13,14 @@ class GetHumbled final : public ActiveEffect
             pub::Player::AdjustCash(1, -cash + newCash);
         }
 
+        bool CanSelect() override
+        {
+            int cash;
+            pub::Player::InspectCash(1, cash);
+
+            return cash > 1'000;
+        }
+
     public:
         explicit GetHumbled(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
 };

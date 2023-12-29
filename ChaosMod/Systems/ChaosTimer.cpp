@@ -74,6 +74,11 @@ ActiveEffect* ChaosTimer::SelectEffect()
         const auto val = Random::i()->Weighted(weights.begin(), weights.end());
         auto effect = possibleEffects[val];
 
+        if (!effect->CanSelect())
+        {
+            continue;
+        }
+
         if (const auto persistent = dynamic_cast<PersistentEffect*>(effect))
         {
             if (persistent->Persisting())
@@ -83,6 +88,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
 
             // If its not already persisting, lets start the effect!
             effect->Begin();
+            break;
         }
 
         if (activeEffects.contains(effect))

@@ -44,6 +44,7 @@ class ActiveEffect
     public:
         virtual void Init() {}
         virtual void Begin() {}
+        virtual bool CanSelect() { return true; }
         virtual void OnLoad() {}
         virtual void OnShipDestroyed(DamageList* dmgList, CShip* ship) {}
         virtual void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry) {}

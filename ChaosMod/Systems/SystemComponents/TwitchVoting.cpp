@@ -177,7 +177,18 @@ void TwitchVoting::Poll()
 
             if (const float value = Random::i()->UniformFloat(0.0f, 1.0f); value <= ConfigManager::i()->baseTwitchVoteWeight)
             {
-                ChaosTimer::i()->TriggerChaos(effectSelection[selectedResult]);
+                auto* effect = effectSelection[selectedResult];
+                if (!effect->CanSelect())
+                {
+                    pub::Audio::PlaySoundEffect(1, CreateID("ui_execute_transaction"));
+                    Log("Twitch picked an effect that couldn't be selected. Stupid Twitch...");
+
+                    const FmtStr fmt(458854, nullptr);
+                    pub::Player::DisplayMissionMessage(1, fmt, MissionMessageType::Type2, false);
+                    return;
+                }
+
+                ChaosTimer::i()->TriggerChaos(effect);
                 return;
             }
 
