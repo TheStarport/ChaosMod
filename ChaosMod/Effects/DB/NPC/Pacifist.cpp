@@ -12,16 +12,23 @@ class Pacifist final : public ActiveEffect
 
         void OnShipDestroyed(DamageList* dmgList, CShip* ship) override
         {
-            if (const auto player = Utils::GetCShip(); !shouldDie && player && player != ship && dmgList->inflictorPlayerId == 1)
+            if (const auto player = Utils::GetCShip(); !shouldDie && player)
             {
-                // const FmtStr fmt(002153, nullptr);
-                const FmtStr fmt(458759, nullptr);
-                pub::Player::DisplayMissionMessage(1, fmt, MissionMessageType::Type2, false);
+                if (player == ship)
+                {
+                    shouldDie = false;
+                }
+                else if (dmgList->inflictorPlayerId == 1)
+                {
+                    // const FmtStr fmt(002153, nullptr);
+                    const FmtStr fmt(458759, nullptr);
+                    pub::Player::DisplayMissionMessage(1, fmt, MissionMessageType::Type2, false);
 
-                timer = 3.0f;
-                shouldDie = true;
+                    timer = 3.0f;
+                    shouldDie = true;
 
-                ChaosTimer::i()->DelayActiveEffect(this, 3.0f);
+                    ChaosTimer::i()->DelayActiveEffect(this, 3.0f);
+                }
             }
         }
 
