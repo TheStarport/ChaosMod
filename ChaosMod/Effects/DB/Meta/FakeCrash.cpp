@@ -4,7 +4,7 @@
 
 class FakeCrash final : public ActiveEffect
 {
-        void SleepAllThreads(DWORD ms)
+        static void SleepAllThreads(const DWORD ms)
         {
             std::vector<HANDLE> threads;
 
@@ -30,14 +30,15 @@ class FakeCrash final : public ActiveEffect
             }
             while (Thread32Next(handle, &threadEntry));
 
-            for (HANDLE thread : threads)
+            for (const HANDLE thread : threads)
             {
                 SuspendThread(thread);
             }
 
+            PlaySoundA("SystemExclamation", nullptr, SND_SYNC);
             Sleep(ms);
 
-            for (HANDLE thread : threads)
+            for (const HANDLE thread : threads)
             {
                 ResumeThread(thread);
 
@@ -47,7 +48,7 @@ class FakeCrash final : public ActiveEffect
             CloseHandle(handle);
         }
 
-        void End() override
+        void Begin() override
         {
             if (Random::i()->Uniform(0, 1))
             {
