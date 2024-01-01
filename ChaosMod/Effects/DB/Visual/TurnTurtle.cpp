@@ -17,5 +17,6 @@ class TurnTurtle final : public ActiveEffect
 SetupEffect(TurnTurtle, {
     .effectName = "Turn Turtle",
     .description = "Like a turtle stuck on its back, the whole world looks upside down.",
-    .category = EffectType::Visual
+    .category = EffectType::Visual,
+    .timingModifier = 0.5f
 });
