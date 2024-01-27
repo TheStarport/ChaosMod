@@ -24,6 +24,7 @@ class SpawnJesus final : public ActiveEffect
                         .WithPersonality("pilot_military_ace")
                         .WithReputation("chaos_jesus")
                         .WithName(458757)
+                        .WithFuse("chaos_teleport_fx")
                         .Spawn();
 
             if (jesus.Acquire())

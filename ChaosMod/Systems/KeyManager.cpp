@@ -4,7 +4,9 @@
 
 bool __stdcall KeyManager::HandleKey(int keyCmd)
 {
-    if (blockPlayerInput)
+    const auto instance = i();
+
+    if (blockPlayerInput || std::ranges::find(instance->blockedKeys, static_cast<Utils::Keys>(keyCmd)) != instance->blockedKeys.end())
     {
         return true;
     }
@@ -40,7 +42,7 @@ bool __stdcall KeyManager::HandleKey(int keyCmd)
         default: break;
     }
 
-    if (const auto instance = i(); instance->randomiseKeys)
+    if (instance->randomiseKeys)
     {
         if (nextKeyRandom)
         {
@@ -228,6 +230,23 @@ KeyManager::KeyManager()
     for (auto& key : possibleKeys)
     {
         keyMap[key] = key;
+    }
+}
+void KeyManager::FireKeyCommand(Utils::Keys key)
+{
+    const auto func = reinterpret_cast<char (*)(Utils::Keys key1, Utils::Keys unused)>(0x576410);
+    func(key, key);
+}
+
+void KeyManager::ToggleAllowedKey(Utils::Keys key, bool allow)
+{
+    if (allow)
+    {
+        blockedKeys.erase(std::ranges::begin(std::ranges::remove(blockedKeys, key)), std::end(blockedKeys));
+    }
+    else
+    {
+        blockedKeys.emplace_back(key);
     }
 }
 

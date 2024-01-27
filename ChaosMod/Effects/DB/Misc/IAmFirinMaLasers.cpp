@@ -1,74 +1,53 @@
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "Systems/KeyManager.hpp"
 
 class IAmFiringMyLasers final : public ActiveEffect
 {
-        typedef void*(__fastcall* UnkClassType)(void* ptr, void* edx, CELauncher* launcher, void* unk);
-        inline static std::unique_ptr<FunctionDetour<UnkClassType>> detour;
-        inline static std::map<CELauncher*, void*> weirdFreelancerClassMap;
-
-        static void* __fastcall Detour(void* ptr, void* edx, CELauncher* launcher, void* unk)
+        const std::array<Utils::Keys, 16> bannedKeys = { Utils::USER_FIRE_WEAPON1,
+                                                         Utils::USER_FIRE_WEAPON2,           Utils::USER_FIRE_WEAPON3,
+                                                         Utils::USER_FIRE_WEAPON4,           Utils::USER_FIRE_WEAPON5,
+                                                         Utils::USER_FIRE_WEAPON6,           Utils::USER_FIRE_WEAPON7,
+                                                         Utils::USER_FIRE_WEAPON8,           Utils::USER_FIRE_WEAPON9,
+                                                         Utils::USER_FIRE_WEAPON10,          Utils::USER_FIRE_FORWARD,
+                                                         Utils::USER_LAUNCH_COUNTERMEASURES, Utils::USER_LAUNCH_CRUISE_DISRUPTORS,
+                                                         Utils::USER_LAUNCH_MINES,           Utils::USER_LAUNCH_MISSILES,
+                                                         Utils::USER_LAUNCH_TORPEDOS };
+        void Begin() override
         {
-            detour->UnDetour();
-            const auto result = detour->GetOriginalFunc()(ptr, edx, launcher, unk);
-            detour->Detour(Detour);
-            weirdFreelancerClassMap[launcher] = result;
-            return result;
+            for (const auto key : bannedKeys)
+            {
+                KeyManager::i()->ToggleAllowedKey(key, false);
+            }
+        }
+
+        void End() override
+        {
+            for (const auto key : bannedKeys)
+            {
+                KeyManager::i()->ToggleAllowedKey(key, true);
+            }
         }
 
         void Update(float delta) override
         {
-            if (CShip* ship = Utils::GetCShip())
+            CShip* ship = Utils::GetCShip();
+            if (!ship)
             {
-                CEquipTraverser tr;
-                CEquip* equip = GetEquipManager(ship)->Traverse(tr);
-                while (equip)
-                {
-                    EquipDesc e;
-                    equip->GetEquipDesc(e);
-                    if (CEGun::cast(equip))
-                    {
-                        const auto launcher = CEGun::cast(equip);
-
-                        const auto range = launcher->GetMunitionRange();
-                        Vector target = launcher->GetBarrelDirWS(0);
-                        const auto pos = launcher->GetBarrelPosWS(0);
-                        target += range;
-                        target = target + pos;
-
-                        if (!launcher->RefireDelayElapsed() || launcher->CanFire(target) != FireResult::Success)
-                        {
-                            equip = GetEquipManager(ship)->Traverse(tr);
-                            continue;
-                        }
-
-                        void* randClass = weirdFreelancerClassMap[launcher];
-
-                        auto ar = launcher->ProjectileArch();
-
-                        typedef DWORD(__fastcall * FireFunctionType)(void* thing, void* edx, Vector& vec);
-                        const auto fireFunc = static_cast<FireFunctionType>((*static_cast<void***>(randClass))[3]);
-                        fireFunc(randClass, nullptr, target);
-
-                        if (const auto fireSfx = reinterpret_cast<PDWORD>(*reinterpret_cast<PDWORD>(reinterpret_cast<DWORD>(ar) + 0x4) + 0x5C))
-                        {
-                            pub::Audio::PlaySoundEffect(1, *fireSfx);
-                        }
-                    }
-
-                    equip = GetEquipManager(ship)->Traverse(tr);
-                }
+                return;
             }
+
+            INPUT inputs[1];
+
+            inputs[0].type = INPUT_MOUSE;
+            inputs[0].mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+
+            SendInput(1, inputs, sizeof(INPUT));
         }
 
     public:
-        explicit IAmFiringMyLasers(const EffectInfo& info) : ActiveEffect(info)
-        {
-            detour = std::make_unique<FunctionDetour<UnkClassType>>(reinterpret_cast<UnkClassType>(0x52D880));
-            detour->Detour(Detour);
-            weirdFreelancerClassMap.clear();
-        }
+        explicit IAmFiringMyLasers(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off
