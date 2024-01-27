@@ -28,6 +28,7 @@ class JellyTime final : public ActiveEffect
                                    .WithLevel(25)
                                    .WithReputation("fc_n_grp")
                                    .WithName(237039)
+                                   .WithFuse("chaos_teleport_fx")
                                    .Spawn();
                     npc.Acquire())
                 {
@@ -44,6 +45,7 @@ class JellyTime final : public ActiveEffect
                                    .WithLevel(25)
                                    .WithReputation("fc_n_grp")
                                    .WithName(237040)
+                                   .WithFuse("chaos_teleport_fx")
                                    .Spawn();
                     npc.Acquire())
                 {

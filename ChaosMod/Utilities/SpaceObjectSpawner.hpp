@@ -53,6 +53,7 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
                 SpaceObjectBuilder& WithReputation(const std::string& rep);
                 SpaceObjectBuilder& WithReputation(uint affiliation);
                 SpaceObjectBuilder& WithDockTo(uint base);
+                SpaceObjectBuilder& WithFuse(const std::string& fuse);
 
                 SpaceObjectBuilder& AsSolar();
                 SpaceObjectBuilder& AsNpc();
@@ -73,6 +74,7 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
                 std::optional<std::pair<uint, uint>> name;
                 std::optional<uint> dockTo;
                 std::optional<std::pair<FmtStr&, FmtStr&>> names;
+                std::optional<std::string> fuse;
 
                 std::array<uint, 21> defaultNames = { 197808u, 197809u, 197810u, 197811u, 197812u, 197813u, 197814u, 197815u, 197816u, 197817u, 197818u,
                                                       197819u, 197820u, 197821u, 197822u, 197823u, 197824u, 197825u, 197826u, 197827u, 197828 };

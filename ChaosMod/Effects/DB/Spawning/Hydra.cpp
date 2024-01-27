@@ -44,7 +44,8 @@ class Hydra final : public ActiveEffect
                                .WithReputation(affiliation)
                                .WithPersonality(personality)
                                .WithName(name1, name2)
-                               .WithLevel(npc->level);
+                               .WithLevel(npc->level)
+                               .WithFuse("chaos_teleport_fx");
 
             auto head1 = builder.Spawn().Acquire();
             auto head2 = builder.Spawn().Acquire();

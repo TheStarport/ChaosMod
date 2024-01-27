@@ -23,6 +23,7 @@ class SpawnExtremeJesus final : public ActiveEffect
                         .WithLevel(50)
                         .WithPersonality("pilot_military_ace")
                         .WithReputation("chaos_jesus")
+                        .WithFuse("chaos_teleport_fx")
                         .WithName(458758)
                         .Spawn();
 

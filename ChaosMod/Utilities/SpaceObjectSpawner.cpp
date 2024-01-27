@@ -163,6 +163,12 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
     return *this;
 }
 
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithFuse(const std::string& fuse)
+{
+    this->fuse = fuse;
+    return *this;
+}
+
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::AsSolar()
 {
     isNpc = false;
@@ -181,12 +187,18 @@ ResourcePtr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
 
     static const auto validateExisting = [](const std::shared_ptr<SpawnedObject>& obj) { return pub::SpaceObj::ExistsAndAlive(obj->spaceObj) != -2; };
 
-    if (isNpc)
+    using T = ResourcePtr<SpawnedObject>;
+    auto response = isNpc ? T{ SpawnNpc(), validateExisting } : T{ SpawnSolar(), validateExisting };
+
+    if (fuse.has_value())
     {
-        return { SpawnNpc(), validateExisting };
+        if (const auto obj = response.Acquire())
+        {
+            Utils::LightFuse(Utils::GetInspect(obj->spaceObj), CreateID(fuse.value().c_str()), 0.0f, 5.0f, 0.0f);
+        }
     }
 
-    return { SpawnSolar(), validateExisting };
+    return response;
 }
 
 std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
@@ -327,9 +339,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     }
 
     uint spaceObj = 0;
-    auto ret = pub::SpaceObj::Create(spaceObj, si);
-
-    Log(std::to_string(ret));
+    pub::SpaceObj::Create(spaceObj, si);
 
     if (!spaceObj)
     {

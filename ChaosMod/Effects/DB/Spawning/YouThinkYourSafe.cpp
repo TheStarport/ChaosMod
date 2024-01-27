@@ -29,6 +29,7 @@ class YouThinkYourSafe final : public ActiveEffect
                                    .WithLevel(25)
                                    .WithReputation("li_lsf_grp")
                                    .WithName(458806)
+                                   .WithFuse("chaos_teleport_fx")
                                    .Spawn();
                     npc.Acquire())
                 {

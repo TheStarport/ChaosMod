@@ -23,6 +23,7 @@ class SpawnBigBertha final : public ActiveEffect
                          .WithLevel(50)
                          .WithPersonality("gunboat_default")
                          .WithReputation("gd_gm_grp")
+                         .WithFuse("chaos_teleport_fx")
                          .WithName(458754)
                          .Spawn();
 
