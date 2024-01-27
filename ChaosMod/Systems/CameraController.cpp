@@ -6,11 +6,12 @@ std::unique_ptr<FunctionDetour<CameraController::CameraCall>> CameraController::
 std::unique_ptr<FunctionDetour<CameraController::CameraCall>> CameraController::turretCameraDetour;
 std::unique_ptr<FunctionDetour<CameraController::CameraCall>> CameraController::cockpitCameraDetour;
 
+// Produces a very nice QUAKE mode
 constexpr float FovRatio = 1.856658f;
 
-std::optional<std::pair<float, float>> fovChase;
-std::optional<std::pair<float, float>> fovTurret;
-std::optional<std::pair<float, float>> fovCockpit;
+std::optional<Camera> fovChase;
+std::optional<Camera> fovTurret;
+std::optional<Camera> fovCockpit;
 
 int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float interval)
 {
@@ -19,9 +20,7 @@ int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float in
     {
         if (!fovChase.has_value())
         {
-            fovChase = {
-                {camera->fovX, camera->fovY}
-            };
+            fovChase = *camera;
         }
 
         camera->fovX = in->fovOverride;
@@ -33,13 +32,13 @@ int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float in
     }
     else if (fovChase.has_value())
     {
-        const auto [fovX, fovY] = fovChase.value();
-        camera->fovX = fovX;
-        camera->fovY = fovY;
-        camera->sinFovX = std::sinf(fovX);
-        camera->sinFovY = std::sinf(fovY);
-        camera->cosFovX = std::cosf(fovX);
-        camera->cosFovY = std::cosf(fovY);
+        const auto& replacement = fovChase.value();
+        camera->fovX = replacement.fovX;
+        camera->fovY = replacement.fovY;
+        camera->sinFovX = replacement.sinFovX;
+        camera->sinFovY = replacement.sinFovY;
+        camera->cosFovX = replacement.cosFovX;
+        camera->cosFovY = replacement.cosFovY;
     }
 
     chaseCameraDetour->UnDetour();
@@ -55,9 +54,7 @@ int __fastcall CameraController::TurretCamera(Camera* camera, void* edx, float i
     {
         if (!fovTurret.has_value())
         {
-            fovTurret = {
-                {camera->fovX, camera->fovY}
-            };
+            fovTurret = *camera;
         }
 
         camera->fovX = in->fovOverride;
@@ -69,13 +66,13 @@ int __fastcall CameraController::TurretCamera(Camera* camera, void* edx, float i
     }
     else if (fovTurret.has_value())
     {
-        const auto [fovX, fovY] = fovTurret.value();
-        camera->fovX = fovX;
-        camera->fovY = fovY;
-        camera->sinFovX = std::sinf(fovX);
-        camera->sinFovY = std::sinf(fovY);
-        camera->cosFovX = std::cosf(fovX);
-        camera->cosFovY = std::cosf(fovY);
+        const auto& replacement = fovTurret.value();
+        camera->fovX = replacement.fovX;
+        camera->fovY = replacement.fovY;
+        camera->sinFovX = replacement.sinFovX;
+        camera->sinFovY = replacement.sinFovY;
+        camera->cosFovX = replacement.cosFovX;
+        camera->cosFovY = replacement.cosFovY;
     }
 
     turretCameraDetour->UnDetour();
@@ -91,9 +88,7 @@ int __fastcall CameraController::CockpitCamera(Camera* camera, void* edx, float 
     {
         if (!fovCockpit.has_value())
         {
-            fovCockpit = {
-                {camera->fovX, camera->fovY}
-            };
+            fovCockpit = *camera;
         }
 
         camera->fovX = in->fovOverride;
@@ -105,13 +100,13 @@ int __fastcall CameraController::CockpitCamera(Camera* camera, void* edx, float 
     }
     else if (fovCockpit.has_value())
     {
-        const auto [fovX, fovY] = fovCockpit.value();
-        camera->fovX = fovX;
-        camera->fovY = fovY;
-        camera->sinFovX = std::sinf(fovX);
-        camera->sinFovY = std::sinf(fovY);
-        camera->cosFovX = std::cosf(fovX);
-        camera->cosFovY = std::cosf(fovY);
+        const auto& replacement = fovCockpit.value();
+        camera->fovX = replacement.fovX;
+        camera->fovY = replacement.fovY;
+        camera->sinFovX = replacement.sinFovX;
+        camera->sinFovY = replacement.sinFovY;
+        camera->cosFovX = replacement.cosFovX;
+        camera->cosFovY = replacement.cosFovY;
     }
 
     cockpitCameraDetour->UnDetour();
