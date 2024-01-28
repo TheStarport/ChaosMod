@@ -17,6 +17,24 @@ class BuggyInterface final : public MemoryEffect
         double height = 0.1;
         float time = 1.0f;
         bool goingDown = true;
+        bool ended = false;
+
+        using LockManeuverT = bool(__fastcall*)(IBehaviorManager* bm, void* edx, bool lock);
+        inline static FunctionDetour<LockManeuverT> lockManeuverDetour = FunctionDetour(reinterpret_cast<LockManeuverT>(GetProcAddress(
+            GetModuleHandleA("common.dll"), "?lock_maneuvers@IBehaviorManager@@QAE_N_N@Z"))); // NOLINT(clang-diagnostic-cast-function-type-strict)
+
+        static bool __fastcall LockManeuverDetour(IBehaviorManager* bm, void* edx, bool lock)
+        {
+            if (lock)
+            {
+                HudInterface::i()->SetBuggyInterface(false);
+            }
+
+            lockManeuverDetour.UnDetour();
+            bool res = lockManeuverDetour.GetOriginalFunc()(bm, edx, lock);
+            lockManeuverDetour.Detour(LockManeuverDetour);
+            return res;
+        }
 
     public:
         void Begin() override
@@ -24,6 +42,7 @@ class BuggyInterface final : public MemoryEffect
             width = 1.0;
             height = 0.1;
             goingDown = true;
+            ended = false;
 
             MemoryEffect::Begin();
             auto info = offsets[0];
@@ -66,11 +85,15 @@ class BuggyInterface final : public MemoryEffect
 
         void End() override
         {
-            MemoryEffect::End();
-            HudInterface::i()->SetBuggyInterface(false);
+            if (!ended)
+            {
+                ended = true;
+                MemoryEffect::End();
+                HudInterface::i()->SetBuggyInterface(false);
+            }
         }
 
-        explicit BuggyInterface(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) {}
+        explicit BuggyInterface(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) { lockManeuverDetour.Detour(LockManeuverDetour); }
 };
 
 // clang-format off
