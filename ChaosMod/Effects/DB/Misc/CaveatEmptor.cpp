@@ -43,7 +43,7 @@ class CaveatEmptor final : public ActiveEffect
                 auto external = CAttachedEquip::cast(equip);
                 equip = GetEquipManager(ship)->Traverse(tr);
 
-                if (external->GetParentConnector(true) == ship->dunnoEngineObject1)
+                if (external->GetParentConnector(true) == long(ship->vftable))
                 {
                     continue;
                 }
