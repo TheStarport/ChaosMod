@@ -404,6 +404,10 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(fl + 0x12F217, soundFix1.data(), soundFix1.size());
     MemUtils::WriteProcMem(fl + 0x12F221, soundFix2.data(), soundFix2.size());
 
+    // Allow the player to form on hostiles
+    float newFormationMin = -2.0f;
+    MemUtils::WriteProcMem(common + 0x13F540, &newFormationMin, sizeof(float));
+
     PatchResolution();
 }
 
