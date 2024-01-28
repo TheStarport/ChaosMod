@@ -31,7 +31,7 @@ namespace Utils
 
     IObjInspectImpl* GetInspect(uint shipId)
     {
-        static auto getShipInspect = reinterpret_cast<_GetShipInspect>(reinterpret_cast<DWORD>(GetModuleHandleA("server.dll")) + 0x206C0);
+        static auto getShipInspect = reinterpret_cast<GetShipInspectT>(reinterpret_cast<DWORD>(GetModuleHandleA("server.dll")) + 0x206C0);
 
         uint iDunno;
         IObjInspectImpl* inspect;
