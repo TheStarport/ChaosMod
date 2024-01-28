@@ -398,6 +398,12 @@ void RequiredMemEdits()
     int missileFlag = 15;
     MemUtils::WriteProcMem(content + 0x0F20F0, &missileFlag, sizeof(int));
 
+    // Fix sounds not playing on negative thrust
+    std::array<byte, 6> soundFix1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xe4, 0x08 };
+    std::array<byte, 1> soundFix2 = { 0x00 };
+    MemUtils::WriteProcMem(fl + 0x12F217, soundFix1.data(), soundFix1.size());
+    MemUtils::WriteProcMem(fl + 0x12F221, soundFix2.data(), soundFix2.size());
+
     PatchResolution();
 }
 
