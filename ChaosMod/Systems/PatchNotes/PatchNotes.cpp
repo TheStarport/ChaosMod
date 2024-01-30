@@ -67,7 +67,7 @@ void PatchNotes::LoadPatches()
 void PatchNotes::SavePatches() const
 {
     using namespace nlohmann;
-    const auto json = json::array();
+    auto json = json::array();
     for (const auto& patch : availablePatches)
     {
         auto obj = json::object();
@@ -80,6 +80,7 @@ void PatchNotes::SavePatches() const
         }
 
         obj["changes"] = changes;
+        json.push_back(obj);
     }
 
     std::string path;

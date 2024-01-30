@@ -5,6 +5,8 @@
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
 
+#include "Effects/AddressTable.hpp"
+#include "ImguiComponents/ImGuiManager.hpp"
 #include "PatchNotes/PatchNotes.hpp"
 #include "UiManager.hpp"
 
@@ -354,7 +356,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    UiManager::i()->UpdateProgressBar(currentTime / ConfigManager::i()->timeBetweenChaos);
+    ImGuiManager::SetProgressBarPercentage(currentTime / ConfigManager::i()->timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);

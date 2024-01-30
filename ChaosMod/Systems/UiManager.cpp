@@ -4,7 +4,6 @@
 #include "UiManager.hpp"
 
 #include "ConfigManager.hpp"
-#include "ImGuiHelpers/ImGuiDX9.hpp"
 #include "ImGuiHelpers/ImGuiWin32.hpp"
 #include "imgui/imgui_internal.h"
 
@@ -16,13 +15,13 @@
 
 // Very hacky way to stop reshade from polluting ImGui
 #define RESHADE_API_LIBRARY_EXPORT
+#include "ImGuiHelpers/ImGuiDX9.hpp"
+#include "ImguiComponents/ImGuiManager.hpp"
 #include "ReshadeManager.hpp"
 #undef RESHADE_API_LIBRARY_EXPORT
 
 typedef LRESULT(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
 FunctionDetour wndProcDetour(reinterpret_cast<OriginalWndProc>(0x5B2570));
-
-std::map<UiManager::Font, ImFont*> UiManager::loadedFonts;
 
 LRESULT __stdcall UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
 {
@@ -77,9 +76,9 @@ void UiManager::HandleInput()
     io.AddMouseButtonEvent(x1, mouse4Down);
     io.AddMouseButtonEvent(x2, mouse5Down);
 
-    if (GetAsyncKeyState(VK_F5) && !debugLog.show)
+    if (GetAsyncKeyState(VK_F5))
     {
-        ToggleDebugConsole();
+        ImGuiManager::ShowDebugConsole();
     }
 }
 
@@ -264,8 +263,8 @@ void UiManager::LoadCursors()
     }
     catch (std::exception& ex)
     {
-        std::string what = ex.what();
-        DebugLog(what);
+        const std::string what = ex.what();
+        Log(what);
     }
 }
 
@@ -290,19 +289,7 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     io.IniFilename = ini.c_str();
     io.LogFilename = log.c_str();
 
-    const auto font = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 28);
-    if (!font)
-    {
-        Log("Unable to load custom fonts!");
-        return;
-    }
-
-    loadedFonts[Font::TitiliumWeb] = font;
-    loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 42);
-    loadedFonts[Font::TitiliumWebBold] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 28);
-    loadedFonts[Font::TitiliumWebBoldLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 42);
-
-    io.Fonts->Build();
+    ImGuiManager::Init();
 
     // Use a more orange theme
     auto& style = ImGui::GetStyle();
@@ -330,63 +317,5 @@ void UiManager::Render()
 {
     HandleInput();
 
-    ImGui_ImplDX9_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-
-    ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiKey_Tab, ImGuiKeyOwner_None);
-    ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiMod_Shift | ImGuiKey_Tab, ImGuiKeyOwner_None);
-    ImGui::SetShortcutRouting(ImGuiKey_Tab, ImGuiKeyOwner_None);
-    ImGui::NewFrame();
-
-    ImGui::PushFont(loadedFonts.begin()->second);
-
-    debugLog.Render();
-    optionText.Render();
-    progressBar.Render();
-    activeEffectsText.Render();
-    scrollingCredits.Render();
-
-#ifdef _DEBUG
-    ImGui::ShowDemoWindow();
-#endif
-
-    ImGui::PopFont();
-
-    ImGui::EndFrame();
-
-    ImGui::Render();
-    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-}
-
-void UiManager::ToggleDebugConsole() { debugLog.show = !debugLog.show; }
-
-void UiManager::DebugLog(const std::string& log)
-{
-    debugLog.Log(log);
-
-    static char path[MAX_PATH];
-    GetUserDataPath(path);
-    static std::ofstream file(std::format("{}/chaos.log", path), std::ios::beg | std::ios::trunc);
-
-    auto now = std::chrono::system_clock::now();
-    file << std::format("{0:%F_%T}: ", now) << log << std::endl;
-}
-void UiManager::SetVotingChoices(const std::vector<std::string>& choices) { optionText.SetOptions(choices); }
-void UiManager::UpdateProgressBar(const float progressPercentage) { progressBar.SetProgressPercentage(progressPercentage); }
-
-ImFont* UiManager::GetFont(const Font font)
-{
-    if (loadedFonts.empty())
-    {
-        // Return default if failed to load
-        return ImGui::GetFont();
-    }
-
-    const auto iter = loadedFonts.find(font);
-    if (iter == loadedFonts.end())
-    {
-        return nullptr;
-    }
-
-    return iter->second;
+    ImGuiManager::Render();
 }

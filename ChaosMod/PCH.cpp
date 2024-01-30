@@ -1,8 +1,18 @@
 #include "PCH.hpp"
 
-#include "Systems/UiManager.hpp"
+#include "Systems/ImguiComponents/Debug.hpp"
 
-void Log(const std::string& log) { UiManager::i()->DebugLog(log); }
+void Log(const std::string& log)
+{
+    DebugMenu::Log(log);
+
+    static char path[MAX_PATH];
+    GetUserDataPath(path);
+    static std::ofstream file(std::format("{}/chaos.log", path), std::ios::beg | std::ios::trunc);
+
+    auto now = std::chrono::system_clock::now();
+    file << std::format("{0:%F_%T}: ", now) << log << std::endl;
+}
 void Assert(const bool cond, const std::string& text, const std::string& file, const int line)
 {
     if (!cond)

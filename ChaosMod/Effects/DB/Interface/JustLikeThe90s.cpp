@@ -1,5 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 #include "PCH.hpp"
+
+#include "Effects/ActiveEffect.hpp"
 #include "Systems/UiManager.hpp"
 
 class JustLikeThe90s final : public ActiveEffect

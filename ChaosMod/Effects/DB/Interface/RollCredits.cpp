@@ -3,11 +3,11 @@
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Systems/ImguiComponents/ScrollingCredits.hpp"
+#include "Systems/ImguiComponents/ImGuiManager.hpp"
 
 class RollCredits final : public ActiveEffect
 {
-        void Begin() override { ScrollingCredits::ToggleVisibility(); }
+        void Begin() override { ImGuiManager::StartCredits(); }
 
     public:
         explicit RollCredits(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

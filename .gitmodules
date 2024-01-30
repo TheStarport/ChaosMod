@@ -1,6 +1,3 @@
-[submodule "vendor/imgui-club"]
-	path = vendor/imgui-club
-	url = https://github.com/ocornut/imgui_club.git
 [submodule "vendor/flhook-sdk"]
 	path = vendor/flhook-sdk
 	url = https://github.com/TheStarport/FLHookSDK.git

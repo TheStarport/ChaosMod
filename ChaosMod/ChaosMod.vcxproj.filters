@@ -37,17 +37,8 @@
     <ClCompile Include="Systems\DirectX\InterfaceQuery.cpp">
       <Filter>Systems\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\Debug.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\ChaosTimer.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp">
       <Filter>Systems\ImGuiHelpers</Filter>
@@ -61,9 +52,6 @@
     <ClCompile Include="Effects\MemoryEffect.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\EventManager.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -75,9 +63,6 @@
     </ClCompile>
     <ClCompile Include="Systems\KeyManager.cpp">
       <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ScrollingCredits.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
     <ClCompile Include="Systems\ShipManipulator.cpp">
       <Filter>Systems</Filter>
@@ -130,9 +115,6 @@
     <ClCompile Include="Effects\DB\Audio\SadViolin.cpp">
       <Filter>Effects\DB\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\DB\Visual\CRT.cpp">
       <Filter>Effects\DB\Visual</Filter>
     </ClCompile>
@@ -171,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="Systems\PatchNotes\GunChange.cpp">
       <Filter>Systems\PatchNotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp">
+      <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -578,6 +563,15 @@
     </ClInclude>
     <ClInclude Include="Systems\PatchNotes\Changes.hpp">
       <Filter>Systems\PatchNotes</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\Configurator.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,7 @@
 #pragma once
 
-#include "ImguiComponents/ActiveEffectsText.hpp"
-#include "ImguiComponents/ChaosOptionText.hpp"
 #include "d3d9.h"
-
-#include "ImguiComponents/Debug.hpp"
-#include "ImguiComponents/ProgressBar.hpp"
-#include "ImguiComponents/ScrollingCredits.hpp"
+#include "imgui/imgui_internal.h"
 
 class UiManager final : public Singleton<UiManager>
 {
@@ -31,12 +26,6 @@ class UiManager final : public Singleton<UiManager>
         static bool WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam);
         static bool OnCursorChangeDetour(const char* cursorName, bool hideCursor);
 
-        ChaosOptionText optionText;
-        DebugMenu debugLog;
-        ProgressBar progressBar;
-        ActiveEffectsText activeEffectsText;
-        ScrollingCredits scrollingCredits;
-
     public:
         void OverrideCursor(std::optional<HCURSOR> cursor);
         void SetCursor(std::string str);
@@ -48,24 +37,4 @@ class UiManager final : public Singleton<UiManager>
         static void Setup(LPDIRECT3DDEVICE9 device, HWND window);
 
         void Render();
-
-        void ToggleDebugConsole();
-        void DebugLog(const std::string& log);
-        void SetVotingChoices(const std::vector<std::string>& choices);
-
-        void UpdateProgressBar(float progressPercentage);
-
-        enum class Font
-        {
-            TitiliumWeb,
-            TitiliumWebLarge,
-            TitiliumWebBold,
-            TitiliumWebBoldLarge,
-        };
-
-    private:
-        static std::map<Font, ImFont*> loadedFonts;
-
-    public:
-        static ImFont* GetFont(Font font);
 };

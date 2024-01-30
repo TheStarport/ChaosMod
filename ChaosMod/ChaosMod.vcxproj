@@ -298,12 +298,7 @@
     <ClCompile Include="Systems\GameEvents\OnHit.cpp" />
     <ClCompile Include="Systems\GameEvents\OnSound.cpp" />
     <ClCompile Include="Systems\HudInterface.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\ActiveEffectsText.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\EffectToggler.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\ChaosOptionText.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\Debug.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\ProgressBar.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\ScrollingCredits.cpp" />
+    <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
@@ -358,9 +353,12 @@
     <ClInclude Include="Systems\HudComponents\TWire.hpp" />
     <ClInclude Include="Systems\HudInterface.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\Configurator.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp" />
     <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
