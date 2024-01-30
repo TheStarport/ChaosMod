@@ -75,17 +75,6 @@ class SprechenSieDeutsch final : public ActiveEffect
             return { dllMap[currentLang].at(index), index };
         }
 
-        static int LoadCustomIdsName(const uint ids, wchar_t* buffer, int length)
-        {
-            const auto [module, index] = GetModuleByIds(ids);
-            if (!module)
-            {
-                return 0;
-            }
-
-            return LoadStringW(module, ids, buffer, length);
-        }
-
         inline static uint infocardLength = 0;
         inline static std::array<char, 65535> infocardBuffer;
         static char* LoadCustomInfocard(uint ids)
@@ -200,8 +189,31 @@ class SprechenSieDeutsch final : public ActiveEffect
         }
 
     public:
+        static int LoadCustomIdsName(const uint ids, wchar_t* buffer, int length)
+        {
+            const auto [module, index] = GetModuleByIds(ids);
+            if (!module)
+            {
+                return 0;
+            }
+
+            return LoadStringW(module, ids, buffer, length);
+        }
+
         explicit SprechenSieDeutsch(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) { LoadLibraries(); }
 };
+
+std::string GetInfocardName(const uint ids)
+{
+    static std::wstring wStr(65525, L'\0');
+
+    int size = SprechenSieDeutsch::LoadCustomIdsName(ids, wStr.data(), static_cast<int>(wStr.capacity()));
+    wStr.reserve(size);
+
+    auto str = StringUtils::wstos(wStr);
+    str.erase(std::ranges::find(str, '\0'), str.end());
+    return str;
+}
 
 constexpr DWORD NakedReturn = 0x57DB25;
 __declspec(naked) void SprechenSieDeutsch::GetIdsInfocardNaked()

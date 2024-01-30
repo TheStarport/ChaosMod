@@ -8,6 +8,7 @@
 #include "Systems/GameEvents/OnSound.hpp"
 #include "Systems/HudInterface.hpp"
 #include "Systems/KeyManager.hpp"
+#include "Systems/PatchNotes/PatchNotes.hpp"
 #include "Systems/ShipManipulator.hpp"
 #include "Systems/SystemComponents/GlobalTimers.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
@@ -77,6 +78,9 @@ void Init()
     ShipManipulator::i();
 
     ChaosTimer::i()->InitEffects();
+
+    PatchNotes notes;
+    notes.GeneratePatch();
 
     OnSound::Detour();
 }

@@ -5,6 +5,7 @@
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
 
+#include "PatchNotes/PatchNotes.hpp"
 #include "UiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -175,12 +176,17 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
 ChaosTimer::ChaosTimer()
 {
+    patchNotes = new PatchNotes();
+    patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes;
+
     auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
     const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
     MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
 }
+
+ChaosTimer::~ChaosTimer() { delete patchNotes; }
 
 void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, const float delay)
 {
@@ -211,6 +217,9 @@ void ChaosTimer::FrameUpdate(const float delta)
 
 void ChaosTimer::InitEffects()
 {
+    // Assets loaded, we can now apply our patches
+    patchNotes->ResetPatches(true);
+
     for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
     {
         effect->Init();
@@ -283,6 +292,17 @@ void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)
     const auto currentShip = Utils::GetCShip();
+
+    if (ConfigManager::i()->enablePatchNotes)
+    {
+        patchTime -= delta;
+        if (patchTime <= 0.0f)
+        {
+            patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes;
+            patchNotes->GeneratePatch();
+        }
+    }
+
     if (!currentShip)
     {
         uint base;

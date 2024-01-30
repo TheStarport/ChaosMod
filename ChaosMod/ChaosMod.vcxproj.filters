@@ -166,6 +166,12 @@
     <ClCompile Include="Effects\DB\Interface\SprechenSieDeutsch.cpp">
       <Filter>Effects\DB\Interface</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\PatchNotes\GunChange.cpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -564,6 +570,15 @@
     <ClInclude Include="Systems\GameEvents\OnSound.hpp">
       <Filter>Systems\GameEvents</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\PatchNotes\PatchNotes.hpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\PatchNotes\Patch.hpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\PatchNotes\Changes.hpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -637,6 +652,9 @@
     </Filter>
     <Filter Include="Vendor\ImGui">
       <UniqueIdentifier>{1c62b564-5150-4818-804a-10025f391b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\PatchNotes">
+      <UniqueIdentifier>{e6ec4d0d-bab2-42c4-9605-3f0468bc1596}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

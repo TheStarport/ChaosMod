@@ -5,6 +5,7 @@
 
 class OnHit;
 class OnSound;
+class PatchNotes;
 class ChaosTimer final : public Singleton<ChaosTimer>
 {
         friend OnHit;
@@ -17,6 +18,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
         static uint OnSoundEffect(uint hash);
 
+        float patchTime = 0.0f;
         float currentTime = 0.0f;
         float modifiers = 1.0f;
         bool doubleTime = false;
@@ -29,9 +31,11 @@ class ChaosTimer final : public Singleton<ChaosTimer>
 
         std::unordered_map<ActiveEffect*, float> activeEffects;
         std::vector<PersistentEffect*> persistentEffects;
+        PatchNotes* patchNotes;
 
     public:
         ChaosTimer();
+        ~ChaosTimer();
         void DelayActiveEffect(ActiveEffect* effect, float delay);
         void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();

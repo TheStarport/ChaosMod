@@ -307,6 +307,8 @@
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
+    <ClCompile Include="Systems\PatchNotes\GunChange.cpp" />
+    <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp" />
     <ClCompile Include="Systems\ReshadeManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
     <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp" />
@@ -364,6 +366,9 @@
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />
+    <ClInclude Include="Systems\PatchNotes\Changes.hpp" />
+    <ClInclude Include="Systems\PatchNotes\Patch.hpp" />
+    <ClInclude Include="Systems\PatchNotes\PatchNotes.hpp" />
     <ClInclude Include="Systems\ReshadeManager.hpp" />
     <ClInclude Include="Systems\ShipManipulator.hpp" />
     <ClInclude Include="Systems\SystemComponents\GlobalTimers.hpp" />

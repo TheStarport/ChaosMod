@@ -159,7 +159,7 @@ void Configurator::Render()
     }
 
     static bool initialized = false;
-    ImGui::BeginDisabled(!config->enableTwitchVoting && !initialized);
+    ImGui::BeginDisabled(!config->enableTwitchVoting || initialized);
     if (ImGui::Button("Initialize Voting Proxy") && TwitchVoting::i()->Initialize())
     {
         initialized = true;
@@ -184,6 +184,25 @@ void Configurator::Render()
     ConfigManager::i()->progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
     ImGui::Checkbox("Show Time Remaining On Effects", &ConfigManager::i()->showTimeRemainingOnEffects);
+
+    ImGui::Separator();
+
+    ImGui::Checkbox("Enable Patch Notes", &ConfigManager::i()->enablePatchNotes);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("'Patch Notes' is a feature where the game will frequently write updates to itself, updating the stats of equipment, ships, NPCs, "
+                          "and everything in between.\n"
+                          "Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
+    }
+
+    ImGui::Checkbox("Count Down On Bases", &ConfigManager::i()->countDownWhileOnBases);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("If enabled the patch timer will not pause while on a base.");
+    }
+
+    ImGui::DragFloat("Time Between Patches (minutes)", &ConfigManager::i()->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
+    if (ImGui::Button("View Patch Notes")) {}
 
     ImGui::End();
 }

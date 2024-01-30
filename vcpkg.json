@@ -23,6 +23,18 @@
         {
             "name": "miniaudio",
             "version>=": "0.11.11"
+        },
+        {
+            "name": "nameof",
+            "version>=": "0.10.3"
+        },
+        {
+            "name": "neargye-semver",
+            "version>=": "0.3.0#1"
+        },
+        {
+            "name": "refl-cpp",
+            "version>=": "0.12.4"
         }
     ]
 }
