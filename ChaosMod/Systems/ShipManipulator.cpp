@@ -2,7 +2,7 @@
 
 #include "ShipManipulator.hpp"
 
-void ShipManipulator::SetAngularVelocity(CObject* object, Vector newVelocity)
+void ShipManipulator::SetAngularVelocity(CObject* object, const Vector& newVelocity)
 {
     const Vector v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);
     const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(object) + 84)) + 152);
@@ -21,14 +21,14 @@ Vector ShipManipulator::GetVelocity(CShip* ship)
     return *reinterpret_cast<Vector*>(ptr + 164);
 }
 
-void ShipManipulator::SetVelocity(CObject* object, Vector newVelocity)
+void ShipManipulator::SetVelocity(CObject* object, const Vector& newVelocity)
 {
     const Vector v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);
     const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(object) + 84)) + 152);
     *reinterpret_cast<Vector*>(ptr + 164) = v;
 }
 
-void ShipManipulator::SetPosition(CObject* object, Vector pos)
+void ShipManipulator::SetPosition(CObject* object, const Vector& pos)
 {
     const Vector v = Vector(pos.x, pos.y, pos.z);
     *reinterpret_cast<Vector*>(PCHAR(object) + 44) = v;
@@ -116,5 +116,5 @@ ShipManipulator::ShipManipulator()
 
 void ShipManipulator::SetPersonalSpace(const bool should) { personalSpace = should; }
 
-void ShipManipulator::OverridePlayerAngularVelocity(const std::optional<Vector> override) { playerAngularVelocityOverride = override; }
+void ShipManipulator::OverridePlayerAngularVelocity(const std::optional<Vector>& override) { playerAngularVelocityOverride = override; }
 void ShipManipulator::MakeShipsSpin(const bool shouldSpin) { spin = shouldSpin; }

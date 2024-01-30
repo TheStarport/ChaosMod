@@ -134,7 +134,7 @@ class ChatConsole : public Singleton<ChatConsole>
             }
         }
 
-        void Print(std::string str, bool flush = false)
+        void Print(const std::string& str, bool flush = false)
         {
             const auto newStr = StringUtils::stows(str);
             Print(newStr, flush);

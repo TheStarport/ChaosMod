@@ -28,7 +28,7 @@ class UiManager final : public Singleton<UiManager>
 
     public:
         void OverrideCursor(std::optional<HCURSOR> cursor);
-        void SetCursor(std::string str);
+        void SetCursor(const std::string& str);
 
         UiManager();
         ~UiManager();

@@ -80,7 +80,7 @@ void Teleporter::SwitchOutDoneHook()
     reinterpret_cast<DisplaySystem>(0x45b490)();
 }
 
-void Teleporter::ChangeSystem(const uint newSystem, const Vector pos, Matrix orient, bool checkTradeLane)
+void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix orient, bool checkTradeLane)
 {
     if (const auto ship = Utils::GetCShip(); ship && checkTradeLane && ship->is_using_tradelane())
     {

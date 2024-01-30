@@ -47,7 +47,7 @@ class Teleporter : public Singleton<Teleporter>
         static void* __stdcall EnterSystemHook(EntryStack* stack);
         static void SwitchOutDoneHook();
 
-        static void ChangeSystem(uint newSystem, Vector pos, Matrix orient, bool checkTradeLane = true);
+        static void ChangeSystem(uint newSystem, const Vector& pos, Matrix orient, bool checkTradeLane = true);
 
     public:
         static void QueueTeleportEffect(float timer = .3f);

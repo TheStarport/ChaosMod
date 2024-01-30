@@ -14,13 +14,13 @@ class ShipManipulator final : public Singleton<ShipManipulator>
         inline static std::unique_ptr<FunctionDetour<OnPhysicsUpdate>> detour;
 
     public:
-        static void SetAngularVelocity(CObject* object, Vector newVelocity);
-        static void SetVelocity(CObject* object, Vector newVelocity);
-        static void SetPosition(CObject* object, Vector pos);
+        static void SetAngularVelocity(CObject* object, const Vector& newVelocity);
+        static void SetVelocity(CObject* object, const Vector& newVelocity);
+        static void SetPosition(CObject* object, const Vector& pos);
 
         ShipManipulator();
 
         void SetPersonalSpace(bool should);
         void MakeShipsSpin(bool shouldSpin);
-        void OverridePlayerAngularVelocity(std::optional<Vector> override);
+        void OverridePlayerAngularVelocity(const std::optional<Vector>& override);
 };

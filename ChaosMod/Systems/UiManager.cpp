@@ -160,7 +160,7 @@ void UiManager::OverrideCursor(const std::optional<HCURSOR> cursor)
     }
 }
 
-void UiManager::SetCursor(const std::string str)
+void UiManager::SetCursor(const std::string& str)
 {
     if (const auto cur = this->mapCursors.find(str); cur != this->mapCursors.end())
     {

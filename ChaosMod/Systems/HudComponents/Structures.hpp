@@ -129,7 +129,7 @@ class TControl
             return *reinterpret_cast<Vector*>(data);
         }
 
-        void SetPosition(const Vector p) const
+        void SetPosition(const Vector& p) const
         {
             const uint data = reinterpret_cast<uint>(this) + 0xA8;
             *reinterpret_cast<Vector*>(data) = p;

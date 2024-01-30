@@ -98,7 +98,7 @@ void PatchNotes::SavePatches() const
     Log(std::format("Saving patch notes: {}", path + "\\patches.json"));
 }
 
-void PatchNotes::RevertPatch(std::shared_ptr<Patch> patch)
+void PatchNotes::RevertPatch(const std::shared_ptr<Patch>& patch)
 {
     patchNotes.pop_back();
 
@@ -140,7 +140,7 @@ void PatchNotes::ResetPatches(const bool reapply)
     }
 }
 
-void PatchNotes::ApplyPatch(std::shared_ptr<Patch> patch)
+void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch)
 {
     appliedPatches.push(patch);
 

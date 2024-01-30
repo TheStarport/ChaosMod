@@ -40,7 +40,7 @@ class PersonalityHelper : public Singleton<PersonalityHelper>
         void LoadMissile(INI_Reader& ini);
         void LoadPilot(INI_Reader& ini);
 
-        void LoadFile(std::string file);
+        void LoadFile(const std::string& file);
 
     public:
         std::optional<const pub::AI::Personality*> Get(const std::string& pilotNickname);

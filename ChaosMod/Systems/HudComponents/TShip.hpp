@@ -13,7 +13,7 @@ class TShip : public TControl
             return value;
         }
 
-        void SetShipViewMatrix(Vector V)
+        void SetShipViewMatrix(const Vector &V)
         {
             uint state = reinterpret_cast<uint>(this) + 0x360;
             *reinterpret_cast<Vector *>(state) = V;

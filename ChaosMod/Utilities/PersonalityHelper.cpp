@@ -1334,7 +1334,7 @@ void PersonalityHelper::LoadPilot(INI_Reader& ini)
     pilots[std::move(nick)] = data;
 }
 
-void PersonalityHelper::LoadFile(std::string file)
+void PersonalityHelper::LoadFile(const std::string& file)
 {
     INI_Reader ini;
     if (!ini.open(file.c_str(), false))
