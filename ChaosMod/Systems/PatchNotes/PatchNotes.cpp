@@ -201,7 +201,7 @@ void PatchNotes::GeneratePatch()
 
     for (auto i = 0u; i < changeCount; ++i)
     {
-        auto type = Random::i()->Uniform(1u, magic_enum::enum_count<ChangeType>());
+        auto type = GetRandomChangeType();
         const auto change = GetChangePtr(static_cast<ChangeType>(type));
 
         change->Generate();
@@ -211,6 +211,19 @@ void PatchNotes::GeneratePatch()
     availablePatches.emplace_back(patch);
     ApplyPatch(patch);
     SavePatches();
+}
+
+ChangeType PatchNotes::GetRandomChangeType()
+{
+    static const std::array effectTypeDistribution = {
+        EquipmentChange<ChangeType::Gun>::GetEffectCount(),      EquipmentChange<ChangeType::Ship>::GetEffectCount(),
+        EquipmentChange<ChangeType::Cm>::GetEffectCount(),       EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Mine>::GetEffectCount(),     EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Thruster>::GetEffectCount(), EquipmentChange<ChangeType::Shield>::GetEffectCount(),
+        EquipmentChange<ChangeType::GunAmmo>::GetEffectCount()
+    };
+
+    return static_cast<ChangeType>(Random::i()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
 }
 
 std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)

@@ -106,7 +106,6 @@ class Change
         virtual void Apply() = 0;
         virtual void Revert() = 0;
         virtual void Generate() = 0;
-        virtual size_t GetEffectCount() = 0;
 
         virtual nlohmann::json ToJson()
         {
@@ -210,51 +209,7 @@ class EquipmentChange : public Change
     public:
         inline static std::vector<uint> possibleEquipment;
 
-        EquipmentChange()
-        {
-            changeType = Type;
-
-            using namespace Archetype;
-
-            if (possibleEquipment.empty())
-            {
-                if constexpr (Type == ChangeType::Ship)
-                {
-                    const auto ships = reinterpret_cast<BinarySearchTree<Ship*>*>(0x63FCAC0);
-                    ships->TraverseTree(
-                        [this](std::pair<uint, Ship*> pair)
-                        {
-                            if (std::ranges::find(ignoredShips, pair.second->archId) != ignoredShips.end())
-                            {
-                                return;
-                            }
-
-                            possibleEquipment.emplace_back(pair.first);
-                        });
-                }
-                else
-                {
-                    const auto goodList = GoodList_get();
-
-                    const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD8);
-                    equipment->TraverseTree(
-                        [this, &goodList](std::pair<uint, Equipment*> pair)
-                        {
-                            if (pair.second->get_class_type() == GetClassType())
-                            {
-                                auto goodId = Arch2Good(pair.second->archId);
-                                auto good = goodList->find_by_id(goodId);
-                                if (!good || good->price == 0.0f)
-                                {
-                                    return;
-                                }
-
-                                possibleEquipment.emplace_back(pair.first);
-                            }
-                        });
-                }
-            }
-        }
+        EquipmentChange() { changeType = Type; }
 
         void Apply() override
         {
@@ -415,6 +370,13 @@ class EquipmentChange : public Change
                 description = std::format("{}: {}   {}  ->  {}", name, newFieldName, *(int*)ptr, i);
                 memcpy_s(newData.data(), newData.size(), &i, 4);
             }
+            else if (type == FieldType::Bool)
+            {
+                *static_cast<bool*>(ptr) = !*static_cast<bool*>(ptr);
+                bool newState = *static_cast<bool*>(ptr);
+                description = std::format("{}: {}   {}  ->  {}", name, newFieldName, !newState, newState);
+                memcpy_s(newData.data(), newData.size(), &newState, 4);
+            }
 
             field = f;
             hash = randomEquipment;
@@ -441,5 +403,50 @@ class EquipmentChange : public Change
             oldData = json["oldData"];
         }
 
-        size_t GetEffectCount() { return possibleEquipment.size(); }
+        static size_t GetEffectCount()
+        {
+            using namespace Archetype;
+
+            if (possibleEquipment.empty())
+            {
+                if constexpr (Type == ChangeType::Ship)
+                {
+                    const auto ships = reinterpret_cast<BinarySearchTree<Ship*>*>(0x63FCAC0);
+                    ships->TraverseTree(
+                        [](std::pair<uint, Ship*> pair)
+                        {
+                            if (std::ranges::find(ignoredShips, pair.second->archId) != ignoredShips.end() || !pair.second->idsName ||
+                                pair.second->maxNanobots == UINT_MAX || pair.second->maxShieldBats == UINT_MAX)
+                            {
+                                return;
+                            }
+
+                            possibleEquipment.emplace_back(pair.first);
+                        });
+                }
+                else
+                {
+                    const auto goodList = GoodList_get();
+
+                    const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD8);
+                    equipment->TraverseTree(
+                        [&goodList](std::pair<uint, Equipment*> pair)
+                        {
+                            if (pair.second->get_class_type() == GetClassType() || !pair.second->idsName)
+                            {
+                                auto goodId = Arch2Good(pair.second->archId);
+                                auto good = goodList->find_by_id(goodId);
+                                if (!good || good->price == 0.0f)
+                                {
+                                    return;
+                                }
+
+                                possibleEquipment.emplace_back(pair.first);
+                            }
+                        });
+                }
+            }
+
+            return possibleEquipment.size();
+        }
 };
