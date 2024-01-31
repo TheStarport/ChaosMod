@@ -49,6 +49,7 @@ LRESULT __stdcall UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM 
 DWORD* mouseX = reinterpret_cast<PDWORD>(0x616840);
 DWORD* mouseY = reinterpret_cast<PDWORD>(0x616844);
 DWORD* mouseStateRaw = reinterpret_cast<PDWORD>(0x616850);
+int* mouseZ = reinterpret_cast<int*>(0x616848);
 
 UiManager::HkMouseState UiManager::ConvertState(const DWORD state)
 {
@@ -65,6 +66,7 @@ void UiManager::HandleInput()
 
     const DWORD xPos = *mouseX;
     const DWORD yPos = *mouseY;
+    const int scroll = *mouseZ;
 
     const auto [leftDown, rightDown, middleDown, mouse4Down, mouse5Down] = ConvertState(*mouseStateRaw);
 
@@ -75,6 +77,11 @@ void UiManager::HandleInput()
     io.AddMouseButtonEvent(middle, middleDown);
     io.AddMouseButtonEvent(x1, mouse4Down);
     io.AddMouseButtonEvent(x2, mouse5Down);
+    if (scroll)
+    {
+        io.AddMouseWheelEvent(0.f, static_cast<float>(scroll));
+        *mouseZ = 0;
+    }
 
     if (GetAsyncKeyState(VK_F5))
     {
