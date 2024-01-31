@@ -98,7 +98,7 @@ void PatchNotes::SavePatches()
 
     std::ofstream file(path + "\\patches.json");
 
-    const std::string jsonStr = json.dump(4);
+    const std::string jsonStr = json.dump();
 
     file << jsonStr << std::endl;
     file.close();
@@ -215,13 +215,17 @@ void PatchNotes::GeneratePatch()
 
 ChangeType PatchNotes::GetRandomChangeType()
 {
+    // MUST MATCH ENUM ORDER
     static const std::array effectTypeDistribution = {
-        EquipmentChange<ChangeType::Gun>::GetEffectCount(),      EquipmentChange<ChangeType::Ship>::GetEffectCount(),
-        EquipmentChange<ChangeType::Cm>::GetEffectCount(),       EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::Mine>::GetEffectCount(),     EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::Thruster>::GetEffectCount(), EquipmentChange<ChangeType::Shield>::GetEffectCount(),
-        EquipmentChange<ChangeType::GunAmmo>::GetEffectCount()
+        EquipmentChange<ChangeType::Gun>::GetEffectCount(),    EquipmentChange<ChangeType::GunAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::GunMotor>::GetEffectCount(),    EquipmentChange<ChangeType::GunExplosion>::GetEffectCount(),
+        EquipmentChange<ChangeType::Shield>::GetEffectCount(), EquipmentChange<ChangeType::Thruster>::GetEffectCount(),
+        EquipmentChange<ChangeType::Mine>::GetEffectCount(),   EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Cm>::GetEffectCount(),     EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Ship>::GetEffectCount(),
     };
+
+    static std::map<ChangeType, int> counts;
 
     return static_cast<ChangeType>(Random::i()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
 }
@@ -259,6 +263,12 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
             break;
         case ChangeType::GunAmmo: 
             change = std::make_shared<EquipmentChange<ChangeType::GunAmmo>>();
+            break;
+        case ChangeType::GunExplosion:
+            change = std::make_shared<EquipmentChange<ChangeType::GunExplosion>>();
+            break;
+        case ChangeType::GunMotor:
+            change = std::make_shared<EquipmentChange<ChangeType::GunMotor>>();
             break;
         default:   // NOLINT(clang-diagnostic-covered-switch-default)
             ASSERT(false, "Invalid type provided in change log.");
