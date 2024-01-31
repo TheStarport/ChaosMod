@@ -79,8 +79,10 @@ void Init()
 
     ChaosTimer::i()->InitEffects();
 
-    PatchNotes notes;
-    notes.GeneratePatch();
+    for (int i = 0; i < 50; i++)
+    {
+        PatchNotes::GeneratePatch();
+    }
 
     OnSound::Detour();
 }

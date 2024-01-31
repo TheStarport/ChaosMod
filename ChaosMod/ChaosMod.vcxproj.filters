@@ -151,9 +151,6 @@
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp">
       <Filter>Systems\PatchNotes</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\PatchNotes\GunChange.cpp">
-      <Filter>Systems\PatchNotes</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
@@ -571,6 +568,9 @@
       <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp">
+      <Filter>Systems\ImguiComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImguiComponents\PatchNotesWindow.hpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
   </ItemGroup>

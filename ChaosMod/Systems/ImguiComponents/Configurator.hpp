@@ -1,6 +1,8 @@
 #pragma once
 
+#include "ImGuiManager.hpp"
 #include "Systems/ConfigManager.hpp"
+#include "Systems/PatchNotes/PatchNotes.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "imgui/imgui.h"
 
@@ -120,7 +122,22 @@ class Configurator final
             }
 
             ImGui::DragFloat("Time Between Patches (minutes)", &ConfigManager::i()->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
-            if (ImGui::Button("View Patch Notes")) {}
+            if (ImGui::Button("View Patch Notes"))
+            {
+                ImGuiManager::ShowPatchNotes();
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("DEV: Generate New Patch"))
+            {
+                PatchNotes::GeneratePatch();
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("DEV: Reset Patches"))
+            {
+                PatchNotes::ResetPatches(false, true);
+            }
 
             ImGui::End();
         }

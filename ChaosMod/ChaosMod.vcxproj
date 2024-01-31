@@ -302,7 +302,6 @@
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
-    <ClCompile Include="Systems\PatchNotes\GunChange.cpp" />
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp" />
     <ClCompile Include="Systems\ReshadeManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
@@ -359,6 +358,7 @@
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp" />
+    <ClInclude Include="Systems\ImguiComponents\PatchNotesWindow.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp" />
     <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />

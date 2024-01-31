@@ -146,7 +146,7 @@ bool UiManager::OnCursorChangeDetour(const char* cursorName, bool hideCursor)
     }
 
     curCursor = name;
-    UiManager::i()->SetCursor(name);
+    i()->SetCursor(name);
     return true;
 }
 

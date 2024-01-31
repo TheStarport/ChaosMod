@@ -2,10 +2,20 @@
 
 #include "PatchNotes.hpp"
 
+#include "Systems/ImguiComponents/ImGuiManager.hpp"
+
 #include <magic_enum.hpp>
 #include <nlohmann/json.hpp>
 
 #include <neargye/semver.hpp>
+
+const std::vector<std::string> ReleaseNouns = {
+#include "Nouns.txt"
+};
+
+const std::vector<std::string> ReleaseAdjectives = {
+#include "Adjectives.txt"
+};
 
 void PatchNotes::LoadPatches()
 {
@@ -27,9 +37,7 @@ void PatchNotes::LoadPatches()
         {
             try
             {
-                ResetPatches(false);
-                availablePatches.clear();
-                patchNotes.clear();
+                ResetPatches(false, true);
 
                 const auto json = nlohmann::json::parse(content);
                 ASSERT(json.is_array(), "Patch notes must be an array.");
@@ -64,7 +72,7 @@ void PatchNotes::LoadPatches()
     }
 }
 
-void PatchNotes::SavePatches() const
+void PatchNotes::SavePatches()
 {
     using namespace nlohmann;
     auto json = json::array();
@@ -110,25 +118,22 @@ void PatchNotes::RevertPatch(const std::shared_ptr<Patch>& patch)
     appliedPatches.pop();
 }
 
-std::string_view PatchNotes::GetPatchNotes() const
-{
-    static std::string str;
-    str.clear();
+std::vector<PatchNotes::StringPatch>& PatchNotes::GetPatchNotes() { return patchNotes; }
 
-    for (const auto& patch : patchNotes)
-    {
-        str += patch;
-    }
-
-    return str;
-}
-
-void PatchNotes::ResetPatches(const bool reapply)
+void PatchNotes::ResetPatches(const bool reapply, bool clean)
 {
     while (!appliedPatches.empty())
     {
         const auto patch = appliedPatches.top();
         RevertPatch(patch);
+    }
+
+    if (clean)
+    {
+        availablePatches.clear();
+        patchNotes.clear();
+        SavePatches();
+        return;
     }
 
     if (reapply)
@@ -144,20 +149,24 @@ void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch)
 {
     appliedPatches.push(patch);
 
-    std::string note;
+    std::vector<std::string> notes;
     for (const auto& change : patch->changes)
     {
-        note += change->description + "\n";
+        notes.emplace_back(change->description);
         change->Apply();
     }
 
-    patchNotes.emplace_back(note);
+    std::chrono::sys_time time{ std::chrono::seconds{ patch->date } };
+    patchNotes.emplace_back(patch->version, std::format("{0:%Y-%m-%d %H:%M:%S}", time), notes, patch->releaseName);
+
+    ImGuiManager::ShowPatchNotes();
 }
 
 void PatchNotes::GeneratePatch()
 {
-    auto changeCount = Random::i()->Uniform(2u, 10u);
+    uint changeCount;
 
+    auto patch = std::make_shared<Patch>();
     semver::version lastVersion{ "1.0.0" };
     if (!availablePatches.empty())
     {
@@ -165,24 +174,28 @@ void PatchNotes::GeneratePatch()
         lastVersion = semver::from_string(lastPatch->version);
     }
 
-    const auto versionIncrement = Random::i()->Uniform(1u, 30u);
-    if (versionIncrement < 25 && lastVersion.patch != 255)
+    const auto versionIncrement = Random::i()->Uniform(1u, 20u);
+    if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;
+        changeCount = Random::i()->Uniform(5u, 10u);
     }
-    else if (versionIncrement < 30 && lastVersion.minor != 255)
+    else if (versionIncrement < 20 && lastVersion.minor != 255)
     {
         lastVersion.minor++;
         lastVersion.patch = 0;
+        changeCount = Random::i()->Uniform(15u, 25u);
     }
     else
     {
         lastVersion.patch = 0;
         lastVersion.minor = 0;
         lastVersion.major++;
+        changeCount = 50;
+        patch->releaseName = std::format(
+            "{} {}", ReleaseAdjectives[Random::i()->Uniform(0u, ReleaseAdjectives.size())], ReleaseNouns[Random::i()->Uniform(0u, ReleaseNouns.size())]);
     }
 
-    auto patch = std::make_shared<Patch>();
     patch->version = lastVersion.to_string();
     patch->date = TimeUtils::UnixTime<std::chrono::seconds>();
 
@@ -208,7 +221,31 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
     switch (type)
     {
         case ChangeType::Gun: 
-            change = std::make_shared<GunChange>();
+            change = std::make_shared<EquipmentChange<ChangeType::Gun>>();
+            break;
+        case ChangeType::Ship: 
+            change = std::make_shared<EquipmentChange<ChangeType::Ship>>();
+            break;
+        case ChangeType::Cm: 
+            change = std::make_shared<EquipmentChange<ChangeType::Cm>>();
+            break;
+        case ChangeType::CmAmmo: 
+            change = std::make_shared<EquipmentChange<ChangeType::CmAmmo>>();
+            break;
+        case ChangeType::Mine: 
+            change = std::make_shared<EquipmentChange<ChangeType::Mine>>();
+            break;
+        case ChangeType::MineAmmo: 
+            change = std::make_shared<EquipmentChange<ChangeType::MineAmmo>>();
+            break;
+        case ChangeType::Thruster: 
+            change = std::make_shared<EquipmentChange<ChangeType::Thruster>>();
+            break;
+        case ChangeType::Shield: 
+            change = std::make_shared<EquipmentChange<ChangeType::Shield>>();
+            break;
+        case ChangeType::GunAmmo: 
+            change = std::make_shared<EquipmentChange<ChangeType::GunAmmo>>();
             break;
         default:   // NOLINT(clang-diagnostic-covered-switch-default)
             ASSERT(false, "Invalid type provided in change log.");
@@ -217,5 +254,3 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
 
     return change;
 }
-
-PatchNotes::PatchNotes() { LoadPatches(); }

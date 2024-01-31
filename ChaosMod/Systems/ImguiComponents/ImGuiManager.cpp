@@ -14,6 +14,7 @@
 #include "../ImGuiHelpers/ImGuiWin32.hpp"
 
 #include "Debug.hpp"
+#include "PatchNotesWindow.hpp"
 #include "imgui/imgui_internal.h"
 
 void ImGuiManager::Init()
@@ -51,6 +52,7 @@ void ImGuiManager::ShowConfigurator() { Configurator::show = true; }
 void ImGuiManager::ShowEffectSelector() { EffectSelector::show = true; }
 void ImGuiManager::ShowEffectToggler() { EffectToggler::show = true; }
 void ImGuiManager::ShowDebugConsole() { DebugMenu::show = true; }
+void ImGuiManager::ShowPatchNotes() { PatchNotesWindow::show = true; }
 void ImGuiManager::StartCredits()
 {
     ScrollingCredits::scrollAmount = 0.0f;
@@ -80,6 +82,7 @@ void ImGuiManager::Render()
     ChaosOptionText::Render();
     ActiveEffectsText::Render();
     DebugMenu::Render();
+    PatchNotesWindow::Render();
 
 #ifdef _DEBUG
     ImGui::ShowDemoWindow();

@@ -41,7 +41,6 @@ class DebugMenu final
             ImGui::SameLine();
             filter.Draw("Filter", -100.0f);
 
-            ImGui::SameLine();
             if (ImGui::Button("Open Configurator"))
             {
                 ImGuiManager::ShowConfigurator();

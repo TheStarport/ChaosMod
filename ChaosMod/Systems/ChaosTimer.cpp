@@ -179,7 +179,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 ChaosTimer::ChaosTimer()
 {
     patchNotes = new PatchNotes();
-    patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes;
+    patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes * 60;
 
     auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
@@ -220,7 +220,7 @@ void ChaosTimer::FrameUpdate(const float delta)
 void ChaosTimer::InitEffects()
 {
     // Assets loaded, we can now apply our patches
-    patchNotes->ResetPatches(true);
+    PatchNotes::ResetPatches(true, false);
 
     for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
     {
@@ -295,13 +295,14 @@ void ChaosTimer::Update(const float delta)
     // If they don't have a ship lets not do chaos (aka are they in space?)
     const auto currentShip = Utils::GetCShip();
 
-    if (ConfigManager::i()->enablePatchNotes)
+    // Check that the game is not paused and patch notes are enabled
+    if (ConfigManager::i()->enablePatchNotes && *PDWORD(0x667D54) == 0 && (ConfigManager::i()->countDownWhileOnBases || currentShip))
     {
         patchTime -= delta;
         if (patchTime <= 0.0f)
         {
-            patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes;
-            patchNotes->GeneratePatch();
+            patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes * 60;
+            PatchNotes::GeneratePatch();
         }
     }
 

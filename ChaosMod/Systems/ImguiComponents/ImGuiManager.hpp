@@ -26,6 +26,7 @@ class ImGuiManager
         static void ShowEffectSelector();
         static void ShowEffectToggler();
         static void ShowDebugConsole();
+        static void ShowPatchNotes();
         static void StartCredits();
         static void StopCredits();
         static void ToggleBoxOfChocolates(bool state);
