@@ -217,12 +217,12 @@ ChangeType PatchNotes::GetRandomChangeType()
 {
     // MUST MATCH ENUM ORDER
     static const std::array effectTypeDistribution = {
-        EquipmentChange<ChangeType::Gun>::GetEffectCount(),    EquipmentChange<ChangeType::GunAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::GunMotor>::GetEffectCount(),    EquipmentChange<ChangeType::GunExplosion>::GetEffectCount(),
-        EquipmentChange<ChangeType::Shield>::GetEffectCount(), EquipmentChange<ChangeType::Thruster>::GetEffectCount(),
-        EquipmentChange<ChangeType::Mine>::GetEffectCount(),   EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::Cm>::GetEffectCount(),     EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::Ship>::GetEffectCount(),
+        EquipmentChange<ChangeType::Gun>::GetEffectCount(),      EquipmentChange<ChangeType::GunAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::GunMotor>::GetEffectCount(), EquipmentChange<ChangeType::GunExplosion>::GetEffectCount(),
+        EquipmentChange<ChangeType::Shield>::GetEffectCount(),   EquipmentChange<ChangeType::Thruster>::GetEffectCount(),
+        EquipmentChange<ChangeType::Mine>::GetEffectCount(),     EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Cm>::GetEffectCount(),       EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
+        EquipmentChange<ChangeType::Ship>::GetEffectCount(),     CurrencyChange::GetEffectCount(),
     };
 
     static std::map<ChangeType, int> counts;
@@ -269,6 +269,9 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
             break;
         case ChangeType::GunMotor:
             change = std::make_shared<EquipmentChange<ChangeType::GunMotor>>();
+            break;
+        case ChangeType::Currency:
+            change = std::make_shared<CurrencyChange>();
             break;
         default:   // NOLINT(clang-diagnostic-covered-switch-default)
             ASSERT(false, "Invalid type provided in change log.");

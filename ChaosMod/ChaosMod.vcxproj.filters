@@ -154,6 +154,9 @@
     <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\PatchNotes\CurrencyChange.cpp">
+      <Filter>Systems\PatchNotes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

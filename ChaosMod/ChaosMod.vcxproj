@@ -302,6 +302,7 @@
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
     <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
+    <ClCompile Include="Systems\PatchNotes\CurrencyChange.cpp" />
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp" />
     <ClCompile Include="Systems\ReshadeManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />

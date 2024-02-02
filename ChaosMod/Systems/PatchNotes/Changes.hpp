@@ -16,7 +16,7 @@ enum class ChangeType
     Cm,
     CmAmmo,
     Ship,
-    // Currency,
+    Currency,
     // Constant,
     // Music
 };
@@ -127,6 +127,24 @@ class Change
             changeType = json["type"];
             description = json["description"];
         }
+};
+
+class CurrencyChange : public Change
+{
+        uint goodHash = 0;
+        float newPrice = 0.f;
+        float oldPrice = 0.f;
+
+        inline static std::vector<uint> possibleGoods;
+
+    public:
+        void Apply() override;
+        void Revert() override;
+        void Generate() override;
+        nlohmann::json ToJson() override;
+        void FromJson(nlohmann::basic_json<> json) override;
+
+        static size_t GetEffectCount();
 };
 
 template <ChangeType Type>
