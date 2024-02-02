@@ -193,7 +193,7 @@ void PatchNotes::GeneratePatch()
         lastVersion.major++;
         changeCount = 50;
         patch->releaseName = std::format(
-            "{} {}", ReleaseAdjectives[Random::i()->Uniform(0u, ReleaseAdjectives.size())], ReleaseNouns[Random::i()->Uniform(0u, ReleaseNouns.size())]);
+            "{} {}", ReleaseAdjectives[Random::i()->Uniform(0u, ReleaseAdjectives.size()-1)], ReleaseNouns[Random::i()->Uniform(0u, ReleaseNouns.size()-1)]);
     }
 
     patch->version = lastVersion.to_string();
