@@ -17,15 +17,14 @@ class ThanksIHateIt final : public ActiveEffect
 
             if (possibleCargo.empty())
             {
-                const auto equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
-                equipment->TraverseTree(
-                    [this](auto pair)
+                const auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
+                for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
+                {
+                    if (equip->value->get_class_type() == Archetype::ClassType::Commodity && equip->value->volume > 0.5f)
                     {
-                        if (pair.second->get_class_type() == Archetype::ClassType::Commodity && pair.second->volume > 0.5f)
-                        {
-                            possibleCargo.emplace_back(Arch2Good(pair.second->archId));
-                        }
-                    });
+                        possibleCargo.emplace_back(Arch2Good(equip->value->archId));
+                    }
+                }
             }
 
             while (remaining > 1.0f)

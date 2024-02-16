@@ -27,7 +27,7 @@ void CurrencyChange::Revert()
 
 void CurrencyChange::Generate()
 {
-    goodHash = possibleGoods[Random::i()->Uniform(0u, possibleGoods.size())];
+    goodHash = possibleGoods[Random::i()->Uniform(0u, possibleGoods.size() - 1)];
 
     auto good = GoodList_get()->find_by_id(goodHash);
 

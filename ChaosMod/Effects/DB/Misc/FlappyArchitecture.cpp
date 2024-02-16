@@ -95,7 +95,7 @@ class FlappyArchitecture final : public ActiveEffect
                         for (auto& dock : validDockingTargets)
                         {
                             const int id =
-                                DALib::Anim->Open(solar->get_archetype()->anim, long(solar->vftable), dock, 0, 0); // NOLINT(bugprone-narrowing-conversions)
+                                DALib::Anim->Open(solar->get_archetype()->anim, long(solar->index), dock, 0, 0); // NOLINT(bugprone-narrowing-conversions)
 
                             if (id == -1)
                             {

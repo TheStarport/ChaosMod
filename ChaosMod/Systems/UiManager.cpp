@@ -300,7 +300,7 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 
     // Use a more orange theme
     auto& style = ImGui::GetStyle();
-    ImVec4* colors = style.Colors;
+    /*ImVec4* colors = style.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.94f);
     colors[ImGuiCol_FrameBg] = ImVec4(0.91f, 0.59f, 0.07f, 0.73f);
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.91f, 0.59f, 0.07f, 0.63f);
@@ -309,7 +309,7 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.19f, 0.18f, 0.73f, 1.00f);
     colors[ImGuiCol_CheckMark] = ImVec4(0.83f, 0.83f, 0.83f, 1.00f);
     colors[ImGuiCol_SliderGrab] = ImVec4(0.88f, 0.88f, 0.88f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);*/
 
     style.PopupBorderSize = 0;
     style.WindowBorderSize = 0;

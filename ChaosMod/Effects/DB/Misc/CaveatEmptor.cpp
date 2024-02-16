@@ -37,13 +37,13 @@ class CaveatEmptor final : public ActiveEffect
             std::vector<CAttachedEquip*> gunsToRemove;
 
             CEquipTraverser tr(Gun);
-            CEquip* equip = GetEquipManager(ship)->Traverse(tr);
+            CEquip* equip = ship->equip_manager.Traverse(tr);
             while (equip)
             {
                 auto external = CAttachedEquip::cast(equip);
-                equip = GetEquipManager(ship)->Traverse(tr);
+                equip = ship->equip_manager.Traverse(tr);
 
-                if (external->GetParentConnector(true) == long(ship->vftable))
+                if (external->GetParentConnector(true) == long(ship->index))
                 {
                     continue;
                 }

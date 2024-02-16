@@ -7,7 +7,7 @@ class SpectatorMode final : public ActiveEffect
     public:
         static void SetCloak(const bool state)
         {
-            CShip* ship = Utils::GetCShip();
+            /*CShip* ship = Utils::GetCShip();
             if (!ship)
             {
                 return;
@@ -16,8 +16,7 @@ class SpectatorMode final : public ActiveEffect
             CEquipTraverser tr;
             CEquip* equip = GetEquipManager(ship)->Traverse(tr);
             while (equip)
-            {
-                EquipDesc e;
+            {esc e;
                 equip->GetEquipDesc(e);
                 uint q = e.archId;
                 if (CECloakingDevice::cast(equip))
@@ -27,7 +26,7 @@ class SpectatorMode final : public ActiveEffect
                 }
 
                 equip = GetEquipManager(ship)->Traverse(tr);
-            }
+            }*/
         }
 
     private:

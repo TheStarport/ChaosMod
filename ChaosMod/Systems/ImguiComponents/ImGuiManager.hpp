@@ -16,6 +16,8 @@ class ImGuiManager
         inline static std::map<EffectType, std::vector<ActiveEffect*>> allEffects;
         inline static std::map<Font, ImFont*> loadedFonts;
 
+        static void SetupImGuiStyle();
+
     public:
         static void Init();
         ImGuiManager() = delete;

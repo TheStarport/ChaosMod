@@ -12,22 +12,21 @@ class DrunkShopping final : public ActiveEffect
             {
                 const auto goodList = GoodList_get();
 
-                const auto equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
-                equipment->TraverseTree(
-                    [this, &goodList](auto pair)
+                const auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
+                for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
+                {
+                    if (equip->value->get_class_type() == Archetype::ClassType::Gun || equip->value->get_class_type() == Archetype::ClassType::Shield)
                     {
-                        if (pair.second->get_class_type() == Archetype::ClassType::Gun || pair.second->get_class_type() == Archetype::ClassType::Shield)
+                        auto goodId = Arch2Good(equip->value->archId);
+                        auto good = goodList->find_by_id(goodId);
+                        if (!good || good->price == 0.0f)
                         {
-                            auto goodId = Arch2Good(pair.second->archId);
-                            auto good = goodList->find_by_id(goodId);
-                            if (!good || good->price == 0.0f)
-                            {
-                                return;
-                            }
-
-                            possibleWeapons.emplace_back(goodId);
+                            return;
                         }
-                    });
+
+                        possibleWeapons.emplace_back(goodId);
+                    }
+                }
             }
 
             for (int i = 0; i < 5; i++)

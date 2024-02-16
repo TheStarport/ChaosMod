@@ -527,47 +527,61 @@ class EquipmentChange : public Change
                 if constexpr (Type == ChangeType::Ship)
                 {
                     const auto ships = reinterpret_cast<BinarySearchTree<Ship*>*>(0x63FCAC0);
-                    ships->TraverseTree(
-                        [](std::pair<uint, Ship*> pair)
+                    for (auto node = ships->begin(); node != ships->end(); ++node)
+                    {
+                        if (std::ranges::find(ignoredShips, node->value->archId) != ignoredShips.end() || !node->value->idsName ||
+                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX)
                         {
-                            if (std::ranges::find(ignoredShips, pair.second->archId) != ignoredShips.end() || !pair.second->idsName ||
-                                pair.second->maxNanobots == UINT_MAX || pair.second->maxShieldBats == UINT_MAX)
-                            {
-                                return;
-                            }
+                            continue;
+                        }
 
-                            possibleEquipment.emplace_back(pair.first);
-                        });
+                        possibleEquipment.emplace_back(node->key);
+                    }
+                }
+                else if constexpr (Type == ChangeType::GunExplosion)
+                {
+                    const auto explosions = reinterpret_cast<BinarySearchTree<Explosion*>*>(0x63FCF3C);
+                    for (auto node = explosions->begin(); node != explosions->end(); ++node)
+                    {
+                        possibleEquipment.emplace_back(node->key);
+                    }
+                }
+                else if constexpr (Type == ChangeType::GunMotor)
+                {
+                    const auto motors = reinterpret_cast<BinarySearchTree<MotorData*>*>(0x63FCA70);
+                    for (auto node = motors->begin(); node != motors->end(); ++node)
+                    {
+                        possibleEquipment.emplace_back(node->key);
+                    }
                 }
                 else
                 {
                     const auto goodList = GoodList_get();
 
-                    const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD8);
-                    equipment->TraverseTree(
-                        [&goodList](std::pair<uint, Equipment*> pair)
+                    const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD4);
+                    for (auto node = equipment->begin(); node != equipment->end(); ++node)
+                    {
+                        if constexpr (Type == ChangeType::GunAmmo)
                         {
-                            if constexpr (Type == ChangeType::GunAmmo)
+                            const auto munition = reinterpret_cast<Munition*>(node->value);
+                            if (munition->motorId && munition->explosionArchId)
                             {
-                                const auto munition = reinterpret_cast<Munition*>(pair.second);
-                                if (munition->motorId && munition->explosionArchId)
-                                {
-                                    missileMap[pair.first] = MissileMap{ munition->motorId, munition->explosionArchId };
-                                }
+                                missileMap[node->key] = MissileMap{ munition->motorId, munition->explosionArchId };
+                            }
+                        }
+
+                        if (node->value->get_class_type() == GetClassType() || !node->value->idsName)
+                        {
+                            auto goodId = Arch2Good(node->value->archId);
+                            auto good = goodList->find_by_id(goodId);
+                            if (!good || good->price == 0.0f)
+                            {
+                                continue;
                             }
 
-                            if (pair.second->get_class_type() == GetClassType() || !pair.second->idsName)
-                            {
-                                auto goodId = Arch2Good(pair.second->archId);
-                                auto good = goodList->find_by_id(goodId);
-                                if (!good || good->price == 0.0f)
-                                {
-                                    return;
-                                }
-
-                                possibleEquipment.emplace_back(pair.first);
-                            }
-                        });
+                            possibleEquipment.emplace_back(node->key);
+                        }
+                    }
                 }
             }
 

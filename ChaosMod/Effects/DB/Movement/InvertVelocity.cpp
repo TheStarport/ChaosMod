@@ -9,7 +9,7 @@ class InvertVelocity final : public ActiveEffect
             EngineEquipConsts::CRUISING_SPEED = -EngineEquipConsts::CRUISING_SPEED;
 
             CEquipTraverser tr;
-            CEquip* equip = GetEquipManager(ship)->Traverse(tr);
+            CEquip* equip = ship->equip_manager.Traverse(tr);
             while (equip)
             {
                 EquipDesc e;
@@ -25,7 +25,7 @@ class InvertVelocity final : public ActiveEffect
                     *reinterpret_cast<float*>(*(reinterpret_cast<DWORD*>(thruster) + 3) + 140) = -thrustValue;
                 }
 
-                equip = GetEquipManager(ship)->Traverse(tr);
+                equip = ship->equip_manager.Traverse(tr);
             }
         }
 
