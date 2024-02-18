@@ -188,6 +188,7 @@
     <ClCompile Include="..\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Effects\DB\Interface\SoKawaii.cpp" />
     <ClCompile Include="Effects\DB\Interface\SprechenSieDeutsch.cpp" />
     <ClCompile Include="Effects\DB\Visual\CinematicMode.cpp" />
     <ClCompile Include="Effects\DB\Visual\CRT.cpp" />

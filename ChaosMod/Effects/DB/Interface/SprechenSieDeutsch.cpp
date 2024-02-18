@@ -5,15 +5,6 @@
 
 class SprechenSieDeutsch final : public ActiveEffect
 {
-        enum class Language
-        {
-            English,
-            German,
-            French,
-            // Russian
-            Chinese
-        };
-
         inline static std::map<Language, std::vector<HMODULE>> dllMap;
 
         inline static Language currentLang = Language::English;
@@ -152,10 +143,11 @@ class SprechenSieDeutsch final : public ActiveEffect
         static void LoadLibraries()
         {
             // clang-format off
-            const std::array<std::pair<std::string, Language>, 3> languages = {{
+            const std::array<std::pair<std::string, Language>, 4> languages = {{
                     { "cn", Language::Chinese },
                     { "de", Language::German },
                     { "fr", Language::French },
+                    { "uwu", Language::UwU }
             }};
             // clang-format on
 
@@ -189,6 +181,8 @@ class SprechenSieDeutsch final : public ActiveEffect
         }
 
     public:
+        static void SetLanguage(const Language lang) { currentLang = lang; }
+
         static int LoadCustomIdsName(const uint ids, wchar_t* buffer, int length)
         {
             const auto [module, index] = GetModuleByIds(ids);
@@ -214,6 +208,8 @@ std::string GetInfocardName(const uint ids)
     str.erase(std::ranges::find(str, '\0'), str.end());
     return str;
 }
+
+void SetLanguage(Language lang) { SprechenSieDeutsch::SetLanguage(lang); }
 
 constexpr DWORD NakedReturn = 0x57DB25;
 __declspec(naked) void SprechenSieDeutsch::GetIdsInfocardNaked()

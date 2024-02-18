@@ -49,7 +49,18 @@ void Log(const std::string& log);
 void SetWireFrames();
 void Assert(bool cond, const std::string& text, const std::string& file, int line);
 
+enum class Language
+{
+    English,
+    German,
+    French,
+    // Russian
+    Chinese,
+    UwU
+};
+
 std::string GetInfocardName(uint ids);
+void SetLanguage(Language lang);
 
 #define ASSERT(cond, text) Assert(cond, text, __FILE__, __LINE__)
 

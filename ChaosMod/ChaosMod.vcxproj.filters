@@ -157,6 +157,9 @@
     <ClCompile Include="Systems\PatchNotes\CurrencyChange.cpp">
       <Filter>Systems\PatchNotes</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Interface\SoKawaii.cpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
