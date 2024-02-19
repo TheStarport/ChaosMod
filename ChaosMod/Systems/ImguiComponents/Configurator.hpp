@@ -122,6 +122,10 @@ class Configurator final
             }
 
             ImGui::DragFloat("Time Between Patches (minutes)", &ConfigManager::i()->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
+            ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerPatchMin), 1.0f, 1, 30);
+            ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerMinorMin), 1.0f, 15, 50);
+            ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerMajorMin), 1.0f, 30, 100);
+
             if (ImGui::Button("View Patch Notes"))
             {
                 ImGuiManager::ShowPatchNotes();

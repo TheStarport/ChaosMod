@@ -20,11 +20,14 @@ class ConfigManager : public Singleton<ConfigManager>
         bool enablePatchNotes = true;
         bool countDownWhileOnBases = true;
         float timeBetweenPatchesInMinutes = 10.f;
+        uint changesPerPatchMin = 7;
+        uint changesPerMinorMin = 15;
+        uint changesPerMajorMin = 40;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
                                        enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects,
                                        timeBetweenSavesInSeconds, allowAutoSavesDuringCombat, toggledEffects, enablePatchNotes, countDownWhileOnBases,
-                                       timeBetweenPatchesInMinutes);
+                                       timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
 
         void Save();
         static ConfigManager* Load();

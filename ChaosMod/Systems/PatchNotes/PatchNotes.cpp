@@ -2,6 +2,7 @@
 
 #include "PatchNotes.hpp"
 
+#include "Systems/ConfigManager.hpp"
 #include "Systems/ImguiComponents/ImGuiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -100,7 +101,7 @@ void PatchNotes::SavePatches()
 
     const std::string jsonStr = json.dump();
 
-    file << jsonStr << std::endl;
+    file << jsonStr << std::endl; // NOLINT
     file.close();
 
     Log(std::format("Saving patch notes: {}", path + "\\patches.json"));
@@ -178,20 +179,20 @@ void PatchNotes::GeneratePatch()
     if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;
-        changeCount = Random::i()->Uniform(5u, 10u);
+        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerPatchMin, ConfigManager::i()->changesPerPatchMin * 2);
     }
     else if (versionIncrement < 20 && lastVersion.minor != 255)
     {
         lastVersion.minor++;
         lastVersion.patch = 0;
-        changeCount = Random::i()->Uniform(15u, 25u);
+        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerMinorMin, ConfigManager::i()->changesPerMinorMin * 2);
     }
     else
     {
         lastVersion.patch = 0;
         lastVersion.minor = 0;
         lastVersion.major++;
-        changeCount = 50;
+        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerMajorMin, ConfigManager::i()->changesPerMajorMin * 2);
         patch->releaseName = std::format("{} {}",
                                          ReleaseAdjectives[Random::i()->Uniform(0u, ReleaseAdjectives.size() - 1)],
                                          ReleaseNouns[Random::i()->Uniform(0u, ReleaseNouns.size() - 1)]);
@@ -223,10 +224,9 @@ ChangeType PatchNotes::GetRandomChangeType()
         EquipmentChange<ChangeType::Shield>::GetEffectCount(),   EquipmentChange<ChangeType::Thruster>::GetEffectCount(),
         EquipmentChange<ChangeType::Mine>::GetEffectCount(),     EquipmentChange<ChangeType::MineAmmo>::GetEffectCount(),
         EquipmentChange<ChangeType::Cm>::GetEffectCount(),       EquipmentChange<ChangeType::CmAmmo>::GetEffectCount(),
-        EquipmentChange<ChangeType::Ship>::GetEffectCount(),     CurrencyChange::GetEffectCount(),
+        EquipmentChange<ChangeType::Ship>::GetEffectCount(),     static_cast<uint>(static_cast<float>(CurrencyChange::GetEffectCount()) * 0.5f),
     };
-
-    static std::map<ChangeType, int> counts;
+    // Half the chance of currency change cause of how many there are
 
     return static_cast<ChangeType>(Random::i()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
 }
