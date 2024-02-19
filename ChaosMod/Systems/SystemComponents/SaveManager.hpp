@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/ConfigManager.hpp"
 #include "Utilities/ChatConsole.hpp"
+#include "Utilities/OffsetHelper.hpp"
 
 class SaveManager
 {
@@ -78,7 +79,7 @@ class SaveManager
         static void Save()
         {
             const auto ship = Utils::GetCShip();
-            if (!ship)
+            if (!ship || OffsetHelper::IsInMission())
             {
                 timer = static_cast<float>(ConfigManager::i()->timeBetweenSavesInSeconds);
                 return;

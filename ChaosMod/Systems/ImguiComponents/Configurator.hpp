@@ -55,6 +55,13 @@ class Configurator final
                     "This is done because this can break mission scripts and NPC spawns in some cases. You can enable it if you want, but you've been warned!");
             }
 
+            ImGui::Checkbox("Block Teleports During Missions", &config->blockTeleportsDuringMissions);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Many missions can softlock if the player is teleports away, into a different system, or to a base. If true, this will "
+                                  "prevent teleport effects from being selected while on a mission.");
+            }
+
             ImGui::Separator();
 
             // Meta Settings
@@ -89,24 +96,23 @@ class Configurator final
             // Style Settings
             ImGui::Text("Style Settings");
 
-            static DWORD startingProgressBarColor = ConfigManager::i()->progressBarColor;
+            static DWORD startingProgressBarColor = config->progressBarColor;
             static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
             static float progressColor[3] = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
             ImGui::ColorEdit3("Chaos Progress Color", progressColor, ImGuiColorEditFlags_PickerHueBar);
-            ConfigManager::i()->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
+            config->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
 
-            static DWORD startingProgressBarTextColor = ConfigManager::i()->progressBarTextColor;
+            static DWORD startingProgressBarTextColor = config->progressBarTextColor;
             static auto startingProgressBarTextColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarTextColor);
             static float progressTextColor[3] = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
             ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
-            ConfigManager::i()->progressBarTextColor =
-                ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
+            config->progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
-            ImGui::Checkbox("Show Time Remaining On Effects", &ConfigManager::i()->showTimeRemainingOnEffects);
+            ImGui::Checkbox("Show Time Remaining On Effects", &config->showTimeRemainingOnEffects);
 
             ImGui::Separator();
 
-            ImGui::Checkbox("Enable Patch Notes", &ConfigManager::i()->enablePatchNotes);
+            ImGui::Checkbox("Enable Patch Notes", &config->enablePatchNotes);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip(
@@ -115,16 +121,16 @@ class Configurator final
                     "Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
             }
 
-            ImGui::Checkbox("Count Down On Bases", &ConfigManager::i()->countDownWhileOnBases);
+            ImGui::Checkbox("Count Down On Bases", &config->countDownWhileOnBases);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip("If enabled the patch timer will not pause while on a base.");
             }
 
-            ImGui::DragFloat("Time Between Patches (minutes)", &ConfigManager::i()->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
-            ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerPatchMin), 1.0f, 1, 30);
-            ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerMinorMin), 1.0f, 15, 50);
-            ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&ConfigManager::i()->changesPerMajorMin), 1.0f, 30, 100);
+            ImGui::DragFloat("Time Between Patches (minutes)", &config->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
+            ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->changesPerPatchMin), 1.0f, 1, 30);
+            ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->changesPerMinorMin), 1.0f, 15, 50);
+            ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->changesPerMajorMin), 1.0f, 30, 100);
 
             if (ImGui::Button("View Patch Notes"))
             {

@@ -381,6 +381,7 @@
     <ClInclude Include="Utilities\AssetTracker.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
     <ClInclude Include="Utilities\Constants.hpp" />
+    <ClInclude Include="Utilities\OffsetHelper.hpp" />
     <ClInclude Include="Utilities\PersonalityHelper.hpp" />
     <ClInclude Include="Utilities\SpaceObjectSpawner.hpp" />
     <ClInclude Include="Utilities\Random.hpp" />

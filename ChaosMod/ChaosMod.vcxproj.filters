@@ -582,6 +582,9 @@
     <ClInclude Include="Systems\ImguiComponents\PatchNotesWindow.hpp">
       <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\OffsetHelper.hpp">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">

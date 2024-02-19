@@ -16,6 +16,7 @@ class ConfigManager : public Singleton<ConfigManager>
         bool showTimeRemainingOnEffects = false;
         uint timeBetweenSavesInSeconds = 300;
         bool allowAutoSavesDuringCombat = false;
+        bool blockTeleportsDuringMissions = false;
         std::map<std::string, std::map<std::string, bool>> toggledEffects;
         bool enablePatchNotes = true;
         bool countDownWhileOnBases = true;
@@ -26,8 +27,8 @@ class ConfigManager : public Singleton<ConfigManager>
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
                                        enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects,
-                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat, toggledEffects, enablePatchNotes, countDownWhileOnBases,
-                                       timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
+                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat, blockTeleportsDuringMissions, toggledEffects, enablePatchNotes,
+                                       countDownWhileOnBases, timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
 
         void Save();
         static ConfigManager* Load();

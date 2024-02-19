@@ -9,6 +9,7 @@
 #include "ImguiComponents/ImGuiManager.hpp"
 #include "PatchNotes/PatchNotes.hpp"
 #include "UiManager.hpp"
+#include "Utilities/OffsetHelper.hpp"
 
 #include <magic_enum.hpp>
 
@@ -77,7 +78,13 @@ ActiveEffect* ChaosTimer::SelectEffect()
         const auto val = Random::i()->Weighted(weights.begin(), weights.end());
         auto effect = possibleEffects[val];
 
+        // If the precondition fails, or trying to teleport in a mission, prevent it.
         if (!effect->CanSelect())
+        {
+            continue;
+        }
+
+        if (ConfigManager::i()->blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
         {
             continue;
         }
