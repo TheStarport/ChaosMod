@@ -521,9 +521,6 @@ class EquipmentChange : public Change
         static size_t GetEffectCount()
         {
             using namespace Archetype;
-            static DWORD content = DWORD(GetModuleHandleA("content.dll"));
-            using TraverseCallType = DWORD*(__thiscall*)(DWORD**);
-            TraverseCallType Traverse = TraverseCallType(content + 0x7FA00);
 
             if (possibleEquipment.empty())
             {
