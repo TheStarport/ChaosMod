@@ -12,7 +12,7 @@ class DrunkShopping final : public ActiveEffect
             {
                 const auto goodList = GoodList_get();
 
-                const auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
+                auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD4);
                 for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
                 {
                     if (equip->value->get_class_type() == Archetype::ClassType::Gun || equip->value->get_class_type() == Archetype::ClassType::Shield)

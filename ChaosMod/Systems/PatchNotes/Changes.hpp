@@ -521,6 +521,9 @@ class EquipmentChange : public Change
         static size_t GetEffectCount()
         {
             using namespace Archetype;
+            static DWORD content = DWORD(GetModuleHandleA("content.dll"));
+            using TraverseCallType = DWORD*(__thiscall*)(DWORD**);
+            TraverseCallType Traverse = TraverseCallType(content + 0x7FA00);
 
             if (possibleEquipment.empty())
             {
@@ -540,7 +543,7 @@ class EquipmentChange : public Change
                 }
                 else if constexpr (Type == ChangeType::GunExplosion)
                 {
-                    const auto explosions = reinterpret_cast<BinarySearchTree<Explosion*>*>(0x63FCF3C);
+                    const auto explosions = reinterpret_cast<BinarySearchTree<Explosion>*>(0x63FCF3C);
                     for (auto node = explosions->begin(); node != explosions->end(); ++node)
                     {
                         possibleEquipment.emplace_back(node->key);
@@ -548,7 +551,7 @@ class EquipmentChange : public Change
                 }
                 else if constexpr (Type == ChangeType::GunMotor)
                 {
-                    const auto motors = reinterpret_cast<BinarySearchTree<MotorData*>*>(0x63FCA70);
+                    const auto motors = reinterpret_cast<BinarySearchTree<MotorData>*>(0x63FCA70);
                     for (auto node = motors->begin(); node != motors->end(); ++node)
                     {
                         possibleEquipment.emplace_back(node->key);

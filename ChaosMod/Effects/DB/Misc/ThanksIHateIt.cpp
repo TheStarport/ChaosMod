@@ -17,7 +17,7 @@ class ThanksIHateIt final : public ActiveEffect
 
             if (possibleCargo.empty())
             {
-                const auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD8);
+                auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD4);
                 for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
                 {
                     if (equip->value->get_class_type() == Archetype::ClassType::Commodity && equip->value->volume > 0.5f)

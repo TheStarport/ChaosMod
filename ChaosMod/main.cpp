@@ -79,11 +79,6 @@ void Init()
 
     ChaosTimer::i()->InitEffects();
 
-    for (int i = 0; i < 50; i++)
-    {
-        PatchNotes::GeneratePatch();
-    }
-
     OnSound::Detour();
 }
 
