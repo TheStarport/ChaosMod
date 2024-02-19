@@ -50,8 +50,22 @@ void CurrencyChange::Generate()
     description = std::format("{}: Base Price   {:.0f}  ->  {:.0f}", name, oldPrice, newPrice);
 }
 
-nlohmann::json CurrencyChange::ToJson() { return Change::ToJson(); }
-void CurrencyChange::FromJson(nlohmann::basic_json<> json) { Change::FromJson(json); }
+nlohmann::json CurrencyChange::ToJson()
+{
+    auto json = Change::ToJson();
+    json["goodHash"] = goodHash;
+    json["oldPrice"] = oldPrice;
+    json["newPrice"] = newPrice;
+    return json;
+}
+void CurrencyChange::FromJson(nlohmann::basic_json<> json)
+{
+    Change::FromJson(json);
+
+    goodHash = json["goodHash"];
+    oldPrice = json["oldPrice"];
+    newPrice = json["newPrice"];
+}
 
 size_t CurrencyChange::GetEffectCount()
 {
@@ -62,6 +76,11 @@ size_t CurrencyChange::GetEffectCount()
 
         for (const GoodInfo* good : list)
         {
+            if (GetInfocardName(good->idsName).empty())
+            {
+                continue;
+            }
+
             if (good->type != GoodInfo::Type::Hull && good->price != 0.f && good->goodId && good->idsName)
             {
                 possibleGoods.emplace_back(good->goodId);

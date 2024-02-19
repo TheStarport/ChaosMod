@@ -369,7 +369,7 @@ class EquipmentChange : public Change
 
             auto item = std::any_cast<std::add_pointer_t<T>>(erasure);
 
-            auto fields = GetEditableFields(item);
+            auto fields = GetEditableFields<T>(item);
             static const auto fieldWeights = GetFieldWeights();
             uint statIndex = UINT_MAX;
             EditableField* value = nullptr;
@@ -530,7 +530,7 @@ class EquipmentChange : public Change
                     for (auto node = ships->begin(); node != ships->end(); ++node)
                     {
                         if (std::ranges::find(ignoredShips, node->value->archId) != ignoredShips.end() || !node->value->idsName ||
-                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX)
+                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX || GetInfocardName(node->value->idsName).empty())
                         {
                             continue;
                         }
@@ -543,6 +543,11 @@ class EquipmentChange : public Change
                     const auto explosions = reinterpret_cast<BinarySearchTree<Explosion>*>(0x63FCF3C);
                     for (auto node = explosions->begin(); node != explosions->end(); ++node)
                     {
+                        if (std::ranges::find_if(missileMap, [node](auto& map) { return map.second.explosionId == node->key; }) == missileMap.end())
+                        {
+                            continue;
+                        }
+
                         possibleEquipment.emplace_back(node->key);
                     }
                 }
@@ -551,6 +556,11 @@ class EquipmentChange : public Change
                     const auto motors = reinterpret_cast<BinarySearchTree<MotorData>*>(0x63FCA70);
                     for (auto node = motors->begin(); node != motors->end(); ++node)
                     {
+                        if (std::ranges::find_if(missileMap, [node](auto& map) { return map.second.motorId == node->key; }) == missileMap.end())
+                        {
+                            continue;
+                        }
+
                         possibleEquipment.emplace_back(node->key);
                     }
                 }
@@ -561,6 +571,11 @@ class EquipmentChange : public Change
                     const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD4);
                     for (auto node = equipment->begin(); node != equipment->end(); ++node)
                     {
+                        if (node->value->idsName == 0 || node->value->idsInfo == 0 || GetInfocardName(node->value->idsName).empty())
+                        {
+                            continue;
+                        }
+
                         if constexpr (Type == ChangeType::GunAmmo)
                         {
                             const auto munition = reinterpret_cast<Munition*>(node->value);
@@ -574,6 +589,7 @@ class EquipmentChange : public Change
                         {
                             auto goodId = Arch2Good(node->value->archId);
                             auto good = goodList->find_by_id(goodId);
+
                             if (!good || good->price == 0.0f)
                             {
                                 continue;

@@ -80,7 +80,7 @@ struct Clamp : refl::attr::usage::field
 // Register all fields we want to dynamically edit
 
 REFL_AUTO(type(Archetype::Ship), field(holdSize), field(linearDrag, Clamp(1.f, 1200.f)), field(strafeForce), field(maxBankAngle, Clamp(0.f, 6.2f)),
-          field(nudgeForce), field(maxNanobots), field(maxShieldBats), field(strafePowerUsage), field(isNomad));
+          field(nudgeForce), field(maxNanobots, Clamp(0.f, 100.f)), field(maxShieldBats, Clamp(0.f, 100.f)), field(strafePowerUsage), field(isNomad));
 
 REFL_AUTO(type(Archetype::Explosion), field(radius), field(impulse, Clamp(0.f, 10000.f)), field(hullDamage, Clamp(0.f, 5000.f)),
           field(energyDamage, Clamp(0.f, 5000.f)));
