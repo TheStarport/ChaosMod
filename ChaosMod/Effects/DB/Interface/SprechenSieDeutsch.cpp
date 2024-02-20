@@ -2,6 +2,7 @@
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "Systems/SystemComponents/ShipInfocardOverride.hpp"
 
 class SprechenSieDeutsch final : public ActiveEffect
 {
@@ -107,7 +108,6 @@ class SprechenSieDeutsch final : public ActiveEffect
                     }
                 }
 
-                std::memset(infocardBuffer.data(), '\0', infocardBuffer.size());
                 memcpy_s(infocardBuffer.data(), infocardBuffer.size(), mem, infocardLength);
                 mem = infocardBuffer.data();
             }
@@ -130,6 +130,17 @@ class SprechenSieDeutsch final : public ActiveEffect
 
         static char* __stdcall GetIdsInfocardOverride(const uint ids)
         {
+            std::memset(infocardBuffer.data(), '\0', infocardBuffer.size());
+
+            auto override = ShipInfocardOverride::OverrideIds(ids);
+            if (override.has_value())
+            {
+                auto& str = override.value();
+                infocardLength = str.size() * 2;
+                memcpy_s(infocardBuffer.data(), infocardBuffer.size(), str.data(), infocardLength);
+                return infocardBuffer.data();
+            }
+
             if (const auto buffer = LoadCustomInfocard(ids))
             {
                 return buffer;

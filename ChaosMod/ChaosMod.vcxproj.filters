@@ -166,6 +166,9 @@
     <ClCompile Include="Effects\DB\Meta\EmergencyHotfix.cpp">
       <Filter>Effects\DB\Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\SystemComponents\ShipInfocardOverride.cpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -587,6 +590,9 @@
     </ClInclude>
     <ClInclude Include="Utilities\OffsetHelper.hpp">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\SystemComponents\ShipInfocardOverride.hpp">
+      <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

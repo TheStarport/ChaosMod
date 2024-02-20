@@ -11,6 +11,7 @@
 #include "Systems/PatchNotes/PatchNotes.hpp"
 #include "Systems/ShipManipulator.hpp"
 #include "Systems/SystemComponents/GlobalTimers.hpp"
+#include "Systems/SystemComponents/ShipInfocardOverride.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "Systems/UiManager.hpp"
 #include "Utilities/AssetTracker.hpp"
@@ -80,6 +81,8 @@ void Init()
     ChaosTimer::i()->InitEffects();
 
     OnSound::Detour();
+
+    ShipInfocardOverride::Init();
 }
 
 const PDWORD screenWidth = ((PDWORD)0x679bc8);
