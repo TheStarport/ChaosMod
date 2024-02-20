@@ -50,4 +50,6 @@ SetupEffect(SadViolin, {
     .effectName = "Sad Violin",
     .description = "Replaces the death music until game restart.",
     .category = EffectType::Audio,
+    .timingModifier = 0.0f,
+    .isTimed = false
 });

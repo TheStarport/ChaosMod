@@ -163,6 +163,9 @@
     <ClCompile Include="Effects\DB\Audio\WhosThatRinging.cpp">
       <Filter>Effects\DB\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\EmergencyHotfix.cpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

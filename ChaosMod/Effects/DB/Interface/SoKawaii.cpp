@@ -18,4 +18,6 @@ SetupEffect(SoKawaii, {
     .effectName = "So Kawaiiiiiiii",
     .description = "It's like we're in an anime, and reading in that voice should hurt...",
     .category = EffectType::Interface,
+    .timingModifier = 0.0f,
+    .isTimed = false
 });

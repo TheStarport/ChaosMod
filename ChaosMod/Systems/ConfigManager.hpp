@@ -7,7 +7,6 @@ class ConfigManager : public Singleton<ConfigManager>
     public:
         float timeBetweenChaos = 45.0f;
         float defaultEffectDuration = 135.0f;
-        bool allowMetaEffects = true;
         uint totalAllowedConcurrentEffects = 8;
         bool enableTwitchVoting = false;
         float baseTwitchVoteWeight = 1.0f;
@@ -25,10 +24,10 @@ class ConfigManager : public Singleton<ConfigManager>
         uint changesPerMinorMin = 15;
         uint changesPerMajorMin = 40;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, allowMetaEffects, totalAllowedConcurrentEffects,
-                                       enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects,
-                                       timeBetweenSavesInSeconds, allowAutoSavesDuringCombat, blockTeleportsDuringMissions, toggledEffects, enablePatchNotes,
-                                       countDownWhileOnBases, timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, totalAllowedConcurrentEffects, enableTwitchVoting,
+                                       baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects, timeBetweenSavesInSeconds,
+                                       allowAutoSavesDuringCombat, blockTeleportsDuringMissions, toggledEffects, enablePatchNotes, countDownWhileOnBases,
+                                       timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
 
         void Save();
         static ConfigManager* Load();

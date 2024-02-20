@@ -64,11 +64,6 @@ class Configurator final
 
             ImGui::Separator();
 
-            // Meta Settings
-            ImGui::Text("Meta Settings");
-            ImGui::Checkbox("Allow Meta Effects", &config->allowMetaEffects);
-            ImGui::Separator();
-
             // Twitch Settings
             ImGui::Text("Twitch Settings");
 

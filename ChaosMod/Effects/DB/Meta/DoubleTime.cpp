@@ -15,6 +15,6 @@ class DoubleTime final : public ActiveEffect
 // clang-format off
 SetupEffect(DoubleTime, {
     .effectName = "Double Time!",
-    .description = "Well you've had first effect, but what about second effect? (Picks two effects instead of one effect!)",
+    .description = "Well you've had first effect, but what about second effect?",
     .category = EffectType::Meta,
 });
