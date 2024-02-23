@@ -3,9 +3,12 @@
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "Systems/UiManager.hpp"
 
 class NoHud final : public ActiveEffect
 {
+
+        HCURSOR cursor = nullptr;
         static void ToggleHud([[maybe_unused]] bool newState)
         {
             __asm {
@@ -17,9 +20,28 @@ class NoHud final : public ActiveEffect
         }
 
     public:
-        void Begin() override { ToggleHud(false); }
-        void End() override { ToggleHud(true); }
-        explicit NoHud(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
+        void Begin() override
+        {
+            ToggleHud(false);
+            UiManager::i()->OverrideCursor(cursor);
+        }
+
+        void End() override
+        {
+            ToggleHud(true);
+            UiManager::i()->OverrideCursor(std::nullopt);
+        };
+
+        explicit NoHud(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)
+        {
+            // Ensure guns still track while hud is disabled
+            std::array<byte, 2> patch = { 0x66, 0x40 }; // INC AX
+            const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
+            MemUtils::WriteProcMem(fl + 0xEC48D, patch.data(), patch.size());
+            MemUtils::WriteProcMem(fl + 0x11DACD, patch.data(), patch.size());
+
+            cursor = LoadCursorFromFileA("../DATA/CHAOS/null.cur");
+        }
 };
 
 // clang-format off
