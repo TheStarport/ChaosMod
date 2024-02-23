@@ -76,7 +76,8 @@ size_t CurrencyChange::GetEffectCount()
 
         for (const GoodInfo* good : list)
         {
-            if (GetInfocardName(good->idsName).empty())
+            // If it doesn't have a name, or is an engine/powerplant, don't list it
+            if (GetInfocardName(good->idsName).empty() || _strcmpi(good->itemIcon, R"(equipment\models\commodities\nn_icons\EQUIPICON_engine.3db)") == 0)
             {
                 continue;
             }

@@ -62,7 +62,7 @@ __declspec(naked) void ShipInfocardOverride::PatchShipInfoInventoryIdsNaked()
     }
 }
 
-std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
+std::optional<std::wstring> ShipInfocardOverride::OverrideIds(const uint ids)
 {
     if (curShip == nullptr)
     {
@@ -86,9 +86,9 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
         std::vector<char*> hpsTurret;
         std::vector<char*> hpsTorps;
 
-        for (auto val : curShip->hardpoints)
+        for (const auto& val : curShip->hardpoints)
         {
-            switch (val.type)
+            switch (val.type) // NOLINT
             {
                 case hp_gun_special_1:
                 case hp_gun_special_2:
@@ -99,22 +99,23 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
                 case hp_gun_special_7:
                 case hp_gun_special_8:
                 case hp_gun_special_9:
+                case hp_gun_special_10:
                     for (auto hp : *curShip->get_legal_hps(val.type))
                     {
-                        if (std::find(hpsGun.begin(), hpsGun.end(), hp.value) == hpsGun.end() &&
-                            std::find(hpsTurret.begin(), hpsTurret.end(), hp.value) == hpsTurret.end())
+                        if (std::ranges::find(hpsGun, hp.value) == hpsGun.end() && std::ranges::find(hpsTurret, hp.value) == hpsTurret.end())
                         {
                             hpsGun.emplace_back(hp.value);
                             guns++;
                         }
                     }
                     break;
+                default:;
             }
         }
 
-        for (auto val : curShip->hardpoints)
+        for (const auto& val : curShip->hardpoints)
         {
-            switch (val.type)
+            switch (val.type) // NOLINT
             {
                 case hp_turret_special_1:
                 case hp_turret_special_2:
@@ -127,8 +128,7 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
                 case hp_turret_special_9:
                     for (auto hp : *curShip->get_legal_hps(val.type))
                     {
-                        if (std::find(hpsTurret.begin(), hpsTurret.end(), hp.value) == hpsTurret.end() &&
-                            std::find(hpsGun.begin(), hpsGun.end(), hp.value) == hpsGun.end())
+                        if (std::ranges::find(hpsTurret, hp.value) == hpsTurret.end() && std::ranges::find(hpsGun, hp.value) == hpsGun.end())
                         {
                             hpsTurret.emplace_back(hp.value);
                             turrets++;
@@ -141,15 +141,16 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
 
                 case hp_torpedo_special_1:
                 case hp_torpedo_special_2:
-                    for (auto hp : *curShip->get_legal_hps(val.type))
+                    for (auto& hp : *curShip->get_legal_hps(val.type))
                     {
-                        if (std::find(hpsTorps.begin(), hpsTorps.end(), hp.value) == hpsTorps.end())
+                        if (std::ranges::find(hpsTorps, hp.value) == hpsTorps.end())
                         {
                             hpsTorps.emplace_back(hp.value);
                             torps++;
                         }
                     }
                     break;
+                default:;
             }
         }
 
@@ -158,29 +159,28 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
         ss << std::fixed; // Don't use e notation
         if (!isInventory)
         {
-            ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><TEXT>Stats</TEXT><PARA/><TEXT>Stats</TEXT><PARA/><TEXT>)" << guns << L"/" << turrets
+            ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><PARA/><JUST loc="center"/><TEXT>Stats</TEXT><PARA/><JUST loc="left"/><TEXT>)" << guns << L"/" << turrets
                << L"/" << torps << L"</TEXT><PARA/>" << 
-                L"<TEXT>" << (int)curShip->hitPoints << L"</TEXT><PARA/>" << 
-                L"<TEXT>" << (int)curShip->holdSize << L"</TEXT><PARA/>" << 
+                L"<TEXT>" << static_cast<int>(curShip->hitPoints) << L"</TEXT><PARA/>" << 
+                L"<TEXT>" << static_cast<int>(curShip->holdSize) << L"</TEXT><PARA/>" << 
                 L"<TEXT>" << curShip->maxNanobots << L"/" << curShip->maxShieldBats << L"</TEXT><PARA/>" << 
                 L"<TEXT>" << std::setprecision(2) << roundf(RadToDeg(curShip->steeringTorque.x, curShip->angularDrag.x) * 100.f) / 100.f << L" (deg/s)</TEXT><PARA/>" << 
                 L"<TEXT>" << std::setprecision(3) << roundf(curShip->rotationInertia.x / (curShip->angularDrag.x * 0.4342944f) * 1000.f) / 1000.f << L" (s)</TEXT><PARA/>" << 
-                L"<TEXT>" << (hasMine == true ? L"Mine" : L"") << (hasCm == true ? (hasMine == true ? L", CM" : L"CM ") : L"") << L"</TEXT><PARA/>" << 
+                L"<TEXT>" << (hasMine ? L"Mine" : L"") << (hasCm ? (hasMine ? L", CM" : L"CM ") : L"") << L"</TEXT><PARA/>" << 
                 L"<PARA/><POP/></RDL>";
         }
-
         else
         {
-            ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><TRA data="1" mask="1" def="-2"/><TEXT>Stats</TEXT><PARA/><TRA data="0" mask="1" def="-1"/><TEXT>Stats</TEXT><PARA/>)"
+            ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><PARA/><JUST loc="center"/><TEXT>Stats</TEXT><PARA/><JUST loc="left"/><PARA/>)"
                << L"<TEXT>Gun/Turret/Special: " << guns << L"/" << turrets << L"/" << torps << L"</TEXT><PARA/>"
-               << L"<TEXT>Armor: " << (int)curShip->hitPoints << L"</TEXT><PARA/>"
-               << L"<TEXT>Cargo Space: " << (int)curShip->holdSize << L"</TEXT><PARA/>"
+               << L"<TEXT>Armor: " << static_cast<int>(curShip->hitPoints) << L"</TEXT><PARA/>"
+               << L"<TEXT>Cargo Space: " << static_cast<int>(curShip->holdSize) << L"</TEXT><PARA/>"
                << L"<TEXT>Max Batteries/Nanobots: " << curShip->maxNanobots << L"/" << curShip->maxShieldBats << L"</TEXT><PARA/>"
                << L"<TEXT>Turn Rate: " << std::setprecision(2) << roundf(RadToDeg(curShip->steeringTorque.x, curShip->angularDrag.x) * 100.f) / 100.f
                << L" (deg/s)</TEXT><PARA/>"
                << L"<TEXT>Response Rate: " << std::setprecision(3)
                << roundf(curShip->rotationInertia.x / (curShip->angularDrag.x * 0.43429448f) * 1000.f) / 1000.f << L" (s)</TEXT><PARA/>"
-               << L"<TEXT>Additional Equipment: " << (hasMine == true ? L"Mine" : L"") << (hasCm == true ? (hasMine == true ? L", CM" : L"CM ") : L"")
+               << L"<TEXT>Additional Equipment: " << (hasMine ? L"Mine" : L"") << (hasCm ? (hasMine ? L", CM" : L"CM ") : L"")
                << L"</TEXT><PARA/>"
                << L"<PARA/><POP/></RDL>";
         }
@@ -190,8 +190,8 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(uint ids)
 
     if (ids == shipWeaponInfoIds)
     {
-        std::wostringstream ss;
-        ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><TRA data="1" mask="1" def="-2"/><TEXT>Stats</TEXT><PARA/><TRA data="0" mask="1" def="-1"/><TEXT>Stats</TEXT><PARA/>)"
+            std::wostringstream ss;
+        ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><PARA/><JUST loc="center"/><TEXT>Stats</TEXT><PARA/><JUST loc="left"/><PARA/>)"
            << L"<TEXT>Gun/Turret/Special Mounts:</TEXT><PARA/>"
            << L"<TEXT>Armor:</TEXT><PARA/>"
            << L"<TEXT>Cargo Space:</TEXT><PARA/>"
