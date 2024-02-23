@@ -80,7 +80,7 @@ void Init()
 
     ChaosTimer::i()->InitEffects();
 
-    OnSound::Detour();
+    OnSound::Init();
 
     ShipInfocardOverride::Init();
 }
