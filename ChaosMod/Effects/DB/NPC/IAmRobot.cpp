@@ -32,5 +32,6 @@ class IAmRobot final : public ActiveEffect
 SetupEffect(IAmRobot, {
     .effectName = "I Am Robot",
     .description = "What did you miss? When did everyone become a robot?",
-    .category = EffectType::Npc
+    .category = EffectType::Npc,
+    .exclusion = EffectExclusion::SendComm,
 });

@@ -29,5 +29,6 @@ SetupEffect(Cardamine, {
     .effectName = "Cardamine, Cardamine.",
     .description = "Cardamine, Cardamine... everybody wants Cardamine! It's all the NPCs will say...",
     .category = EffectType::Npc,
-    .timingModifier = 2.0f
+    .timingModifier = 2.0f,
+    .exclusion = EffectExclusion::SendComm
 });

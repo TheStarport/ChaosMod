@@ -34,5 +34,6 @@ class PlanetOfTheApes final : public ActiveEffect
 SetupEffect(PlanetOfTheApes, {
     .effectName = "Planet Of The Apes",
     .description = "In an alternate reality... the apes won. Now they are everywhere.",
-    .category = EffectType::Npc
+    .category = EffectType::Npc,
+    .exclusion = EffectExclusion::SendComm
 });

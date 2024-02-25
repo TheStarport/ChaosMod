@@ -19,6 +19,9 @@ enum class EffectExclusion
     None,
     Movie,
     Visual,
+    SendComm,
+    FireResource,
+    RefireDelay
 };
 
 class ActiveEffect
