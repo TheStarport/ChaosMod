@@ -11,6 +11,7 @@
 #include "Systems/PatchNotes/PatchNotes.hpp"
 #include "Systems/ShipManipulator.hpp"
 #include "Systems/SystemComponents/GlobalTimers.hpp"
+#include "Systems/SystemComponents/MoviePlayer.hpp"
 #include "Systems/SystemComponents/ShipInfocardOverride.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "Systems/UiManager.hpp"
@@ -500,11 +501,44 @@ void SetupHack()
     thornLoadDetour->Detour(ScriptLoadHook);
 }
 
+HMODULE dll;
+void __stdcall TerminateAllThreads()
+{
+    MoviePlayer::del();
+
+    for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
+    {
+        effect->Cleanup();
+    }
+
+    FreeLibraryAndExitThread(dll, 0);
+}
+
+FunctionDetour freeLibraryDetour(FreeLibrary);
+BOOL __stdcall FreeLibraryDetour(const HMODULE handle)
+{
+    if (dll == handle)
+    {
+        freeLibraryDetour.UnDetour();
+        CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TerminateAllThreads), nullptr, 0, nullptr);
+
+        return true;
+    }
+
+    freeLibraryDetour.UnDetour();
+    const auto res = FreeLibrary(handle);
+    freeLibraryDetour.Detour(FreeLibraryDetour);
+    return res;
+}
+
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
     DisableThreadLibraryCalls(hModule);
     if (dwReason == DLL_PROCESS_ATTACH)
     {
+        dll = hModule;
+        freeLibraryDetour.Detour(FreeLibraryDetour);
+
         float newX = 0.5f;
         float newY = 0.5f;
 

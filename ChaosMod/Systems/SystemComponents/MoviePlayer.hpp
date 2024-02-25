@@ -16,8 +16,7 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-#define MINIAUDIO_IMPLEMENTATION
-#include <miniaudio.h>
+#include "miniaudio.h"
 
 enum class Movie
 {
@@ -207,6 +206,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
             ma_engine_init(nullptr, &engine);
             ma_engine_set_volume(&engine, 0.4f);
         }
+
         ~MoviePlayer()
         {
             delete stopwatch;
@@ -214,6 +214,12 @@ class MoviePlayer final : public Singleton<MoviePlayer>
             if (currentPlayingMovie.has_value())
             {
                 StopMovie();
+            }
+
+            // Unregister movies
+            for (auto& data : movies | std::views::values)
+            {
+                ma_audio_buffer_uninit(&data.audioBufferWrapper);
             }
 
             ma_engine_uninit(&engine);

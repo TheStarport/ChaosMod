@@ -310,6 +310,9 @@
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp" />
     <ClCompile Include="Systems\ReshadeManager.cpp" />
     <ClCompile Include="Systems\ShipManipulator.cpp" />
+    <ClCompile Include="Systems\SystemComponents\miniaudio.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Systems\SystemComponents\ShipInfocardOverride.cpp" />
     <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp" />
     <ClCompile Include="Systems\Teleporter.cpp" />

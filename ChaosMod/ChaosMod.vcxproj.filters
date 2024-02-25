@@ -172,6 +172,9 @@
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp">
       <Filter>Effects\DB\Spawning</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\SystemComponents\miniaudio.c">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

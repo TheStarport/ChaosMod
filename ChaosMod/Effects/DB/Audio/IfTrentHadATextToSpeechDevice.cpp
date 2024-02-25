@@ -33,6 +33,15 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
                 });
         }
 
+        void Cleanup() override
+        {
+            if (ttsThread.joinable())
+            {
+                ttsThread.request_stop();
+                ttsThread.join();
+            }
+        }
+
     public:
         IfTrentHadATextToSpeechDevice(const EffectInfo &info) : ActiveEffect(info)
         {

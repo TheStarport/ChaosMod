@@ -53,6 +53,7 @@ class ActiveEffect
         virtual void Update(float delta) {}
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}
+        virtual void Cleanup() {}
         virtual ~ActiveEffect() = default;
         explicit ActiveEffect(EffectInfo effectInfo) : effectInfo(std::move(effectInfo)) { allEffects.emplace_back(this); }
 
