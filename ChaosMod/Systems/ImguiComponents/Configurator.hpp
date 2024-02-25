@@ -103,6 +103,14 @@ class Configurator final
             ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
             config->progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
+            const char* timerOptions[] = {
+                "Progress Bar: Top",
+                "Progress Bar: Sides",
+                "Clock",
+            };
+
+            ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->progressBarType), timerOptions, IM_ARRAYSIZE(timerOptions));
+
             ImGui::Checkbox("Show Time Remaining On Effects", &config->showTimeRemainingOnEffects);
 
             ImGui::Separator();

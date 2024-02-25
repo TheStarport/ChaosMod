@@ -5,6 +5,13 @@
 class ConfigManager : public Singleton<ConfigManager>
 {
     public:
+        enum class ProgressBar
+        {
+            TopBar,
+            SideBar,
+            Clock
+        };
+
         float timeBetweenChaos = 45.0f;
         float defaultEffectDuration = 135.0f;
         uint totalAllowedConcurrentEffects = 8;
@@ -23,11 +30,12 @@ class ConfigManager : public Singleton<ConfigManager>
         uint changesPerPatchMin = 7;
         uint changesPerMinorMin = 15;
         uint changesPerMajorMin = 40;
+        ProgressBar progressBarType = ProgressBar::Clock;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, timeBetweenChaos, defaultEffectDuration, totalAllowedConcurrentEffects, enableTwitchVoting,
                                        baseTwitchVoteWeight, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects, timeBetweenSavesInSeconds,
                                        allowAutoSavesDuringCombat, blockTeleportsDuringMissions, toggledEffects, enablePatchNotes, countDownWhileOnBases,
-                                       timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin);
+                                       timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin, progressBarType);
 
         void Save();
         static ConfigManager* Load();

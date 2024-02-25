@@ -180,10 +180,10 @@ void ImGuiManager::Render()
 
     ImGui::PushFont(loadedFonts.begin()->second);
 
+    ProgressBar::Render();
     Configurator::Render();
     EffectToggler::Render();
     EffectSelector::Render();
-    ProgressBar::Render();
     ScrollingCredits::Render();
     ChaosOptionText::Render();
     ActiveEffectsText::Render();
