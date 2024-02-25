@@ -40,9 +40,11 @@ class BloodMagic final : public ActiveEffect
             float capacity = 0.f;
 
             auto traverser = ship->equip_manager.StartTraverse(EquipmentClass::Power);
-            while (ship->equip_manager.Traverse(traverser))
+            auto equip = ship->equip_manager.Traverse(traverser);
+            while (equip)
             {
-                capacity += static_cast<CEPower*>(traverser.currentEquip)->GetCapacity();
+                capacity += static_cast<CEPower*>(equip)->GetCapacity();
+                equip = ship->equip_manager.Traverse(traverser);
             }
 
             // While blood magic mode is on, always be at 100% power.
@@ -59,5 +61,6 @@ SetupEffect(BloodMagic, {
     .effectName = "Blood Magic",
     .description = "Blood magic is a school of magic that taps into the inherent power of blood to fuel spellcasting. "
         "It can do great evil at the expense of the caster's health, or the expense of others.",
-    .category = EffectType::StatManipulation
+    .category = EffectType::StatManipulation,
+    .exclusion = EffectExclusion::FireResource
 });
