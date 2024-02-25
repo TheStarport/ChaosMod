@@ -29,6 +29,7 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
     public:
         SpaceObjectSpawner();
         ~SpaceObjectSpawner();
+
         struct SpaceObjectBuilder
         {
                 SpaceObjectBuilder& WithNpc(const std::string& npcNickname);
@@ -54,6 +55,9 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
                 SpaceObjectBuilder& WithReputation(uint affiliation);
                 SpaceObjectBuilder& WithDockTo(uint base);
                 SpaceObjectBuilder& WithFuse(const std::string& fuse);
+                SpaceObjectBuilder& WithRandomNpc();
+                SpaceObjectBuilder& WithRandomReputation();
+                SpaceObjectBuilder& WithRandomName();
 
                 SpaceObjectBuilder& AsSolar();
                 SpaceObjectBuilder& AsNpc();

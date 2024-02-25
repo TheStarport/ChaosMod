@@ -169,6 +169,9 @@
     <ClCompile Include="Systems\SystemComponents\ShipInfocardOverride.cpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

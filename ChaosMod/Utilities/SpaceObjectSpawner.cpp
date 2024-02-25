@@ -3,6 +3,7 @@
 #include "SpaceObjectSpawner.hpp"
 
 #include "AssetTracker.hpp"
+#include "Constants.hpp"
 #include "Exceptions/NpcLoadingException.hpp"
 #include "PersonalityHelper.hpp"
 
@@ -166,6 +167,84 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithFuse(const std::string& fuse)
 {
     this->fuse = fuse;
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithRandomNpc()
+{
+    auto& templates = i()->npcTemplates;
+    auto el = templates.begin();
+    std::advance(el, Random::i()->Uniform(0u, templates.size() - 1));
+
+    npcTemplate = el->second;
+
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithRandomReputation()
+{
+    auto* groups = reinterpret_cast<FlMap<Reputation::RepGroup>*>(0x64018EC);
+
+    const uint randomGroupIndex = Random::i()->Uniform(0u, groups->size() - 1);
+    uint currentIndex = 0;
+    for (auto listItem = groups->begin(); listItem != groups->end(); ++listItem, ++currentIndex)
+    {
+        if (currentIndex == randomGroupIndex)
+        {
+            reputation = listItem.value()->name;
+            break;
+        }
+    }
+
+    return *this;
+}
+
+SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithRandomName()
+{
+    struct NameRange
+    {
+            std::pair<uint, uint> firstName;
+            std::pair<uint, uint> lastName;
+    };
+
+    // clang-format off
+    constexpr std::array<NameRange, 5> nameLists = {
+        {
+            // Liberty
+            {
+                { 226608, 226952 },
+                { 227008, 227307 }
+            },
+            // Kusari
+        {
+            { 228708, 228890 },
+            { 228908, 229207 }
+            },
+            // Hispania
+            {
+            { 229208, 229340 },
+            { 229408, 229460 }
+            },
+            // Rheinland
+            {
+            { 228008, 228407 },
+            { 228408, 228663 }
+            },
+            // Bretonia
+            {
+            { 227308, 227575 },
+            { 227708, 228007 }
+            },
+        }
+    };
+    // clang-format on
+    const auto& [firstName, lastName] = nameLists[Random::i()->Uniform(0u, nameLists.size() - 1)];
+
+    name = {
+        Random::i()->Uniform(firstName.first, firstName.second),
+        Random::i()->Uniform(lastName.first, lastName.second),
+    };
+
     return *this;
 }
 
