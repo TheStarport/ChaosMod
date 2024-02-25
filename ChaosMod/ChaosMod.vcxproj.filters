@@ -175,6 +175,9 @@
     <ClCompile Include="Systems\SystemComponents\miniaudio.c">
       <Filter>Systems\SystemComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Audio\AsmrRainSoundsForSleeping.cpp">
+      <Filter>Effects\DB\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
