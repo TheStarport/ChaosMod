@@ -194,6 +194,7 @@
     <ClCompile Include="Effects\DB\Interface\SprechenSieDeutsch.cpp" />
     <ClCompile Include="Effects\DB\Meta\EmergencyHotfix.cpp" />
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp" />
     <ClCompile Include="Effects\DB\Visual\CinematicMode.cpp" />
     <ClCompile Include="Effects\DB\Visual\CRT.cpp" />
     <ClCompile Include="Effects\DB\Visual\Drunk Flying.cpp" />

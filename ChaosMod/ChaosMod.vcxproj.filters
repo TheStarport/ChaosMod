@@ -178,6 +178,9 @@
     <ClCompile Include="Effects\DB\Audio\AsmrRainSoundsForSleeping.cpp">
       <Filter>Effects\DB\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

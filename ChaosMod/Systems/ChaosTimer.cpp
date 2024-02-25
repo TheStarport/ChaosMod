@@ -15,6 +15,12 @@
 
 void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
 {
+    // Skip entries that are despawned, not destroyed (invalid memory)
+    if (static_cast<int>(dmgList->isDestroyed) > 1 || dmgList->inflictorId > 0xffff)
+    {
+        return;
+    }
+
     auto* ship = reinterpret_cast<CShip*>(ecx[4]);
     for (const auto& key : i()->activeEffects | std::views::keys)
     {

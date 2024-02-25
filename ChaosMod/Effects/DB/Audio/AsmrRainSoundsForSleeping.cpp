@@ -7,8 +7,8 @@
 
 class AsmrRainSoundsForSleeping final : public ActiveEffect
 {
-        ma_engine engine;
-        ma_sound sound;
+        ma_engine engine{};
+        ma_sound sound{};
 
         void Begin() override
         {
