@@ -27,6 +27,24 @@ class CoolantLeak final : public ActiveEffect
             ship->set_power(currentPower - (powerIncrease * 0.4f));
         }
 
+        void End() override
+        {
+            auto ship = Utils::GetCShip();
+
+            if (ship)
+            {
+                Utils::UnLightFuse(Utils::GetInspect(ship->id), CreateID("chaos_coolant_leak"), 0.0f);
+            }
+        }
+
+        void Begin() override
+        {
+            pub::Audio::PlaySoundEffect(1, CreateID("chaos_coolant_leak"));
+            auto ship = Utils::GetCShip();
+
+            Utils::LightFuse(Utils::GetInspect(ship->id), CreateID("chaos_coolant_leak"), 0.0f, 5.0f, 0.0f);
+        }
+
     public:
         explicit CoolantLeak(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
 };

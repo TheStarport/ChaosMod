@@ -29,6 +29,7 @@ class SpeedCola final : public ActiveEffect
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_speed_cola"));
             getMassDetour.Detour(GetMassDetour);
         }
+
         void End() override { getMassDetour.UnDetour(); }
 
     public:
