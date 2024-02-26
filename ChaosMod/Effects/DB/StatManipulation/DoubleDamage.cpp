@@ -12,7 +12,20 @@ class DoubleDamage final : public ActiveEffect
                 if (obj->id == hitSpaceObj)
                 {
                     // Double the amount of damage that would be applied
-                    dmgEntry.health -= obj->hitPoints - dmgEntry.health;
+                    float currentShield = 0.f;
+                    float maxShield = 0.f;
+                    bool shieldsUp = false;
+                    pub::SpaceObj::GetShieldHealth(hitSpaceObj, currentShield, maxShield, shieldsUp);
+
+                    if (shieldsUp)
+                    {
+                        dmgEntry.health -= currentShield - dmgEntry.health;
+                    }
+                    else
+                    {
+                        dmgEntry.health -= obj->hitPoints - dmgEntry.health;
+                    }
+
                     break;
                 }
 
