@@ -57,4 +57,6 @@ SetupEffect(IfTrentHadATextToSpeechDevice, {
     .effectName = "If Trent Had A Text To Speech Device",
     .description = "Plays a random line via the system's text-to-speech.",
     .category = EffectType::Audio,
+    .timingModifier = 0.0f,
+    .isTimed = false
 });
