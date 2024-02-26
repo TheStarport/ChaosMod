@@ -31,6 +31,8 @@ class CaveatEmptor final : public ActiveEffect
 
         void Begin() override
         {
+            pub::Audio::PlaySoundEffect(1, CreateID("chaos_caveat_emptor"));
+
             // Blow off guns that are not attached to the ship root
             CShip* ship = Utils::GetCShip();
 
