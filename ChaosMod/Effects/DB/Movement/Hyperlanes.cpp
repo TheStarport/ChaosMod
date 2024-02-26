@@ -26,6 +26,6 @@ class Hyperlanes final : public MemoryEffect
 SetupEffect(Hyperlanes, {
     .effectName = "Hyperlanes",
     .description = "You've been given a SUPER DUPER SPEED UP POWER. Tradelanes are gonna make you go FAAAAAAST.",
-    .category = EffectType::StatManipulation,
+    .category = EffectType::Movement,
     .timingModifier = 3.0f
 });
