@@ -199,6 +199,7 @@
     <ClCompile Include="Effects\DB\StatManipulation\DoubleTap.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\FiftyFifty.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\Juggernog.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\SpeedCola.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\Wither.cpp" />
     <ClCompile Include="Effects\DB\Visual\CinematicMode.cpp" />

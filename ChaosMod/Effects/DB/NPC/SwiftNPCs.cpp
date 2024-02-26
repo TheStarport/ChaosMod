@@ -36,5 +36,6 @@ class SwiftNPCs final : public ActiveEffect
 SetupEffect(SwiftNPCs, {
     .effectName = "Swift NPCs",
     .description = "Someone made the NPCs go all zoomy!",
-    .category = EffectType::Npc
+    .category = EffectType::Npc,
+    .exclusion = EffectExclusion::GetMass
 });

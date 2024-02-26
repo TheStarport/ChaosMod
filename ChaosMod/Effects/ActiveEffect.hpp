@@ -21,7 +21,8 @@ enum class EffectExclusion
     Visual,
     SendComm,
     FireResource,
-    RefireDelay
+    RefireDelay,
+    GetMass
 };
 
 class ActiveEffect
