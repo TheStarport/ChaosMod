@@ -36,29 +36,32 @@ class CaveatEmptor final : public ActiveEffect
             // Blow off guns that are not attached to the ship root
             CShip* ship = Utils::GetCShip();
 
-            std::vector<CAttachedEquip*> gunsToRemove;
+            std::vector<CAttachedEquip*> attachedEquips;
 
-            CEquipTraverser tr(Gun);
+            CEquipTraverser tr;
             CEquip* equip = ship->equip_manager.Traverse(tr);
             while (equip)
             {
                 auto external = CAttachedEquip::cast(equip);
                 equip = ship->equip_manager.Traverse(tr);
 
-                if (external->GetParentConnector(true) == long(ship->index))
+                if (!external || external->GetParentConnector(true) == long(ship->index))
                 {
                     continue;
                 }
 
                 // We are attached to the ship
-                gunsToRemove.emplace_back(external);
+                attachedEquips.emplace_back(external);
             }
 
-            for (const auto gun : gunsToRemove)
+            DamageList dmg;
+            for (const auto subEquip : attachedEquips)
             {
-                gun->Destroy();
-                gun->Disconnect();
+                // Apply damage to destroy equipment
+                dmg.add_damage_entry(subEquip->SubObjId, 0.0f, static_cast<DamageEntry::SubObjFate>(2));
             }
+
+            destroySubObjects(ship, nullptr, &dmg, false);
 
             // Queue wing destruction
             GlobalTimers::i()->AddTimer(DelayedGroupExplosion, 1.0f);
