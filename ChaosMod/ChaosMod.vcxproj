@@ -196,6 +196,7 @@
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\AllPowerToTheWeapons.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\BloodMagic.cpp" />
+    <ClCompile Include="Effects\DB\StatManipulation\DoubleTap.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\FiftyFifty.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\Wither.cpp" />
