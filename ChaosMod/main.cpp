@@ -417,6 +417,10 @@ void RequiredMemEdits()
                                           0x50, 0x53, 0xE8, 0x37, 0x6C, 0xFD, 0xFF, 0x83, 0xC4, 0x08, 0x61, 0xEB, 0x63 };
     MemUtils::WriteProcMem(fl + 0x18B2D5, uiSmoothness.data(), uiSmoothness.size());
 
+    // Comm/Background chatter play immediately
+    MemUtils::NopAddress(fl + 0xCDB41, 2);
+    MemUtils::NopAddress(fl + 0xCE71E, 2);
+
     PatchResolution();
 }
 
