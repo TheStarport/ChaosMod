@@ -35,12 +35,19 @@ void ShipManipulator::SetPosition(CObject* object, const Vector& pos)
     object->update_tree();
 }
 
-void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
+void ShipManipulator::PhysicsUpdate(const uint system, float delta)
 {
+    detour->UnDetour();
+
+    if (i()->cocaineMode)
+    {
+        PhySys::Update(system, delta);
+        PhySys::Update(system, delta);
+    }
+
     const auto ship = Utils::GetCShip();
     if (!ship)
     {
-        detour->UnDetour();
         PhySys::Update(system, delta);
         detour->Detour(PhysicsUpdate);
         return;
@@ -103,7 +110,6 @@ void ShipManipulator::PhysicsUpdate(const uint system, const float delta)
                                     });
     }
 
-    detour->UnDetour();
     PhySys::Update(system, delta);
     detour->Detour(PhysicsUpdate);
 }
@@ -117,4 +123,5 @@ ShipManipulator::ShipManipulator()
 void ShipManipulator::SetPersonalSpace(const bool should) { personalSpace = should; }
 
 void ShipManipulator::OverridePlayerAngularVelocity(const std::optional<Vector>& override) { playerAngularVelocityOverride = override; }
+void ShipManipulator::SetCocaineMode(const bool mode) { cocaineMode = mode; }
 void ShipManipulator::MakeShipsSpin(const bool shouldSpin) { spin = shouldSpin; }

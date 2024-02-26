@@ -39,7 +39,7 @@ class SpeedCola final : public ActiveEffect
 SetupEffect(SpeedCola, {
     .effectName = "Speed Cola",
     .description = "Speed Cola speeds up your life.",
-    .category = EffectType::StatManipulation,
+    .category = EffectType::Movement,
     .timingModifier = 1.5f,
     .exclusion = EffectExclusion::GetMass
 });
