@@ -181,6 +181,34 @@
     <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
+    <ClCompile Include="Effects\DB\Movement\Zoomies.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\Wither.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\Juggernog.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\Hyperlanes.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\FiftyFifty.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\DoubleTap.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\CocaineMode.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\AllPowerToTheWeapons.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\StatManipulation\BloodMagic.cpp">
+      <Filter>Effects\DB\StatManipulation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -317,9 +345,6 @@
     <ClCompile Include="Effects\DB\StatManipulation\GodMode.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\DB\StatManipulation\Hyperlanes.cpp">
-      <Filter>Effects\DB\StatManipulation</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\DB\StatManipulation\TryRepairing.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
@@ -420,9 +445,6 @@
       <Filter>Effects\DB\NPC</Filter>
     </ClCompile>
     <ClCompile Include="Effects\DB\StatManipulation\DemolitionDerby.cpp">
-      <Filter>Effects\DB\StatManipulation</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\DB\StatManipulation\Zoomies.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
     <ClCompile Include="Effects\DB\Visual\HomageToElite.cpp">
