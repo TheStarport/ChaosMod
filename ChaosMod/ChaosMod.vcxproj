@@ -197,6 +197,7 @@
     <ClCompile Include="Effects\DB\Movement\Hyperlanes.cpp" />
     <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
     <ClCompile Include="Effects\DB\Movement\Zoomies.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp" />
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\AllPowerToTheWeapons.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\BloodMagic.cpp" />
