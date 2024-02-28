@@ -212,6 +212,9 @@
     <ClCompile Include="Effects\DB\StatManipulation\SurpriseMechanics.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
