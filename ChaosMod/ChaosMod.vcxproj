@@ -197,6 +197,8 @@
     <ClCompile Include="Effects\DB\Movement\Hyperlanes.cpp" />
     <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
     <ClCompile Include="Effects\DB\Movement\Zoomies.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\ClonePlayer.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\EvilPlayer.cpp" />
     <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp" />
     <ClCompile Include="Effects\DB\Spawning\LambdaSquadron.cpp" />
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />

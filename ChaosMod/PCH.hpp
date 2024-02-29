@@ -48,6 +48,7 @@ void Log(const std::string& log);
 
 void SetWireFrames();
 void Assert(bool cond, const std::string& text, const std::string& file, int line);
+std::optional<std::string> HashLookup(uint hash);
 
 enum class Language
 {

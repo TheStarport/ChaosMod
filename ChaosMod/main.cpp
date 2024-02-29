@@ -31,12 +31,24 @@ typedef void (*GlobalTimeFunc)(double delta);
 std::unique_ptr<FunctionDetour<ScriptLoadPtr>> thornLoadDetour;
 std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 
-#ifdef _DEBUG
-
 using CreateIdFunc = uint (*)(const char* str);
 std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
 FILE* hashFile = nullptr;
 std::map<std::string, uint> hashMap;
+
+std::optional<std::string> HashLookup(const uint hash)
+{
+    for (auto& [nickname, existingHash] : hashMap)
+    {
+        if (existingHash == hash)
+        {
+            return nickname;
+        }
+    }
+
+    return std::nullopt;
+}
+
 uint CreateIdDetour(const char* string)
 {
     if (!string)
@@ -44,9 +56,9 @@ uint CreateIdDetour(const char* string)
         return 0;
     }
 
-    if (!hashFile)
+    if (const auto found = hashMap.find(string); found != hashMap.end())
     {
-        fopen_s(&hashFile, "hashmap.csv", "wb");
+        return found->second;
     }
 
     createIdDetour->UnDetour();
@@ -55,14 +67,20 @@ uint CreateIdDetour(const char* string)
     if (const std::string str = string; !hashMap.contains(str))
     {
         hashMap[str] = hash;
+#ifdef _DEBUG
+        if (!hashFile)
+        {
+            fopen_s(&hashFile, "hashmap.csv", "wb");
+        }
+
         fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
         fflush(hashFile);
+#endif
     }
 
     createIdDetour->Detour(CreateIdDetour);
     return hash;
 }
-#endif
 
 constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
