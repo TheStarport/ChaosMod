@@ -198,6 +198,7 @@
     <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
     <ClCompile Include="Effects\DB\Movement\Zoomies.cpp" />
     <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\LambdaSquadron.cpp" />
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\AllPowerToTheWeapons.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\BloodMagic.cpp" />
@@ -350,6 +351,7 @@
     <ClInclude Include="Exceptions\NpcLoadingException.hpp" />
     <ClInclude Include="PCH.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Systems\BugFixes.hpp" />
     <ClInclude Include="Systems\CameraController.hpp" />
     <ClInclude Include="Systems\ChaosTimer.hpp" />
     <ClInclude Include="Systems\ConfigManager.hpp" />

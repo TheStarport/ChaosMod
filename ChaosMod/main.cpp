@@ -1,5 +1,6 @@
 // ReSharper disable CppClangTidyPerformanceNoIntToPtr
 #include "PCH.hpp"
+#include "Systems/BugFixes.hpp"
 
 #include "Systems/CameraController.hpp"
 #include "Systems/ChaosTimer.hpp"
@@ -420,6 +421,8 @@ void RequiredMemEdits()
     // Comm/Background chatter play immediately
     MemUtils::NopAddress(fl + 0xCDB41, 2);
     MemUtils::NopAddress(fl + 0xCE71E, 2);
+
+    BugFixes::SetupDetours();
 
     PatchResolution();
 }
