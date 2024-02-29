@@ -200,6 +200,7 @@
     <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp" />
     <ClCompile Include="Effects\DB\Spawning\LambdaSquadron.cpp" />
     <ClCompile Include="Effects\DB\Spawning\MonsterCloset.cpp" />
+    <ClCompile Include="Effects\DB\Spawning\PleaseDoNotBend.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\AllPowerToTheWeapons.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\BloodMagic.cpp" />
     <ClCompile Include="Effects\DB\StatManipulation\DoubleTap.cpp" />
