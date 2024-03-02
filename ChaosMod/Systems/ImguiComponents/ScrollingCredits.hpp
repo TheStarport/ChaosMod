@@ -42,7 +42,6 @@ class ScrollingCredits final
             ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
 
             ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_Always);
-            ImGui::SetNextWindowFocus();
             if (!ImGui::Begin("Scrolling Credits", nullptr, windowFlags))
             {
                 ImGui::End();

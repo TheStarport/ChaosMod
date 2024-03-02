@@ -18,6 +18,5 @@ SetupEffect(TakeABreak, {
     .effectName = "Take a break",
     .description = "You've been playing too long. We've captured your progress and set a manditory break time.",
     .category = EffectType::Teleport,
-    .timingModifier = 2.0f,
-    .weight = 5
+    .timingModifier = 1.0f
 });

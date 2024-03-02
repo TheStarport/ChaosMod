@@ -3,7 +3,7 @@ name = Trent
 rank = 0
 Description = NewPlayer
 
-money = 50000
+money = 5000
 
 voice = trent_voice
 costume = trent

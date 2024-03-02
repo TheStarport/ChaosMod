@@ -17,6 +17,5 @@ SetupEffect(RandomSystem, {
     .description = "This place is boring, lets take you to a far more exotic land.",
     .category = EffectType::Teleport,
     .timingModifier = 0.0f,
-    .isTimed = false,
-    .weight = 5
+    .isTimed = false
 });

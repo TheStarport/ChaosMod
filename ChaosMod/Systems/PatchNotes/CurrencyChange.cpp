@@ -2,6 +2,8 @@
 
 #include "Changes.hpp"
 
+CurrencyChange::CurrencyChange() { changeType = ChangeType::Currency; }
+
 void CurrencyChange::Apply()
 {
     const auto goods = GoodList_get();

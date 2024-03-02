@@ -309,7 +309,7 @@ void ChaosTimer::Update(const float delta)
     const auto currentShip = Utils::GetCShip();
 
     // Check that the game is not paused and patch notes are enabled
-    if (ConfigManager::i()->enablePatchNotes && *PDWORD(0x667D54) == 0 && (ConfigManager::i()->countDownWhileOnBases || currentShip))
+    if (ConfigManager::i()->enablePatchNotes && !OffsetHelper::IsGamePaused() && (ConfigManager::i()->countDownWhileOnBases || currentShip))
     {
         patchTime -= delta;
         if (patchTime <= 0.0f)

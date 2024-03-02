@@ -92,6 +92,8 @@ void Init()
 
     // If any of these are done earlier, we get crashes (bad)
 
+    PatchNotes::LoadPatches();
+
     EventManager::i()->SetupDetours();
     CameraController::i();
     HudInterface::i();
@@ -282,10 +284,8 @@ void RequiredMemEdits()
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
     const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
 
-#ifdef _DEBUG
     createIdDetour = std::make_unique<FunctionDetour<CreateIdFunc>>(CreateID);
     createIdDetour->Detour(CreateIdDetour);
-#endif
 
     // Patch out vanilla cursor
     BYTE nopPatch[] = { 0x90, 0x90, 0x90, 0x90 };

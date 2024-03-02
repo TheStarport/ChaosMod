@@ -17,7 +17,7 @@ class PatchNotes : Singleton<PatchNotes>
         inline static std::vector<std::shared_ptr<Patch>> availablePatches;
         static void SavePatches();
         static void RevertPatch(const std::shared_ptr<Patch> &patch);
-        static void ApplyPatch(const std::shared_ptr<Patch> &patch);
+        static void ApplyPatch(const std::shared_ptr<Patch> &patch, bool showPatchNotes = true);
         static std::shared_ptr<Change> GetChangePtr(ChangeType type);
 
     public:

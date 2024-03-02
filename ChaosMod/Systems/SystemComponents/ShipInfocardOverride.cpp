@@ -191,7 +191,7 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(const uint ids)
     if (ids == shipWeaponInfoIds)
     {
             std::wostringstream ss;
-        ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><PARA/><JUST loc="center"/><TEXT>Stats</TEXT><PARA/><JUST loc="left"/><PARA/>)"
+        ss << LR"(<?xml version="1.0" encoding="UTF-16"?><RDL><PUSH/><PARA/><JUST loc="center"/><TEXT>Stats</TEXT><PARA/><JUST loc="left"/>)"
            << L"<TEXT>Gun/Turret/Special Mounts:</TEXT><PARA/>"
            << L"<TEXT>Armor:</TEXT><PARA/>"
            << L"<TEXT>Cargo Space:</TEXT><PARA/>"

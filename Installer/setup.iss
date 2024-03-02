@@ -73,7 +73,7 @@ Filename: "{app}\EXE\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringC
 Type: filesandordirs; Name: "{app}"
 
 [Messages]
-WelcomeLabel2=Hello Beagle. I would to play a game. Install this mod and enjoy... well you probably wont, but I will.
+WelcomeLabel2=Hello Beagle. I would like to play a game. Install this mod and enjoy... well you probably wont, but I will.
 FinishedLabel=Setup has finished installing [name] on your computer. The application may be launched by selecting the installed shortcut.%n%nNOTE: [name] has been installed as a separate application. Therefore, your vanilla Freelancer installation has not been modified and can still be played at any time.
 
 [Code]

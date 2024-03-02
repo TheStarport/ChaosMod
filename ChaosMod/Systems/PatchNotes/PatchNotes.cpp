@@ -30,46 +30,60 @@ void PatchNotes::LoadPatches()
     std::ifstream file(path + "\\patches.json", std::ios_base::binary | std::ios_base::in);
 
     // If the file exists, load it.
-    if (file.is_open())
+    if (!file.is_open())
     {
-        using StreamIter = std::istreambuf_iterator<char>;
-        std::string content(StreamIter{ file }, StreamIter{});
-        if (file)
+        return;
+    }
+
+    using StreamIter = std::istreambuf_iterator<char>;
+    std::string content(StreamIter{ file }, StreamIter{});
+    try
+    {
+        const auto json = nlohmann::json::parse(content);
+        ASSERT(json.is_array(), "Patch notes must be an array.");
+
+        file.close();
+
+        while (!appliedPatches.empty())
         {
-            try
-            {
-                ResetPatches(false, true);
-
-                const auto json = nlohmann::json::parse(content);
-                ASSERT(json.is_array(), "Patch notes must be an array.");
-
-                for (const auto& obj : json)
-                {
-                    ASSERT(obj.is_object(), "Every array item must be an object.");
-
-                    const auto patch = std::make_shared<Patch>();
-                    patch->date = obj["date"];
-                    patch->version = obj["version"];
-                    auto _ = semver::from_string(patch->version); // Not used, excepts if invalid
-
-                    for (auto& changes = obj["changes"]; const auto& changeObj : changes)
-                    {
-                        ASSERT(changes.is_object(), "Changes must be objects");
-
-                        auto change = GetChangePtr(changeObj["type"].get<ChangeType>());
-
-                        change->FromJson(changeObj);
-                        patch->changes.emplace_back(change);
-                    }
-
-                    availablePatches.emplace_back(patch);
-                }
-            }
-            catch (std::exception& ex)
-            {
-                Log(std::format("Failed to parse patch notes.json {}. Attempting to reset file.", ex.what()));
-            }
+            const auto patch = appliedPatches.top();
+            RevertPatch(patch);
         }
+
+        availablePatches.clear();
+        patchNotes.clear();
+
+        for (const auto& obj : json)
+        {
+            ASSERT(obj.is_object(), "Every array item must be an object.");
+
+            const auto patch = std::make_shared<Patch>();
+            patch->date = obj["date"];
+            patch->version = obj["version"];
+            auto _ = semver::from_string(patch->version); // Not used, excepts if invalid
+            if (obj.contains("release"))
+            {
+                patch->releaseName = obj["release"];
+            }
+
+            auto changes = obj.at("changes").get<nlohmann::json::array_t>();
+            for (const auto& changeObj : changes)
+            {
+                ASSERT(changeObj.is_object(), "Changes must be objects");
+
+                auto change = GetChangePtr(static_cast<ChangeType>(changeObj["type"].get<int>()));
+
+                change->FromJson(changeObj);
+                patch->changes.emplace_back(change);
+            }
+
+            availablePatches.emplace_back(patch);
+        }
+    }
+    catch (std::exception& ex)
+    {
+        Log(std::format("Failed to parse patch notes.json {}. Attempting to reset file.", ex.what()));
+        ResetPatches(false, true);
     }
 }
 
@@ -89,6 +103,8 @@ void PatchNotes::SavePatches()
         }
 
         obj["changes"] = changes;
+        obj["version"] = patch->version;
+        obj["release"] = patch->releaseName;
         json.push_back(obj);
     }
 
@@ -141,12 +157,12 @@ void PatchNotes::ResetPatches(const bool reapply, bool clean)
     {
         for (const auto& patch : availablePatches)
         {
-            ApplyPatch(patch);
+            ApplyPatch(patch, false);
         }
     }
 }
 
-void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch)
+void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch, bool showPatchNotes)
 {
     appliedPatches.push(patch);
 
@@ -160,7 +176,10 @@ void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch)
     std::chrono::sys_time time{ std::chrono::seconds{ patch->date } };
     patchNotes.emplace_back(patch->version, std::format("{0:%Y-%m-%d %H:%M:%S}", time), notes, patch->releaseName);
 
-    ImGuiManager::ShowPatchNotes();
+    if (showPatchNotes)
+    {
+        ImGuiManager::ShowPatchNotes();
+    }
 }
 
 void PatchNotes::GeneratePatch()

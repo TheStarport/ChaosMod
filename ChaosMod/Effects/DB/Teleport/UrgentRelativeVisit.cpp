@@ -22,6 +22,5 @@ SetupEffect(UrgentRelativeVisit, {
     .description = "You got a text from Tobias to meet him on a random base. He said it was urgent...",
     .category = EffectType::Teleport,
     .timingModifier = 0.0f,
-    .isTimed = false,
-    .weight = 5
+    .isTimed = false
 });

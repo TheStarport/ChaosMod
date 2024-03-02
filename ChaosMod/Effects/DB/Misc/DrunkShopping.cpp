@@ -21,7 +21,7 @@ class DrunkShopping final : public ActiveEffect
                         auto good = goodList->find_by_id(goodId);
                         if (!good || good->price == 0.0f)
                         {
-                            return;
+                            continue;
                         }
 
                         possibleWeapons.emplace_back(goodId);

@@ -138,6 +138,8 @@ class CurrencyChange : public Change
         inline static std::vector<uint> possibleGoods;
 
     public:
+        CurrencyChange();
+
         void Apply() override;
         void Revert() override;
         void Generate() override;
@@ -259,7 +261,7 @@ class EquipmentChange : public Change
             }
             else if constexpr (Type == ChangeType::GunMotor)
             {
-                auto motor = Archetype::GetMotor(hash);
+                auto motor = const_cast<Archetype::MotorData*>(Archetype::GetMotor(hash));
                 if (!motor)
                 {
                     return {};

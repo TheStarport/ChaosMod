@@ -18,6 +18,5 @@ SetupEffect(TheStarsReallyAreBeautiful, {
     .description = "Time to teleport you to your nearest star so you can admire it!",
     .category = EffectType::Teleport,
     .timingModifier = 0.0f,
-    .isTimed = false,
-    .weight = 5
+    .isTimed = false
 });

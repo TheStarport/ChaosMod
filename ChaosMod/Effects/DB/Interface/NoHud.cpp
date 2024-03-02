@@ -4,6 +4,7 @@
 
 #include "Effects/ActiveEffect.hpp"
 #include "Systems/UiManager.hpp"
+#include "Utilities/OffsetHelper.hpp"
 
 class NoHud final : public ActiveEffect
 {

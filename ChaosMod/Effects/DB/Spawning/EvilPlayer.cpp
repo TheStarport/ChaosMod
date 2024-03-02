@@ -33,7 +33,7 @@ class SpawnEvilPlayer final : public ActiveEffect
                 items.emplace_back(item);
             }
 
-            const std::string nickname = "cloned_player_loadout_" + std::to_string(i++);
+            const std::string nickname = "cloned_player_loadout_evil_" + std::to_string(i++);
             SpaceObjectSpawner::CreateNewLoadout(nickname, items);
 
             clone = SpaceObjectSpawner::NewBuilder()
