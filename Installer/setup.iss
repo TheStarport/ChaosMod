@@ -29,9 +29,10 @@ DefaultDirName={sd}\Games\{#MyAppFileName}
 DefaultGroupName={#MyAppFileName}
 DisableWelcomePage=False
 DisableDirPage=False
+DiskSpanning=True
 ExtraDiskSpaceRequired = {#SizeAll}
 InfoBeforeFile={#SourcePath}\Assets\Text\installinfo.txt
-OutputBaseFilename=FreelancerHDESetup
+OutputBaseFilename=FreelancerChaosMod
 SetupIconFile={#SourcePath}\Assets\Images\icon.ico
 SolidCompression=yes
 UninstallDisplayIcon={#SourcePath}\Assets\Images\icon.ico
@@ -72,7 +73,7 @@ Filename: "{app}\EXE\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringC
 Type: filesandordirs; Name: "{app}"
 
 [Messages]
-WelcomeLabel2=Freelancer: HD Edition is a mod that aims to improve every aspect of the game Freelancer (2003) while keeping the look and feel as close to vanilla as possible. It also serves as an all-in-one package for players so they don't have to worry about installing countless patches and mods to create the perfect HD and bug-free install.%n%nThis installer requires a clean, freshly installed Freelancer directory.
+WelcomeLabel2=Hello Beagle. I would to play a game. Install this mod and enjoy... well you probably wont, but I will.
 FinishedLabel=Setup has finished installing [name] on your computer. The application may be launched by selecting the installed shortcut.%n%nNOTE: [name] has been installed as a separate application. Therefore, your vanilla Freelancer installation has not been modified and can still be played at any time.
 
 [Code]
