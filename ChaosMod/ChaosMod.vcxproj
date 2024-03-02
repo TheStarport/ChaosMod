@@ -328,6 +328,7 @@
     <ClCompile Include="Systems\ShipManipulator.cpp" />
     <ClCompile Include="Systems\SystemComponents\miniaudio.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Systems\SystemComponents\ShipInfocardOverride.cpp" />
     <ClCompile Include="Systems\SystemComponents\TwitchVoting.cpp" />

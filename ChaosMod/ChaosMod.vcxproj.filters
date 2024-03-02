@@ -181,7 +181,6 @@
     <ClCompile Include="Effects\DB\StatManipulation\Vampire.cpp">
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
     <ClCompile Include="Effects\DB\Movement\Zoomies.cpp">
       <Filter>Effects\DB\Movement</Filter>
     </ClCompile>
@@ -213,6 +212,21 @@
       <Filter>Effects\DB\StatManipulation</Filter>
     </ClCompile>
     <ClCompile Include="Effects\DB\Spawning\FinePilsner.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\PleaseDoNotBend.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\LambdaSquadron.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\EvilPlayer.cpp">
+      <Filter>Effects\DB\Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Spawning\ClonePlayer.cpp">
       <Filter>Effects\DB\Spawning</Filter>
     </ClCompile>
   </ItemGroup>
@@ -632,6 +646,9 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Systems\SystemComponents\ShipInfocardOverride.hpp">
+      <Filter>Systems\SystemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\BugFixes.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
   </ItemGroup>
