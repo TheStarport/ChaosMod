@@ -8,16 +8,22 @@ class BloodMagic final : public ActiveEffect
 
         static void __fastcall ConsumeFireResources(CELauncher* launcher)
         {
-            if (launcher->GetOwner() != Utils::GetCShip())
+            const auto ship = Utils::GetCShip();
+            if (launcher->GetOwner() != ship)
             {
                 return;
             }
 
             // Massively lower the health cost so the user doesn't instantly die
             const float healthCost = launcher->LauncherArch()->powerUsage * 0.2f;
-
-            const auto ship = Utils::GetCShip();
             ship->hitPoints -= healthCost;
+
+            // Prevent their health from going negative, kill them now
+            if (ship->get_relative_health() < 0.001f)
+            {
+                pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
+                return;
+            }
 
             consumeFireResourcesDetour.UnDetour();
             consumeFireResourcesDetour.GetOriginalFunc()(launcher);
