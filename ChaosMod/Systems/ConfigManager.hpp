@@ -9,7 +9,8 @@ class ConfigManager : public Singleton<ConfigManager>
         {
             TopBar,
             SideBar,
-            Clock
+            Clock,
+            Countdown
         };
 
         float timeBetweenChaos = 45.0f;

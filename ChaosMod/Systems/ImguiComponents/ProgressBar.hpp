@@ -12,6 +12,44 @@ class ProgressBar final
         friend ImGuiManager;
         inline static float progress = 0.0f;
 
+        static void DrawCountdown()
+        {
+            ImGui::PushFont(ImGuiManager::GetFont(Font::TitiliumWebLarge));
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, 0);
+            ImGui::PushStyleColor(ImGuiCol_MenuBarBg, 0);
+            if (!ImGui::BeginMainMenuBar())
+            {
+                ImGui::PopStyleColor(2);
+                ImGui::PopFont();
+                return;
+            }
+
+            using namespace std::chrono;
+            const auto remainingTime = ChaosTimer::i()->GetTimeUntilChaos();
+
+            if (remainingTime <= 0.f)
+            {
+                ImGui::Text("00:00");
+            }
+            else
+            {
+                auto dur = duration<float>{ remainingTime };
+
+                const auto s = duration_cast<seconds>(dur);
+                dur -= s;
+                const auto m = duration_cast<milliseconds>(dur);
+
+                const auto sc = s.count();
+                const auto mc = m.count();
+
+                ImGui::Text(std::format("{:02}:{:02}", sc, mc).c_str());
+            }
+
+            ImGui::EndMainMenuBar();
+            ImGui::PopStyleColor(2);
+            ImGui::PopFont();
+        }
+
         static void DrawAngledLine(const float angle, const float radius, const float lengthIn, const float lengthOut, const ImU32 color)
         {
             const float x1 = std::sinf(-angle + static_cast<float>(std::numbers::pi)) * (radius - lengthOut) + radius;
@@ -133,6 +171,7 @@ class ProgressBar final
                 case ConfigManager::ProgressBar::TopBar: DrawTopBar(); break;
                 case ConfigManager::ProgressBar::SideBar: DrawSideBars(); break;
                 case ConfigManager::ProgressBar::Clock: DrawClock(); break;
+                case ConfigManager::ProgressBar::Countdown: DrawCountdown(); break;
             }
 
             ImGui::PopStyleColor();
