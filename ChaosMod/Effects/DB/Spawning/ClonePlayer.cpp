@@ -42,7 +42,7 @@ class ClonePlayer final : public ActiveEffect
                         .WithSystem(ship->system)
                         .WithPosition(ship->get_position(), 1500.f)
                         .WithLevel(50)
-                        .WithPersonality("pilot_military_ace")
+                        .WithPersonality("pilot_universal")
                         .WithReputation("fc_uk_grp")
                         .WithName(458857)
                         .WithFuse("chaos_teleport_fx")

@@ -195,7 +195,7 @@ std::optional<std::wstring> ShipInfocardOverride::OverrideIds(const uint ids)
            << L"<TEXT>Gun/Turret/Special Mounts:</TEXT><PARA/>"
            << L"<TEXT>Armor:</TEXT><PARA/>"
            << L"<TEXT>Cargo Space:</TEXT><PARA/>"
-           << L"<TEXT>Max Batteries/Nanobots:</TEXT><PARA/>"
+           << L"<TEXT>Max Nanobots/Batteries:</TEXT><PARA/>"
            << L"<TEXT>Turn Rate:</TEXT><PARA/>"
            << L"<TEXT>Time To 100% TR (Response):</TEXT><PARA/>"
            << L"<TEXT>Additional Equipment: </TEXT><PARA/><POP/></RDL>";
