@@ -34,7 +34,7 @@ S 458808 Wand of Fireball
 S 458809 Super Saiyan
 S 458810 Clown Gun
 S 458811 Yeet-O-Matic
-S 458812 Sludge Launcher
+S 458812 GES Bio Rifle
 S 458813 Memesile
 S 458814 Memesile Launcher
 S 458815 Blunderbuss
@@ -181,31 +181,54 @@ H 458805
 	Zoner Marines
 
 H 458825
-	Wand of Fireball Placeholder Description
-
+	\m\bWAND OF FIREBALL\B
+	\l
+	A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one. The fire spreads around corners. It ignites flammable objects in the area that aren’t being worn or carried.
+	\l
 H 458826
-	Super Saiyan Placeholder Description
+	\m\bSUPER SAIYAN\B
+	\l
+	"I'm the Saiyan who came all the way from Earth for the sole purpose of beating you. I am the warrior you've heard of in legends, pure of heart and awakened by fury, that's what I am. I am the Super Saiyan, Son Goku!"
+	\l
 
 H 458827
-	Clown Gun Placeholder Description
+	\m\bCLOWN GUN\B
+	\l
+	Honk.
+	\l
 
 H 458828
 	Yeet-O-Matic Placeholder Description
 
 H 458829
-	Sludge Launcher Placeholder Description
-
+	\m\bGES BIO RIFLE\B
+	\l
+	A testament to creative recycling, this weapon uses volatile Tarydium waste for ammunition. The highly unstable nature of this waste makes the GES BioRifle more powerful than its Tarydium-using cousin, the Stinger.
+	\l
+	
 H 458830
-	Memesile Placeholder Description
+	\m\bMEMESILE\B
+	\l
+	Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan Nyan nyan nyan ny
+	\l
 
 H 458831
-	Memesile Launcher Placeholder Description
+	\m\bMEMESILE LAUNCHER\B
+	\l
+	Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan Nyan nyan nyan ny
+	\l
 
 H 458832
-	Blunderbuss Placeholder Description
+	\m\bBLUNDERBUSS\B
+	\l
+	CLOSE RANGE??!?
+	\l
 
 H 458833
-	Asteroid Gun Placeholder Description
+	\m\bASTEROID GUN\B
+	\l
+	The war on the rocks will never be over
+	\l
 
 H 458834
 	Supercharged Shield LF Placeholder Description
@@ -232,7 +255,10 @@ H 458840
 	\l
 
 H 458841
-	Ancient Gallian Thruster Placeholder Description
+	\m\bANCIENT GALLIC THRUSTER\B
+	\l
+	"Liberté, Egalité, Retraite"
+	\l
 
 H 458846
 	\m\bWAND OF MAGIC MISSILE\B
