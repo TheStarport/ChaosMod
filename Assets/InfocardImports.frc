@@ -33,7 +33,7 @@ S 458807 Omicron Minor Jump Hole
 S 458808 Wand of Fireball
 S 458809 Super Saiyan
 S 458810 Clown Gun
-S 458811 Yeet-O-Matic
+S 458811 Zero Point Energy Field Manipulator
 S 458812 GES Bio Rifle
 S 458813 Memesile
 S 458814 Memesile Launcher
@@ -198,7 +198,10 @@ H 458827
 	\l
 
 H 458828
-	Yeet-O-Matic Placeholder Description
+	\m\bZERO POINT ENERGY FIELD MANIPULATOR\B
+	\l
+	HEV Suit not included.
+	\l
 
 H 458829
 	\m\bGES BIO RIFLE\B
