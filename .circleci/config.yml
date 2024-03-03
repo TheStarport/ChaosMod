@@ -7,6 +7,9 @@ jobs:
     windows-msvc:
         executor: win/server-2022
         steps:
+            - add_ssh_keys:
+                fingerprints:
+                  - "SHA256:Vez+9ng8BrMKVo1RJUa68647BVC9Rihu1rZVRiShbT4"
             - checkout
             - run: .ci\install-vcpkg.ps1
             - run: .ci\install-dependencies.ps1
