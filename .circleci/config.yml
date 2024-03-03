@@ -11,6 +11,7 @@ jobs:
                 fingerprints:
                   - "SHA256:Vez+9ng8BrMKVo1RJUa68647BVC9Rihu1rZVRiShbT4"
             - checkout
+            - run: Get-ChildItem -Force
             - run: .ci\install-vcpkg.ps1
             - run: .ci\install-dependencies.ps1
             - run: .ci\build-project.ps1
