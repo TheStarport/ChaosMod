@@ -4,6 +4,6 @@ $VCPKG_DIR = "$HOME\vcpkg"
 
 Push-Location "$VCPKG_DIR"
 
-./vcpkg.exe install --x-wait-for-lock --triplet "x86-windows" --vcpkg-root "$VCPKG_DIR" --x-manifest-root="${HOME}/project" --x-install-root="${HOME}\vcpkg_installed\x86-windows"
+./vcpkg.exe install --x-wait-for-lock --triplet "x86-windows" --vcpkg-root "$VCPKG_DIR" --x-manifest-root="${HOME}/project" --x-install-root="${HOME}/project/vcpkg_installed/x86-windows"
 
 Pop-Location
