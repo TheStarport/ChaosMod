@@ -4,7 +4,7 @@ orbs:
     win: circleci/windows@5.0.0
 
 jobs:
-    windows-msvc:
+    build:
         executor: win/server-2022
         steps:
             - add_ssh_keys:
@@ -16,6 +16,10 @@ jobs:
                 command: |
                     git submodule sync
                     git submodule update --init --recursive
+            - run:
+                name: Download 7Zip
+                command: |
+                    & "C:\windows\system32\curl.exe" -L -o "${HOME}/7z.exe" "https://www.7-zip.org/a/7zr.exe"
             - restore_cache:
                 name: Restoring VCPKG Cache
                 key: vcpkg-{{ checksum "vcpkg.json" }}
@@ -42,8 +46,32 @@ jobs:
             - run: 
                 name: Build Project
                 command: .ci\build-project.ps1
+            - run:
+                name: "Compress Release"
+                command: 
+                    mkdir C:\Users\circleci\artifacts
+                    7z a -r C:\Users\circleci\artifacts\ChaosMod.7z ./ChaosMod/Release/*
+            - persist_to_workspace:
+                root: C:\Users\circleci\artifacts
+                paths: 
+                    - ChaosMod.7z
+
+    release:
+        docker:
+            - image: cibuilds/github:0.10
+        steps:
+            - attach_workspace:
+                at: C:\Users\circleci\artifacts
+            - run:
+                name: Publish Release on GitHub
+                command: |
+                    VERSION=$(date +"%Y-%m-%d")
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} C:\Users\circleci\artifacts
 
 workflows:
     run-all:
         jobs:
-            - windows-msvc
+            - build
+            - release:
+                requires:
+                    - build

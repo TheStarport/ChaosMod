@@ -16,7 +16,6 @@ if (-not (Test-Path $VCPKG_DEST)) {
 
 # Only download and install dx9 sdk if not cached
 if (-not (Test-Path $DX9_SDK)) {
-    & "C:\windows\system32\curl.exe" -L -o "${HOME}/7z.exe" "https://www.7-zip.org/a/7zr.exe"
     mkdir TEMP; cd TEMP
     & "C:\windows\system32\curl.exe" -L -o "_DX2010_.exe" "https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe"
     7z x _DX2010_.exe DXSDK/Include -o_DX2010_
