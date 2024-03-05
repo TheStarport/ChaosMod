@@ -17,7 +17,11 @@ jobs:
                     git submodule sync
                     git submodule update --init --recursive
             - restore_cache:
+                name: Restoring VCPKG Cache
                 key: vcpkg-{{ checksum "vcpkg.json" }}
+            #- restore_cache:
+                #name: Restore DX9 SDK Cache
+                #key: 
             - run: 
                 name: Install VCPKG
                 command: .ci\install-vcpkg.ps1
