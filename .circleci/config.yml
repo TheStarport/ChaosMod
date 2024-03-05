@@ -19,9 +19,9 @@ jobs:
             - restore_cache:
                 name: Restoring VCPKG Cache
                 key: vcpkg-{{ checksum "vcpkg.json" }}
-            #- restore_cache:
-                #name: Restore DX9 SDK Cache
-                #key: 
+            - restore_cache:
+                name: Restore DX9 SDK Cache
+                key: dx9-sdk
             - run: 
                 name: Install VCPKG
                 command: .ci\install-vcpkg.ps1
@@ -30,9 +30,15 @@ jobs:
                 command: .ci\install-dependencies.ps1
                 no_output_timeout: 25m
             - save_cache:
+                name: Caching VCPKG Packages
                 key: vcpkg-{{ checksum "vcpkg.json" }}
                 paths:
                     - vcpkg_installed
+            - save_cache:
+                name: Caching DX9 SDK
+                key: dx9-sdk
+                paths:
+                    - C:\Users\circleci\DirectXSDK
             - run: 
                 name: Build Project
                 command: .ci\build-project.ps1
