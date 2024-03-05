@@ -22,22 +22,13 @@ jobs:
                     & "C:\windows\system32\curl.exe" -L -o "${HOME}/7z.exe" "https://www.7-zip.org/a/7zr.exe"
             - restore_cache:
                 name: Restoring VCPKG Cache
-                key: vcpkg-{{ checksum "vcpkg.json" }}
+                key: vcpkg-build-{{ checksum "vcpkg.json" }}
             - restore_cache:
                 name: Restore DX9 SDK Cache
                 key: dx9-sdk
             - run: 
-                name: Install VCPKG
-                command: .ci\install-vcpkg.ps1
-            - run: 
                 name: Install Dependencies
                 command: .ci\install-dependencies.ps1
-                no_output_timeout: 25m
-            - save_cache:
-                name: Caching VCPKG Packages
-                key: vcpkg-{{ checksum "vcpkg.json" }}
-                paths:
-                    - vcpkg_installed
             - save_cache:
                 name: Caching DX9 SDK
                 key: dx9-sdk
@@ -46,10 +37,29 @@ jobs:
             - run: 
                 name: Build Project
                 command: .ci\build-project.ps1
+                no_output_timeout: 25m
+            - save_cache:
+                name: Caching VCPKG Packages
+                key: vcpkg-build-{{ checksum "vcpkg.json" }}
+                paths:
+                    - vcpkg_installed
             - run:
-                name: "Compress Release"
+                name: Build Installer
+                command: |
+                    mkdir Release\EXE
+                    Get-ChildItem -Path "Release" -Filter ".dll" -Recurse | Move-Item -Destination "Release\EXE" -Whatif
+                    & ${HOME}/7z.exe a -r chaosmod.7z ./Release/* ./Assets/*
+                    & "C:\Windows\System32\curl.exe" -o ./Installer/Assets/External/FreelancerHDESetup_v06_silent_test.exe https://f003.backblazeb2.com/b2api/v2/b2_download_file_by_id?fileId=4_z0d41f4d9e10a9adf85d20013_f212668fac620798a_d20240305_m125353_c003_v0312019_t0022_u01709643233941
+                    Move-Item chaosmod.7z -Destination ./Installer/Assets/Mod
+                    & C:\Users\circleci\Inno\iscc.exe /O+ ./Installer/setup.ics
+                    & ${HOME}/7z.exe a -r Setup.7z ./Installer/Output*
+                    Copy-Item ./Setup.7z -Destination C:\Users\circleci\artifacts\Setup.7z
+                    Copy-Item ./Installer/Mod/chaosmod.7z -Destination C:\Users\circleci\artifacts\Assets.7z
+            - run:
+                name: " Release"
                 command: 
                     mkdir C:\Users\circleci\artifacts
+                    7z a -r 
                     7z a -r C:\Users\circleci\artifacts\ChaosMod.7z ./ChaosMod/Release/*
             - persist_to_workspace:
                 root: C:\Users\circleci\artifacts
