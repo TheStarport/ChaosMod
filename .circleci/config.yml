@@ -10,9 +10,12 @@ jobs:
             - add_ssh_keys:
                 fingerprints:
                   - "SHA256:Vez+9ng8BrMKVo1RJUa68647BVC9Rihu1rZVRiShbT4"
+            - checkout
             - run: 
-                name: Checkout
-                command: git clone --recurse-submodules -b "$CIRCLE_BRANCH" "$CIRCLE_REPOSITORY_URL"
+                name: Checkout Submodules
+                command: |
+                    git submodule sync
+                    git submodule update --init
             - restore_cache:
                 key: vcpkg-{{ checksum "vcpkg.json" }}
             - run: 
