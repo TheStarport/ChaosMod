@@ -15,7 +15,7 @@ jobs:
                 name: Checkout Submodules
                 command: |
                     git submodule sync
-                    git submodule update --init
+                    git submodule update --init --recursive
             - restore_cache:
                 key: vcpkg-{{ checksum "vcpkg.json" }}
             - run: 

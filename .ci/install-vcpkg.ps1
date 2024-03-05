@@ -22,8 +22,8 @@ if ($UPDATE_VCPKG)
     # update existing Vcpkg
     Push-Location "$VCPKG_DIR"
     git --quiet pull
-    .\bootstrap-vcpkg.bat -disableMetrics 2>&1
-    .\vcpkg.exe integrate install 2>&1
+    .\bootstrap-vcpkg.bat -disableMetrics
+    .\vcpkg.exe integrate install
     Pop-Location
 }
 else
@@ -32,7 +32,9 @@ else
     Push-Location "$HOME"
     git clone --quiet https://github.com/Microsoft/vcpkg.git
     Set-Location vcpkg
-    .\bootstrap-vcpkg.bat -disableMetrics 2>&1
-    .\vcpkg.exe integrate install 2>&1
+    .\bootstrap-vcpkg.bat -disableMetrics
+    .\vcpkg.exe integrate install
     Pop-Location
 }
+
+exit $LASTEXITCODE
