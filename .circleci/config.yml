@@ -12,7 +12,7 @@ jobs:
                   - "SHA256:Vez+9ng8BrMKVo1RJUa68647BVC9Rihu1rZVRiShbT4"
             - checkout
             - restore_cache:
-                key: vcpkg-deps-{{ checksum "vcpkg.json" }}
+                key: vcpkg-{{ checksum "vcpkg.json" }}
             - run: 
                 name: Install VCPKG
                 command: .ci\install-vcpkg.ps1
@@ -21,7 +21,7 @@ jobs:
                 command: .ci\install-dependencies.ps1
                 no_output_timeout: 25m
             - save_cache:
-                key: vcpkg-deps-{{ checksum "vcpkg.json" }}
+                key: vcpkg-{{ checksum "vcpkg.json" }}
                 paths:
                     - vcpkg_installed
             - run: 
