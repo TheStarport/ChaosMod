@@ -54,8 +54,9 @@ if (-not (Test-Path $DX9_SDK)) {
     7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
     mv _DX2010_/DXSDK $DX9_SDK
     cd ..; rm TEMP -Force -Recurse
-    [System.Environment]::SetEnvironmentVariable('DX9_SDK', $DX9_SDK, 'User')
 }
+
+[System.Environment]::SetEnvironmentVariable('DX9_SDK', $DX9_SDK, 'User')
 
 # Install InnoSetup
 & "C:\windows\system32\curl.exe" -L -o "${HOME}/InnoSetup.exe" "https://jrsoftware.org/download.php/is.exe"

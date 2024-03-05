@@ -6,6 +6,7 @@ orbs:
 jobs:
     build:
         executor: win/server-2022
+        resource_class: starport/chaosmod
         steps:
             - add_ssh_keys:
                 fingerprints:
@@ -85,3 +86,4 @@ workflows:
             - release:
                 requires:
                     - build
+
