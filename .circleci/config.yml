@@ -5,7 +5,7 @@ orbs:
 
 jobs:
     build:
-        executor: win/server-2022
+        machine: true
         resource_class: starport/chaosmod
         steps:
             - add_ssh_keys:
