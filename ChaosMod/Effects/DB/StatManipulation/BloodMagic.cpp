@@ -6,7 +6,7 @@ class BloodMagic final : public ActiveEffect
 {
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher*);
 
-        static void __fastcall ConsumeFireResources(CELauncher* launcher)
+        void OnConsumeFireResources(CELauncher* launcher) override
         {
             const auto ship = Utils::GetCShip();
             if (launcher->GetOwner() != ship)
@@ -24,17 +24,8 @@ class BloodMagic final : public ActiveEffect
                 pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
                 return;
             }
-
-            consumeFireResourcesDetour.UnDetour();
-            consumeFireResourcesDetour.GetOriginalFunc()(launcher);
-            consumeFireResourcesDetour.Detour(ConsumeFireResources);
         }
 
-        inline static FunctionDetour<ConsumeFireResourcesType> consumeFireResourcesDetour{ reinterpret_cast<ConsumeFireResourcesType>(
-            GetProcAddress(GetModuleHandleA("common.dll"), "?ConsumeFireResources@CELauncher@@UAEXXZ")) };
-
-        void Begin() override { consumeFireResourcesDetour.Detour(ConsumeFireResources); }
-        void End() override { consumeFireResourcesDetour.UnDetour(); }
         void Update(float delta) override
         {
             auto ship = Utils::GetCShip();
