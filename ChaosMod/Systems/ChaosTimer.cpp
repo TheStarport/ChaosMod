@@ -4,10 +4,12 @@
 
 #include "ConfigManager.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "ShipManipulator.hpp"
 
 #include "Effects/AddressTable.hpp"
 #include "ImguiComponents/ImGuiManager.hpp"
 #include "PatchNotes/PatchNotes.hpp"
+#include "SystemComponents/GlobalTimers.hpp"
 #include "UiManager.hpp"
 #include "Utilities/OffsetHelper.hpp"
 
@@ -199,6 +201,8 @@ ChaosTimer::ChaosTimer()
     const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
     MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
+
+    consumeFireResourcesDetour.Detour(OnConsumeFireResources);
 }
 
 ChaosTimer::~ChaosTimer() { delete patchNotes; }
@@ -302,6 +306,41 @@ uint ChaosTimer::OnSoundEffect(const uint hash)
     }
 
     return hash;
+}
+
+void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
+{
+    for (const auto& key : i()->activeEffects | std::views::keys)
+    {
+        key->OnConsumeFireResources(launcher);
+    }
+
+    for (const auto& effect : i()->persistentEffects)
+    {
+        effect->OnConsumeFireResources(launcher);
+    }
+
+    consumeFireResourcesDetour.UnDetour();
+    consumeFireResourcesDetour.GetOriginalFunc()(launcher);
+    consumeFireResourcesDetour.Detour(OnConsumeFireResources);
+
+    if (launcher->archetype->archId == CreateID("chaos_blunderbuss"))
+    {
+        auto ship = launcher->GetOwner();
+
+        auto orientation = ship->get_orientation();
+        Vector forwards = { orientation[0][2], orientation[1][2], orientation[2][2] };
+        forwards *= 1000.f;
+
+        Vector newVelocity = ship->get_velocity() + forwards;
+        GlobalTimers::i()->AddTimer(
+            [ship, newVelocity](float delta)
+            {
+                ShipManipulator::SetVelocity(ship, newVelocity);
+                return true;
+            },
+            0.05f);
+    }
 }
 
 void ChaosTimer::Update(const float delta)

@@ -17,6 +17,11 @@ class ChaosTimer final : public Singleton<ChaosTimer>
 
         static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
         static uint OnSoundEffect(uint hash);
+        using ConsumeFireResourcesType = void(__fastcall*)(CELauncher* launcher);
+        static void __fastcall OnConsumeFireResources(CELauncher* launcher);
+
+        inline static FunctionDetour<ConsumeFireResourcesType> consumeFireResourcesDetour{ reinterpret_cast<ConsumeFireResourcesType>(
+            GetProcAddress(GetModuleHandleA("common.dll"), "?ConsumeFireResources@CELauncher@@UAEXXZ")) };
 
         float patchTime = 0.0f;
         float currentTime = 0.0f;
