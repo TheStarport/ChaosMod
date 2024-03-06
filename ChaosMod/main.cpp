@@ -440,6 +440,10 @@ void RequiredMemEdits()
     MemUtils::NopAddress(fl + 0xCDB41, 2);
     MemUtils::NopAddress(fl + 0xCE71E, 2);
 
+    // Patch HP_Fire extra audio not being played
+    std::array<byte, 9> hpFirePatch = { 0x83, 0xFA, 0xFF, 0xBA, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3 };
+    MemUtils::WriteProcMem(common + 0x039F77, hpFirePatch.data(), hpFirePatch.size());
+
     BugFixes::SetupDetours();
 
     PatchResolution();
