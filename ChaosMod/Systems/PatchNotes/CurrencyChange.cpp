@@ -47,7 +47,9 @@ void CurrencyChange::Generate()
     }
 
     oldPrice = good->price;
-    newPrice = AdjustField(good->price, static_cast<bool>(Random::i()->Uniform(0u, 1u)));
+    // clang-format off
+    newPrice = AdjustField(good->price, static_cast<bool>(Random::i()->Uniform(0u, 1u)), {{ 1.f, 999999.f }});
+    // clang-format on
 
     description = std::format("{}: Base Price   {:.0f}  ->  {:.0f}", name, oldPrice, newPrice);
 }

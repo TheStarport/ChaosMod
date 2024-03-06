@@ -92,7 +92,7 @@ class Change
 
         template <typename T>
             requires std::is_integral_v<T> || std::is_floating_point_v<T>
-        static T AdjustField(T existingValue, bool increase)
+        static T AdjustField(T existingValue, bool increase, std::optional<std::pair<T, T>> minMax = std::nullopt)
         {
             const auto value = static_cast<float>(existingValue);
             const float percentage = value * 0.01f;
@@ -103,7 +103,13 @@ class Change
                 percentageChange = std::clamp(-percentageChange, -95, -1); // If lowering make sure we don't end up negative
             }
 
-            return static_cast<T>(value + percentage * static_cast<float>(percentageChange));
+            T returnValue = static_cast<T>(value + percentage * static_cast<float>(percentageChange));
+            if (minMax.has_value())
+            {
+                returnValue = std::clamp(returnValue, minMax.value().first, minMax.value().second);
+            }
+
+            return returnValue;
         }
 
     public:
