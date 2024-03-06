@@ -25,5 +25,6 @@ class PatchNotes : Singleton<PatchNotes>
         static std::vector<StringPatch> &GetPatchNotes();
         static void ResetPatches(bool reapply, bool clean);
         static void GeneratePatch();
+        static void RevertLastPatch();
         static ChangeType GetRandomChangeType();
 };

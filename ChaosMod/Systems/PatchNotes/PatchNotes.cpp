@@ -234,6 +234,14 @@ void PatchNotes::GeneratePatch()
     SavePatches();
 }
 
+void PatchNotes::RevertLastPatch()
+{
+    const auto lastPatch = availablePatches.back();
+    RevertPatch(lastPatch);
+
+    ImGuiManager::ShowPatchNotes();
+}
+
 ChangeType PatchNotes::GetRandomChangeType()
 {
     // MUST MATCH ENUM ORDER

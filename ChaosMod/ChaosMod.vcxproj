@@ -193,6 +193,7 @@
     <ClCompile Include="Effects\DB\Interface\SoKawaii.cpp" />
     <ClCompile Include="Effects\DB\Interface\SprechenSieDeutsch.cpp" />
     <ClCompile Include="Effects\DB\Meta\EmergencyHotfix.cpp" />
+    <ClCompile Include="Effects\DB\Meta\EmergencyRollback.cpp" />
     <ClCompile Include="Effects\DB\Movement\CocaineMode.cpp" />
     <ClCompile Include="Effects\DB\Movement\Hyperlanes.cpp" />
     <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
