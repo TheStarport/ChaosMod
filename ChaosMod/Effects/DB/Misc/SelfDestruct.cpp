@@ -4,11 +4,18 @@
 
 class SelfDestruct final : public ActiveEffect
 {
+        void Begin() override { pub::Audio::PlaySoundEffect(1, CreateID("chaos_self_destruct")); }
+
         void End() override
         {
-            if (const CShip* ship = Utils::GetCShip())
+            if (const CShip* ship = Utils::GetCShip(); ship && Random::i()->Uniform(0u, 1u))
             {
                 pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
+            }
+            else
+            {
+                pub::Audio::PlaySoundEffect(1, CreateID("chaos_windows_error"));
+                MessageBoxA(nullptr, "SelfDestruct.exe has stopped working.", "SelfDestruct.exe", MB_OK);
             }
         }
 
@@ -19,7 +26,7 @@ class SelfDestruct final : public ActiveEffect
 // clang-format off
 SetupEffect(SelfDestruct, {
     .effectName = "Self Destruct",
-    .description = "You probably shouldn't have pressed that button. Time to die!",
+    .description = "You probably shouldn't have pressed that button. Hopefully it's a dud...",
     .category = EffectType::Misc,
-    .fixedTimeOverride = 5.0f,
+    .fixedTimeOverride = 12.0f,
 });
