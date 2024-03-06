@@ -54,3 +54,4 @@ float mod(float x, float y)
 #include "LANoire.reshade"
 #include "TurnTurtle.reshade"
 #include "Vignette.reshade"
+#include "Glitch.reshade"
