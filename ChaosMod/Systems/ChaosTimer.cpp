@@ -212,6 +212,7 @@ void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, const float delay)
 }
 
 void ChaosTimer::ToggleDoubleTime() { doubleTime = !doubleTime; }
+bool ChaosTimer::DoubleTimeActive() const { return doubleTime; }
 void ChaosTimer::AdjustModifier(const float modifier) { modifiers += modifier; }
 
 void ChaosTimer::FrameUpdate(const float delta)

@@ -39,6 +39,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         void DelayActiveEffect(ActiveEffect* effect, float delay);
         void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();
+        bool DoubleTimeActive() const;
         void AdjustModifier(float modifier);
         void Update(float delta);
         void FrameUpdate(float delta);

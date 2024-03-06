@@ -170,6 +170,12 @@ void TwitchVoting::Poll()
         else if (hasReceivedResult)
         {
             isVotingRoundDone = true;
+
+            if (ChaosTimer::i()->DoubleTimeActive())
+            {
+                ChaosTimer::i()->TriggerChaos();
+            }
+
             if (selectedResult == 3) // Twitch selected Random
             {
                 ChaosTimer::i()->TriggerChaos();
