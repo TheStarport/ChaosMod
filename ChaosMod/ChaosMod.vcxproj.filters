@@ -229,6 +229,8 @@
     <ClCompile Include="Effects\DB\Spawning\ClonePlayer.cpp">
       <Filter>Effects\DB\Spawning</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Interface\RadarJamming.cpp" />
+    <ClCompile Include="Effects\DB\Meta\EmergencyRollback.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -614,9 +616,6 @@
     </ClInclude>
     <ClInclude Include="..\vendor\imgui\imstb_truetype.h">
       <Filter>Vendor\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
     </ClInclude>
     <ClInclude Include="Systems\GameEvents\OnSound.hpp">
       <Filter>Systems\GameEvents</Filter>

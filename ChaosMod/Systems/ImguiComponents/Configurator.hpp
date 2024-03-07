@@ -6,34 +6,25 @@
 #include "Systems/SystemComponents/TwitchVoting.hpp"
 #include "imgui/imgui.h"
 
+#include <magic_enum_utility.hpp>
+
 class ImGuiManager;
 class Configurator final
 {
         friend ImGuiManager;
 
         inline static bool show = false;
-        static void Render()
-        {
-            if (!show)
-            {
-                return;
-            }
+        inline static std::map<EffectType, std::vector<ActiveEffect*>>* allEffects;
 
-            if (!ImGui::Begin("Configurator", &show, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
-            {
-                ImGui::End();
-                return;
-            }
+        inline static DWORD* gamePauseIncrementor = PDWORD(0x667D54);
+        inline static bool doDecrement = false;
+
+        static void RenderChaosTab()
+        {
+            ImGui::TextWrapped("PLACEHOLDER DESCRIPTION THAT IS SUPER DESCRIPTIVE ABOUT THINGS THAT NEED DESCRIBING FOR THIS DESCRIPTIVE TAB OF DESCRIPTIONS.");
 
             auto* config = ConfigManager::i();
-            if (ImGui::Button("Save Changes"))
-            {
-                config->Save();
-            }
 
-            ImGui::Separator();
-
-            // Effect Settings
             ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
             ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
             ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->totalAllowedConcurrentEffects), 1, 12);
@@ -46,7 +37,6 @@ class Configurator final
                     "For this reason, the game will auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
             }
 
-            ImGui::SameLine();
             ImGui::Checkbox("Allow Saving During Combat", &config->allowAutoSavesDuringCombat);
             if (ImGui::IsItemHovered())
             {
@@ -61,14 +51,13 @@ class Configurator final
                 ImGui::SetTooltip("Many missions can softlock if the player is teleports away, into a different system, or to a base. If true, this will "
                                   "prevent teleport effects from being selected while on a mission.");
             }
+        }
 
-            ImGui::Separator();
-
-            // Twitch Settings
-            ImGui::Text("Twitch Settings");
+        static void RenderTwitchTab()
+        {
+            auto* config = ConfigManager::i();
 
             ImGui::Checkbox("Enable Twitch Voting", &config->enableTwitchVoting);
-            ImGui::SameLine();
             ImGui::SliderFloat("Twitch Voting Weight", &config->baseTwitchVoteWeight, 0.1f, 1.0f);
             if (ImGui::IsItemHovered())
             {
@@ -85,11 +74,11 @@ class Configurator final
                 initialized = true;
             }
             ImGui::EndDisabled();
+        }
 
-            ImGui::Separator();
-
-            // Style Settings
-            ImGui::Text("Style Settings");
+        static void RenderStyleTab()
+        {
+            auto* config = ConfigManager::i();
 
             static DWORD startingProgressBarColor = config->progressBarColor;
             static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
@@ -108,8 +97,11 @@ class Configurator final
             ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->progressBarType), timerOptions, IM_ARRAYSIZE(timerOptions));
 
             ImGui::Checkbox("Show Time Remaining On Effects", &config->showTimeRemainingOnEffects);
+        }
 
-            ImGui::Separator();
+        static void RenderRandomTab()
+        {
+            auto* config = ConfigManager::i();
 
             ImGui::Checkbox("Enable Patch Notes", &config->enablePatchNotes);
             if (ImGui::IsItemHovered())
@@ -146,6 +138,156 @@ class Configurator final
             if (ImGui::Button("DEV: Reset Patches"))
             {
                 PatchNotes::ResetPatches(false, true);
+            }
+        }
+
+        static void RenderEffectToggleTab()
+        {
+            auto& configEffects = ConfigManager::i()->toggledEffects;
+
+            magic_enum::enum_for_each<EffectType>(
+                [&configEffects](auto val)
+                {
+                    constexpr EffectType category = val;
+                    const auto categoryName = std::string(magic_enum::enum_name(category));
+
+                    const auto categoryEffects = allEffects->find(category);
+                    if (categoryEffects == allEffects->end())
+                    {
+                        return;
+                    }
+
+                    bool configEffectsNeedPopulating = false;
+                    if (!configEffects.contains(categoryName))
+                    {
+                        configEffects[categoryName] = {};
+                        configEffectsNeedPopulating = true;
+                    }
+
+                    auto& configCategoryEffects = configEffects[categoryName];
+
+                    ImGui::PushID(categoryName.c_str());
+                    bool all = std::all_of(configCategoryEffects.begin(),
+                                           configCategoryEffects.end(),
+                                           [](std::pair<const std::string, bool>& individualEffect) { return individualEffect.second; });
+
+                    if (ImGui::Checkbox("All?##ID", &all))
+                    {
+                        for (auto& i : configCategoryEffects)
+                        {
+                            i.second = all;
+                        }
+
+                        ConfigManager::i()->Save();
+                    }
+
+                    ImGui::SameLine();
+                    ImGui::PushStyleVar(ImGuiStyleVar_SeparatorTextAlign, ImVec2(0.45f, 0.5f));
+                    ImGui::SeparatorText(categoryName.c_str());
+                    ImGui::PopStyleVar();
+
+                    ImGui::NewLine();
+
+                    if (ImGui::BeginTable(categoryName.c_str(), 2))
+                    {
+                        for (ActiveEffect* effect : categoryEffects->second)
+                        {
+                            auto& info = effect->GetEffectInfo();
+
+                            if (configEffectsNeedPopulating)
+                            {
+                                configEffects[categoryName][info.effectName] = true;
+                            }
+
+                            auto& isEnabled = configEffects[categoryName][info.effectName];
+
+                            ImGui::TableNextColumn();
+                            if (ImGui::Checkbox(info.effectName.c_str(), &isEnabled))
+                            {
+                                ConfigManager::i()->Save();
+                            }
+
+                            if (ImGui::IsItemHovered())
+                            {
+                                ImGui::SetTooltip(info.description.c_str()); // NOLINT(clang-diagnostic-format-security)
+                            }
+                        }
+                        ImGui::EndTable();
+                    }
+
+                    ImGui::NewLine();
+
+                    if (configEffectsNeedPopulating)
+                    {
+                        ConfigManager::i()->Save();
+                    }
+
+                    ImGui::PopID();
+                });
+        }
+
+        static void Render()
+        {
+            if (!show)
+            {
+                if (doDecrement)
+                {
+                    *gamePauseIncrementor = 0;
+                    doDecrement = false;
+                }
+                return;
+            }
+
+            if (!*gamePauseIncrementor)
+            {
+                *gamePauseIncrementor = 1;
+                doDecrement = true;
+            }
+
+            ImGui::SetNextWindowSize({ 800.f, 800.f }, ImGuiCond_Always);
+            if (!ImGui::Begin("Configurator", &show, ImGuiWindowFlags_NoResize))
+            {
+                ImGui::End();
+                return;
+            }
+
+            auto* config = ConfigManager::i();
+            if (ImGui::Button("Save Changes"))
+            {
+                config->Save();
+            }
+
+            ImGui::Separator();
+            ImGui::NewLine();
+
+            if (ImGui::BeginTabBar("Configurator Tabs"))
+            {
+                if (ImGui::BeginTabItem("Chaos Settings"))
+                {
+                    RenderChaosTab();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Style Settings"))
+                {
+                    RenderStyleTab();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Randomizer Settings"))
+                {
+                    RenderRandomTab();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Twitch Settings"))
+                {
+                    RenderTwitchTab();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Effect Toggles"))
+                {
+                    RenderEffectToggleTab();
+                    ImGui::EndTabItem();
+                }
+                ImGui::EndTabBar();
             }
 
             ImGui::End();

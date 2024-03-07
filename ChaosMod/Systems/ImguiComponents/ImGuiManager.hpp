@@ -26,7 +26,6 @@ class ImGuiManager
         static void SetVotingChoices(const std::vector<std::string>& choices);
         static void ShowConfigurator();
         static void ShowEffectSelector();
-        static void ShowEffectToggler();
         static void ShowDebugConsole();
         static void ShowPatchNotes();
         static void StartCredits();

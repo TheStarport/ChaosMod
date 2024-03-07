@@ -51,12 +51,6 @@ class DebugMenu final
                 ImGuiManager::ShowEffectSelector();
             }
 
-            ImGui::SameLine();
-            if (ImGui::Button("Open Effect Toggler"))
-            {
-                ImGuiManager::ShowEffectToggler();
-            }
-
             ImGui::Separator();
 
             if (ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar))

@@ -383,7 +383,6 @@
     <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Configurator.hpp" />
     <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\EffectToggler.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
     <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
     <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp" />

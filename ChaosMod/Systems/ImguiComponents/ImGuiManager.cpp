@@ -4,7 +4,6 @@
 #include "ChaosOptionText.hpp"
 #include "Configurator.hpp"
 #include "EffectSelector.hpp"
-#include "EffectToggler.hpp"
 #include "ProgressBar.hpp"
 #include "ScrollingCredits.hpp"
 
@@ -37,37 +36,36 @@ void ImGuiManager::SetupImGuiStyle()
     ImGuiStyle& style = ImGui::GetStyle();
 
     style.Alpha = 1.0f;
-    style.WindowPadding = ImVec2(12.0f, 12.0f);
+    style.WindowPadding = ImVec2(8.f, 4.0f);
     style.WindowMinSize = ImVec2(20.0f, 20.0f);
     style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+    style.SeparatorTextAlign = ImVec2(.5f, .5);
+    style.SeparatorTextPadding = ImVec2(20.f, 3.f);
     style.WindowMenuButtonPosition = ImGuiDir_None;
     style.ChildBorderSize = 1.0f;
     style.PopupBorderSize = 1.0f;
     style.FrameBorderSize = 1.0f;
-    style.ItemSpacing = ImVec2(12.0f, 12.0f);
+    style.ItemSpacing = ImVec2(20.0f, 4.0f);
     style.ItemInnerSpacing = ImVec2(6.0f, 3.0f);
     style.IndentSpacing = 20.0f;
     style.ColumnsMinSpacing = 6.0f;
-    style.ScrollbarSize = 50.0f;
-    style.GrabMinSize = 40.0f;
-    style.TabBorderSize = 0.0f;
+    style.ScrollbarSize = 20.0f;
+    style.GrabMinSize = 16.0f;
+    style.TabBorderSize = 1.0f;
     style.ColorButtonPosition = ImGuiDir_Right;
     style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
     style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
-    style.WindowBorderSize = 2.0f; // Stärke des Randes
-    style.FramePadding = ImVec2(10.0f, 10.0f);
+    style.WindowBorderSize = 2.0f;
+    style.FramePadding = ImVec2(6.f, 2.0f);
+    style.CellPadding = ImVec2(3.f, 2.0f);
 
-    // Abgerundete Ecken
-    style.WindowRounding = 5.0f;    // Fensterränder
-    style.ChildRounding = 5.0f;     // Kind-Fensterränder
-    style.FrameRounding = 5.0f;     // Rahmenränder
-    style.GrabRounding = 5.0f;      // Slider-Griff-Ränder
-    style.PopupRounding = 5.0f;     // Popup-Ränder
-    style.ScrollbarRounding = 1.0f; // Scrollbar-Ränder
-    style.TabRounding = 5.0f;       // Tab-Ränder
-
-    // Size
-    style.ScrollbarSize = 20.0f;
+    style.WindowRounding = 5.0f;
+    style.ChildRounding = 5.0f;
+    style.FrameRounding = 5.0f;
+    style.GrabRounding = 6.0f;
+    style.PopupRounding = 5.0f;
+    style.ScrollbarRounding = 6.0f;
+    style.TabRounding = 5.0f;
 
     style.Colors[ImGuiCol_Text] = textColor;
     style.Colors[ImGuiCol_TextDisabled] = disabledColor;
@@ -135,7 +133,7 @@ void ImGuiManager::Init()
     }
 
     EffectSelector::allEffects = &allEffects;
-    EffectToggler::allEffects = &allEffects;
+    Configurator::allEffects = &allEffects;
     ScrollingCredits::Init();
 
     const auto& io = ImGui::GetIO();
@@ -156,7 +154,6 @@ void ImGuiManager::SetProgressBarPercentage(float percentage) { ProgressBar::pro
 void ImGuiManager::SetVotingChoices(const std::vector<std::string>& choices) { ChaosOptionText::options = choices; }
 void ImGuiManager::ShowConfigurator() { Configurator::show = true; }
 void ImGuiManager::ShowEffectSelector() { EffectSelector::show = true; }
-void ImGuiManager::ShowEffectToggler() { EffectToggler::show = true; }
 void ImGuiManager::ShowDebugConsole() { DebugMenu::show = true; }
 void ImGuiManager::ShowPatchNotes() { PatchNotesWindow::show = true; }
 void ImGuiManager::StartCredits()
@@ -182,7 +179,6 @@ void ImGuiManager::Render()
 
     ProgressBar::Render();
     Configurator::Render();
-    EffectToggler::Render();
     EffectSelector::Render();
     ScrollingCredits::Render();
     ChaosOptionText::Render();
