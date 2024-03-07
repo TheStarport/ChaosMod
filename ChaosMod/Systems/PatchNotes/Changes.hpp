@@ -113,7 +113,16 @@ class Change
         }
 
     public:
+        enum class ChangePositivity
+        {
+            Default,
+            Boon,
+            Nerf,
+            Neither
+        };
+
         ChangeType changeType;
+        ChangePositivity positivity;
         std::string description;
 
         virtual void Apply() = 0;
@@ -125,6 +134,7 @@ class Change
             nlohmann::json json = nlohmann::json::object();
             json["type"] = changeType;
             json["description"] = description;
+            json["positivity"] = positivity;
             return json;
         };
 
@@ -132,6 +142,7 @@ class Change
         {
             changeType = json["type"];
             description = json["description"];
+            positivity = json["positivity"];
         }
 };
 
@@ -203,42 +214,52 @@ class EquipmentChange : public Change
         std::array<byte, 4> newData{};
         std::array<byte, 4> oldData{};
 
-        static constexpr std::vector<uint> GetFieldWeights()
+        struct FieldData
         {
-            std::vector<uint> fields;
+                std::optional<Clamp> clamp;
+                bool inverted = false;
+                bool nbb = false;
+        };
+
+        static constexpr std::pair<std::vector<FieldData>, std::vector<uint>> GetFieldData()
+        {
+            std::vector<FieldData> fields;
+            std::vector<uint> weights;
             for_each(refl::descriptor::type_descriptor<T>::members,
-                     [&fields](auto member)
+                     [&fields, &weights](auto member)
                      {
-                         if constexpr (!member.is_static && member.is_writable && refl::descriptor::has_attribute<Weight>(member))
+                         FieldData data;
+                         static_assert(!member.is_static && member.is_writable, "Unprocessable field!");
+
+                         if constexpr (refl::descriptor::has_attribute<Weight>(member))
                          {
                              auto weight = refl::descriptor::get_attribute<Weight>(member);
-                             fields.push_back(weight.w);
+                             weights.push_back(weight.w);
                          }
                          else
                          {
-                             fields.push_back(100);
+                             weights.push_back(100);
                          }
-                     });
-            return fields;
-        }
 
-        static constexpr std::vector<std::optional<Clamp>> GetFieldClamps()
-        {
-            std::vector<std::optional<Clamp>> fields;
-            for_each(refl::descriptor::type_descriptor<T>::members,
-                     [&fields](auto member)
-                     {
-                         if constexpr (!member.is_static && member.is_writable && refl::descriptor::has_attribute<Clamp>(member))
+                         if constexpr (refl::descriptor::has_attribute<Clamp>(member))
                          {
                              auto clamp = refl::descriptor::get_attribute<Clamp>(member);
-                             fields.emplace_back(clamp);
+                             data.clamp = clamp;
                          }
-                         else
+
+                         if constexpr (refl::descriptor::has_attribute<Inverted>(member))
                          {
-                             fields.emplace_back(std::nullopt);
+                             data.inverted = true;
                          }
+
+                         if constexpr (refl::descriptor::has_attribute<Nbb>(member))
+                         {
+                             data.nbb = true;
+                         }
+
+                         fields.push_back(data);
                      });
-            return fields;
+            return { fields, weights };
         }
 
         inline static std::vector<uint> ignoredShips = { CreateID("chaos_jesus"),
@@ -378,12 +399,12 @@ class EquipmentChange : public Change
             auto item = std::any_cast<std::add_pointer_t<T>>(erasure);
 
             auto fields = GetEditableFields<T>(item);
-            static const auto fieldWeights = GetFieldWeights();
+            static const auto [fieldData, weights] = GetFieldData();
             uint statIndex = UINT_MAX;
             EditableField* value = nullptr;
             while (statIndex == UINT_MAX)
             {
-                statIndex = Random::i()->Weighted(fieldWeights.begin(), fieldWeights.end());
+                statIndex = Random::i()->Weighted(weights.begin(), weights.end());
                 value = &fields[statIndex];
                 if constexpr (Type == ChangeType::GunAmmo)
                 {
@@ -443,8 +464,8 @@ class EquipmentChange : public Change
 
             auto buff = static_cast<bool>(Random::i()->Uniform(0u, 1u));
 
-            static const auto clamps = GetFieldClamps();
-            auto clamp = clamps[statIndex];
+            const auto& data = fieldData[statIndex];
+            auto clamp = data.clamp;
 
             if (clamp.has_value())
             {
@@ -463,6 +484,22 @@ class EquipmentChange : public Change
                 clamp = Clamp(INT_MIN, INT_MAX);
             }
 
+            char symbol = '~';
+            if (data.nbb)
+            {
+                positivity = ChangePositivity::Neither;
+            }
+            else if (buff && !data.inverted)
+            {
+                positivity = ChangePositivity::Boon;
+                symbol = '+';
+            }
+            else
+            {
+                positivity = ChangePositivity::Nerf;
+                symbol = '-';
+            }
+
             if (value->type == FieldType::Float)
             {
                 auto fp = *(float*)value->ptr;
@@ -475,7 +512,7 @@ class EquipmentChange : public Change
                     fp = std::clamp(AdjustField(fp, buff), clamp->min, clamp->max);
                 }
 
-                description = std::format("{}: {}   {:.2f}  ->  {:.2f}", name, newFieldName, *(float*)value->ptr, fp);
+                description = std::format("{} {}: {}   {:.2f}  ->  {:.2f}", symbol, name, newFieldName, *(float*)value->ptr, fp);
                 memcpy_s(newData.data(), newData.size(), &fp, 4);
             }
             else if (value->type == FieldType::Int)
@@ -490,14 +527,14 @@ class EquipmentChange : public Change
                     i = std::clamp(AdjustField(i, buff), static_cast<int>(clamp->min), static_cast<int>(clamp->max));
                 }
 
-                description = std::format("{}: {}   {}  ->  {}", name, newFieldName, *(int*)value->ptr, i);
+                description = std::format("{} {}: {}   {}  ->  {}", symbol, name, newFieldName, *(int*)value->ptr, i);
                 memcpy_s(newData.data(), newData.size(), &i, 4);
             }
             else if (value->type == FieldType::Bool)
             {
                 *static_cast<bool*>(value->ptr) = !*static_cast<bool*>(value->ptr);
                 bool newState = *static_cast<bool*>(value->ptr);
-                description = std::format("{}: {}   {}  ->  {}", name, newFieldName, !newState, newState);
+                description = std::format("{} {}: {}   {}  ->  {}", symbol, name, newFieldName, !newState, newState);
                 memcpy_s(newData.data(), newData.size(), &newState, 4);
             }
 

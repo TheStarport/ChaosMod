@@ -166,10 +166,10 @@ void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch, bool showPatchN
 {
     appliedPatches.push(patch);
 
-    std::vector<std::string> notes;
+    std::vector<std::pair<std::string, Change::ChangePositivity>> notes;
     for (const auto& change : patch->changes)
     {
-        notes.emplace_back(change->description);
+        notes.emplace_back(std::pair{ change->description, change->positivity });
         change->Apply();
     }
 

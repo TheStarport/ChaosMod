@@ -52,14 +52,26 @@ class PatchNotesWindow final
             ImGui::InputText("Filter", patchFilter, sizeof(patchFilter));
             ToLower(patchFilter);
 
+            static auto patchType = Change::ChangePositivity::Default;
+
+            ImGui::RadioButton("All", reinterpret_cast<int*>(&patchType), 0);
+            ImGui::SameLine();
+            ImGui::RadioButton("Boon", reinterpret_cast<int*>(&patchType), 1);
+            ImGui::SameLine();
+            ImGui::RadioButton("Nerf", reinterpret_cast<int*>(&patchType), 2);
+            ImGui::SameLine();
+            ImGui::RadioButton("Neither", reinterpret_cast<int*>(&patchType), 3);
+
+            ImGui::Separator();
+
             static auto& notes = PatchNotes::GetPatchNotes();
             for (auto patch = notes.rbegin(); patch != notes.rend(); ++patch)
             {
                 // If there is a filter, check if this patch contains ANY items we care about first
                 if (patchFilter[0] != '\0' && std::ranges::all_of(patch->changes,
-                                                                  [](const std::string& text)
+                                                                  [](const std::pair<std::string, Change::ChangePositivity>& change)
                                                                   {
-                                                                      char* lowerA = _strdup(text.c_str());
+                                                                      char* lowerA = _strdup(change.first.c_str());
                                                                       ToLower(lowerA);
 
                                                                       const bool ret = strstr(lowerA, patchFilter) == nullptr;
@@ -80,14 +92,19 @@ class PatchNotesWindow final
                 }
                 ImGui::NewLine();
 
-                for (auto& text : patch->changes)
+                for (auto& change : patch->changes)
                 {
-                    char* lowerA = _strdup(text.c_str());
+                    if (patchType != Change::ChangePositivity::Default && patchType != change.second)
+                    {
+                        continue;
+                    }
+
+                    char* lowerA = _strdup(change.first.c_str());
                     ToLower(lowerA);
 
                     if (patchFilter[0] == '\0' || strstr(lowerA, patchFilter) != nullptr)
                     {
-                        ImGui::Text(text.c_str()); // NOLINT(clang-diagnostic-format-security)
+                        ImGui::Text(change.first.c_str()); // NOLINT(clang-diagnostic-format-security)
                     }
                     free(lowerA);
                 }

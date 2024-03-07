@@ -8,7 +8,7 @@ class PatchNotes : Singleton<PatchNotes>
         {
                 std::string version;
                 std::string date;
-                std::vector<std::string> changes;
+                std::vector<std::pair<std::string, Change::ChangePositivity>> changes;
                 std::string releaseName;
         };
 
