@@ -229,8 +229,12 @@
     <ClCompile Include="Effects\DB\Spawning\ClonePlayer.cpp">
       <Filter>Effects\DB\Spawning</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\DB\Interface\RadarJamming.cpp" />
-    <ClCompile Include="Effects\DB\Meta\EmergencyRollback.cpp" />
+    <ClCompile Include="Effects\DB\Interface\RadarJamming.cpp">
+      <Filter>Effects\DB\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\DB\Meta\EmergencyRollback.cpp">
+      <Filter>Effects\DB\Meta</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
