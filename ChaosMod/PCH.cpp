@@ -13,6 +13,7 @@ void Log(const std::string& log)
     auto now = std::chrono::system_clock::now();
     file << std::format("{0:%F_%T}: ", now) << log << std::endl;
 }
+
 void Assert(const bool cond, const std::string& text, const std::string& file, const int line)
 {
     if (!cond)

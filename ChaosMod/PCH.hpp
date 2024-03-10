@@ -63,7 +63,12 @@ enum class Language
 std::string GetInfocardName(uint ids);
 void SetLanguage(Language lang);
 
-#define ASSERT(cond, text) Assert(cond, text, __FILE__, __LINE__)
+// ReSharper disable twice CppInconsistentNaming
+#ifdef DEBUG
+    #define ASSERT(cond, text) Assert(cond, text, __FILE__, __LINE__)
+#else
+    #define ASSERT
+#endif
 
 struct Weight : refl::attr::usage::field
 {

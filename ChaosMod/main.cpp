@@ -22,8 +22,8 @@
 #include <Systems/ReshadeManager.hpp>
 #include <reshade/reshade.hpp>
 
-const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc"));
-const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));
+const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc")); // NOLINT
+const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));         // NOLINT
 
 typedef void*(__cdecl* ScriptLoadPtr)(const char*);
 typedef void (*GlobalTimeFunc)(double delta);
@@ -70,11 +70,11 @@ uint CreateIdDetour(const char* string)
 #ifdef _DEBUG
         if (!hashFile)
         {
-            fopen_s(&hashFile, "hashmap.csv", "wb");
+            (void)fopen_s(&hashFile, "hashmap.csv", "wb");
         }
 
-        fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
-        fflush(hashFile);
+        (void)fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
+        (void)fflush(hashFile);
 #endif
     }
 
@@ -175,17 +175,17 @@ void PatchResolution()
     // Disable the reading of the znear/zfar/fovy parameters.
     {
         BYTE patch1[] = { 0x00 };
-        MemUtils::WriteProcMem((char*)0x5C8994, &patch1, 1);
-        MemUtils::WriteProcMem((char*)0x5C899C, &patch1, 1);
-        MemUtils::WriteProcMem((char*)0x5C89A4, &patch1, 1);
+        MemUtils::WriteProcMem(0x5C8994, &patch1, 1);
+        MemUtils::WriteProcMem(0x5C899C, &patch1, 1);
+        MemUtils::WriteProcMem(0x5C89A4, &patch1, 1);
     }
 
     // Force the fovx to predefined values.
     {
         BYTE patch6[] = { 0x90, 0xE9 };
-        MemUtils::WriteProcMem((char*)0x40f617, &patch6, 2);
-        PBYTE fpFovx = (PBYTE)HkCb_Fovx_Naked - 0x40f618 - 5;
-        MemUtils::WriteProcMem((char*)0x40f618 + 1, &fpFovx, 4);
+        MemUtils::WriteProcMem(0x40f617, &patch6, 2);
+        PBYTE fovX = reinterpret_cast<PBYTE>(HkCb_Fovx_Naked) - 0x40f618 - 5;
+        MemUtils::WriteProcMem(0x40f618 + 1, &fovX, 4);
     }
 
     // Set the FOV for the UI elements on the main screen.
@@ -521,10 +521,10 @@ void SetupHack()
 
     // Setup hooks
     const HMODULE common = GetModuleHandleA("common");
-    timingDetour =
-        std::make_unique<FunctionDetour<GlobalTimeFunc>>(reinterpret_cast<GlobalTimeFunc>(GetProcAddress(common, "?UpdateGlobalTime@Timing@@YAXN@Z")));
-    thornLoadDetour =
-        std::make_unique<FunctionDetour<ScriptLoadPtr>>(reinterpret_cast<ScriptLoadPtr>(GetProcAddress(common, "?ThornScriptLoad@@YAPAUIScriptEngine@@PBD@Z")));
+    timingDetour = std::make_unique<FunctionDetour<GlobalTimeFunc>>(
+        reinterpret_cast<GlobalTimeFunc>(GetProcAddress(common, "?UpdateGlobalTime@Timing@@YAXN@Z"))); // NOLINT
+    thornLoadDetour = std::make_unique<FunctionDetour<ScriptLoadPtr>>(
+        reinterpret_cast<ScriptLoadPtr>(GetProcAddress(common, "?ThornScriptLoad@@YAPAUIScriptEngine@@PBD@Z"))); // NOLINT
 
     timingDetour->Detour(Update);
     thornLoadDetour->Detour(ScriptLoadHook);

@@ -1,5 +1,9 @@
 ## TODO Readme
 
+## Contributing
+
+See [contributing guidelines]("./.github/CONTRIBUTING.md) for more information.
+
 ## Credits
 
 ### Direct

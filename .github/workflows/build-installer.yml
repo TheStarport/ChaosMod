@@ -1,0 +1,105 @@
+name: Build Installer
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    env: 
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+    runs-on: windows-latest
+    steps:
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Set Work ENVs
+        id: vars
+        run: |
+          echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+          WIN_HOME=$(echo $HOME | tr '/' '\\')
+          WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
+          WIN_HOME=${WIN_HOME^}
+          echo $WIN_HOME
+          echo DX9_SDK=$WIN_HOME/dx9
+          echo "DX9_SDK=$WIN_HOME/dx9" >> $GITHUB_ENV
+        shell: bash
+
+      - run: vcpkg integrate install
+
+      - uses: ilammy/msvc-dev-cmd@v1.10.0
+        with:
+          arch: x86
+
+      - name: "Install Inno"
+        run: choco install innosetup --acceptlicense
+        
+      - name: "Restore DX9 Cache"
+        id: dx9-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/dx9
+          key:  dx9-cache
+
+      - name: "Restore HD Installer"
+        id: hde-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/Installer/Assets/External
+          key:  hde-cache
+          
+      - name: "Cache DX9 SDK"
+        if:    steps.dx9-cache.outputs.cache-hit != 'true'
+        run: |
+          echo Downloading DXSDK June 2010
+          curl -s -L -o "_DX2010_.exe" "https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe"
+          echo Extracting include files
+          7z x _DX2010_.exe DXSDK/Include -o_DX2010_ > nul
+          echo Extracting lib files
+          7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_ > nul
+          echo Moving SDK to home directory
+          mkdir $DX9_SDK
+          mv _DX2010_/DXSDK/* $DX9_SDK
+          echo Cleaning up install files
+          rm -fR _DX*_ _DX*_.exe
+        shell: bash
+
+      - name: "Download HDE Installer"
+        if:    steps.hde-cache.outputs.cache-hit != 'true'
+        run: 
+          curl -s -o ${{ github.workspace }}/Installer/Assets/External/FreelancerHDESetup_v06_silent_test.exe https://f003.backblazeb2.com/b2api/v2/b2_download_file_by_id?fileId=4_z0d41f4d9e10a9adf85d20013_f212668fac620798a_d20240305_m125353_c003_v0312019_t0022_u01709643233941
+
+      - name: Compile ChaosMod
+        run: msbuild.exe "${env:GITHUB_WORKSPACE}\FreelancerChaosMod.sln" /t:Build /p:Configuration=Release /p:Platform=x86
+          
+      - name: "Pre-Build Installer"
+        run: |
+          cd ${{ github.workspace }}
+          mkdir Archive
+          Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
+          Get-ChildItem -Path ".\Release" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
+          7z a -r ./chaosmod.7z ./Archive/*
+          Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
+
+      - name: "Build Installer"
+        run: |
+          cd ${{ github.workspace }}/Installer
+          & "${env:programfiles(x86)}\Inno Setup 6\iscc.exe" /O+ ".\setup.iss"
+          cd ..
+          7z a -r .\Installer.7z .\Installer/Output*
+          Rename-Item -Path .\chaosmod.7z -NewName Assets.7z
+
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ github.workspace }}/*.7z"
+          body: "Automatically generated"
+          tag: ${{ steps.vars.outputs.date }}
+      

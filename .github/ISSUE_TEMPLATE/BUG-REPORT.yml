@@ -1,0 +1,37 @@
+name: "Bug Report"
+description: Create a new ticket for a bug.
+title: "Bug - <title>"
+labels: [
+  "bug"
+]
+body:
+  - type: checkboxes
+  attributes:
+    label: Chaos Mod Components
+    description: What parts of ChaosMod were you using at the time of the bug?
+    options:
+      - label: This effect is related to a "Chaos Effect"
+      - label: This effect is related to the randomizer/patch notes
+      - label: This effect only occurs during a mission
+      - label: I can reliably reproduce this bug
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please enter an explicit description of your issue
+      placeholder: Short and explicit description of your issue.
+    validations:
+      required: true
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Reproduction steps"
+      description: If possible explain how to reproduce this issue
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+      render: bash
+    validations:
+      required: false
