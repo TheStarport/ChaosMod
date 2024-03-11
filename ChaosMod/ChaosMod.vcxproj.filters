@@ -40,11 +40,11 @@
     <ClCompile Include="Systems\ChaosTimer.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp">
-      <Filter>Systems\ImGuiHelpers</Filter>
+    <ClCompile Include="Systems\ImGui\Helpers\ImGuiDX9.cpp">
+      <Filter>Systems\ImGui\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp">
-      <Filter>Systems\ImGuiHelpers</Filter>
+    <ClCompile Include="Systems\ImGui\Helpers\ImGuiWin32.cpp">
+      <Filter>Systems\ImGui\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Systems\ConfigManager.cpp">
       <Filter>Systems</Filter>
@@ -254,23 +254,23 @@
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
       <Filter>Systems\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\Debug.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\Debug.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ChaosTimer.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\ProgressBar.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\ChaosOptionText.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp">
-      <Filter>Systems\ImGuiHelpers</Filter>
+    <ClInclude Include="Systems\ImGui\ImGuiDX9.hpp">
+      <Filter>Systems\ImGui\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp">
-      <Filter>Systems\ImGuiHelpers</Filter>
+    <ClInclude Include="Systems\ImGui\Helpers\ImGuiWin32.hpp">
+      <Filter>Systems\ImGui\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ConfigManager.hpp">
       <Filter>Systems</Filter>
@@ -290,8 +290,8 @@
     <ClInclude Include="Effects\AddressTable.hpp">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\ActiveEffectsText.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
     <ClCompile Include="Effects\DB\Interface\BuggyInterface.cpp">
       <Filter>Effects\DB\Interface</Filter>
@@ -491,8 +491,8 @@
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\ScrollingCredits.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ShipManipulator.hpp">
       <Filter>Systems</Filter>
@@ -633,17 +633,17 @@
     <ClInclude Include="Systems\PatchNotes\Changes.hpp">
       <Filter>Systems\PatchNotes</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\ImGuiManager.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\Configurator.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\Configurator.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\EffectSelector.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImguiComponents\PatchNotesWindow.hpp">
-      <Filter>Systems\ImguiComponents</Filter>
+    <ClInclude Include="Systems\ImGui\PatchNotesWindow.hpp">
+      <Filter>Systems\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\OffsetHelper.hpp">
       <Filter>Utilities</Filter>
@@ -665,10 +665,10 @@
     <Filter Include="Systems\DirectX">
       <UniqueIdentifier>{57d48447-4af9-48c3-8e1a-69f0edc54fa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\ImguiComponents">
+    <Filter Include="Systems\ImGui">
       <UniqueIdentifier>{2e0f0a05-95ef-4351-a235-74f65799bbcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\ImGuiHelpers">
+    <Filter Include="Systems\ImGui\Helpers">
       <UniqueIdentifier>{2650c570-2d3a-41e3-93b5-6a4a6bd3d5ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Effects">

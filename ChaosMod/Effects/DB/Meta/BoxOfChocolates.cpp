@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Systems/ImguiComponents/ImGuiManager.hpp"
+#include "Systems/ImGui/ImGuiManager.hpp"
 
 class BoxOfChocolates final : public ActiveEffect
 {

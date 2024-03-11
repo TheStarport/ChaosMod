@@ -31,6 +31,7 @@ class ImGuiManager
         static void StartCredits();
         static void StopCredits();
         static void ToggleBoxOfChocolates(bool state);
+        static void ToggleSelectionWheel();
         static void Render();
 
         static ImFont* GetFont(Font font);

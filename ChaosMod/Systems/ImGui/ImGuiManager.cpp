@@ -1,19 +1,21 @@
 #include "PCH.hpp"
 
-#include "ActiveEffectsText.hpp"
-#include "ChaosOptionText.hpp"
-#include "Configurator.hpp"
-#include "EffectSelector.hpp"
-#include "ProgressBar.hpp"
-#include "ScrollingCredits.hpp"
+#include "Components/ActiveEffectsText.hpp"
+#include "Components/ChaosOptionText.hpp"
+#include "Components/ProgressBar.hpp"
+#include "Components/ScrollingCredits.hpp"
 
 #include "ImGuiManager.hpp"
 
-#include "../ImGuiHelpers/ImGuiDX9.hpp"
-#include "../ImGuiHelpers/ImGuiWin32.hpp"
+#include "Helpers/ImGuiDX9.hpp"
+#include "Helpers/ImGuiWin32.hpp"
 
-#include "Debug.hpp"
-#include "PatchNotesWindow.hpp"
+#include "Menus/Configurator.hpp"
+#include "Menus/Debug.hpp"
+#include "Menus/EffectSelector.hpp"
+#include "Menus/PatchNotesWindow.hpp"
+#include "Menus/SelectionWheel.hpp"
+
 #include "imgui/imgui_internal.h"
 
 void ImGuiManager::SetupImGuiStyle()
@@ -101,11 +103,11 @@ void ImGuiManager::SetupImGuiStyle()
     style.Colors[ImGuiCol_ResizeGrip] = bgColor;
     style.Colors[ImGuiCol_ResizeGripHovered] = titleBgColor;
     style.Colors[ImGuiCol_ResizeGripActive] = bgColor;
-    style.Colors[ImGuiCol_Tab] = titleBgColor;                                                       // Normaler Tab-Hintergrund
-    style.Colors[ImGuiCol_TabHovered] = buttonHoverColor;                                            // Tab-Hintergrund, wenn die Maus darüber schwebt
-    style.Colors[ImGuiCol_TabActive] = ImVec4(titleBgColor.x, titleBgColor.y, titleBgColor.z, 1.0f); // Aktiver Tab-Hintergrund, leicht geänderte Farbe
-    style.Colors[ImGuiCol_TabUnfocused] = titleBgColor;                                              // Unfokussierter Tab-Hintergrund
-    style.Colors[ImGuiCol_TabUnfocusedActive] = titleBgColor;                                        // Aktiver unfokussierter Tab-Hintergrund
+    style.Colors[ImGuiCol_Tab] = titleBgColor;
+    style.Colors[ImGuiCol_TabHovered] = buttonHoverColor;
+    style.Colors[ImGuiCol_TabActive] = ImVec4(titleBgColor.x, titleBgColor.y, titleBgColor.z, 1.0f);
+    style.Colors[ImGuiCol_TabUnfocused] = titleBgColor;
+    style.Colors[ImGuiCol_TabUnfocusedActive] = titleBgColor;
 
     style.Colors[ImGuiCol_PlotLines] = ImVec4(0.5215686559677124f, 0.6000000238418579f, 0.7019608020782471f, 1.0f);
     style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.03921568766236305f, 0.9803921580314636f, 0.9803921580314636f, 1.0f);
@@ -116,7 +118,7 @@ void ImGuiManager::SetupImGuiStyle()
     style.Colors[ImGuiCol_NavHighlight] = ImVec4(0.4980392158031464f, 0.5137255191802979f, 1.0f, 1.0f);
     style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.4980392158031464f, 0.5137255191802979f, 1.0f, 1.0f);
     style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.196078434586525f, 0.1764705926179886f, 0.5450980663299561f, 0.501960813999176f);
-    style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.196078434586525f, 0.1764705926179886f, 0.5450980663299561f, 0.501960813999176f);
+    style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.196078434586525f, 0.1764705926179886f, 0.5450980663299561f, 0);
 }
 
 void ImGuiManager::Init()
@@ -164,6 +166,17 @@ void ImGuiManager::StartCredits()
 
 void ImGuiManager::StopCredits() { ScrollingCredits::show = false; }
 void ImGuiManager::ToggleBoxOfChocolates(const bool state) { ActiveEffectsText::boxOfChocolates = state; }
+void ImGuiManager::ToggleSelectionWheel()
+{
+    if (!SelectionWheel::currentlyShowing)
+    {
+        SelectionWheel::shouldShow = true;
+    }
+    else
+    {
+        SelectionWheel::currentlyShowing = false;
+    }
+}
 
 void ImGuiManager::Render()
 {
@@ -185,6 +198,7 @@ void ImGuiManager::Render()
     ActiveEffectsText::Render();
     DebugMenu::Render();
     PatchNotesWindow::Render();
+    SelectionWheel::Render();
 
 #ifdef _DEBUG
     ImGui::ShowDemoWindow();

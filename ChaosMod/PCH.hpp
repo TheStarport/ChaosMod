@@ -64,10 +64,12 @@ std::string GetInfocardName(uint ids);
 void SetLanguage(Language lang);
 
 // ReSharper disable twice CppInconsistentNaming
-#ifdef DEBUG
+#ifdef _DEBUG
     #define ASSERT(cond, text) Assert(cond, text, __FILE__, __LINE__)
 #else
-    #define ASSERT
+    #define ASSERT(cond, text) \
+        (void)(cond);          \
+        (void)(text);
 #endif
 
 struct Weight : refl::attr::usage::field

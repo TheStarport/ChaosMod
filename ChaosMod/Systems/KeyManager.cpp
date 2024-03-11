@@ -2,6 +2,10 @@
 
 #include "KeyManager.hpp"
 
+#include "ImGui/ImGuiManager.hpp"
+
+constexpr int ToggleWheel = Utils::USER_MANEUVER_CRUISE;
+
 bool __stdcall KeyManager::HandleKey(int keyCmd)
 {
     const auto instance = i();
@@ -17,7 +21,6 @@ bool __stdcall KeyManager::HandleKey(int keyCmd)
         case Utils::USER_NONE:
         case Utils::USER_KEY:
         case Utils::USER_CHAR:
-        case Utils::USER_BUTTON:
         case Utils::USER_WHEEL:
         case Utils::USER_MOVE:
         case Utils::USER_BUTTON0:
@@ -62,6 +65,11 @@ bool __stdcall KeyManager::HandleKey(int keyCmd)
 
     switch (keyCmd) // NOLINT(hicpp-multiway-paths-covered)
     {
+        case ToggleWheel:
+            {
+                ImGuiManager::ToggleSelectionWheel();
+                return true;
+            }
         default: return false;
     }
 }
@@ -91,6 +99,10 @@ KeyManager::KeyManager()
     auto address = reinterpret_cast<PDWORD>(reinterpret_cast<char*>(&patch) + 1);
     *address = reinterpret_cast<DWORD>(PVOID(HandleKeyNaked));
     MemUtils::WriteProcMem(reinterpret_cast<char*>(0x576410), &patch, 7);
+
+    // Key Names
+    static char toggleWheel[] = "CHAOS_WHEEL_TOGGLE";
+    *reinterpret_cast<char**>(0x614FC8) = toggleWheel;
 
     // Setup possible values
     possibleKeys = { Utils::USER_PAUSE,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImGuiManager.hpp"
+#include "../ImGuiManager.hpp"
 
 #include <imgui/imgui.h>
 

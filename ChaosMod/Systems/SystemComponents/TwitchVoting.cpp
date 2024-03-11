@@ -4,7 +4,7 @@
 
 #include "Systems/ChaosTimer.hpp"
 #include "Systems/ConfigManager.hpp"
-#include "Systems/ImguiComponents/ImGuiManager.hpp"
+#include "Systems/ImGui/ImGuiManager.hpp"
 #include "Systems/UiManager.hpp"
 
 #include <nlohmann/json.hpp>

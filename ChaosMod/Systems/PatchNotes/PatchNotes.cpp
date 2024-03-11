@@ -3,7 +3,7 @@
 #include "PatchNotes.hpp"
 
 #include "Systems/ConfigManager.hpp"
-#include "Systems/ImguiComponents/ImGuiManager.hpp"
+#include "Systems/ImGui/ImGuiManager.hpp"
 
 #include <magic_enum.hpp>
 #include <nlohmann/json.hpp>

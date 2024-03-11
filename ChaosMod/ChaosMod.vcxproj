@@ -145,10 +145,12 @@
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>if defined FL_CHAOS_MOD (
-  copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
-  powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true
-)</Command>
+      <Command>
+				if defined FL_CHAOS_MOD (
+				copy /Y "$(TargetDir)*.dll" "$(FL_CHAOS_MOD)"
+				powershell -ExecutionPolicy Bypass -File $(SolutionDir)CopyChaosAssets.ps1 -NoLaunch true -NoXml true
+				)
+			</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -320,9 +322,10 @@
     <ClCompile Include="Systems\GameEvents\OnHit.cpp" />
     <ClCompile Include="Systems\GameEvents\OnSound.cpp" />
     <ClCompile Include="Systems\HudInterface.cpp" />
-    <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp" />
-    <ClCompile Include="Systems\ImGuiHelpers\ImGuiDX9.cpp" />
-    <ClCompile Include="Systems\ImGuiHelpers\ImGuiWin32.cpp" />
+    <ClCompile Include="Systems\ImGui\Components\PiMenu.cpp" />
+    <ClCompile Include="Systems\ImGui\ImGuiManager.cpp" />
+    <ClCompile Include="Systems\ImGui\Helpers\ImGuiDX9.cpp" />
+    <ClCompile Include="Systems\ImGui\Helpers\ImGuiWin32.cpp" />
     <ClCompile Include="Systems\KeyManager.cpp" />
     <ClCompile Include="Systems\PatchNotes\CurrencyChange.cpp" />
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp" />
@@ -380,17 +383,19 @@
     <ClInclude Include="Systems\HudComponents\TToggle.hpp" />
     <ClInclude Include="Systems\HudComponents\TWire.hpp" />
     <ClInclude Include="Systems\HudInterface.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ActiveEffectsText.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\Configurator.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\EffectSelector.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ChaosOptionText.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\Debug.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ImGuiManager.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\PatchNotesWindow.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ProgressBar.hpp" />
-    <ClInclude Include="Systems\ImguiComponents\ScrollingCredits.hpp" />
-    <ClInclude Include="Systems\ImGuiHelpers\ImGuiDX9.hpp" />
-    <ClInclude Include="Systems\ImGuiHelpers\ImGuiWin32.hpp" />
+    <ClInclude Include="Systems\ImGui\Components\ActiveEffectsText.hpp" />
+    <ClInclude Include="Systems\ImGui\Components\ChaosOptionText.hpp" />
+    <ClInclude Include="Systems\ImGui\Components\PiMenu.hpp" />
+    <ClInclude Include="Systems\ImGui\Components\ProgressBar.hpp" />
+    <ClInclude Include="Systems\ImGui\Components\ScrollingCredits.hpp" />
+    <ClInclude Include="Systems\ImGui\ImGuiManager.hpp" />
+    <ClInclude Include="Systems\ImGui\Helpers\ImGuiDX9.hpp" />
+    <ClInclude Include="Systems\ImGui\Helpers\ImGuiWin32.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\Configurator.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\Debug.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\EffectSelector.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\PatchNotesWindow.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\SelectionWheel.hpp" />
     <ClInclude Include="Systems\KeyManager.hpp" />
     <ClInclude Include="Systems\PatchNotes\Changes.hpp" />
     <ClInclude Include="Systems\PatchNotes\Patch.hpp" />
@@ -419,6 +424,9 @@
     <ResourceCompile Include="Resources.rc">
       <DeploymentContent>false</DeploymentContent>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Systems\ImGui\Components\Credits.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

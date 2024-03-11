@@ -1,6 +1,6 @@
 #include "PCH.hpp"
 
-#include "Systems/ImguiComponents/Debug.hpp"
+#include "Systems/ImGui/Menus/Debug.hpp"
 
 void Log(const std::string& log)
 {

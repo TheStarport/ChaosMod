@@ -4,7 +4,7 @@
 #include "UiManager.hpp"
 
 #include "ConfigManager.hpp"
-#include "ImGuiHelpers/ImGuiWin32.hpp"
+#include "ImGui/Helpers/ImGuiWin32.hpp"
 #include "imgui/imgui_internal.h"
 
 #include <iostream>
@@ -15,8 +15,8 @@
 
 // Very hacky way to stop reshade from polluting ImGui
 #define RESHADE_API_LIBRARY_EXPORT
-#include "ImGuiHelpers/ImGuiDX9.hpp"
-#include "ImguiComponents/ImGuiManager.hpp"
+#include "ImGui/Helpers/ImGuiDX9.hpp"
+#include "ImGui/ImGuiManager.hpp"
 #include "ReshadeManager.hpp"
 #undef RESHADE_API_LIBRARY_EXPORT
 
@@ -81,11 +81,6 @@ void UiManager::HandleInput()
     {
         io.AddMouseWheelEvent(0.f, static_cast<float>(scroll));
         *mouseZ = 0;
-    }
-
-    if (GetAsyncKeyState(VK_F5))
-    {
-        ImGuiManager::ShowDebugConsole();
     }
 }
 

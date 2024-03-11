@@ -7,7 +7,7 @@
 #include "ShipManipulator.hpp"
 
 #include "Effects/AddressTable.hpp"
-#include "ImguiComponents/ImGuiManager.hpp"
+#include "ImGui/ImGuiManager.hpp"
 #include "PatchNotes/PatchNotes.hpp"
 #include "SystemComponents/GlobalTimers.hpp"
 #include "UiManager.hpp"

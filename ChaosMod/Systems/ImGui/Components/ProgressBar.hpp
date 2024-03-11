@@ -4,6 +4,7 @@
 
 #include "imgui/imgui.h"
 
+#include "Systems/ImGui/ImGuiManager.hpp"
 #include "magic_enum_flags.hpp"
 
 class ImGuiManager;

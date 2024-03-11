@@ -97,7 +97,6 @@ void Init()
     EventManager::i()->SetupDetours();
     CameraController::i();
     HudInterface::i();
-    KeyManager::i();
     ShipManipulator::i();
 
     ChaosTimer::i()->InitEffects();
@@ -444,6 +443,10 @@ void RequiredMemEdits()
     std::array<byte, 9> hpFirePatch = { 0x83, 0xFA, 0xFF, 0xBA, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3 };
     MemUtils::WriteProcMem(common + 0x039F77, hpFirePatch.data(), hpFirePatch.size());
 
+    // Replace the word 'MULTIPLAYER' with 'CHAOS MOD' in the options menu
+    uint menu3Ids = 458753;
+    MemUtils::WriteProcMem(fl + 0xAABFC, &menu3Ids, 4);
+
     BugFixes::SetupDetours();
 
     PatchResolution();
@@ -528,6 +531,9 @@ void SetupHack()
 
     timingDetour->Detour(Update);
     thornLoadDetour->Detour(ScriptLoadHook);
+
+    // Key manager needs to hook before key commands are loaded
+    KeyManager::i();
 }
 
 HMODULE dll;
