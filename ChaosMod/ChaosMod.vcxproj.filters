@@ -151,9 +151,6 @@
     <ClCompile Include="Systems\PatchNotes\PatchNotes.cpp">
       <Filter>Systems\PatchNotes</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\ImguiComponents\ImGuiManager.cpp">
-      <Filter>Systems\ImguiComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Systems\PatchNotes\CurrencyChange.cpp">
       <Filter>Systems\PatchNotes</Filter>
     </ClCompile>
@@ -235,6 +232,12 @@
     <ClCompile Include="Effects\DB\Meta\EmergencyRollback.cpp">
       <Filter>Effects\DB\Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Systems\ImGui\ImGuiManager.cpp">
+      <Filter>Systems\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\ImGui\Components\PiMenu.cpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />
@@ -254,20 +257,8 @@
     <ClInclude Include="Systems\DirectX\InterfaceQuery.hpp">
       <Filter>Systems\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGui\Debug.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Systems\ChaosTimer.hpp">
       <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\ProgressBar.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\ChaosOptionText.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\ImGuiDX9.hpp">
-      <Filter>Systems\ImGui\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Systems\ImGui\Helpers\ImGuiWin32.hpp">
       <Filter>Systems\ImGui\Helpers</Filter>
@@ -289,9 +280,6 @@
     </ClCompile>
     <ClInclude Include="Effects\AddressTable.hpp">
       <Filter>Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\ActiveEffectsText.hpp">
-      <Filter>Systems\ImGui</Filter>
     </ClInclude>
     <ClCompile Include="Effects\DB\Interface\BuggyInterface.cpp">
       <Filter>Effects\DB\Interface</Filter>
@@ -491,9 +479,6 @@
     <ClInclude Include="Systems\SystemComponents\MoviePlayer.hpp">
       <Filter>Systems\SystemComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGui\ScrollingCredits.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Systems\ShipManipulator.hpp">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -636,15 +621,6 @@
     <ClInclude Include="Systems\ImGui\ImGuiManager.hpp">
       <Filter>Systems\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\ImGui\Configurator.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\EffectSelector.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Systems\ImGui\PatchNotesWindow.hpp">
-      <Filter>Systems\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Utilities\OffsetHelper.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -653,6 +629,42 @@
     </ClInclude>
     <ClInclude Include="Systems\BugFixes.hpp">
       <Filter>Systems\SystemComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Components\PiMenu.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Components\ProgressBar.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Components\ScrollingCredits.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\SelectionWheel.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\PatchNotesWindow.hpp">
+      <Filter>Systems\ImGui\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\EffectSelector.hpp">
+      <Filter>Systems\ImGui\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\Debug.hpp">
+      <Filter>Systems\ImGui\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Helpers\ImGuiDX9.hpp">
+      <Filter>Systems\ImGui\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\Configurator.hpp">
+      <Filter>Systems\ImGui\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Components\ChaosOptionText.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Components\ActiveEffectsText.hpp">
+      <Filter>Systems\ImGui\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\ImGui\Menus\CargoSpawner.hpp">
+      <Filter>Systems\ImGui\Menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,11 +743,22 @@
     <Filter Include="Systems\PatchNotes">
       <UniqueIdentifier>{e6ec4d0d-bab2-42c4-9605-3f0468bc1596}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\ImGui\Components">
+      <UniqueIdentifier>{52634881-5757-406f-8c3e-90ca8c18d237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\ImGui\Menus">
+      <UniqueIdentifier>{1227f061-dcad-4d66-b5a8-2eda0b861b78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Systems\ImGui\Components\Credits.txt">
+      <Filter>Systems\ImGui\Components</Filter>
+    </Text>
   </ItemGroup>
 </Project>

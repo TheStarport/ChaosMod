@@ -9,6 +9,7 @@
 
 #include "Helpers/ImGuiDX9.hpp"
 #include "Helpers/ImGuiWin32.hpp"
+#include "Menus/CargoSpawner.hpp"
 
 #include "Menus/Configurator.hpp"
 #include "Menus/Debug.hpp"
@@ -165,6 +166,7 @@ void ImGuiManager::StartCredits()
 }
 
 void ImGuiManager::StopCredits() { ScrollingCredits::show = false; }
+void ImGuiManager::ShowCargoSpawner() { CargoSpawner::show = true; }
 void ImGuiManager::ToggleBoxOfChocolates(const bool state) { ActiveEffectsText::boxOfChocolates = state; }
 void ImGuiManager::ToggleSelectionWheel()
 {
@@ -199,6 +201,7 @@ void ImGuiManager::Render()
     DebugMenu::Render();
     PatchNotesWindow::Render();
     SelectionWheel::Render();
+    CargoSpawner::Render();
 
 #ifdef _DEBUG
     ImGui::ShowDemoWindow();

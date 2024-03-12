@@ -391,6 +391,7 @@
     <ClInclude Include="Systems\ImGui\ImGuiManager.hpp" />
     <ClInclude Include="Systems\ImGui\Helpers\ImGuiDX9.hpp" />
     <ClInclude Include="Systems\ImGui\Helpers\ImGuiWin32.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\CargoSpawner.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\Configurator.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\Debug.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\EffectSelector.hpp" />

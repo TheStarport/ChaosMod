@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Components/PiMenu.hpp"
+#include "Systems/SystemComponents/GlobalTimers.hpp"
 #include "imgui/imgui.h"
 
 class ImGuiManager;
@@ -42,6 +43,28 @@ class SelectionWheel final
                     if (PieMenuItem("DEV: Effect Selector"))
                     {
                         ImGuiManager::ShowEffectSelector();
+                    }
+
+                    if (PieMenuItem("DEV: Advance Level"))
+                    {
+                        int money = 0;
+                        pub::Player::GetMoneyNeededToNextRank(1, money);
+                        if (money > 0)
+                        {
+                            pub::Player::AdjustCash(1, money);
+                            GlobalTimers::i()->AddTimer(
+                                [money](const float _)
+                                {
+                                    pub::Player::AdjustCash(1, -money);
+                                    return true;
+                                },
+                                1.f);
+                        }
+                    }
+
+                    if (PieMenuItem("DEV: Add Cargo"))
+                    {
+                        ImGuiManager::ShowCargoSpawner();
                     }
 
                     EndPieMenu();

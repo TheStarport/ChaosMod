@@ -30,6 +30,7 @@ class ImGuiManager
         static void ShowPatchNotes();
         static void StartCredits();
         static void StopCredits();
+        static void ShowCargoSpawner();
         static void ToggleBoxOfChocolates(bool state);
         static void ToggleSelectionWheel();
         static void Render();
