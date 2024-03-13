@@ -6,6 +6,8 @@ class GetHumbled final : public ActiveEffect
 {
         void Begin() override
         {
+            pub::Audio::PlaySoundEffect(1, CreateID("chaos_credits_gone"));
+
             int cash;
             pub::Player::InspectCash(1, cash);
 
