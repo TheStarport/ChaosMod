@@ -238,6 +238,9 @@
     <ClCompile Include="Systems\ImGui\Components\PiMenu.cpp">
       <Filter>Systems\ImGui\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\DB\Movement\Stalled.cpp">
+      <Filter>Effects\DB\Movement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utils.hpp" />

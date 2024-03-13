@@ -200,6 +200,7 @@
     <ClCompile Include="Effects\DB\Movement\CocaineMode.cpp" />
     <ClCompile Include="Effects\DB\Movement\Hyperlanes.cpp" />
     <ClCompile Include="Effects\DB\Movement\SpeedCola.cpp" />
+    <ClCompile Include="Effects\DB\Movement\Stalled.cpp" />
     <ClCompile Include="Effects\DB\Movement\Zoomies.cpp" />
     <ClCompile Include="Effects\DB\Spawning\ClonePlayer.cpp" />
     <ClCompile Include="Effects\DB\Spawning\EvilPlayer.cpp" />
