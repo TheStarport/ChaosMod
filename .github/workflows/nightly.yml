@@ -43,7 +43,8 @@ jobs:
       - name: Set Work ENVs
         id: vars
         run: |
-          echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+          echo "::set-output name=date::$(date +'%Y-%m-%d %H-%M')"
+          echo "::set-output name=body::$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p')"
           WIN_HOME=$(echo $HOME | tr '/' '\\')
           WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
           WIN_HOME=${WIN_HOME^}
@@ -121,6 +122,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ github.workspace }}/*.7z"
-          body: "Automatically generated"
+          body: "${{ steps.vars.outputs.body }}"
           tag: ${{ steps.vars.outputs.date }}
       
