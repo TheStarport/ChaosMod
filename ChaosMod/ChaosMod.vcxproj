@@ -395,6 +395,7 @@
     <ClInclude Include="Systems\ImGui\Menus\CargoSpawner.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\Configurator.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\Debug.hpp" />
+    <ClInclude Include="Systems\ImGui\Menus\EffectHistory.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\EffectSelector.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\PatchNotesWindow.hpp" />
     <ClInclude Include="Systems\ImGui\Menus\SelectionWheel.hpp" />

@@ -50,6 +50,8 @@ class ChaosTimer final : public Singleton<ChaosTimer>
         void FrameUpdate(float delta);
         void InitEffects();
         static const std::unordered_map<ActiveEffect*, float>& GetActiveEffects();
+        static const std::vector<PersistentEffect*>& GetActivePersistentEffects();
+        static void EndEffectPrematurely(const ActiveEffect* effect);
 
         [[nodiscard]]
         float GetTimeUntilChaos() const;

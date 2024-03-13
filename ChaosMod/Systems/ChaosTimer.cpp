@@ -177,6 +177,9 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
     auto& info = effect->GetEffectInfo();
     Log(std::format("Starting Effect: {} ({})", info.effectName, magic_enum::enum_name(info.category)));
+
+    ImGuiManager::AddToEffectHistory(info.effectName, info.description);
+
     effect->Begin();
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
@@ -451,3 +454,15 @@ void ChaosTimer::Update(const float delta)
 }
 
 const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() { return i()->activeEffects; }
+const std::vector<PersistentEffect*>& ChaosTimer::GetActivePersistentEffects() { return i()->persistentEffects; }
+void ChaosTimer::EndEffectPrematurely(const ActiveEffect* effect)
+{
+    auto& all = i()->activeEffects;
+    for (auto& iter : all)
+    {
+        if (iter.first == effect)
+        {
+            iter.second = 0.0f;
+        }
+    }
+}

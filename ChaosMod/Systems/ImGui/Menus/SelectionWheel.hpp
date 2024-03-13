@@ -28,6 +28,16 @@ class SelectionWheel final
                     ImGuiManager::ShowDebugConsole();
                 }
 
+                if (PieMenuItem("Effect History"))
+                {
+                    ImGuiManager::ShowEffectHistory();
+                }
+
+                if (PieMenuItem("Show Patch Notes"))
+                {
+                    ImGuiManager::ShowPatchNotes();
+                }
+
                 if (BeginPieMenu("Debug"))
                 {
                     if (PieMenuItem("DEV: New Patch"))

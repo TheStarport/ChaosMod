@@ -13,6 +13,7 @@
 
 #include "Menus/Configurator.hpp"
 #include "Menus/Debug.hpp"
+#include "Menus/EffectHistory.hpp"
 #include "Menus/EffectSelector.hpp"
 #include "Menus/PatchNotesWindow.hpp"
 #include "Menus/SelectionWheel.hpp"
@@ -159,6 +160,12 @@ void ImGuiManager::ShowConfigurator() { Configurator::show = true; }
 void ImGuiManager::ShowEffectSelector() { EffectSelector::show = true; }
 void ImGuiManager::ShowDebugConsole() { DebugMenu::show = true; }
 void ImGuiManager::ShowPatchNotes() { PatchNotesWindow::show = true; }
+void ImGuiManager::ShowEffectHistory() { EffectHistory::show = true; }
+void ImGuiManager::AddToEffectHistory(std::string_view effectName, std::string_view description)
+{
+    std::chrono::sys_time time{ TimeUtils::UnixToSysTime(TimeUtils::UnixTime<std::chrono::seconds>()) };
+    EffectHistory::pastEffects.emplace_back(effectName, description, std::format("{0:%Y-%m-%d %H:%M:%S}", time));
+}
 void ImGuiManager::StartCredits()
 {
     ScrollingCredits::scrollAmount = 0.0f;
@@ -192,16 +199,17 @@ void ImGuiManager::Render()
 
     ImGui::PushFont(loadedFonts.begin()->second);
 
-    ProgressBar::Render();
-    Configurator::Render();
-    EffectSelector::Render();
-    ScrollingCredits::Render();
-    ChaosOptionText::Render();
     ActiveEffectsText::Render();
-    DebugMenu::Render();
-    PatchNotesWindow::Render();
-    SelectionWheel::Render();
     CargoSpawner::Render();
+    ChaosOptionText::Render();
+    Configurator::Render();
+    DebugMenu::Render();
+    EffectHistory::Render();
+    EffectSelector::Render();
+    PatchNotesWindow::Render();
+    ProgressBar::Render();
+    ScrollingCredits::Render();
+    SelectionWheel::Render();
 
 #ifdef _DEBUG
     ImGui::ShowDemoWindow();

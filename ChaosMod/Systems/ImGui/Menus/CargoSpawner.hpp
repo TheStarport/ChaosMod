@@ -14,7 +14,6 @@ class CargoSpawner final
         friend ImGuiManager;
 
         inline static bool show = false;
-        inline static std::map<EffectType, std::vector<ActiveEffect*>>* allEffects;
 
         inline static DWORD* gamePauseIncrementor = PDWORD(0x667D54);
         inline static bool doDecrement = false;

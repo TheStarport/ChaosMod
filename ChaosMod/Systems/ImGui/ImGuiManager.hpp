@@ -28,6 +28,8 @@ class ImGuiManager
         static void ShowEffectSelector();
         static void ShowDebugConsole();
         static void ShowPatchNotes();
+        static void ShowEffectHistory();
+        static void AddToEffectHistory(std::string_view effectName, std::string_view description);
         static void StartCredits();
         static void StopCredits();
         static void ShowCargoSpawner();
