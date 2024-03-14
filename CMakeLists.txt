@@ -31,6 +31,8 @@ file(GLOB_RECURSE SOURCE_FILES LIST_DIRECTORIES false
         "${SOURCE_PATH}/*.h*"
         "${INCLUDE_PATH}/*.c*"
         "${INCLUDE_PATH}/*.h*"
+        "${PROJECT_SOURCE_DIR}/resource.h"
+        "${PROJECT_SOURCE_DIR}/Resources.rc"
         "${SDK_PATH}/*.h*"
         "${imgui}/*.h"
         "${imgui}/*.cpp"
@@ -47,7 +49,7 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;"
         "_CRT_SECURE_NO_WARNINGS;"
-        "WIN32;WIN32_LEAN_AND_MEAN;"
+        "WIN32;"
         "UNICODE;_UNICODE;"
         "NOMINMAX;"
         "IMGUI_DEFINE_MATH_OPERATORS;"
@@ -115,7 +117,7 @@ if (WIN32)
         string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND copy /Y "${OUT_PATH}" "$ENV{FL_CHAOS_MOD}"
-            COMMAND powershell ${PROJECT_SOURCE_DIR}/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
+            COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
         )
     else()
         message(STATUS "ENV: FL_CHAOS_MOD not defined. Not adding post build step.")

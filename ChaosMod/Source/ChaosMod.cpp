@@ -12,6 +12,7 @@
 #include "Components/SaveManager.hpp"
 #include "Components/ShipManipulator.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
+#include "Components/SplashScreen.hpp"
 #include "Components/TwitchVoting.hpp"
 #include "Components/Teleporter.hpp"
 #include "Components/UiManager.hpp"
@@ -93,6 +94,9 @@ double timeCounter;
 
 void ChaosMod::DelayedInit()
 {
+    // We no longer need the splash screen
+    ResetComponent<SplashScreen>();
+
     // Register all the components we can!
     SetComponent<EventManager>();
     SetComponent<CameraController>();
@@ -527,10 +531,13 @@ ChaosMod::ChaosMod()
     SetComponent<Random>(); // Almost everything depends on Random
     SetComponent<GlobalTimers>();
 
+    Get<SplashScreen>()->SetLoadingMessage(5);
     ConfigManager::Load();
 
+    Get<SplashScreen>()->SetLoadingMessage(10);
     SetComponent<ChaosTimer>();
     SetComponent<DrawingHelper>();
+    Get<SplashScreen>()->SetLoadingMessage(15);
     SetComponent<UiManager>();
     SetComponent<KeyManager>();
     SetComponent<ReshadeManager>();
@@ -576,6 +583,31 @@ BOOL __stdcall ChaosMod::FreeLibraryDetour(const HMODULE handle)
     return res;
 }
 
+extern "C" __declspec(dllexport) void Dummy() {}
+
+FunctionDetour startUpDetour(DALib::Startup);
+
+bool OnStartUp(HWND window, const char* unk)
+{
+    float newX = 0.5f;
+    float newY = 0.5f;
+
+    MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
+    MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
+
+    // Display loading screen while we load all our chaos content
+    // It takes a lot longer than vanilla!
+    SetComponent<SplashScreen>(window);
+    Get<SplashScreen>()->SetLoadingMessage(2);
+
+    // Force construct ChaosMod
+    ChaosMod::i();
+    Get<ReshadeManager>()->SetHModule(dll);
+
+    startUpDetour.UnDetour();
+    return DALib::Startup(window, unk);
+}
+
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
     DisableThreadLibraryCalls(hModule);
@@ -583,15 +615,9 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
     {
         dll = hModule;
 
-        float newX = 0.5f;
-        float newY = 0.5f;
-
-        MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
-        MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
-
-        // Force construct ChaosMod
-        ChaosMod::i();
-        Get<ReshadeManager>()->SetHModule(hModule);
+        // Defer our start up so we bypass the DLL loader lock
+        // We need our threads :)
+        startUpDetour.Detour(OnStartUp);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {

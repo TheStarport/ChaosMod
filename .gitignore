@@ -33,9 +33,9 @@
 *.exe
 *.out
 *.app
-!frc.exe
-!UTFXML.exe
-!XMLUTF.exe
+!BinUtils/frc.exe
+!BinUtils/UTFXML.exe
+!BinUtils/XMLUTF.exe
 
 # Visual Studio
 # User-specific files

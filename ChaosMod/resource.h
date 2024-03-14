@@ -3,6 +3,7 @@
 // Used by Resources.rc
 //
 #define DefaultPerfOptions              101
+#define IDI_CHAOS_LOGO 102
 
 // Next default values for new objects
 // 

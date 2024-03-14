@@ -57,6 +57,8 @@ $func = {
     Start-Process -FilePath "$proc" -Wait -ArgumentList $params
 }
 
+$rootDir = "$PSScriptRoot\.."
+
 function Convert {
     param(     
         [Parameter(Mandatory)]   
@@ -77,8 +79,8 @@ function Convert {
     
     foreach ($group in $groups) {
         $jobs = foreach ($file in $group.Group) {
-            Start-Job -ScriptBlock $func -Arg @("$PSScriptRoot\$exePath", "-o $destination $($file.FullName)")
-            $trimmedDestination = $destination.TrimStart("$PSScriptRoot")
+            Start-Job -ScriptBlock $func -Arg @("$rootDir\$exePath", "-o $destination $($file.FullName)")
+            $trimmedDestination = $destination.TrimStart("$rootDir")
             Write-Host "Converting $($file) and writing it to $trimmedDestination"
         }
         Receive-Job $jobs -Wait -AutoRemoveJob
@@ -89,11 +91,11 @@ function Convert {
 $watch = New-Object System.Diagnostics.Stopwatch
 
 #Set infocard directories and compile them from the .frc file.
-$infocardXMLPath = "$PSScriptRoot\Assets\InfocardImports.frc" 
+$infocardXMLPath = "$rootDir\Assets\InfocardImports.frc"
 $frcPath = "$PSScriptRoot\frc.exe"
-$trimmedinfocardXMLPath = $infocardXMLPath.TrimStart("$PSScriptRoot")
-$infocardDestinationPath = "$PSScriptRoot\Assets\DATA\CHAOS\ChaosInfocards.dll"
-$trimmedinfocardDestinationPath = $infocardDestinationPath.TrimStart("$PSScriptRoot")
+$trimmedinfocardXMLPath = $infocardXMLPath.TrimStart("$rootDir")
+$infocardDestinationPath = "$rootDir\Assets\DATA\CHAOS\ChaosInfocards.dll"
+$trimmedinfocardDestinationPath = $infocardDestinationPath.TrimStart("$rootDir")
 
 Write-Host "Compiling infocards from $trimmedinfocardXMLPath to $trimmedinfocardDestinationPath..." -ForegroundColor Blue
 $watch.Start() 
@@ -106,9 +108,9 @@ Write-Host "Infocards compiled in $time seconds!" -ForegroundColor Green
 if ($noXml -eq $false)
 {
     #Set ALE and XML directories
-    $effectXMLPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX\XML"
-    $effectPackedPath = "$PSScriptRoot\Assets\DATA\CHAOS\VFX"
-    $effectALEOutputPath = "$PSScriptRoot\Assets\DATA"
+    $effectXMLPath = "$rootDir\Assets\DATA\CHAOS\VFX\XML"
+    $effectPackedPath = "$rootDir\Assets\DATA\CHAOS\VFX"
+    $effectALEOutputPath = "$rootDir\Assets\DATA"
 
     #Unpack the ALE files to XML for source control
     Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
@@ -154,10 +156,10 @@ if (!$env:FL_CHAOS_MOD) {
 #Check the FL_CHAOS_MOD environment variable exists and if so, copy the files over to the application's directory.
 if ($env:FL_CHAOS_MOD) {
     $fullCopyDestination = Resolve-Path $env:FL_CHAOS_MOD\..\
-    Write-Host "Copying asset files from $PSScriptRoot\ to $fullCopyDestination" -ForegroundColor Blue
+    Write-Host "Copying asset files from $rootDir\ to $fullCopyDestination" -ForegroundColor Blue
     $watch.Start() 
-    Copy-Item -Path "$PSScriptRoot\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
-    Copy-Item -Path "$PSScriptRoot\Assets\EXE\" -Destination "$fullCopyDestination" -Recurse -Force
+    Copy-Item -Path "$rootDir\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
+    Copy-Item -Path "$rootDir\Assets\EXE\" -Destination "$fullCopyDestination" -Recurse -Force
     $watch.Stop()
     $time = Write-Output $watch.Elapsed.TotalSeconds
     Write-Host "Asset files copied over in $time seconds!" -ForegroundColor Green

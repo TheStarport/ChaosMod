@@ -15,9 +15,10 @@
 
 // Very hacky way to stop reshade from polluting ImGui
 #define RESHADE_API_LIBRARY_EXPORT
+#include "Components/ReshadeManager.hpp"
+#include "Components/SplashScreen.hpp"
 #include "ImGui/Helpers/ImGuiDX9.hpp"
 #include "ImGui/ImGuiManager.hpp"
-#include "Components/ReshadeManager.hpp"
 #undef RESHADE_API_LIBRARY_EXPORT
 
 typedef LRESULT(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
@@ -117,8 +118,10 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
         }
     }
 
+
     Get<ReshadeManager>()->InitReshade();
 
+    Get<SplashScreen>()->SetLoadingMessage(55);
     return new Direct3D8(d3d);
 }
 
@@ -272,6 +275,7 @@ void UiManager::LoadCursors()
 
 void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 {
+    Get<SplashScreen>()->SetLoadingMessage(80);
     Get<UiManager>()->window = window;
     ImGui_ImplDX9_Init(device);
     ImGui_ImplWin32_Init(window);
