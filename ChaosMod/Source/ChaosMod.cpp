@@ -105,6 +105,8 @@ void ChaosMod::DelayedInit()
     SetComponent<PersonalityHelper>();
     SetComponent<SpaceObjectSpawner>();
 
+    Get<ChaosTimer>()->InitEffects();
+
     PatchNotes::LoadPatches();
     OnSound::Init();
     ShipInfocardOverride::Init();
@@ -525,9 +527,9 @@ ChaosMod::ChaosMod()
     SetComponent<Random>(); // Almost everything depends on Random
     SetComponent<GlobalTimers>();
 
-    SetComponent<ChaosTimer>();
-    Get<ChaosTimer>()->InitEffects();
+    ConfigManager::Load();
 
+    SetComponent<ChaosTimer>();
     SetComponent<DrawingHelper>();
     SetComponent<UiManager>();
     SetComponent<KeyManager>();

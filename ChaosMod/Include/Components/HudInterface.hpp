@@ -12,7 +12,7 @@ class __declspec(uuid(PointerHandlerId)) PointerHandler
         class HudInterface* hud;
 };
 
-class __declspec(uuid(HudInterfaceId)) HudInterface final : public Component, public IHud
+class __declspec(uuid(HudInterfaceId)) HudInterface final : public IHud, public Component
 {
         IHudFacility* facility = nullptr;
         using RemoteCallType = HRESULT(__stdcall*)(IHudFacility*& hudFacility);

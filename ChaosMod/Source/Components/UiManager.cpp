@@ -276,9 +276,6 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
     ImGui_ImplDX9_Init(device);
     ImGui_ImplWin32_Init(window);
 
-    // Load our config
-    ConfigManager::Load();
-
     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
 
     char path[MAX_PATH];
