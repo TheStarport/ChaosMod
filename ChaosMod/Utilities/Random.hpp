@@ -2,7 +2,7 @@
 #include <Concepts.hpp>
 #include <random>
 
-class Random final : public Singleton<Random>
+class Random final : public Component
 {
         std::mt19937 engine;
 

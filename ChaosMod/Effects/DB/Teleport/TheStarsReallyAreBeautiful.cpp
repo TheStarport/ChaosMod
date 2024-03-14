@@ -6,7 +6,7 @@
 class TheStarsReallyAreBeautiful final : public ActiveEffect
 {
         // Teleport the player to a star, with a 25% it being in a different system
-        void Begin() override { Teleporter::i()->WarpToRandomStar(Random::i()->Uniform(0u, 3u) < 3); }
+        void Begin() override { Get<Teleporter>()->WarpToRandomStar(Get<Random>()->Uniform(0u, 3u) < 3); }
 
     public:
         explicit TheStarsReallyAreBeautiful(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

@@ -8,7 +8,7 @@ constexpr int ToggleWheel = Utils::USER_MANEUVER_CRUISE;
 
 bool __stdcall KeyManager::HandleKey(int keyCmd)
 {
-    const auto instance = i();
+    const auto instance = Get<KeyManager>();
 
     if (blockPlayerInput || std::ranges::find(instance->blockedKeys, static_cast<Utils::Keys>(keyCmd)) != instance->blockedKeys.end())
     {

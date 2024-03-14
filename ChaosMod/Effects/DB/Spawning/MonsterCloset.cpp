@@ -18,13 +18,13 @@ class MonsterCloset final : public ActiveEffect
             {
                 if (npc.Acquire())
                 {
-                    SpaceObjectSpawner::i()->Despawn(npc);
+                    Get<SpaceObjectSpawner>()->Despawn(npc);
                 }
             }
 
             npcs.clear();
 
-            const uint count = Random::i()->Uniform(5u, 15u);
+            const uint count = Get<Random>()->Uniform(5u, 15u);
 
             for (auto i = 0u; i < count; i++)
             {

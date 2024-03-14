@@ -29,7 +29,7 @@ void CurrencyChange::Revert()
 
 void CurrencyChange::Generate()
 {
-    goodHash = possibleGoods[Random::i()->Uniform(0u, possibleGoods.size() - 1)];
+    goodHash = possibleGoods[Get<Random>()->Uniform(0u, possibleGoods.size() - 1)];
 
     auto good = GoodList_get()->find_by_id(goodHash);
 
@@ -37,18 +37,18 @@ void CurrencyChange::Generate()
     if (good->type == GoodInfo::Type::Commodity || good->type == GoodInfo::Type::Equipment)
     {
         const auto equip = Archetype::GetEquipment(good->equipmentId);
-        name = GetInfocardName(equip->idsName);
+        name = ChaosMod::GetInfocardName(equip->idsName);
     }
     else if (good->type == GoodInfo::Type::Ship)
     {
         good = (GoodList_get()->find_by_id(good->hullGoodId));
         const auto equip = Archetype::GetShip(good->equipmentId);
-        name = GetInfocardName(equip->idsName);
+        name = ChaosMod::GetInfocardName(equip->idsName);
     }
 
     oldPrice = good->price;
     // clang-format off
-    newPrice = AdjustField(good->price, static_cast<bool>(Random::i()->Uniform(0u, 1u)), {{ 1.f, 999999.f }});
+    newPrice = AdjustField(good->price, static_cast<bool>(Get<Random>()->Uniform(0u, 1u)), {{ 1.f, 999999.f }});
     // clang-format on
 
     description = std::format("~ {}: Base Price   {:.0f}  ->  {:.0f}", name, oldPrice, newPrice);
@@ -82,7 +82,8 @@ size_t CurrencyChange::GetEffectCount()
         for (const GoodInfo* good : list)
         {
             // If it doesn't have a name, or is an engine/powerplant, don't list it
-            if (GetInfocardName(good->idsName).empty() || _strcmpi(good->itemIcon, R"(equipment\models\commodities\nn_icons\EQUIPICON_engine.3db)") == 0)
+            if (ChaosMod::GetInfocardName(good->idsName).empty() ||
+                _strcmpi(good->itemIcon, R"(equipment\models\commodities\nn_icons\EQUIPICON_engine.3db)") == 0)
             {
                 continue;
             }

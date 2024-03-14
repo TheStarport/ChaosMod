@@ -11,9 +11,9 @@ class Yeet final : public ActiveEffect
 
             ship->get_behavior_interface()->update_current_behavior_engage_engine(false);
 
-            movement.x = Random::i()->Uniform(0, 1) ? -3000.f : 3000.f;
-            movement.y = Random::i()->Uniform(0, 1) ? -3000.f : 3000.f;
-            movement.z = Random::i()->Uniform(0, 1) ? -3000.f : 3000.f;
+            movement.x = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
+            movement.y = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
+            movement.z = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
 
             const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(ship) + 84)) + 152);
             *reinterpret_cast<Vector*>(ptr + 164) = movement;

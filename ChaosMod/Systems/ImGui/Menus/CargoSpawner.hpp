@@ -120,7 +120,7 @@ class CargoSpawner final
                     {
                         for (auto& [goodId, ids] : goods)
                         {
-                            auto name = GetInfocardName(ids);
+                            auto name = ChaosMod::GetInfocardName(ids);
                             if (name.empty())
                             {
                                 continue;

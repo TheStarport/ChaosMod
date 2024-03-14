@@ -18,7 +18,7 @@ class WhosThatRinging final : public ActiveEffect
         float timeUntilNextEffect = 0.f;
         void Begin() override
         {
-            const auto index = Random::i()->Uniform(0u, soundDurationMap.size() - 1);
+            const auto index = Get<Random>()->Uniform(0u, soundDurationMap.size() - 1);
             auto pair = soundDurationMap.begin();
             std::advance(pair, index);
 

@@ -13,7 +13,7 @@ class PortraitMode final : public ActiveEffect
                 return;
             }
 
-            const auto drawing = DrawingHelper::i();
+            const auto drawing = Get<DrawingHelper>();
             drawing->BoxFilled(0.f, 0.0f, 0.3333333f, 1.f, D3DCOLOR_XRGB(0, 0, 0));
             drawing->BoxFilled(0.6666666f, 0.0f, 0.3333333f, 1.f, D3DCOLOR_XRGB(0, 0, 0));
         }

@@ -7,13 +7,13 @@ class IllTrySpinning final : public ActiveEffect
 {
         void Begin() override
         {
-            ShipManipulator::i()->MakeShipsSpin(true);
+            Get<ShipManipulator>()->MakeShipsSpin(true);
             Utils::GetCShip()->get_behavior_interface()->update_current_behavior_auto_level(false);
         }
 
         void End() override
         {
-            ShipManipulator::i()->MakeShipsSpin(false);
+            Get<ShipManipulator>()->MakeShipsSpin(false);
             auto ship = Utils::GetCShip();
             if (ship)
             {

@@ -18,13 +18,13 @@ class ActiveEffectsText final
 
             if (isTimed)
             {
-                const float fraction = time / (modifier * ConfigManager::i()->defaultEffectDuration);
+                const float fraction = time / (modifier * Get<ConfigManager>()->defaultEffectDuration);
 
                 ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 200);
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
-                ImGui::PushStyleColor(ImGuiCol_Text, ConfigManager::i()->progressBarTextColor);
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->progressBarColor);
+                ImGui::PushStyleColor(ImGuiCol_Text, Get<ConfigManager>()->progressBarTextColor);
 
-                const std::string timeRemaining = ConfigManager::i()->showTimeRemainingOnEffects ? std::format("{:.1f}", time) : "";
+                const std::string timeRemaining = Get<ConfigManager>()->showTimeRemainingOnEffects ? std::format("{:.1f}", time) : "";
                 ImGui::ProgressBar(fraction, ImVec2(200, 0), timeRemaining.c_str());
                 ImGui::PopStyleColor(2);
             }

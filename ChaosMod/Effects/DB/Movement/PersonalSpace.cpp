@@ -5,8 +5,8 @@
 
 class PersonalSpace final : public ActiveEffect
 {
-        void Begin() override { ShipManipulator::i()->SetPersonalSpace(true); }
-        void End() override { ShipManipulator::i()->SetPersonalSpace(false); }
+        void Begin() override { Get<ShipManipulator>()->SetPersonalSpace(true); }
+        void End() override { Get<ShipManipulator>()->SetPersonalSpace(false); }
 
     public:
         explicit PersonalSpace(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

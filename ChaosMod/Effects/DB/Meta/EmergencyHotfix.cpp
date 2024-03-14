@@ -7,7 +7,7 @@
 class EmergencyHotfix final : public ActiveEffect
 {
         void Begin() override { PatchNotes::GeneratePatch(); }
-        bool CanSelect() override { return ConfigManager::i()->enablePatchNotes; }
+        bool CanSelect() override { return Get<ConfigManager>()->enablePatchNotes; }
 
     public:
         explicit EmergencyHotfix(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

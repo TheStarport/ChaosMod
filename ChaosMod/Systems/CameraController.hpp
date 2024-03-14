@@ -1,6 +1,6 @@
 #pragma once
 
-class CameraController final : public Singleton<CameraController>
+class CameraController final : public Component
 {
         using CameraCall = int(__fastcall*)(Camera*, void* edx, float interval);
         float fovOverride = 0.0f;

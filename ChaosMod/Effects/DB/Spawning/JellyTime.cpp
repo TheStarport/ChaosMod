@@ -14,7 +14,7 @@ class JellyTime final : public ActiveEffect
             {
                 if (npc.Acquire())
                 {
-                    SpaceObjectSpawner::i()->Despawn(npc);
+                    Get<SpaceObjectSpawner>()->Despawn(npc);
                 }
             }
             npcs.clear();

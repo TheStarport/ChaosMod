@@ -5,8 +5,8 @@
 
 class CocaineMode final : public ActiveEffect
 {
-        void Begin() override { ShipManipulator::i()->SetCocaineMode(true); }
-        void End() override { ShipManipulator::i()->SetCocaineMode(false); }
+        void Begin() override { Get<ShipManipulator>()->SetCocaineMode(true); }
+        void End() override { Get<ShipManipulator>()->SetCocaineMode(false); }
 
     public:
         explicit CocaineMode(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

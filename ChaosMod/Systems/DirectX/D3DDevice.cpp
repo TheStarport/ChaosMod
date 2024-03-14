@@ -21,7 +21,7 @@ Direct3DDevice8::Direct3DDevice8(Direct3D8* d3d, IDirect3DDevice9* ProxyInterfac
     Direct3DDevice8::ProxyInterface = ProxyInterface;
     ProxyAddressLookupTable = new AddressLookupTable(this);
     PaletteFlag = SupportsPalettes();
-    DrawingHelper::i()->SetDevice(ProxyInterface);
+    Get<DrawingHelper>()->SetDevice(ProxyInterface);
 
     D3DDEVICE_CREATION_PARAMETERS params;
     ProxyInterface->GetCreationParameters(&params);
@@ -748,10 +748,10 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::EndScene()
 
     ::ShowCursor(true);
 
-    // DrawingHelper::i()->GradientBox(0, 0, 1000, 1000, D3DCOLOR_RGBA(0, 0, 0, 255), D3DCOLOR_XRGB(255, 255, 255), true);
+    // Get<DrawingHelper>()->GradientBox(0, 0, 1000, 1000, D3DCOLOR_RGBA(0, 0, 0, 255), D3DCOLOR_XRGB(255, 255, 255), true);
 
-    DrawingHelper::i()->Draw();
-    UiManager::i()->Render();
+    Get<DrawingHelper>()->Draw();
+    Get<UiManager>()->Render();
 
     return ProxyInterface->EndScene();
 }

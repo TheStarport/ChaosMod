@@ -5,8 +5,8 @@
 
 class QuakeFov final : public ActiveEffect
 {
-        void Begin() override { CameraController::i()->OverrideFov(120.0f); }
-        void End() override { CameraController::i()->OverrideFov(0.0f); }
+        void Begin() override { Get<CameraController>()->OverrideFov(120.0f); }
+        void End() override { Get<CameraController>()->OverrideFov(0.0f); }
 
     public:
         explicit QuakeFov(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

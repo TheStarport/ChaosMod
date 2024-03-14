@@ -1,6 +1,6 @@
 #pragma once
 
-class ChatConsole : public Singleton<ChatConsole>
+class ChatConsole : public Component
 {
         enum class Node
         {

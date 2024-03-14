@@ -8,8 +8,8 @@ class UrgentRelativeVisit final : public ActiveEffect
         // Teleport the player to a random base
         void Begin() override
         {
-            const auto random = Random::i()->Uniform(0u, 1u);
-            Teleporter::i()->BeamToRandomBase(random);
+            const auto random = Get<Random>()->Uniform(0u, 1u);
+            Get<Teleporter>()->BeamToRandomBase(random);
         }
 
     public:

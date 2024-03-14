@@ -5,9 +5,9 @@
 
 class DrunkFlying final : public ActiveEffect
 {
-        void Begin() override { ReshadeManager::i()->ToggleTechnique("Drunk", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Drunk", true); }
 
-        void End() override { ReshadeManager::i()->ToggleTechnique("Drunk", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("Drunk", false); }
 
     public:
         explicit DrunkFlying(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

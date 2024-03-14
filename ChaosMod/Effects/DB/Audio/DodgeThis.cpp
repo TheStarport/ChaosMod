@@ -1,4 +1,5 @@
 #include "PCH.hpp"
+
 #include "Effects/ActiveEffect.hpp"
 
 class DodgeThis final : public ActiveEffect
@@ -10,7 +11,7 @@ class DodgeThis final : public ActiveEffect
 
         void OnApplyDamageAfter(uint hitSpaceObj, DamageList* dmgList, const DamageEntry& dmgEntry) override
         {
-            pub::Audio::PlaySoundEffect(0, sounds[Random::i()->Uniform(0u, sounds.size() - 1)]);
+            pub::Audio::PlaySoundEffect(0, sounds[Get<Random>()->Uniform(0u, sounds.size() - 1)]);
         }
 
     public:

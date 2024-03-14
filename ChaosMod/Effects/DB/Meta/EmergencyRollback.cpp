@@ -7,7 +7,7 @@
 class EmergencyRollback final : public ActiveEffect
 {
         void Begin() override { PatchNotes::RevertLastPatch(); }
-        bool CanSelect() override { return ConfigManager::i()->enablePatchNotes; }
+        bool CanSelect() override { return Get<ConfigManager>()->enablePatchNotes; }
 
     public:
         explicit EmergencyRollback(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

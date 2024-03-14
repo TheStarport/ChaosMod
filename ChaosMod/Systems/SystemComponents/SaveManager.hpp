@@ -81,11 +81,11 @@ class SaveManager
             const auto ship = Utils::GetCShip();
             if (!ship || OffsetHelper::IsInMission())
             {
-                timer = static_cast<float>(ConfigManager::i()->timeBetweenSavesInSeconds);
+                timer = static_cast<float>(Get<ConfigManager>()->timeBetweenSavesInSeconds);
                 return;
             }
 
-            if (!ConfigManager::i()->allowAutoSavesDuringCombat)
+            if (!Get<ConfigManager>()->allowAutoSavesDuringCombat)
             {
                 bool hostileNear = false;
                 Utils::ForEachObject<CShip>(CObject::CSHIP_OBJECT,
@@ -119,10 +119,10 @@ class SaveManager
                 }
             }
 
-            timer = static_cast<float>(ConfigManager::i()->timeBetweenSavesInSeconds);
+            timer = static_cast<float>(Get<ConfigManager>()->timeBetweenSavesInSeconds);
 
             auto slot = SaveFile();
-            ChatConsole::i()->Tra(0xFFFFFF40, -1);
-            ChatConsole::i()->Print(std::format(L"Autosaved into slot {}", slot), true);
+            Get<ChatConsole>()->Tra(0xFFFFFF40, -1);
+            Get<ChatConsole>()->Print(std::format(L"Autosaved into slot {}", slot), true);
         }
 };

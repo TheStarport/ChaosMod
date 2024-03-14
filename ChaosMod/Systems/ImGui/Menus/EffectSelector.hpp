@@ -41,7 +41,7 @@ class EffectSelector final
                             static bool selected = false;
                             if (ImGui::Selectable(info.effectName.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick) && ImGui::IsMouseDoubleClicked(0))
                             {
-                                ChaosTimer::i()->TriggerChaos(effect);
+                                Get<ChaosTimer>()->TriggerChaos(effect);
                             }
                             selected = false;
                         }

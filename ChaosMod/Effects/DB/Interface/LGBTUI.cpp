@@ -84,13 +84,13 @@ class Lgbtui final : public MemoryEffect
                 MemUtils::WriteProcMem(module + address, bytes.data(), bytes.size());
             }
 
-            HudInterface::i()->SetUiColor(((r & 0xff) << 16) + ((g & 0xFF) << 8) + (b & 0xFF));
+            Get<HudInterface>()->SetUiColor(((r & 0xff) << 16) + ((g & 0xFF) << 8) + (b & 0xFF));
         }
 
         void End() override
         {
             MemoryEffect::End();
-            HudInterface::i()->SetUiColor(0x0);
+            Get<HudInterface>()->SetUiColor(0x0);
         }
 
     public:

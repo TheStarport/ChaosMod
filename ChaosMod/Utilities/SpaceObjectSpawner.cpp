@@ -9,7 +9,7 @@
 
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithNpc(const std::string& npcNickname)
 {
-    auto& templates = i()->npcTemplates;
+    auto& templates = Get<SpaceObjectSpawner>()->npcTemplates;
     const auto found = templates.find(CreateID(npcNickname.c_str()));
     if (found == templates.end())
     {
@@ -55,7 +55,7 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
 
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithPersonality(const std::string& personalityNickname)
 {
-    if (const auto personality = PersonalityHelper::i()->Get(personalityNickname); personality.has_value())
+    if (const auto personality = Get<PersonalityHelper>()->Get(personalityNickname); personality.has_value())
     {
         personalityOverride = personality.value();
     }
@@ -172,9 +172,9 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
 
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithRandomNpc()
 {
-    auto& templates = i()->npcTemplates;
+    auto& templates = Get<SpaceObjectSpawner>()->npcTemplates;
     auto el = templates.begin();
-    std::advance(el, Random::i()->Uniform(0u, templates.size() - 1));
+    std::advance(el, Get<Random>()->Uniform(0u, templates.size() - 1));
 
     npcTemplate = el->second;
 
@@ -185,7 +185,7 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
 {
     auto* groups = reinterpret_cast<FlMap<Reputation::RepGroup>*>(0x64018EC);
 
-    const uint randomGroupIndex = Random::i()->Uniform(0u, groups->size() - 1);
+    const uint randomGroupIndex = Get<Random>()->Uniform(0u, groups->size() - 1);
     uint currentIndex = 0;
     for (auto listItem = groups->begin(); listItem != groups->end(); ++listItem, ++currentIndex)
     {
@@ -238,11 +238,11 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
         }
     };
     // clang-format on
-    const auto& [firstName, lastName] = nameLists[Random::i()->Uniform(0u, nameLists.size() - 1)];
+    const auto& [firstName, lastName] = nameLists[Get<Random>()->Uniform(0u, nameLists.size() - 1)];
 
     name = {
-        Random::i()->Uniform(firstName.first, firstName.second),
-        Random::i()->Uniform(lastName.first, lastName.second),
+        Get<Random>()->Uniform(firstName.first, firstName.second),
+        Get<Random>()->Uniform(lastName.first, lastName.second),
     };
 
     return *this;
@@ -293,9 +293,9 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     si.pos = position.value();
     if (positionVariance.has_value())
     {
-        si.pos.x += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
-        si.pos.y += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
-        si.pos.z += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.x += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.y += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.z += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
     }
 
     si.shipArchetype = npcTemplate.archetypeHash;
@@ -378,8 +378,8 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     }
     else
     {
-        uint firstName = defaultNames[Random::i()->Uniform(0u, defaultNames.size() - 1)];
-        uint secondName = defaultNames[Random::i()->Uniform(0u, defaultNames.size() - 1)];
+        uint firstName = defaultNames[Get<Random>()->Uniform(0u, defaultNames.size() - 1)];
+        uint secondName = defaultNames[Get<Random>()->Uniform(0u, defaultNames.size() - 1)];
         pilotName.append_string(firstName);  // ids that replaces %s0
         pilotName.append_string(secondName); // ids that replaces %s1
     }
@@ -388,7 +388,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     pub::AI::SetPersonalityParams personalityParams;
     if (npcTemplate.pilotHash)
     {
-        if (auto personality = PersonalityHelper::i()->Get(npcTemplate.pilot); personality.has_value())
+        if (auto personality = Get<PersonalityHelper>()->Get(npcTemplate.pilot); personality.has_value())
         {
             personalityOverride.emplace(personality.value());
         }
@@ -434,7 +434,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
 
     spawnedObject->spaceObj = spaceObj;
 
-    i()->spawnedObjects.emplace_back(spawnedObject);
+    Get<SpaceObjectSpawner>()->spawnedObjects.emplace_back(spawnedObject);
     return spawnedObject;
 }
 
@@ -458,16 +458,16 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 
     si.rep = MakeId(reputation.value_or("").c_str());
 
-    auto nickname = Random::i()->UniformString<std::string>(32);
+    auto nickname = Get<Random>()->UniformString<std::string>(32);
     strncpy_s(si.nickName, sizeof(si.nickName), nickname.c_str(), nickname.size());
 
     // Do we need to vary the starting position slightly? Useful when spawning multiple objects
     si.pos = position.value();
     if (positionVariance.has_value())
     {
-        si.pos.x += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
-        si.pos.y += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
-        si.pos.z += Random::i()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.x += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.y += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
+        si.pos.z += Get<Random>()->UniformFloat(-positionVariance.value(), positionVariance.value());
     }
 
     si.dockWith = dockTo.value_or(0);
@@ -509,7 +509,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     pub::AI::SetPersonalityParams personalityParams;
     if (npcTemplate.pilotHash)
     {
-        if (auto personality = PersonalityHelper::i()->Get(npcTemplate.pilot); personality.has_value())
+        if (auto personality = Get<PersonalityHelper>()->Get(npcTemplate.pilot); personality.has_value())
         {
             personalityOverride.emplace(personality.value());
         }
@@ -561,7 +561,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 
     spawnedObject->spaceObj = spaceId;
 
-    i()->spawnedObjects.emplace_back(spawnedObject);
+    Get<SpaceObjectSpawner>()->spawnedObjects.emplace_back(spawnedObject);
     return spawnedObject;
 }
 

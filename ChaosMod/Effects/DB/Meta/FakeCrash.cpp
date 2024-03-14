@@ -50,20 +50,20 @@ class FakeCrash final : public ActiveEffect
 
         void Begin() override
         {
-            if (Random::i()->Uniform(0, 1))
+            if (Get<Random>()->Uniform(0, 1))
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(Random::i()->Uniform(0, 2000)));
+                std::this_thread::sleep_for(std::chrono::milliseconds(Get<Random>()->Uniform(0, 2000)));
             }
 
-            if (Random::i()->Uniform(0, 1))
+            if (Get<Random>()->Uniform(0, 1))
             {
-                const uint delay = Random::i()->Uniform(250u, 2000u);
+                const uint delay = Get<Random>()->Uniform(250u, 2000u);
 
                 SleepAllThreads(delay);
-                std::this_thread::sleep_for(std::chrono::milliseconds(Random::i()->Uniform(0, 2000)));
+                std::this_thread::sleep_for(std::chrono::milliseconds(Get<Random>()->Uniform(0, 2000)));
             }
 
-            SleepAllThreads(Random::i()->Uniform(3000u, 10000u));
+            SleepAllThreads(Get<Random>()->Uniform(3000u, 10000u));
         }
 
     public:

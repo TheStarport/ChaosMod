@@ -29,7 +29,7 @@ class ThanksIHateIt final : public ActiveEffect
 
             while (remaining > 1.0f)
             {
-                auto cargo = possibleCargo[Random::i()->Uniform(0u, possibleCargo.size() - 1)];
+                auto cargo = possibleCargo[Get<Random>()->Uniform(0u, possibleCargo.size() - 1)];
                 pub::Player::AddCargo(1, cargo, 1, 1.0f, false);
                 remaining -= 1.0f;
             }

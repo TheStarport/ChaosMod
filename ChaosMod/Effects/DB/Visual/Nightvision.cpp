@@ -5,9 +5,9 @@
 
 class Nightvision final : public ActiveEffect
 {
-        void Begin() override { ReshadeManager::i()->ToggleTechnique("Nightvision", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Nightvision", true); }
 
-        void End() override { ReshadeManager::i()->ToggleTechnique("Nightvision", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("Nightvision", false); }
 
     public:
         explicit Nightvision(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

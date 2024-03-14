@@ -1,6 +1,6 @@
 #pragma once
 
-class ShipManipulator final : public Singleton<ShipManipulator>
+class ShipManipulator final : public Component
 {
         using OnPhysicsUpdate = void (*)(unsigned, float);
         static void PhysicsUpdate(uint system, float delta);

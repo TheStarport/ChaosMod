@@ -1,6 +1,6 @@
 #pragma once
 
-class PersonalityHelper : public Singleton<PersonalityHelper>
+class PersonalityHelper : public Component
 {
         std::map<std::string, pub::AI::Personality> pilots;
         std::map<std::string, pub::AI::Personality::EvadeDodgeUseStruct> evadeDodge;

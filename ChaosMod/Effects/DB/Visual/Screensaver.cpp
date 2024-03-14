@@ -15,11 +15,11 @@ class Screensaver final : public ActiveEffect
 
         void Begin() override
         {
-            resolution = DrawingHelper::i()->GetResolution();
+            resolution = Get<DrawingHelper>()->GetResolution();
 
             pos = resolution * 0.5f;
-            speedX *= Random::i()->Uniform(0u, 1u) ? -1 : 1;
-            speedY *= Random::i()->Uniform(0u, 1u) ? -1 : 1;
+            speedX *= Get<Random>()->Uniform(0u, 1u) ? -1 : 1;
+            speedY *= Get<Random>()->Uniform(0u, 1u) ? -1 : 1;
 
             sizeX = 40.0f / 100 * resolution.x;
             sizeY = 40.0f / 100 * resolution.y;
@@ -44,7 +44,7 @@ class Screensaver final : public ActiveEffect
             rel.x /= resolution.x;
             rel.y /= resolution.y;
 
-            DrawingHelper::i()->CaptureSurface(rel.x, rel.y, .4f, 0.4f);
+            Get<DrawingHelper>()->CaptureSurface(rel.x, rel.y, .4f, 0.4f);
         }
 
     public:

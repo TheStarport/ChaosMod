@@ -5,13 +5,13 @@
 
 class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
 {
-        void FrameUpdate(float delta) override { MoviePlayer::i()->FrameUpdate(); }
+        void FrameUpdate(float delta) override { Get<MoviePlayer>()->FrameUpdate(); }
 
-        void Begin() override { MoviePlayer::i()->StartMovie(Movie::OriginalIntro); }
+        void Begin() override { Get<MoviePlayer>()->StartMovie(Movie::OriginalIntro); }
 
-        void End() override { MoviePlayer::i()->StopMovie(); }
+        void End() override { Get<MoviePlayer>()->StopMovie(); }
 
-        void Init() override { MoviePlayer::i()->RegisterMovie(Movie::OriginalIntro, "../DATA/CHAOS/MOVIES/fl_intro.mp4"); }
+        void Init() override { Get<MoviePlayer>()->RegisterMovie(Movie::OriginalIntro, "../DATA/CHAOS/MOVIES/fl_intro.mp4"); }
 
     public:
         explicit AllWeKnowIsThatThereWereTwoSides(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

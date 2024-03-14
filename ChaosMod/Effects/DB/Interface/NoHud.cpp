@@ -24,13 +24,13 @@ class NoHud final : public ActiveEffect
         void Begin() override
         {
             ToggleHud(false);
-            UiManager::i()->OverrideCursor(cursor);
+            Get<UiManager>()->OverrideCursor(cursor);
         }
 
         void End() override
         {
             ToggleHud(true);
-            UiManager::i()->OverrideCursor(std::nullopt);
+            Get<UiManager>()->OverrideCursor(std::nullopt);
         };
 
         explicit NoHud(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)

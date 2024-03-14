@@ -12,7 +12,7 @@ class PleaseDoNotBend final : public ActiveEffect
 
             if (maxwell.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(maxwell);
+                Get<SpaceObjectSpawner>()->Despawn(maxwell);
             }
 
             maxwell = SpaceObjectSpawner::NewBuilder()

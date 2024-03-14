@@ -26,7 +26,7 @@ class ProgressBar final
             }
 
             using namespace std::chrono;
-            const auto remainingTime = ChaosTimer::i()->GetTimeUntilChaos();
+            const auto remainingTime = Get<ChaosTimer>()->GetTimeUntilChaos();
 
             if (remainingTime <= 0.f)
             {
@@ -126,7 +126,7 @@ class ProgressBar final
         {
             if (ImGui::BeginMainMenuBar())
             {
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->progressBarColor);
                 ImGui::ProgressBar(progress, ImVec2(-FLT_MIN, 0), "");
                 ImGui::PopStyleColor();
                 ImGui::EndMainMenuBar();
@@ -165,9 +165,9 @@ class ProgressBar final
             }
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ConfigManager::i()->progressBarColor);
+            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->progressBarColor);
 
-            switch (ConfigManager::i()->progressBarType)
+            switch (Get<ConfigManager>()->progressBarType)
             {
                 case ConfigManager::ProgressBar::TopBar: DrawTopBar(); break;
                 case ConfigManager::ProgressBar::SideBar: DrawSideBars(); break;

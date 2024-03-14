@@ -2,7 +2,7 @@
 
 #include <reshade/reshade.hpp>
 
-class ReshadeManager : public Singleton<ReshadeManager>
+class ReshadeManager : public Component
 {
         struct ResourceHash
         {

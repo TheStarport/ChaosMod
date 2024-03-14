@@ -7,8 +7,8 @@
 
 class FlippedUi final : public ActiveEffect
 {
-        void Begin() override { HudInterface::i()->ToggleFlipping(); }
-        void End() override { HudInterface::i()->ToggleFlipping(); }
+        void Begin() override { Get<HudInterface>()->ToggleFlipping(); }
+        void End() override { Get<HudInterface>()->ToggleFlipping(); }
 
     public:
         explicit FlippedUi(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

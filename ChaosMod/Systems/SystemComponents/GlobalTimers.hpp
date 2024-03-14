@@ -1,7 +1,7 @@
 #pragma once
 #include "Systems/ConfigManager.hpp"
 
-class GlobalTimers : public Singleton<GlobalTimers>
+class GlobalTimers : public Component
 {
     private:
         struct GlobalTimer
@@ -41,7 +41,7 @@ class GlobalTimers : public Singleton<GlobalTimers>
         {
             while (true)
             {
-                int id = Random::i()->Uniform(0, INT32_MAX);
+                int id = Get<Random>()->Uniform(0, INT32_MAX);
                 if (timers.contains(id))
                 {
                     continue;

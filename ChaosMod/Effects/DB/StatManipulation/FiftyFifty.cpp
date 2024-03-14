@@ -33,7 +33,7 @@ class FiftyFifty final : public ActiveEffect
             const uint shieldHash = CreateID("ge_s_battery_01");
 
             // 50/50 chance of giving or taking away regens
-            if (Random::i()->Uniform(0u, 1u))
+            if (Get<Random>()->Uniform(0u, 1u))
             {
                 for (EquipmentItem* eq = head->next; eq != head; eq = eq->next)
                 {

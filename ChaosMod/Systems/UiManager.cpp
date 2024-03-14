@@ -25,14 +25,14 @@ FunctionDetour wndProcDetour(reinterpret_cast<OriginalWndProc>(0x5B2570));
 
 LRESULT __stdcall UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
 {
-    i()->window = hWnd;
+    Get<UiManager>()->window = hWnd;
 
     const HCURSOR arrowCursor = LoadCursor(NULL, IDC_ARROW);
     CURSORINFO ci;
     ci.cbSize = sizeof(ci);
     if (GetCursorInfo(&ci) && ci.hCursor == arrowCursor)
     {
-        i()->SetCursor("arrow");
+        Get<UiManager>()->SetCursor("arrow");
     }
 
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -117,7 +117,7 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
         }
     }
 
-    ReshadeManager::i()->InitReshade();
+    Get<ReshadeManager>()->InitReshade();
 
     return new Direct3D8(d3d);
 }
@@ -129,10 +129,10 @@ std::string curCursor;
 
 bool UiManager::OnCursorChangeDetour(const char* cursorName, bool hideCursor)
 {
-    if (HCURSOR override = i()->cursorOverride.value_or(nullptr))
+    if (HCURSOR override = Get<UiManager>()->cursorOverride.value_or(nullptr))
     {
         ::SetCursor(override);
-        PostMessage(i()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(override));
+        PostMessage(Get<UiManager>()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(override));
         return true;
     }
 
@@ -148,7 +148,7 @@ bool UiManager::OnCursorChangeDetour(const char* cursorName, bool hideCursor)
     }
 
     curCursor = name;
-    i()->SetCursor(name);
+    Get<UiManager>()->SetCursor(name);
     return true;
 }
 
@@ -158,7 +158,7 @@ void UiManager::OverrideCursor(const std::optional<HCURSOR> cursor)
     if (cursor.has_value())
     {
         ::SetCursor(cursor.value());
-        PostMessage(i()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cursor.value()));
+        PostMessage(Get<UiManager>()->window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cursor.value()));
     }
 }
 
@@ -272,7 +272,7 @@ void UiManager::LoadCursors()
 
 void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 {
-    i()->window = window;
+    Get<UiManager>()->window = window;
     ImGui_ImplDX9_Init(device);
     ImGui_ImplWin32_Init(window);
 

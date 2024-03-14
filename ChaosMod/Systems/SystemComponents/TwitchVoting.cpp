@@ -108,7 +108,7 @@ void TwitchVoting::Poll()
         return;
     }
 
-    if (!ConfigManager::i()->enableTwitchVoting)
+    if (!Get<ConfigManager>()->enableTwitchVoting)
     {
         if (pipeHandle != INVALID_HANDLE_VALUE)
         {
@@ -160,7 +160,7 @@ void TwitchVoting::Poll()
         return;
     }
 
-    if (const auto timeUntilChaos = ChaosTimer::i()->GetTimeUntilChaos(); timeUntilChaos <= 1.0f)
+    if (const auto timeUntilChaos = Get<ChaosTimer>()->GetTimeUntilChaos(); timeUntilChaos <= 1.0f)
     {
         if (!hasReceivedResult && isVotingRunning)
         {
@@ -171,18 +171,18 @@ void TwitchVoting::Poll()
         {
             isVotingRoundDone = true;
 
-            if (ChaosTimer::i()->DoubleTimeActive())
+            if (Get<ChaosTimer>()->DoubleTimeActive())
             {
-                ChaosTimer::i()->TriggerChaos();
+                Get<ChaosTimer>()->TriggerChaos();
             }
 
             if (selectedResult == 3) // Twitch selected Random
             {
-                ChaosTimer::i()->TriggerChaos();
+                Get<ChaosTimer>()->TriggerChaos();
                 return;
             }
 
-            if (const float value = Random::i()->UniformFloat(0.0f, 1.0f); value <= ConfigManager::i()->baseTwitchVoteWeight)
+            if (const float value = Get<Random>()->UniformFloat(0.0f, 1.0f); value <= Get<ConfigManager>()->baseTwitchVoteWeight)
             {
                 auto* effect = effectSelection[selectedResult];
                 if (!effect->CanSelect())
@@ -195,11 +195,11 @@ void TwitchVoting::Poll()
                     return;
                 }
 
-                ChaosTimer::i()->TriggerChaos(effect);
+                Get<ChaosTimer>()->TriggerChaos(effect);
                 return;
             }
 
-            ChaosTimer::i()->TriggerChaos();
+            Get<ChaosTimer>()->TriggerChaos();
         }
     }
     else if (!isVotingRunning && isVotingRoundDone)
@@ -208,7 +208,7 @@ void TwitchVoting::Poll()
         hasReceivedResult = false;
         isVotingRoundDone = false;
 
-        effectSelection = ChaosTimer::i()->GetNextEffects();
+        effectSelection = Get<ChaosTimer>()->GetNextEffects();
 
         std::vector<std::string> effectNames;
 

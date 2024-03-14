@@ -11,7 +11,7 @@ class __declspec(uuid(PointerHandlerId)) PointerHandler
         class HudInterface* hud;
 };
 
-class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<HudInterface>, public IHud
+class __declspec(uuid(HudInterfaceId)) HudInterface final : public Component, public IHud
 {
         IHudFacility* facility = nullptr;
         using RemoteCallType = HRESULT(__stdcall*)(IHudFacility*& hudFacility);
@@ -44,8 +44,8 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
 
                 BuggyInterface()
                 {
-                    goingRight = Random::i()->Uniform(0u, 1u);
-                    goingDown = Random::i()->Uniform(0u, 1u);
+                    goingRight = Get<Random>()->Uniform(0u, 1u);
+                    goingDown = Get<Random>()->Uniform(0u, 1u);
                 }
         };
         std::optional<std::unordered_map<TControl*, BuggyInterface>> buggyInterface;
@@ -88,7 +88,7 @@ class __declspec(uuid(HudInterfaceId)) HudInterface final : public Singleton<Hud
         }
 
         HudInterface();
-        ~HudInterface() { FreeLibrary(GetModuleHandleA("Hud.dll")); }
+        ~HudInterface() override { FreeLibrary(GetModuleHandleA("Hud.dll")); }
 
         void __stdcall Draw(TControl* sender) override;
         void __stdcall Update(TControl* sender) override;

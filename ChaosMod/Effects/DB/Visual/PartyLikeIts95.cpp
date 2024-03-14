@@ -29,20 +29,20 @@ class PartyLikeIts95 final : public MemoryEffect
 
         void FrameUpdate(float delta) override
         {
-            DrawingHelper::i()->SetTextureStageState(0, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
-            DrawingHelper::i()->SetTextureStageState(1, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
-            DrawingHelper::i()->SetTextureStageState(2, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
-            DrawingHelper::i()->SetTextureStageState(3, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
-            DrawingHelper::i()->SetTextureStageState(4, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
+            Get<DrawingHelper>()->SetTextureStageState(0, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
+            Get<DrawingHelper>()->SetTextureStageState(1, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
+            Get<DrawingHelper>()->SetTextureStageState(2, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
+            Get<DrawingHelper>()->SetTextureStageState(3, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
+            Get<DrawingHelper>()->SetTextureStageState(4, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 7, true);
         }
         void End() override
         {
             MemoryEffect::End();
-            DrawingHelper::i()->SetTextureStageState(0, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 1, true);
-            DrawingHelper::i()->SetTextureStageState(1, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 2, true);
-            DrawingHelper::i()->SetTextureStageState(2, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 3, true);
-            DrawingHelper::i()->SetTextureStageState(3, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 4, true);
-            DrawingHelper::i()->SetTextureStageState(4, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 5, true);
+            Get<DrawingHelper>()->SetTextureStageState(0, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 1, true);
+            Get<DrawingHelper>()->SetTextureStageState(1, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 2, true);
+            Get<DrawingHelper>()->SetTextureStageState(2, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 3, true);
+            Get<DrawingHelper>()->SetTextureStageState(3, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 4, true);
+            Get<DrawingHelper>()->SetTextureStageState(4, static_cast<D3DTEXTURESTAGESTATETYPE>(D3DTSS_MAXMIPLEVEL), 5, true);
         }
 
     public:

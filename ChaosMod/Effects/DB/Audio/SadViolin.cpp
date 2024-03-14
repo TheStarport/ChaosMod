@@ -18,7 +18,7 @@ class SadViolin final : public PersistentEffect
             auto newAudio = audio;
             if (newAudio.musicId == deathMusicHash)
             {
-                auto index = Random::i()->Uniform(0u, deathReplacements.size() - 1);
+                auto index = Get<Random>()->Uniform(0u, deathReplacements.size() - 1);
                 Log(std::format("Picking new death sound index: {}", index));
                 newAudio.musicId = deathReplacements[index];
             }

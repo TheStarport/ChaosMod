@@ -64,7 +64,7 @@ class CaveatEmptor final : public ActiveEffect
             destroySubObjects(ship, nullptr, &dmg, false);
 
             // Queue wing destruction
-            GlobalTimers::i()->AddTimer(DelayedGroupExplosion, 1.0f);
+            Get<GlobalTimers>()->AddTimer(DelayedGroupExplosion, 1.0f);
         }
 
     public:

@@ -7,7 +7,7 @@
 
 class SoKawaii final : public ActiveEffect
 {
-        void Begin() override { SetLanguage(Language::UwU); }
+        void Begin() override { ChaosMod::SetLanguage(Language::UwU); }
 
     public:
         explicit SoKawaii(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

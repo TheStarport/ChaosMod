@@ -60,14 +60,14 @@ class MultiplayerExperience final : public ActiveEffect
                 CShip* ship;
                 while (true)
                 {
-                    ship = ships[Random::i()->Uniform(0u, ships.size() - 1)];
+                    ship = ships[Get<Random>()->Uniform(0u, ships.size() - 1)];
                     if (!ship->is_player())
                     {
                         break;
                     }
                 }
 
-                const auto line = lines[Random::i()->Uniform(0u, lines.size() - 1)];
+                const auto line = lines[Get<Random>()->Uniform(0u, lines.size() - 1)];
 
                 int rep = 0;
                 pub::SpaceObj::GetRep(ship->id, rep);
@@ -81,12 +81,12 @@ class MultiplayerExperience final : public ActiveEffect
                     return;
                 }
 
-                auto color = Random::i()->Uniform(0u, 0xFFFFFFu);
+                auto color = Get<Random>()->Uniform(0u, 0xFFFFFFu);
                 color += (0x40 << 24);
-                ChatConsole::i()->Tra(color, -1);
-                ChatConsole::i()->Print(std::format(L"{}:", std::wstring(reinterpret_cast<const wchar_t*>(str))), false);
-                ChatConsole::i()->Style(static_cast<USHORT>(ChatConsole::Style::Dialog));
-                ChatConsole::i()->Print(std::format(L" {}", line), true);
+                Get<ChatConsole>()->Tra(color, -1);
+                Get<ChatConsole>()->Print(std::format(L"{}:", std::wstring(reinterpret_cast<const wchar_t*>(str))), false);
+                Get<ChatConsole>()->Style(static_cast<USHORT>(ChatConsole::Style::Dialog));
+                Get<ChatConsole>()->Print(std::format(L" {}", line), true);
             }
         }
 

@@ -5,7 +5,7 @@
 
 class RandomSystem final : public ActiveEffect
 {
-        void Begin() override { Teleporter::i()->WarpToRandomSystem(); }
+        void Begin() override { Get<Teleporter>()->WarpToRandomSystem(); }
 
     public:
         explicit RandomSystem(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

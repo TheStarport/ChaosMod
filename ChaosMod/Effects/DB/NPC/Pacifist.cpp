@@ -27,7 +27,7 @@ class Pacifist final : public ActiveEffect
                     timer = 3.0f;
                     shouldDie = true;
 
-                    ChaosTimer::i()->DelayActiveEffect(this, 3.0f);
+                    Get<ChaosTimer>()->DelayActiveEffect(this, 3.0f);
                 }
             }
         }

@@ -5,9 +5,9 @@
 
 class Crt final : public ActiveEffect
 {
-        void Begin() override { ReshadeManager::i()->ToggleTechnique("CRT", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("CRT", true); }
 
-        void End() override { ReshadeManager::i()->ToggleTechnique("CRT", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("CRT", false); }
 
     public:
         explicit Crt(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

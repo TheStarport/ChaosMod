@@ -39,7 +39,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
 {
     detour->UnDetour();
 
-    if (i()->cocaineMode)
+    if (Get<ShipManipulator>()->cocaineMode)
     {
         PhySys::Update(system, delta);
         PhySys::Update(system, delta);
@@ -53,12 +53,12 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
         return;
     }
 
-    if (i()->playerAngularVelocityOverride.has_value())
+    if (Get<ShipManipulator>()->playerAngularVelocityOverride.has_value())
     {
-        SetAngularVelocity(ship, i()->playerAngularVelocityOverride.value());
+        SetAngularVelocity(ship, Get<ShipManipulator>()->playerAngularVelocityOverride.value());
     }
 
-    if (i()->spin)
+    if (Get<ShipManipulator>()->spin)
     {
         Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                     [](auto ship)
@@ -69,7 +69,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
                                     });
     }
 
-    if (i()->personalSpace)
+    if (Get<ShipManipulator>()->personalSpace)
     {
 
         Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,

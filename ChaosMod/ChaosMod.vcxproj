@@ -414,6 +414,7 @@
     <ClInclude Include="Systems\UiManager.hpp" />
     <ClInclude Include="Utilities\AssetTracker.hpp" />
     <ClInclude Include="Utilities\ChatConsole.hpp" />
+    <ClInclude Include="Utilities\Component.hpp" />
     <ClInclude Include="Utilities\Constants.hpp" />
     <ClInclude Include="Utilities\OffsetHelper.hpp" />
     <ClInclude Include="Utilities\PersonalityHelper.hpp" />

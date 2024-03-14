@@ -23,7 +23,7 @@ enum class Movie
     OriginalIntro
 };
 
-class MoviePlayer final : public Singleton<MoviePlayer>
+class MoviePlayer final : public Component
 {
         struct MovieData
         {
@@ -67,7 +67,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
             avcodec_close(codecContext);
             avformat_close_input(&formatContext);
 
-            DrawingHelper::i()->ClearVideoTexture();
+            Get<DrawingHelper>()->ClearVideoTexture();
 
             currentPlayingMovie = std::nullopt;
         }
@@ -88,7 +88,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
 
             currentPlayingMovie = &data->second;
 
-            texture = DrawingHelper::i()->GetVideoSurface();
+            texture = Get<DrawingHelper>()->GetVideoSurface();
 
             avformat_open_input(&formatContext, data->second.path.c_str(), nullptr, nullptr);
             avformat_find_stream_info(formatContext, nullptr);
@@ -207,7 +207,7 @@ class MoviePlayer final : public Singleton<MoviePlayer>
             ma_engine_set_volume(&engine, 0.4f);
         }
 
-        ~MoviePlayer()
+        ~MoviePlayer() override
         {
             delete stopwatch;
 

@@ -12,7 +12,7 @@ class SpawnExtremeJesus final : public ActiveEffect
 
             if (jesus.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(jesus);
+                Get<SpaceObjectSpawner>()->Despawn(jesus);
             }
 
             jesus = SpaceObjectSpawner::NewBuilder()

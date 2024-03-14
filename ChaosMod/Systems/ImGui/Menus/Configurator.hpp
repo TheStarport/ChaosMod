@@ -1,9 +1,12 @@
 #pragma once
 
-#include "ImGuiManager.hpp"
+#include "../ImGuiManager.hpp"
+
 #include "Systems/ConfigManager.hpp"
 #include "Systems/PatchNotes/PatchNotes.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
+
+#include "imgui-filebrowser/imfilebrowser.h"
 #include "imgui/imgui.h"
 
 #include <magic_enum_utility.hpp>
@@ -13,17 +16,22 @@ class Configurator final
 {
         friend ImGuiManager;
 
-        inline static bool show = false;
+        bool show = false;
+        bool importer;
         inline static std::map<EffectType, std::vector<ActiveEffect*>>* allEffects;
 
         inline static DWORD* gamePauseIncrementor = PDWORD(0x667D54);
         inline static bool doDecrement = false;
 
-        static void RenderChaosTab()
+        std::shared_ptr<ConfigManager> config = nullptr;
+
+        ImGui::FileBrowser fileBrowser{ ImGuiFileBrowserFlags_ConfirmOnEnter };
+
+        bool confirmImport = false;
+
+        void RenderChaosTab() const
         {
             ImGui::TextWrapped("PLACEHOLDER DESCRIPTION THAT IS SUPER DESCRIPTIVE ABOUT THINGS THAT NEED DESCRIBING FOR THIS DESCRIPTIVE TAB OF DESCRIPTIONS.");
-
-            auto* config = ConfigManager::i();
 
             ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
             ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
@@ -53,10 +61,8 @@ class Configurator final
             }
         }
 
-        static void RenderTwitchTab()
+        void RenderTwitchTab() const
         {
-            auto* config = ConfigManager::i();
-
             ImGui::Checkbox("Enable Twitch Voting", &config->enableTwitchVoting);
             ImGui::SliderFloat("Twitch Voting Weight", &config->baseTwitchVoteWeight, 0.1f, 1.0f);
             if (ImGui::IsItemHovered())
@@ -69,17 +75,15 @@ class Configurator final
 
             static bool initialized = false;
             ImGui::BeginDisabled(!config->enableTwitchVoting || initialized);
-            if (ImGui::Button("Initialize Voting Proxy") && TwitchVoting::i()->Initialize())
+            if (ImGui::Button("Initialize Voting Proxy") && Get<TwitchVoting>()->Initialize())
             {
                 initialized = true;
             }
             ImGui::EndDisabled();
         }
 
-        static void RenderStyleTab()
+        void RenderStyleTab() const
         {
-            auto* config = ConfigManager::i();
-
             static DWORD startingProgressBarColor = config->progressBarColor;
             static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
             static float progressColor[3] = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
@@ -99,10 +103,8 @@ class Configurator final
             ImGui::Checkbox("Show Time Remaining On Effects", &config->showTimeRemainingOnEffects);
         }
 
-        static void RenderRandomTab()
+        void RenderRandomTab() const
         {
-            auto* config = ConfigManager::i();
-
             ImGui::Checkbox("Enable Patch Notes", &config->enablePatchNotes);
             if (ImGui::IsItemHovered())
             {
@@ -122,28 +124,11 @@ class Configurator final
             ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->changesPerPatchMin), 1.0f, 1, 30);
             ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->changesPerMinorMin), 1.0f, 15, 50);
             ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->changesPerMajorMin), 1.0f, 30, 100);
-
-            if (ImGui::Button("View Patch Notes"))
-            {
-                ImGuiManager::ShowPatchNotes();
-            }
-
-            ImGui::SameLine();
-            if (ImGui::Button("DEV: Generate New Patch"))
-            {
-                PatchNotes::GeneratePatch();
-            }
-
-            ImGui::SameLine();
-            if (ImGui::Button("DEV: Reset Patches"))
-            {
-                PatchNotes::ResetPatches(false, true);
-            }
         }
 
-        static void RenderEffectToggleTab()
+        void RenderEffectToggleTab() const
         {
-            auto& configEffects = ConfigManager::i()->toggledEffects;
+            auto& configEffects = Get<ConfigManager>()->toggledEffects;
 
             magic_enum::enum_for_each<EffectType>(
                 [&configEffects](auto val)
@@ -178,7 +163,7 @@ class Configurator final
                             i.second = all;
                         }
 
-                        ConfigManager::i()->Save();
+                        Get<ConfigManager>()->Save();
                     }
 
                     ImGui::SameLine();
@@ -204,7 +189,7 @@ class Configurator final
                             ImGui::TableNextColumn();
                             if (ImGui::Checkbox(info.effectName.c_str(), &isEnabled))
                             {
-                                ConfigManager::i()->Save();
+                                Get<ConfigManager>()->Save();
                             }
 
                             if (ImGui::IsItemHovered())
@@ -219,15 +204,32 @@ class Configurator final
 
                     if (configEffectsNeedPopulating)
                     {
-                        ConfigManager::i()->Save();
+                        Get<ConfigManager>()->Save();
                     }
 
                     ImGui::PopID();
                 });
         }
 
-        static void Render()
+        void HandleFileBrowser()
         {
+            fileBrowser.Display();
+
+            if (!fileBrowser.HasSelected())
+            {
+                return;
+            }
+
+            auto path = fileBrowser.GetSelected();
+            fileBrowser.ClearSelected();
+
+            ImGuiManager::ImportConfig(path.generic_string());
+        }
+
+        void Render()
+        {
+            HandleFileBrowser();
+
             if (!show)
             {
                 if (doDecrement)
@@ -245,16 +247,43 @@ class Configurator final
             }
 
             ImGui::SetNextWindowSize({ 800.f, 800.f }, ImGuiCond_Always);
-            if (!ImGui::Begin("Configurator", &show, ImGuiWindowFlags_NoResize))
+            if (!ImGui::Begin(importer ? "Config Importer" : "Configurator", &show, ImGuiWindowFlags_NoResize))
             {
                 ImGui::End();
                 return;
             }
 
-            auto* config = ConfigManager::i();
-            if (ImGui::Button("Save Changes"))
+            if (importer)
             {
-                config->Save();
+                if (ImGui::Button("Import"))
+                {
+                    confirmImport = true;
+                }
+            }
+            else
+            {
+                if (ImGui::Button("Save Changes"))
+                {
+                    config->Save();
+                }
+
+                ImGui::BeginDisabled(fileBrowser.IsOpened());
+                ImGui::SameLine();
+                if (ImGui::Button("Load Preset"))
+                {
+                    static const std::vector<std::string> filters = { ".json", ".txt" };
+                    fileBrowser.SetTypeFilters(filters);
+
+                    const auto path = std::filesystem::current_path().append("presets");
+                    fileBrowser.SetPwd(exists(path) ? path : std::filesystem::current_path());
+                    fileBrowser.Open();
+                }
+                ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::SetTooltip("You can load preset configs. TODO Better explain this later");
+                }
             }
 
             ImGui::Separator();
@@ -264,33 +293,56 @@ class Configurator final
             {
                 if (ImGui::BeginTabItem("Chaos Settings"))
                 {
+                    ImGui::BeginDisabled(importer);
                     RenderChaosTab();
+                    ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }
                 if (ImGui::BeginTabItem("Style Settings"))
                 {
+                    ImGui::BeginDisabled(importer);
                     RenderStyleTab();
+                    ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }
                 if (ImGui::BeginTabItem("Randomizer Settings"))
                 {
+                    ImGui::BeginDisabled(importer);
                     RenderRandomTab();
+                    ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }
                 if (ImGui::BeginTabItem("Twitch Settings"))
                 {
+                    ImGui::BeginDisabled(importer);
                     RenderTwitchTab();
+                    ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }
                 if (ImGui::BeginTabItem("Effect Toggles"))
                 {
+                    ImGui::BeginDisabled(importer);
                     RenderEffectToggleTab();
+                    ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }
                 ImGui::EndTabBar();
             }
 
             ImGui::End();
+        }
+
+        explicit Configurator(std::shared_ptr<ConfigManager> existingConfig) : importer(existingConfig != nullptr)
+        {
+            if (!existingConfig)
+            {
+                config = std::shared_ptr<ConfigManager>(Get<ConfigManager>());
+            }
+            else
+            {
+                show = true;
+                config = existingConfig;
+            }
         }
 
     public:

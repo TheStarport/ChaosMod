@@ -62,7 +62,7 @@ class SelectionWheel final
                         if (money > 0)
                         {
                             pub::Player::AdjustCash(1, money);
-                            GlobalTimers::i()->AddTimer(
+                            Get<GlobalTimers>()->AddTimer(
                                 [money](const float _)
                                 {
                                     pub::Player::AdjustCash(1, -money);

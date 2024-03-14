@@ -18,7 +18,7 @@ class IAmFiringMyLasers final : public ActiveEffect
         {
             for (const auto key : bannedKeys)
             {
-                KeyManager::i()->ToggleAllowedKey(key, false);
+                Get<KeyManager>()->ToggleAllowedKey(key, false);
             }
         }
 
@@ -26,7 +26,7 @@ class IAmFiringMyLasers final : public ActiveEffect
         {
             for (const auto key : bannedKeys)
             {
-                KeyManager::i()->ToggleAllowedKey(key, true);
+                Get<KeyManager>()->ToggleAllowedKey(key, true);
             }
         }
 

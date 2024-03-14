@@ -10,7 +10,7 @@ class Cardamine final : public ActiveEffect
         static int Detour(const uint fromShipId, const uint toShipId, uint voiceId, const Costume* costume, const uint infocardId, uint* voiceLineId,
                           const int a6, const uint infocardId2, const float a8, const bool a9)
         {
-            uint voiceLine = Random::i()->Uniform(0u, 1u) ? CreateID("gcs_fidget_traderumor_01-") : CreateID("gcs_fidget_trade_simple_01-");
+            uint voiceLine = Get<Random>()->Uniform(0u, 1u) ? CreateID("gcs_fidget_traderumor_01-") : CreateID("gcs_fidget_trade_simple_01-");
             detour->UnDetour();
             const int i = pub::SpaceObj::SendComm(fromShipId, toShipId, 2328361551, costume, infocardId, &voiceLine, a6, infocardId2, a8, a9);
             detour->Detour(Detour);

@@ -8,7 +8,7 @@ class SelfDestruct final : public ActiveEffect
 
         void End() override
         {
-            if (const CShip* ship = Utils::GetCShip(); ship && Random::i()->Uniform(0u, 1u))
+            if (const CShip* ship = Utils::GetCShip(); ship && Get<Random>()->Uniform(0u, 1u))
             {
                 pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
             }

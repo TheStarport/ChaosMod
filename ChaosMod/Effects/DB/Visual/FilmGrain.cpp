@@ -5,9 +5,9 @@
 
 class FilmGrain final : public ActiveEffect
 {
-        void Begin() override { ReshadeManager::i()->ToggleTechnique("FilmGrain", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("FilmGrain", true); }
 
-        void End() override { ReshadeManager::i()->ToggleTechnique("FilmGrain", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("FilmGrain", false); }
 
     public:
         explicit FilmGrain(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

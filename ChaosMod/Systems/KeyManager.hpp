@@ -1,6 +1,6 @@
 #pragma once
 
-class KeyManager : public Singleton<KeyManager>
+class KeyManager final : public Component
 {
         std::map<int, int> keyMap = {};
         std::vector<int> possibleKeys;

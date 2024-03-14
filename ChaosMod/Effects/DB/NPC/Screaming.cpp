@@ -32,8 +32,8 @@ class Screaming final : public ActiveEffect
 
                 if (!activeShips.empty())
                 {
-                    const auto ship = activeShips[Random::i()->Uniform(0u, activeShips.size() - 1)];
-                    const uint index = Random::i()->Uniform(0u, voiceToLinePairs.size() - 1);
+                    const auto ship = activeShips[Get<Random>()->Uniform(0u, activeShips.size() - 1)];
+                    const uint index = Get<Random>()->Uniform(0u, voiceToLinePairs.size() - 1);
                     const auto& [voice, line] = voiceToLinePairs[index];
 
                     ID_String voiceLine{};

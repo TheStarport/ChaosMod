@@ -20,7 +20,7 @@ class SleepyPlayer final : public ActiveEffect
 
         void BlackOut(const int alpha)
         {
-            const auto drawing = DrawingHelper::i();
+            const auto drawing = Get<DrawingHelper>();
             drawing->BoxFilled(0.f, 0.0f, 1.f, 1.f, D3DCOLOR_ARGB(alpha, 0, 0, 0));
             if (const float progress = static_cast<float>(alpha) / 255.f; progress > 0)
             {
@@ -53,7 +53,7 @@ class SleepyPlayer final : public ActiveEffect
                     if (alpha >= 255)
                     {
                         currentMode = TiredMode::Opening;
-                        nextTimestamp = nextTimestamp = Random::i()->UniformFloat(0.5f, 1.5f);
+                        nextTimestamp = nextTimestamp = Get<Random>()->UniformFloat(0.5f, 1.5f);
                     }
                     break;
                 case TiredMode::Opening:
@@ -65,15 +65,15 @@ class SleepyPlayer final : public ActiveEffect
                         {
                             alpha = 0;
                             currentMode = TiredMode::Waiting;
-                            nextTimestamp = Random::i()->UniformFloat(2.5f, 5.0f);
+                            nextTimestamp = Get<Random>()->UniformFloat(2.5f, 5.0f);
                         }
                     }
                     break;
                 case TiredMode::Waiting:
                     if (nextTimestamp < 0.0f)
                     {
-                        direction.x = Random::i()->UniformFloat(-1.0f, 1.0f);
-                        direction.y = Random::i()->UniformFloat(-1.0f, 1.0f);
+                        direction.x = Get<Random>()->UniformFloat(-1.0f, 1.0f);
+                        direction.y = Get<Random>()->UniformFloat(-1.0f, 1.0f);
                         currentMode = TiredMode::Closing;
                     }
                     break;

@@ -14,12 +14,12 @@ class YouThinkYourSafe final : public ActiveEffect
             {
                 if (npc.Acquire())
                 {
-                    SpaceObjectSpawner::i()->Despawn(npc);
+                    Get<SpaceObjectSpawner>()->Despawn(npc);
                 }
             }
             npcs.clear();
 
-            const uint count = Random::i()->Uniform(2u, 5u);
+            const uint count = Get<Random>()->Uniform(2u, 5u);
             for (auto i = 0u; i < count; i++)
             {
                 if (auto npc = SpaceObjectSpawner::NewBuilder()

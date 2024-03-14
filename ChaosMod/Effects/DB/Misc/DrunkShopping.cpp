@@ -31,7 +31,7 @@ class DrunkShopping final : public ActiveEffect
 
             for (int i = 0; i < 5; i++)
             {
-                auto cargo = possibleWeapons[Random::i()->Uniform(0u, possibleWeapons.size() - 1)];
+                auto cargo = possibleWeapons[Get<Random>()->Uniform(0u, possibleWeapons.size() - 1)];
                 pub::Player::AddCargo(1, cargo, 1, 1.0f, false);
             }
         }

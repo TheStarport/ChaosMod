@@ -13,23 +13,24 @@ extern "C" __declspec(dllexport) const char* DESCRIPTION = "Chaos Mod will repla
 
 void ReshadeManager::OnInitEffect(effect_runtime* runtime)
 {
-    if (!i()->runtime)
+    auto i = Get<ReshadeManager>();
+    if (!i->runtime)
     {
         // Set a timer to disable any active effects one second after start, so they can all init
-        GlobalTimers::i()->AddTimer(
-            [](auto delta)
+        Get<GlobalTimers>()->AddTimer(
+            [i](auto delta)
             {
-                i()->ToggleTechnique("", false);
+                i->ToggleTechnique("", false);
                 return true;
             },
             1.0f);
     }
 
     // Assume last created effect runtime is the main one
-    i()->runtime = runtime;
+    i->runtime = runtime;
 }
 
-void ReshadeManager::OnDestroyEffect(effect_runtime* runtime) { i()->runtime = nullptr; }
+void ReshadeManager::OnDestroyEffect(effect_runtime* runtime) { Get<ReshadeManager>()->runtime = nullptr; }
 
 std::optional<std::pair<Vector, effect_uniform_variable>> ReshadeManager::GetUniformFloat(const std::string& name, const size_t valueCount) const
 {

@@ -18,7 +18,7 @@ class RandomisedProjectiles final : public ActiveEffect
                 gunsToOriginalProjectiles.emplace_back(arch->archId, dynamic_cast<Archetype::Launcher*>(arch)->projectileArchId);
             }
 
-            const uint hash = possibleProjectiles[Random::i()->Uniform(0u, possibleProjectiles.size() - 1)];
+            const uint hash = possibleProjectiles[Get<Random>()->Uniform(0u, possibleProjectiles.size() - 1)];
 
             *reinterpret_cast<PDWORD>(reinterpret_cast<DWORD>(arch) + 0x98) = hash;
             *reinterpret_cast<PDWORD>(reinterpret_cast<DWORD>(equip) + 0x4C) = reinterpret_cast<DWORD>(Archetype::GetEquipment(hash));

@@ -34,9 +34,9 @@ class Direct3D8 : public IUnknown
 
         IDirect3D9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
         virtual HRESULT STDMETHODCALLTYPE RegisterSoftwareDevice(void* pInitializeFunction);
         virtual uint STDMETHODCALLTYPE GetAdapterCount();
@@ -77,9 +77,9 @@ class Direct3DDevice8 : public IUnknown
 
         IDirect3DDevice9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
         virtual HRESULT STDMETHODCALLTYPE TestCooperativeLevel();
         virtual uint STDMETHODCALLTYPE GetAvailableTextureMem();
@@ -220,13 +220,13 @@ class Direct3DSwapChain8 : public IUnknown, public AddressLookupTableObject
 
     public:
         Direct3DSwapChain8(Direct3DDevice8* device, IDirect3DSwapChain9* ProxyInterface);
-        ~Direct3DSwapChain8();
+        ~Direct3DSwapChain8() override;
 
         IDirect3DSwapChain9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
         virtual HRESULT STDMETHODCALLTYPE Present(const RECT* pSourceRect, const RECT* pDestRect, HWND hDestWindowOverride, const RGNDATA* pDirtyRegion);
         virtual HRESULT STDMETHODCALLTYPE GetBackBuffer(uint iBackBuffer, D3DBACKBUFFER_TYPE Type, Direct3DSurface8** ppBackBuffer);
@@ -263,26 +263,26 @@ class Direct3DTexture8 : public Direct3DBaseTexture8, public AddressLookupTableO
 
     public:
         Direct3DTexture8(Direct3DDevice8* device, IDirect3DTexture9* ProxyInterface);
-        ~Direct3DTexture8();
+        ~Direct3DTexture8() override;
 
         IDirect3DTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-        virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
-        virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
-        virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
-        virtual DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetPriority() override;
-        virtual void STDMETHODCALLTYPE PreLoad() override;
-        virtual D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
+        HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
+        HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
+        DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
+        DWORD STDMETHODCALLTYPE GetPriority() override;
+        void STDMETHODCALLTYPE PreLoad() override;
+        D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
 
-        virtual DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetLOD() override;
-        virtual DWORD STDMETHODCALLTYPE GetLevelCount() override;
+        DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
+        DWORD STDMETHODCALLTYPE GetLOD() override;
+        DWORD STDMETHODCALLTYPE GetLevelCount() override;
 
         virtual HRESULT STDMETHODCALLTYPE GetLevelDesc(uint Level, D3DSURFACE_DESC8* pDesc);
         virtual HRESULT STDMETHODCALLTYPE GetSurfaceLevel(uint Level, Direct3DSurface8** ppSurfaceLevel);
@@ -301,26 +301,26 @@ class Direct3DCubeTexture8 : public Direct3DBaseTexture8, public AddressLookupTa
 
     public:
         Direct3DCubeTexture8(Direct3DDevice8* device, IDirect3DCubeTexture9* ProxyInterface);
-        ~Direct3DCubeTexture8();
+        ~Direct3DCubeTexture8() override;
 
         IDirect3DCubeTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-        virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
-        virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
-        virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
-        virtual DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetPriority() override;
-        virtual void STDMETHODCALLTYPE PreLoad() override;
-        virtual D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
+        HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
+        HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
+        DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
+        DWORD STDMETHODCALLTYPE GetPriority() override;
+        void STDMETHODCALLTYPE PreLoad() override;
+        D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
 
-        virtual DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetLOD() override;
-        virtual DWORD STDMETHODCALLTYPE GetLevelCount() override;
+        DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
+        DWORD STDMETHODCALLTYPE GetLOD() override;
+        DWORD STDMETHODCALLTYPE GetLevelCount() override;
 
         virtual HRESULT STDMETHODCALLTYPE GetLevelDesc(uint Level, D3DSURFACE_DESC8* pDesc);
         virtual HRESULT STDMETHODCALLTYPE GetCubeMapSurface(D3DCUBEMAP_FACES FaceType, uint Level, Direct3DSurface8** ppCubeMapSurface);
@@ -339,26 +339,26 @@ class Direct3DVolumeTexture8 : public Direct3DBaseTexture8, public AddressLookup
 
     public:
         Direct3DVolumeTexture8(Direct3DDevice8* device, IDirect3DVolumeTexture9* ProxyInterface);
-        ~Direct3DVolumeTexture8();
+        ~Direct3DVolumeTexture8() override;
 
         IDirect3DVolumeTexture9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-        virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
-        virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
-        virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
-        virtual DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetPriority() override;
-        virtual void STDMETHODCALLTYPE PreLoad() override;
-        virtual D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
+        HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
+        HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
+        DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
+        DWORD STDMETHODCALLTYPE GetPriority() override;
+        void STDMETHODCALLTYPE PreLoad() override;
+        D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
 
-        virtual DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetLOD() override;
-        virtual DWORD STDMETHODCALLTYPE GetLevelCount() override;
+        DWORD STDMETHODCALLTYPE SetLOD(DWORD LODNew) override;
+        DWORD STDMETHODCALLTYPE GetLOD() override;
+        DWORD STDMETHODCALLTYPE GetLevelCount() override;
 
         virtual HRESULT STDMETHODCALLTYPE GetLevelDesc(uint Level, D3DVOLUME_DESC8* pDesc);
         virtual HRESULT STDMETHODCALLTYPE GetVolumeLevel(uint Level, Direct3DVolume8** ppVolumeLevel);
@@ -378,13 +378,13 @@ class Direct3DSurface8 : public IUnknown, public AddressLookupTableObject
 
     public:
         Direct3DSurface8(Direct3DDevice8* device, IDirect3DSurface9* ProxyInterface);
-        ~Direct3DSurface8();
+        ~Direct3DSurface8() override;
 
         IDirect3DSurface9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
         virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice);
         virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags);
@@ -407,13 +407,13 @@ class Direct3DVolume8 : public IUnknown, public AddressLookupTableObject
 
     public:
         Direct3DVolume8(Direct3DDevice8* Device, IDirect3DVolume9* ProxyInterface);
-        ~Direct3DVolume8();
+        ~Direct3DVolume8() override;
 
         IDirect3DVolume9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
         virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice);
         virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags);
@@ -436,22 +436,22 @@ class Direct3DVertexBuffer8 : public Direct3DResource8, public AddressLookupTabl
 
     public:
         Direct3DVertexBuffer8(Direct3DDevice8* Device, IDirect3DVertexBuffer9* ProxyInterface);
-        ~Direct3DVertexBuffer8();
+        ~Direct3DVertexBuffer8() override;
 
         IDirect3DVertexBuffer9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-        virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
-        virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
-        virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
-        virtual DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetPriority() override;
-        virtual void STDMETHODCALLTYPE PreLoad() override;
-        virtual D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
+        HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
+        HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
+        DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
+        DWORD STDMETHODCALLTYPE GetPriority() override;
+        void STDMETHODCALLTYPE PreLoad() override;
+        D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
 
         virtual HRESULT STDMETHODCALLTYPE Lock(uint OffsetToLock, uint SizeToLock, BYTE** ppbData, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE Unlock();
@@ -469,22 +469,22 @@ class Direct3DIndexBuffer8 : public Direct3DResource8, public AddressLookupTable
 
     public:
         Direct3DIndexBuffer8(Direct3DDevice8* Device, IDirect3DIndexBuffer9* ProxyInterface);
-        ~Direct3DIndexBuffer8();
+        ~Direct3DIndexBuffer8() override;
 
         IDirect3DIndexBuffer9* GetProxyInterface() const { return ProxyInterface; }
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
-        virtual ULONG STDMETHODCALLTYPE AddRef() override;
-        virtual ULONG STDMETHODCALLTYPE Release() override;
+        HRESULT STDMETHODCALLTYPE QueryInterface(REFIID rid, void** ppvObj) override;
+        ULONG STDMETHODCALLTYPE AddRef() override;
+        ULONG STDMETHODCALLTYPE Release() override;
 
-        virtual HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
-        virtual HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
-        virtual HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
-        virtual DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
-        virtual DWORD STDMETHODCALLTYPE GetPriority() override;
-        virtual void STDMETHODCALLTYPE PreLoad() override;
-        virtual D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
+        HRESULT STDMETHODCALLTYPE GetDevice(Direct3DDevice8** ppDevice) override;
+        HRESULT STDMETHODCALLTYPE SetPrivateData(REFGUID refguid, const void* pData, DWORD SizeOfData, DWORD Flags) override;
+        HRESULT STDMETHODCALLTYPE GetPrivateData(REFGUID refguid, void* pData, DWORD* pSizeOfData) override;
+        HRESULT STDMETHODCALLTYPE FreePrivateData(REFGUID refguid) override;
+        DWORD STDMETHODCALLTYPE SetPriority(DWORD PriorityNew) override;
+        DWORD STDMETHODCALLTYPE GetPriority() override;
+        void STDMETHODCALLTYPE PreLoad() override;
+        D3DRESOURCETYPE STDMETHODCALLTYPE GetType() override;
 
         virtual HRESULT STDMETHODCALLTYPE Lock(uint OffsetToLock, uint SizeToLock, BYTE** ppbData, DWORD Flags);
         virtual HRESULT STDMETHODCALLTYPE Unlock();

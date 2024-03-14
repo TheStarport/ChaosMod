@@ -86,7 +86,7 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix or
     {
         ship->request_exit_tradelane();
 
-        GlobalTimers::i()->AddTimer(
+        Get<GlobalTimers>()->AddTimer(
             [newSystem, pos, orient](float delta)
             {
                 ChangeSystem(newSystem, pos, orient, false);
@@ -138,7 +138,7 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix or
 
 void Teleporter::QueueTeleportEffect(float timer)
 {
-    GlobalTimers::i()->AddTimer(
+    Get<GlobalTimers>()->AddTimer(
         [](auto delta)
         {
             auto ship = Utils::GetCShip();
@@ -171,7 +171,7 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
     if (checkForTradelane && ship->is_using_tradelane())
     {
         ship->request_exit_tradelane();
-        GlobalTimers::i()->AddTimer(
+        Get<GlobalTimers>()->AddTimer(
             [solar](float delta)
             {
                 WarpToSolar(solar, false);
@@ -349,7 +349,7 @@ void Teleporter::WarpToRandomStar(const bool inSystem)
 
         if (!stars.empty())
         {
-            const auto index = Random::i()->Uniform(0u, stars.size() - 1);
+            const auto index = Get<Random>()->Uniform(0u, stars.size() - 1);
             const auto star = stars[index];
 
             WarpToSolar(star);
@@ -370,7 +370,7 @@ void Teleporter::WarpToRandomSolar(const bool inSystem)
 
         if (!solars.empty())
         {
-            const auto index = Random::i()->Uniform(0u, solars.size() - 1);
+            const auto index = Get<Random>()->Uniform(0u, solars.size() - 1);
             const auto solar = solars[index];
 
             WarpToSolar(solar);
@@ -398,7 +398,7 @@ void Teleporter::WarpToRandomSystem()
         system = Universe::GetNextSystem();
     }
 
-    const auto index = Random::i()->Uniform(0u, systems.size() - 1);
+    const auto index = Get<Random>()->Uniform(0u, systems.size() - 1);
     system = systems[index];
 
     ChangeSystem(system->id, ship->position, ship->orientation);
@@ -424,7 +424,7 @@ void Teleporter::BeamToRandomBase(const bool inSystem)
         base = Universe::GetNextBase();
     }
 
-    const auto index = Random::i()->Uniform(0u, bases.size() - 1);
+    const auto index = Get<Random>()->Uniform(0u, bases.size() - 1);
     base = bases[index];
 
     pub::Player::ForceLand(1, base->baseId);

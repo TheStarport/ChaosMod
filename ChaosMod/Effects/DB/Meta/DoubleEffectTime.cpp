@@ -5,8 +5,8 @@
 
 class DoubleEffectTime final : public ActiveEffect
 {
-        void Begin() override { ChaosTimer::i()->AdjustModifier(1.0f); }
-        void End() override { ChaosTimer::i()->AdjustModifier(-1.0f); }
+        void Begin() override { Get<ChaosTimer>()->AdjustModifier(1.0f); }
+        void End() override { Get<ChaosTimer>()->AdjustModifier(-1.0f); }
 
     public:
         explicit DoubleEffectTime(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

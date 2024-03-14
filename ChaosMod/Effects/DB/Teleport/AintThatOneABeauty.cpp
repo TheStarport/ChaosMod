@@ -6,7 +6,7 @@
 class AintThatOneABeauty final : public ActiveEffect
 {
         // Teleport the player to a solar, with a 25% it being in a different system
-        void Begin() override { Teleporter::i()->WarpToRandomSolar(Random::i()->Uniform(0u, 3u) < 3); }
+        void Begin() override { Get<Teleporter>()->WarpToRandomSolar(Get<Random>()->Uniform(0u, 3u) < 3); }
 
     public:
         explicit AintThatOneABeauty(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

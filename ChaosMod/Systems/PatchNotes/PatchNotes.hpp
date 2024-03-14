@@ -2,7 +2,7 @@
 
 #include "Patch.hpp"
 
-class PatchNotes : Singleton<PatchNotes>
+class PatchNotes
 {
         struct StringPatch
         {

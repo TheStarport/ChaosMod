@@ -7,11 +7,11 @@ class FakeTeleport final : public ActiveEffect
 {
         void Begin() override
         {
-            Teleporter::i()->SaveCurrentPosition();
-            Teleporter::i()->WarpToRandomSolar(false);
+            Get<Teleporter>()->SaveCurrentPosition();
+            Get<Teleporter>()->WarpToRandomSolar(false);
         }
 
-        void End() override { Teleporter::i()->RestorePreviousPosition(); }
+        void End() override { Get<Teleporter>()->RestorePreviousPosition(); }
 
     public:
         explicit FakeTeleport(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

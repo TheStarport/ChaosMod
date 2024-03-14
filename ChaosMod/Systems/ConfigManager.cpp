@@ -24,7 +24,7 @@ void ConfigManager::Save()
     Log(std::format("Saving json config: {}", path + "\\chaos.json"));
 }
 
-ConfigManager* ConfigManager::Load()
+std::shared_ptr<ConfigManager> ConfigManager::Load()
 {
     std::string path;
     path.resize(MAX_PATH, '\0');
@@ -44,8 +44,8 @@ ConfigManager* ConfigManager::Load()
         {
             try
             {
-                [[maybe_unused]] auto manager = std::make_unique<ConfigManager>(nlohmann::json::parse(content));
-                return i(&manager);
+                [[maybe_unused]] const auto manager = std::make_shared<ConfigManager>(nlohmann::json::parse(content));
+                ResetComponent<ConfigManager>(manager);
             }
             catch (std::exception& ex)
             {
@@ -53,19 +53,25 @@ ConfigManager* ConfigManager::Load()
             }
         }
     }
-
-    auto instance = i();
-    if (instance->toggledEffects.empty())
+    else
     {
-        for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
-        {
-            auto& info = effect->GetEffectInfo();
-            auto name = std::string(magic_enum::enum_name<EffectType>(info.category));
-            if (!instance->toggledEffects.contains(name))
-            {
-                instance->toggledEffects[name] = {};
-            }
+        SetComponent<ConfigManager>();
+    }
 
+    auto instance = Get<ConfigManager>();
+
+    // If new effects or new categories are added, enable them by default
+    for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
+    {
+        auto& info = effect->GetEffectInfo();
+        auto name = std::string(magic_enum::enum_name<EffectType>(info.category));
+        if (!instance->toggledEffects.contains(name))
+        {
+            instance->toggledEffects[name] = {};
+        }
+
+        if (!instance->toggledEffects[name].contains(info.effectName))
+        {
             instance->toggledEffects[name][info.effectName] = true;
         }
     }

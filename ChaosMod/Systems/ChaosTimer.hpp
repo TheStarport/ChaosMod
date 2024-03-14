@@ -6,7 +6,7 @@
 class OnHit;
 class OnSound;
 class PatchNotes;
-class ChaosTimer final : public Singleton<ChaosTimer>
+class ChaosTimer final : public Component
 {
         friend OnHit;
         friend OnSound;
@@ -40,7 +40,7 @@ class ChaosTimer final : public Singleton<ChaosTimer>
 
     public:
         ChaosTimer();
-        ~ChaosTimer();
+        ~ChaosTimer() override;
         void DelayActiveEffect(ActiveEffect* effect, float delay);
         void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();

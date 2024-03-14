@@ -2,3 +2,6 @@
 	path = vendor/flhook-sdk
 	url = https://github.com/TheStarport/FLHookSDK.git
 	branch = 4.1
+[submodule "vendor/imgui-filebrowser"]
+	path = vendor/imgui-filebrowser
+	url = https://github.com/AirGuanZ/imgui-filebrowser.git

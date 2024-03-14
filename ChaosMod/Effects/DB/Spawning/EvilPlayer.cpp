@@ -13,13 +13,13 @@ class SpawnEvilPlayer final : public ActiveEffect
 
             if (clone.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(clone);
+                Get<SpaceObjectSpawner>()->Despawn(clone);
             }
 
             std::vector<SpaceObjectSpawner::LoadoutItem> items;
             for (auto traverser = ship->equip_manager.begin(); traverser != ship->equip_manager.end(); ++traverser)
             {
-                auto nickname = HashLookup(traverser.currentEquip->archetype->archId);
+                auto nickname = ChaosMod::HashLookup(traverser.currentEquip->archetype->archId);
                 if (!nickname.has_value())
                 {
                     continue;

@@ -5,8 +5,8 @@
 
 class DoubleTime final : public ActiveEffect
 {
-        void Begin() override { ChaosTimer::i()->ToggleDoubleTime(); }
-        void End() override { ChaosTimer::i()->ToggleDoubleTime(); }
+        void Begin() override { Get<ChaosTimer>()->ToggleDoubleTime(); }
+        void End() override { Get<ChaosTimer>()->ToggleDoubleTime(); }
 
     public:
         explicit DoubleTime(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

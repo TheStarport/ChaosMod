@@ -8,7 +8,7 @@ struct SpawnedObject
         uint spaceObj;
 };
 
-class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
+class SpaceObjectSpawner final : public Component
 {
         struct NpcTemplate
         {
@@ -28,7 +28,7 @@ class SpaceObjectSpawner final : public Singleton<SpaceObjectSpawner>
 
     public:
         SpaceObjectSpawner();
-        ~SpaceObjectSpawner();
+        ~SpaceObjectSpawner() override;
 
         struct SpaceObjectBuilder
         {

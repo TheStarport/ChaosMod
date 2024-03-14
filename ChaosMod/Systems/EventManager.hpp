@@ -1,6 +1,6 @@
 #pragma once
 
-class EventManager : public Singleton<EventManager>
+class EventManager : public Component
 {
         using OnLaunch = void(__fastcall*)(IServerImpl* impl, void* edx, uint client, uint ship);
 

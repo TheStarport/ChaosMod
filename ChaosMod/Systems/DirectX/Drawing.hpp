@@ -6,7 +6,7 @@
 
 #include "D3DTypes.hpp"
 
-class DrawingHelper final : public Singleton<DrawingHelper>
+class DrawingHelper final : public Component
 {
         struct Vertex
         {

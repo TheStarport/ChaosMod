@@ -21,7 +21,7 @@ class LowBudgetSciFiMovie final : public ActiveEffect
                 return hash;
             }
 
-            return pewHashes[Random::i()->Uniform(0u, pewHashes.size() - 1)];
+            return pewHashes[Get<Random>()->Uniform(0u, pewHashes.size() - 1)];
         }
 
     public:

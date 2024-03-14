@@ -1,6 +1,6 @@
 #pragma once
 
-class Teleporter : public Singleton<Teleporter>
+class Teleporter : public Component
 {
         inline static uint entryObject = 0;
 

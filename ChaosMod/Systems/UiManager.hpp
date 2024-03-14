@@ -3,7 +3,7 @@
 #include "d3d9.h"
 #include "imgui/imgui_internal.h"
 
-class UiManager final : public Singleton<UiManager>
+class UiManager final : public Component
 {
         std::optional<HCURSOR> cursorOverride;
 
@@ -31,7 +31,7 @@ class UiManager final : public Singleton<UiManager>
         void SetCursor(const std::string& str);
 
         UiManager();
-        ~UiManager();
+        ~UiManager() override;
         void LoadCursors();
 
         static void Setup(LPDIRECT3DDEVICE9 device, HWND window);

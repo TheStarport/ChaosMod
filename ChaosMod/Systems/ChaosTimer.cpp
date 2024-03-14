@@ -24,12 +24,13 @@ void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
     }
 
     auto* ship = reinterpret_cast<CShip*>(ecx[4]);
-    for (const auto& key : i()->activeEffects | std::views::keys)
+    const auto i = Get<ChaosTimer>();
+    for (const auto& key : i->activeEffects | std::views::keys)
     {
         key->OnShipDestroyed(dmgList, ship);
     }
 
-    for (const auto& effect : i()->persistentEffects)
+    for (const auto& effect : i->persistentEffects)
     {
         if (effect->Persisting())
         {
@@ -68,7 +69,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    const auto& configEffects = ConfigManager::i()->toggledEffects;
+    const auto& configEffects = Get<ConfigManager>()->toggledEffects;
 
     for (uint attempts = 0; attempts < 15; attempts++)
     {
@@ -83,7 +84,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
                                   });
         }
 
-        const auto val = Random::i()->Weighted(weights.begin(), weights.end());
+        const auto val = Get<Random>()->Weighted(weights.begin(), weights.end());
         auto effect = possibleEffects[val];
 
         // If the precondition fails, or trying to teleport in a mission, prevent it.
@@ -92,7 +93,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        if (ConfigManager::i()->blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
+        if (Get<ConfigManager>()->blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
         {
             continue;
         }
@@ -163,11 +164,11 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     }
 
     // Too many active effects
-    if (activeEffects.size() >= ConfigManager::i()->totalAllowedConcurrentEffects)
+    if (activeEffects.size() >= Get<ConfigManager>()->totalAllowedConcurrentEffects)
     {
         // Clean out those without timers
         std::erase_if(activeEffects, [](const auto& active) { return !active.first->GetEffectInfo().isTimed; });
-        if (activeEffects.size() >= ConfigManager::i()->totalAllowedConcurrentEffects)
+        if (activeEffects.size() >= Get<ConfigManager>()->totalAllowedConcurrentEffects)
         {
             // If still too large skip
             PlayEffectSkip();
@@ -183,7 +184,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     effect->Begin();
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
-    float timing = info.isTimed ? modifiers * (info.timingModifier * ConfigManager::i()->defaultEffectDuration) : 30.0f;
+    float timing = info.isTimed ? modifiers * (info.timingModifier * Get<ConfigManager>()->defaultEffectDuration) : 30.0f;
 
     if (info.fixedTimeOverride != 0.0f)
     {
@@ -197,7 +198,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 ChaosTimer::ChaosTimer()
 {
     patchNotes = new PatchNotes();
-    patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes * 60;
+    patchTime = Get<ConfigManager>()->timeBetweenPatchesInMinutes * 60;
 
     auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
@@ -254,7 +255,7 @@ void ChaosTimer::InitEffects()
     }
 }
 
-float ChaosTimer::GetTimeUntilChaos() const { return ConfigManager::i()->timeBetweenChaos - currentTime; }
+float ChaosTimer::GetTimeUntilChaos() const { return Get<ConfigManager>()->timeBetweenChaos - currentTime; }
 
 std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 {
@@ -276,12 +277,13 @@ std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 
 void ChaosTimer::OnApplyDamage(const uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, const bool after)
 {
-    for (const auto& key : i()->activeEffects | std::views::keys)
+    const auto i = Get<ChaosTimer>();
+    for (const auto& key : i->activeEffects | std::views::keys)
     {
         after ? key->OnApplyDamageAfter(hitSpaceObj, dmgList, dmgEntry) : key->OnApplyDamage(hitSpaceObj, dmgList, dmgEntry);
     }
 
-    for (const auto& effect : i()->persistentEffects)
+    for (const auto& effect : i->persistentEffects)
     {
         if (effect->Persisting())
         {
@@ -292,7 +294,9 @@ void ChaosTimer::OnApplyDamage(const uint hitSpaceObj, DamageList* dmgList, Dama
 
 uint ChaosTimer::OnSoundEffect(const uint hash)
 {
-    for (const auto& key : i()->activeEffects | std::views::keys)
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
     {
         if (const uint newHash = key->OnSoundEffect(hash); newHash != hash)
         {
@@ -300,7 +304,7 @@ uint ChaosTimer::OnSoundEffect(const uint hash)
         }
     }
 
-    for (const auto& effect : i()->persistentEffects)
+    for (const auto& effect : i->persistentEffects)
     {
         if (const uint newHash = effect->OnSoundEffect(hash); newHash != hash)
         {
@@ -313,12 +317,14 @@ uint ChaosTimer::OnSoundEffect(const uint hash)
 
 void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 {
-    for (const auto& key : i()->activeEffects | std::views::keys)
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
     {
         key->OnConsumeFireResources(launcher);
     }
 
-    for (const auto& effect : i()->persistentEffects)
+    for (const auto& effect : i->persistentEffects)
     {
         effect->OnConsumeFireResources(launcher);
     }
@@ -336,7 +342,7 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
         forwards *= 1000.f;
 
         Vector newVelocity = ship->get_velocity() + forwards;
-        GlobalTimers::i()->AddTimer(
+        Get<GlobalTimers>()->AddTimer(
             [ship, newVelocity](float delta)
             {
                 ShipManipulator::SetVelocity(ship, newVelocity);
@@ -352,12 +358,12 @@ void ChaosTimer::Update(const float delta)
     const auto currentShip = Utils::GetCShip();
 
     // Check that the game is not paused and patch notes are enabled
-    if (ConfigManager::i()->enablePatchNotes && !OffsetHelper::IsGamePaused() && (ConfigManager::i()->countDownWhileOnBases || currentShip))
+    if (Get<ConfigManager>()->enablePatchNotes && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->countDownWhileOnBases || currentShip))
     {
         patchTime -= delta;
         if (patchTime <= 0.0f)
         {
-            patchTime = ConfigManager::i()->timeBetweenPatchesInMinutes * 60;
+            patchTime = Get<ConfigManager>()->timeBetweenPatchesInMinutes * 60;
             PatchNotes::GeneratePatch();
         }
     }
@@ -403,7 +409,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    if (!ConfigManager::i()->enableTwitchVoting && currentTime > ConfigManager::i()->timeBetweenChaos)
+    if (!Get<ConfigManager>()->enableTwitchVoting && currentTime > Get<ConfigManager>()->timeBetweenChaos)
     {
         TriggerChaos();
 
@@ -413,7 +419,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    ImGuiManager::SetProgressBarPercentage(currentTime / ConfigManager::i()->timeBetweenChaos);
+    ImGuiManager::SetProgressBarPercentage(currentTime / Get<ConfigManager>()->timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);
@@ -453,11 +459,11 @@ void ChaosTimer::Update(const float delta)
     }
 }
 
-const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() { return i()->activeEffects; }
-const std::vector<PersistentEffect*>& ChaosTimer::GetActivePersistentEffects() { return i()->persistentEffects; }
+const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() { return Get<ChaosTimer>()->activeEffects; }
+const std::vector<PersistentEffect*>& ChaosTimer::GetActivePersistentEffects() { return Get<ChaosTimer>()->persistentEffects; }
 void ChaosTimer::EndEffectPrematurely(const ActiveEffect* effect)
 {
-    auto& all = i()->activeEffects;
+    auto& all = Get<ChaosTimer>()->activeEffects;
     for (auto& iter : all)
     {
         if (iter.first == effect)

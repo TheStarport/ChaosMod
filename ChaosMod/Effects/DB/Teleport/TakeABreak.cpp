@@ -5,9 +5,9 @@
 
 class TakeABreak final : public ActiveEffect
 {
-        void Begin() override { Teleporter::i()->SaveCurrentPosition(); }
+        void Begin() override { Get<Teleporter>()->SaveCurrentPosition(); }
 
-        void End() override { Teleporter::i()->RestorePreviousPosition(); }
+        void End() override { Get<Teleporter>()->RestorePreviousPosition(); }
 
     public:
         explicit TakeABreak(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

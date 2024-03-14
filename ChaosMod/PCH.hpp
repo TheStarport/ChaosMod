@@ -39,16 +39,11 @@ using u64 = unsigned long long;
 #include <Singleton.hpp>
 
 #include "../Utils.hpp"
+#include "Utilities/Component.hpp"
 #include "Utilities/Random.hpp"
 
 #include <Utils/Detour.hpp>
 #include <Utils/Utils.hpp>
-
-void Log(const std::string& log);
-
-void SetWireFrames();
-void Assert(bool cond, const std::string& text, const std::string& file, int line);
-std::optional<std::string> HashLookup(uint hash);
 
 enum class Language
 {
@@ -60,8 +55,25 @@ enum class Language
     UwU
 };
 
-std::string GetInfocardName(uint ids);
-void SetLanguage(Language lang);
+class ChaosMod : public Singleton<ChaosMod>
+{
+        static void DelayedInit();
+        static void* ScriptLoadHook(const char* script);
+        static void __stdcall TerminateAllThreads();
+        static BOOL __stdcall FreeLibraryDetour(const HMODULE handle);
+
+    public:
+        ChaosMod();
+
+        static std::optional<std::string> HashLookup(uint hash);
+        static void SetLanguage(Language lang);
+        static std::string GetInfocardName(uint ids);
+};
+
+void Log(const std::string& log);
+
+void SetWireFrames();
+void Assert(bool cond, const std::string& text, const std::string& file, int line);
 
 // ReSharper disable twice CppInconsistentNaming
 #ifdef _DEBUG

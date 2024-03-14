@@ -12,7 +12,7 @@ class SpawnBigBertha final : public ActiveEffect
 
             if (bertha.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(bertha);
+                Get<SpaceObjectSpawner>()->Despawn(bertha);
             }
 
             bertha = SpaceObjectSpawner::NewBuilder()

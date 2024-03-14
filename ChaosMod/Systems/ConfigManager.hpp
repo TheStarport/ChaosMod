@@ -2,9 +2,16 @@
 
 #include <nlohmann/json.hpp>
 
-class ConfigManager : public Singleton<ConfigManager>
+class ConfigManager : public Component
 {
     public:
+        ConfigManager() = default;
+        ConfigManager(const ConfigManager& configManager)
+        {
+            // Copy all the data, skipping the vtable
+            memcpy_s(reinterpret_cast<PCHAR>(this) + 4, sizeof(ConfigManager) - 4, reinterpret_cast<LPCSTR>(&configManager) + 4, sizeof(ConfigManager) - 4);
+        }
+
         enum class ProgressBar
         {
             TopBar,
@@ -39,5 +46,5 @@ class ConfigManager : public Singleton<ConfigManager>
                                        timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin, progressBarType);
 
         void Save();
-        static ConfigManager* Load();
+        static std::shared_ptr<ConfigManager> Load();
 };

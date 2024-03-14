@@ -5,8 +5,8 @@
 
 class HomageToElite final : public ActiveEffect
 {
-        void FrameUpdate(float delta) override { DrawingHelper::i()->SetRenderState(D3DRS_FILLMODE, 2, true); }
-        void End() override { DrawingHelper::i()->SetRenderState(D3DRS_FILLMODE, 3, true); }
+        void FrameUpdate(float delta) override { Get<DrawingHelper>()->SetRenderState(D3DRS_FILLMODE, 2, true); }
+        void End() override { Get<DrawingHelper>()->SetRenderState(D3DRS_FILLMODE, 3, true); }
 
     public:
         explicit HomageToElite(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

@@ -97,7 +97,7 @@ class Change
             const auto value = static_cast<float>(existingValue);
             const float percentage = value * 0.01f;
 
-            auto percentageChange = Random::i()->Uniform(1, 300);
+            auto percentageChange = Get<Random>()->Uniform(1, 300);
             if (!increase)
             {
                 percentageChange = std::clamp(-percentageChange, -95, -1); // If lowering make sure we don't end up negative
@@ -391,7 +391,7 @@ class EquipmentChange : public Change
 
         void Generate() override
         {
-            hash = possibleEquipment[Random::i()->Uniform(0u, possibleEquipment.size() - 1)];
+            hash = possibleEquipment[Get<Random>()->Uniform(0u, possibleEquipment.size() - 1)];
 
             const auto erasure = GetArchetypePtr();
             ASSERT(erasure.has_value(), "Failed to get archetype pointer!!");
@@ -404,7 +404,7 @@ class EquipmentChange : public Change
             EditableField* value = nullptr;
             while (statIndex == UINT_MAX)
             {
-                statIndex = Random::i()->Weighted(weights.begin(), weights.end());
+                statIndex = Get<Random>()->Weighted(weights.begin(), weights.end());
                 value = &fields[statIndex];
                 if constexpr (Type == ChangeType::GunAmmo)
                 {
@@ -425,7 +425,7 @@ class EquipmentChange : public Change
                 {
                     if (missileData.explosionId == item->id)
                     {
-                        name = GetInfocardName(Archetype::GetEquipment(munition)->idsName);
+                        name = ChaosMod::GetInfocardName(Archetype::GetEquipment(munition)->idsName);
                         break;
                     }
                 }
@@ -436,14 +436,14 @@ class EquipmentChange : public Change
                 {
                     if (missileData.motorId == item->archId)
                     {
-                        name = GetInfocardName(Archetype::GetEquipment(munition)->idsName);
+                        name = ChaosMod::GetInfocardName(Archetype::GetEquipment(munition)->idsName);
                         break;
                     }
                 }
             }
             else
             {
-                name = GetInfocardName(item->idsName);
+                name = ChaosMod::GetInfocardName(item->idsName);
             }
 
             std::string newFieldName = std::regex_replace(value->name, std::regex("([a-z])([A-Z])"), "$1 $2");
@@ -462,7 +462,7 @@ class EquipmentChange : public Change
                 }
             }
 
-            auto buff = static_cast<bool>(Random::i()->Uniform(0u, 1u));
+            auto buff = static_cast<bool>(Get<Random>()->Uniform(0u, 1u));
 
             const auto& data = fieldData[statIndex];
             auto clamp = data.clamp;
@@ -575,7 +575,8 @@ class EquipmentChange : public Change
                     for (auto node = ships->begin(); node != ships->end(); ++node)
                     {
                         if (std::ranges::find(ignoredShips, node->value->archId) != ignoredShips.end() || !node->value->idsName ||
-                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX || GetInfocardName(node->value->idsName).empty())
+                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX ||
+                            ChaosMod::GetInfocardName(node->value->idsName).empty())
                         {
                             continue;
                         }
@@ -616,7 +617,7 @@ class EquipmentChange : public Change
                     const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD4);
                     for (auto node = equipment->begin(); node != equipment->end(); ++node)
                     {
-                        if (node->value->idsName == 0 || node->value->idsInfo == 0 || GetInfocardName(node->value->idsName).empty())
+                        if (node->value->idsName == 0 || node->value->idsInfo == 0 || ChaosMod::GetInfocardName(node->value->idsName).empty())
                         {
                             continue;
                         }

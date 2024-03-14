@@ -194,27 +194,27 @@ void PatchNotes::GeneratePatch()
         lastVersion = semver::from_string(lastPatch->version);
     }
 
-    const auto versionIncrement = Random::i()->Uniform(1u, 20u);
+    const auto versionIncrement = Get<Random>()->Uniform(1u, 20u);
     if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;
-        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerPatchMin, ConfigManager::i()->changesPerPatchMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerPatchMin, Get<ConfigManager>()->changesPerPatchMin * 2);
     }
     else if (versionIncrement < 20 && lastVersion.minor != 255)
     {
         lastVersion.minor++;
         lastVersion.patch = 0;
-        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerMinorMin, ConfigManager::i()->changesPerMinorMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerMinorMin, Get<ConfigManager>()->changesPerMinorMin * 2);
     }
     else
     {
         lastVersion.patch = 0;
         lastVersion.minor = 0;
         lastVersion.major++;
-        changeCount = Random::i()->Uniform(ConfigManager::i()->changesPerMajorMin, ConfigManager::i()->changesPerMajorMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerMajorMin, Get<ConfigManager>()->changesPerMajorMin * 2);
         patch->releaseName = std::format("{} {}",
-                                         ReleaseAdjectives[Random::i()->Uniform(0u, ReleaseAdjectives.size() - 1)],
-                                         ReleaseNouns[Random::i()->Uniform(0u, ReleaseNouns.size() - 1)]);
+                                         ReleaseAdjectives[Get<Random>()->Uniform(0u, ReleaseAdjectives.size() - 1)],
+                                         ReleaseNouns[Get<Random>()->Uniform(0u, ReleaseNouns.size() - 1)]);
     }
 
     patch->version = lastVersion.to_string();
@@ -255,7 +255,7 @@ ChangeType PatchNotes::GetRandomChangeType()
     };
     // Half the chance of currency change cause of how many there are
 
-    return static_cast<ChangeType>(Random::i()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
+    return static_cast<ChangeType>(Get<Random>()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
 }
 
 std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)

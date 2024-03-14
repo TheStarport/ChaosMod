@@ -15,8 +15,7 @@ std::optional<Camera> fovCockpit;
 
 int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float interval)
 {
-    const auto in = i();
-    if (in->fovOverride != 0.0f)
+    if (const auto in = Get<CameraController>(); in->fovOverride != 0.0f)
     {
         if (!fovChase.has_value())
         {
@@ -49,8 +48,7 @@ int __fastcall CameraController::ChaseCamera(Camera* camera, void* edx, float in
 
 int __fastcall CameraController::TurretCamera(Camera* camera, void* edx, float interval)
 {
-    const auto in = i();
-    if (in->fovOverride != 0.0f)
+    if (const auto in = Get<CameraController>(); in->fovOverride != 0.0f)
     {
         if (!fovTurret.has_value())
         {
@@ -83,8 +81,7 @@ int __fastcall CameraController::TurretCamera(Camera* camera, void* edx, float i
 
 int __fastcall CameraController::CockpitCamera(Camera* camera, void* edx, float interval)
 {
-    const auto in = i();
-    if (in->fovOverride != 0.0f)
+    if (const auto in = Get<CameraController>(); in->fovOverride != 0.0f)
     {
         if (!fovCockpit.has_value())
         {

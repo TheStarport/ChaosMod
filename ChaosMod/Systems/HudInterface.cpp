@@ -16,9 +16,11 @@ void HudInterface::FlipTextControl(TControl* control)
         return;
     }
 
+    auto i = Get<HudInterface>();
+
     const auto text = static_cast<TText*>(control); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    const auto el = i()->flippedText.find(text);
-    if (el != i()->flippedText.end())
+    const auto el = i->flippedText.find(text);
+    if (el != i->flippedText.end())
     {
         text->SetTextValue(el->second.c_str());
         return;
@@ -30,7 +32,7 @@ void HudInterface::FlipTextControl(TControl* control)
     if (!str.empty() && !rev.empty())
     {
 
-        i()->flippedText[text] = rev;
+        i->flippedText[text] = rev;
         text->SetTextValue(rev.c_str());
     }
 }

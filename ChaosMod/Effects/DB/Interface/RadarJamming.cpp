@@ -34,10 +34,10 @@ class RadarJamming final : public ActiveEffect
                 auto& data = jitterReducer[obj];
                 if (data.index == 2)
                 {
-                    data.range = Random::i()->UniformFloat(-30.f, 30.f);
-                    data.invert[0] = Random::i()->Uniform(0u, 1u) == 0u;
-                    data.invert[1] = Random::i()->Uniform(0u, 1u) == 0u;
-                    data.invert[2] = Random::i()->Uniform(0u, 1u) == 0u;
+                    data.range = Get<Random>()->UniformFloat(-30.f, 30.f);
+                    data.invert[0] = Get<Random>()->Uniform(0u, 1u) == 0u;
+                    data.invert[1] = Get<Random>()->Uniform(0u, 1u) == 0u;
+                    data.invert[2] = Get<Random>()->Uniform(0u, 1u) == 0u;
                 }
 
                 if (data.index++ >= 2)
@@ -92,7 +92,7 @@ class RadarJamming final : public ActiveEffect
 
         void Begin() override
         {
-            ReshadeManager::i()->ToggleTechnique("GlitchB", true);
+            Get<ReshadeManager>()->ToggleTechnique("GlitchB", true);
             jitterReducer.clear();
 
             getTargetLeadFirePosDetour.Detour(GetTargetLeadFirePosDetour);
@@ -101,7 +101,7 @@ class RadarJamming final : public ActiveEffect
 
         void End() override
         {
-            ReshadeManager::i()->ToggleTechnique("GlitchB", false);
+            Get<ReshadeManager>()->ToggleTechnique("GlitchB", false);
 
             getTargetLeadFirePosDetour.UnDetour();
             getTargetLeadFirePosInspectDetour.UnDetour();

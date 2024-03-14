@@ -15,7 +15,7 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
         std::jthread ttsThread{};
         void Begin() override
         {
-            const uint index = Random::i()->Uniform(0u, ttsLines.size() - 1);
+            const uint index = Get<Random>()->Uniform(0u, ttsLines.size() - 1);
 
             auto line = ttsLines[index];
 

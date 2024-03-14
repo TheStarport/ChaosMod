@@ -27,7 +27,7 @@ class BuggyInterface final : public MemoryEffect
         {
             if (lock)
             {
-                HudInterface::i()->SetBuggyInterface(false);
+                Get<HudInterface>()->SetBuggyInterface(false);
             }
 
             lockManeuverDetour.UnDetour();
@@ -51,7 +51,7 @@ class BuggyInterface final : public MemoryEffect
             info = offsets[1];
             MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
 
-            HudInterface::i()->SetBuggyInterface(true);
+            Get<HudInterface>()->SetBuggyInterface(true);
         }
 
         void Update(const float delta) override
@@ -89,7 +89,7 @@ class BuggyInterface final : public MemoryEffect
             {
                 ended = true;
                 MemoryEffect::End();
-                HudInterface::i()->SetBuggyInterface(false);
+                Get<HudInterface>()->SetBuggyInterface(false);
             }
         }
 

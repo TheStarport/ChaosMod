@@ -1,7 +1,7 @@
 #pragma once
 #include "Effects/ActiveEffect.hpp"
 
-class TwitchVoting final : public Singleton<TwitchVoting>
+class TwitchVoting final : public Component
 {
         void* pipeHandle = INVALID_HANDLE_VALUE;
         u64 lastPing = 0;
@@ -27,7 +27,7 @@ class TwitchVoting final : public Singleton<TwitchVoting>
         void Cleanup();
 
     public:
-        ~TwitchVoting();
+        ~TwitchVoting() override;
         bool Initialize();
         void Poll();
 };

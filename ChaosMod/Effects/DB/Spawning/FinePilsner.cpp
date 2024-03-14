@@ -12,7 +12,7 @@ class FinePilsner final : public ActiveEffect
 
             if (vc.Acquire())
             {
-                SpaceObjectSpawner::i()->Despawn(vc);
+                Get<SpaceObjectSpawner>()->Despawn(vc);
             }
 
             vc = SpaceObjectSpawner::NewBuilder()

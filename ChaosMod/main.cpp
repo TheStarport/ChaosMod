@@ -15,8 +15,12 @@
 #include "Systems/SystemComponents/MoviePlayer.hpp"
 #include "Systems/SystemComponents/ShipInfocardOverride.hpp"
 #include "Systems/SystemComponents/TwitchVoting.hpp"
+#include "Systems/Teleporter.hpp"
 #include "Systems/UiManager.hpp"
 #include "Utilities/AssetTracker.hpp"
+#include "Utilities/PersonalityHelper.hpp"
+#include "Utilities/SpaceObjectSpawner.hpp"
+
 #include <Systems/SystemComponents/SaveManager.hpp>
 
 #include <Systems/ReshadeManager.hpp>
@@ -36,7 +40,7 @@ std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
 FILE* hashFile = nullptr;
 std::map<std::string, uint> hashMap;
 
-std::optional<std::string> HashLookup(const uint hash)
+std::optional<std::string> ChaosMod::HashLookup(const uint hash)
 {
     for (auto& [nickname, existingHash] : hashMap)
     {
@@ -85,25 +89,24 @@ uint CreateIdDetour(const char* string)
 constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
 
-bool init = false;
-void Init()
+void ChaosMod::DelayedInit()
 {
-    init = true;
-
-    // If any of these are done earlier, we get crashes (bad)
+    // Register all the components we can!
+    SetComponent<EventManager>();
+    SetComponent<CameraController>();
+    SetComponent<MoviePlayer>();
+    SetComponent<HudInterface>();
+    SetComponent<ShipManipulator>();
+    SetComponent<Teleporter>();
+    SetComponent<TwitchVoting>();
+    SetComponent<ChatConsole>();
+    SetComponent<PersonalityHelper>();
+    SetComponent<SpaceObjectSpawner>();
 
     PatchNotes::LoadPatches();
-
-    EventManager::i()->SetupDetours();
-    CameraController::i();
-    HudInterface::i();
-    ShipManipulator::i();
-
-    ChaosTimer::i()->InitEffects();
-
     OnSound::Init();
-
     ShipInfocardOverride::Init();
+    Get<EventManager>()->SetupDetours();
 }
 
 const PDWORD screenWidth = ((PDWORD)0x679bc8);
@@ -452,19 +455,13 @@ void RequiredMemEdits()
     PatchResolution();
 }
 
-void* ScriptLoadHook(const char* script)
+void* ChaosMod::ScriptLoadHook(const char* script)
 {
-    if (!init)
-    {
-        Init();
-    }
-
-    UiManager::i()->SetCursor("arrow");
+    DelayedInit();
+    Get<UiManager>()->SetCursor("arrow");
 
     thornLoadDetour->UnDetour();
-    const auto res = thornLoadDetour->GetOriginalFunc()(script);
-    thornLoadDetour->Detour(ScriptLoadHook);
-    return res;
+    return thornLoadDetour->GetOriginalFunc()(script);
 }
 
 void Update(const double delta)
@@ -473,13 +470,13 @@ void Update(const double delta)
     while (timeCounter > SixtyFramesPerSecond)
     {
         SaveManager::SaveTimer(SixtyFramesPerSecond);
-        ChaosTimer::i()->Update(SixtyFramesPerSecond);
-        GlobalTimers::i()->Update(SixtyFramesPerSecond);
+        Get<ChaosTimer>()->Update(SixtyFramesPerSecond);
+        Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
         timeCounter -= SixtyFramesPerSecond;
     }
 
-    TwitchVoting::i()->Poll();
-    ChaosTimer::i()->FrameUpdate(static_cast<float>(delta));
+    Get<TwitchVoting>()->Poll();
+    Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
     timingDetour->UnDetour();
     timingDetour->GetOriginalFunc()(delta);
     timingDetour->Detour(Update);
@@ -505,8 +502,11 @@ void CreateDefaultPerfOptions()
     file << str << std::endl;
 }
 
-void SetupHack()
+FunctionDetour freeLibraryDetour(FreeLibrary);
+ChaosMod::ChaosMod()
 {
+    freeLibraryDetour.Detour(FreeLibraryDetour);
+
     // The very first thing we do is change the saved data folder so we can save and load properly
     std::string newSavedDataFolder = "FLChaosMod";
     MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
@@ -519,8 +519,17 @@ void SetupHack()
     // make needed memory edits for chaos mod to work
     RequiredMemEdits();
 
-    // Force our hook before the dx8 is created so we can inject DX9 like a boss
-    UiManager::i();
+    // Register only the components that have to be done now
+    SetComponent<Random>(); // Almost everything depends on Random
+    SetComponent<GlobalTimers>();
+
+    SetComponent<ChaosTimer>();
+    Get<ChaosTimer>()->InitEffects();
+
+    SetComponent<DrawingHelper>();
+    SetComponent<UiManager>();
+    SetComponent<KeyManager>();
+    SetComponent<ReshadeManager>();
 
     // Setup hooks
     const HMODULE common = GetModuleHandleA("common");
@@ -531,26 +540,23 @@ void SetupHack()
 
     timingDetour->Detour(Update);
     thornLoadDetour->Detour(ScriptLoadHook);
-
-    // Key manager needs to hook before key commands are loaded
-    KeyManager::i();
 }
 
 HMODULE dll;
-void __stdcall TerminateAllThreads()
+void __stdcall ChaosMod::TerminateAllThreads()
 {
-    MoviePlayer::del();
-
     for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
     {
         effect->Cleanup();
     }
 
+    // Explicitly reset any components that make use of threads
+    ResetComponent<MoviePlayer>();
+
     FreeLibraryAndExitThread(dll, 0);
 }
 
-FunctionDetour freeLibraryDetour(FreeLibrary);
-BOOL __stdcall FreeLibraryDetour(const HMODULE handle)
+BOOL __stdcall ChaosMod::FreeLibraryDetour(const HMODULE handle)
 {
     if (dll == handle)
     {
@@ -572,16 +578,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
     if (dwReason == DLL_PROCESS_ATTACH)
     {
         dll = hModule;
-        freeLibraryDetour.Detour(FreeLibraryDetour);
 
         float newX = 0.5f;
         float newY = 0.5f;
 
         MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
         MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
-        SetupHack();
 
-        ReshadeManager::i()->SetHModule(hModule);
+        // Force construct ChaosMod
+        ChaosMod::i();
+        Get<ReshadeManager>()->SetHModule(hModule);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {

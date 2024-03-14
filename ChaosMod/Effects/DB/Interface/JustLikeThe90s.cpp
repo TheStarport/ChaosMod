@@ -7,8 +7,8 @@
 class JustLikeThe90s final : public ActiveEffect
 {
         std::vector<HCURSOR> cursors;
-        void Begin() override { UiManager::i()->OverrideCursor(cursors[Random::i()->Uniform(0u, cursors.size() - 1)]); }
-        void End() override { UiManager::i()->OverrideCursor(std::nullopt); }
+        void Begin() override { Get<UiManager>()->OverrideCursor(cursors[Get<Random>()->Uniform(0u, cursors.size() - 1)]); }
+        void End() override { Get<UiManager>()->OverrideCursor(std::nullopt); }
 
     public:
         JustLikeThe90s(const EffectInfo& info) : ActiveEffect(info)

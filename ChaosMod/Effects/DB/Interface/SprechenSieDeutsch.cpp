@@ -18,7 +18,7 @@ class SprechenSieDeutsch final : public ActiveEffect
             const auto current = currentLang;
             while (current == currentLang)
             {
-                currentLang = static_cast<Language>(Random::i()->Uniform(0, static_cast<int>(Language::Chinese)));
+                currentLang = static_cast<Language>(Get<Random>()->Uniform(0, static_cast<int>(Language::Chinese)));
             }
         }
 
@@ -208,7 +208,7 @@ class SprechenSieDeutsch final : public ActiveEffect
         explicit SprechenSieDeutsch(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) { LoadLibraries(); }
 };
 
-std::string GetInfocardName(const uint ids)
+std::string ChaosMod::GetInfocardName(const uint ids)
 {
     static std::wstring wStr(65525, L'\0');
 
@@ -220,7 +220,7 @@ std::string GetInfocardName(const uint ids)
     return str;
 }
 
-void SetLanguage(Language lang) { SprechenSieDeutsch::SetLanguage(lang); }
+void ChaosMod::SetLanguage(Language lang) { SprechenSieDeutsch::SetLanguage(lang); }
 
 constexpr DWORD NakedReturn = 0x57DB25;
 __declspec(naked) void SprechenSieDeutsch::GetIdsInfocardNaked()

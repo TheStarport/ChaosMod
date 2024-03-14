@@ -125,6 +125,9 @@ void ImGuiManager::SetupImGuiStyle()
 
 void ImGuiManager::Init()
 {
+    ASSERT(configurator == nullptr, "Init should not be called twice");
+    configurator = new Configurator(nullptr);
+
     for (const auto effects = ActiveEffect::GetAllEffects(); const auto& effect : effects)
     {
         auto& info = effect->GetEffectInfo();
@@ -146,6 +149,7 @@ void ImGuiManager::Init()
 
     loadedFonts[Font::TitiliumWeb] = font;
     loadedFonts[Font::TitiliumWebLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 42);
+    loadedFonts[Font::TitiliumWebExtraLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb.ttf", 84);
     loadedFonts[Font::TitiliumWebBold] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 28);
     loadedFonts[Font::TitiliumWebBoldLarge] = io.Fonts->AddFontFromFileTTF("../DATA/CHAOS/FONTS/TitilliumWeb-Bold.ttf", 42);
 
@@ -156,7 +160,7 @@ void ImGuiManager::Init()
 
 void ImGuiManager::SetProgressBarPercentage(float percentage) { ProgressBar::progress = percentage; }
 void ImGuiManager::SetVotingChoices(const std::vector<std::string>& choices) { ChaosOptionText::options = choices; }
-void ImGuiManager::ShowConfigurator() { Configurator::show = true; }
+void ImGuiManager::ShowConfigurator() { configurator->show = true; }
 void ImGuiManager::ShowEffectSelector() { EffectSelector::show = true; }
 void ImGuiManager::ShowDebugConsole() { DebugMenu::show = true; }
 void ImGuiManager::ShowPatchNotes() { PatchNotesWindow::show = true; }
@@ -186,6 +190,20 @@ void ImGuiManager::ToggleSelectionWheel()
         SelectionWheel::currentlyShowing = false;
     }
 }
+void ImGuiManager::ImportConfig(const std::string& path)
+{
+    try
+    {
+        std::ifstream ifs(path);
+        std::string content((std::istreambuf_iterator(ifs)), (std::istreambuf_iterator<char>()));
+
+        configImporter = new Configurator(std::make_shared<ConfigManager>(nlohmann::json::parse(content)));
+    }
+    catch (const std::exception& ex)
+    {
+        // TODO: ImGui popup
+    }
+}
 
 void ImGuiManager::Render()
 {
@@ -202,7 +220,7 @@ void ImGuiManager::Render()
     ActiveEffectsText::Render();
     CargoSpawner::Render();
     ChaosOptionText::Render();
-    Configurator::Render();
+    configurator->Render();
     DebugMenu::Render();
     EffectHistory::Render();
     EffectSelector::Render();
@@ -210,6 +228,22 @@ void ImGuiManager::Render()
     ProgressBar::Render();
     ScrollingCredits::Render();
     SelectionWheel::Render();
+
+    if (configImporter)
+    {
+        configImporter->Render();
+        if (configImporter->confirmImport)
+        {
+            ResetComponent<ConfigManager>(configImporter->config);
+
+            configurator->config = configImporter->config;
+
+            delete configImporter;
+            configImporter = nullptr;
+
+            configurator->config->Save();
+        }
+    }
 
 #ifdef _DEBUG
     ImGui::ShowDemoWindow();

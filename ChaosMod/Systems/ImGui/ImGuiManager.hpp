@@ -4,6 +4,7 @@ enum class Font
 {
     TitiliumWeb,
     TitiliumWebLarge,
+    TitiliumWebExtraLarge,
     TitiliumWebBold,
     TitiliumWebBoldLarge,
 };
@@ -11,12 +12,15 @@ enum class Font
 class ActiveEffect;
 enum class EffectType;
 struct ImFont;
+class Configurator;
 class ImGuiManager
 {
         inline static std::map<EffectType, std::vector<ActiveEffect*>> allEffects;
         inline static std::map<Font, ImFont*> loadedFonts;
 
         static void SetupImGuiStyle();
+        inline static Configurator* configurator;
+        inline static Configurator* configImporter;
 
     public:
         static void Init();
@@ -35,6 +39,7 @@ class ImGuiManager
         static void ShowCargoSpawner();
         static void ToggleBoxOfChocolates(bool state);
         static void ToggleSelectionWheel();
+        static void ImportConfig(const std::string& path);
         static void Render();
 
         static ImFont* GetFont(Font font);
