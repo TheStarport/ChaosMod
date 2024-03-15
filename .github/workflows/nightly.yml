@@ -23,7 +23,7 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
         run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
 
-  build:
+  build-msvc:
     needs: date-check
     if: ${{ needs.date-check.outputs.should_run != 'false' }}
     env: 
@@ -44,7 +44,8 @@ jobs:
         id: vars
         run: |
           echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
-          echo "::set-output name=body::$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p')"
+          BODY=$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p' | awk '{print "- "$0}')
+          echo "$BODY" >> RELEASE.md
           WIN_HOME=$(echo $HOME | tr '/' '\\')
           WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
           WIN_HOME=${WIN_HOME^}
@@ -97,15 +98,18 @@ jobs:
         run: 
           curl -s -o ${{ github.workspace }}/Installer/Assets/External/FreelancerHDESetup_v06_silent_test.exe https://f003.backblazeb2.com/b2api/v2/b2_download_file_by_id?fileId=4_z0d41f4d9e10a9adf85d20013_f212668fac620798a_d20240305_m125353_c003_v0312019_t0022_u01709643233941
 
+      - name: CMake Generate
+        run: cmake --preset vs2022-msvc-release -S ${{ github.workspace }} -B ${{ github.workspace }}\build\vs2022-msvc-release
+
       - name: Compile ChaosMod
-        run: msbuild.exe "${env:GITHUB_WORKSPACE}\FreelancerChaosMod.sln" /t:Build /p:Configuration=Release /p:Platform=x86
+        run: cmake --build ${{ github.workspace }}\build\vs2022-msvc-release --target ChaosMod --config Release
           
       - name: "Pre-Build Installer"
         run: |
           cd ${{ github.workspace }}
           mkdir Archive
           Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
-          Get-ChildItem -Path ".\Release" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
+          Get-ChildItem -Path ".\build\vs2022-msvc-release\Release" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
           7z a -r ./chaosmod.7z ./Archive/*
           Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
 
@@ -122,6 +126,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ github.workspace }}/*.7z"
-          body: "${{ steps.vars.outputs.body }}"
+          bodyFile: "RELEASE.md"
           tag: ${{ steps.vars.outputs.date }}
       
