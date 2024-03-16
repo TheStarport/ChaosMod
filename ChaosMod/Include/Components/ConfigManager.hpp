@@ -45,6 +45,6 @@ class ConfigManager : public Component
                                        allowAutoSavesDuringCombat, blockTeleportsDuringMissions, toggledEffects, enablePatchNotes, countDownWhileOnBases,
                                        timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin, changesPerMajorMin, progressBarType);
 
-        void Save();
+        void Save(std::string_view path = "");
         static std::shared_ptr<ConfigManager> Load();
 };

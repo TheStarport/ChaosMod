@@ -6,14 +6,20 @@
 
 #include <magic_enum.hpp>
 
-void ConfigManager::Save()
+void ConfigManager::Save(std::string_view path)
 {
-    std::string path;
-    path.resize(MAX_PATH, '\0');
-    GetUserDataPath(path.data());
-    path.erase(std::ranges::find(path, '\0'), path.end());
+    if (path.empty())
+    {
+        static std::string userPath;
+        userPath.resize(MAX_PATH, '\0');
+        GetUserDataPath(userPath.data());
+        userPath.erase(std::ranges::find(userPath, '\0'), userPath.end());
+        userPath += "\\chaos.json";
+        path = userPath;
+    }
 
-    std::ofstream file(path + "\\chaos.json");
+    std::string fileLoc = std::format("{}", path);
+    std::ofstream file(fileLoc);
 
     const nlohmann::json json = *this;
     const std::string jsonStr = json.dump(4);
@@ -21,7 +27,7 @@ void ConfigManager::Save()
     file << jsonStr << std::endl;
     file.close();
 
-    Log(std::format("Saving json config: {}", path + "\\chaos.json"));
+    Log(std::format("Saving json config: {}", fileLoc));
 }
 
 std::shared_ptr<ConfigManager> ConfigManager::Load()

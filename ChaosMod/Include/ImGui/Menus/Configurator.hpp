@@ -30,6 +30,9 @@ class Configurator final
 
         bool confirmImport = false;
 
+        bool showExportModal = false;
+        std::string exportPath;
+
         void RenderChaosTab() const
         {
             ImGui::TextWrapped("PLACEHOLDER DESCRIPTION THAT IS SUPER DESCRIPTIVE ABOUT THINGS THAT NEED DESCRIBING FOR THIS DESCRIPTIVE TAB OF DESCRIPTIONS.");
@@ -263,14 +266,28 @@ class Configurator final
             }
             else
             {
+                ImGui::BeginDisabled(fileBrowser.IsOpened());
                 if (ImGui::Button("Save Changes"))
                 {
                     config->Save();
                 }
 
-                ImGui::BeginDisabled(fileBrowser.IsOpened());
                 ImGui::SameLine();
-                if (ImGui::Button("Load Preset"))
+                if (ImGui::Button("Export Preset"))
+                {
+                    exportPath = std::filesystem::current_path().append("presets\\exported.json").string();
+                    config->Save(exportPath);
+                    ImGui::OpenPopup("Exported Config Modal");
+                    showExportModal = true;
+                }
+
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::SetTooltip("TODO: Tooltip explaining how exporting presets works");
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Import Preset"))
                 {
                     static const std::vector<std::string> filters = { ".json", ".txt" };
                     fileBrowser.SetTypeFilters(filters);
@@ -279,6 +296,7 @@ class Configurator final
                     fileBrowser.SetPwd(exists(path) ? path : std::filesystem::current_path());
                     fileBrowser.Open();
                 }
+
                 ImGui::EndDisabled();
 
                 if (ImGui::IsItemHovered())
@@ -328,6 +346,21 @@ class Configurator final
                     ImGui::EndTabItem();
                 }
                 ImGui::EndTabBar();
+            }
+
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            if (ImGui::BeginPopupModal("Exported Config Modal", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Exported Config To:");
+                ImGui::Text(exportPath.c_str());
+
+                if (ImGui::Button("OK", ImVec2(120, 0)))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
             }
 
             ImGui::End();
