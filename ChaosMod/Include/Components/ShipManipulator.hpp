@@ -10,6 +10,7 @@ class ShipManipulator final : public Component
         bool spin = false;
         bool personalSpace = false;
         bool cocaineMode = false;
+        bool gravity = false;
 
         std::optional<Vector> playerAngularVelocityOverride;
         inline static std::unique_ptr<FunctionDetour<OnPhysicsUpdate>> detour;
@@ -23,6 +24,7 @@ class ShipManipulator final : public Component
 
         void SetPersonalSpace(bool should);
         void MakeShipsSpin(bool shouldSpin);
+        void EnableGravity(bool enable);
         void OverridePlayerAngularVelocity(const std::optional<Vector>& override);
         void SetCocaineMode(const bool mode);
 };

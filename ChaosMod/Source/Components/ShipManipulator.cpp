@@ -69,6 +69,17 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
                                     });
     }
 
+    if (Get<ShipManipulator>()->gravity)
+    {
+        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+                                    [delta](auto ship)
+                                    {
+                                        Vector newVelocity = ship->get_velocity();
+                                        newVelocity.y -= 500.f * delta;
+                                        ShipManipulator::SetVelocity(ship, newVelocity);
+                                    });
+    }
+
     if (Get<ShipManipulator>()->personalSpace)
     {
 
@@ -125,3 +136,4 @@ void ShipManipulator::SetPersonalSpace(const bool should) { personalSpace = shou
 void ShipManipulator::OverridePlayerAngularVelocity(const std::optional<Vector>& override) { playerAngularVelocityOverride = override; }
 void ShipManipulator::SetCocaineMode(const bool mode) { cocaineMode = mode; }
 void ShipManipulator::MakeShipsSpin(const bool shouldSpin) { spin = shouldSpin; }
+void ShipManipulator::EnableGravity(const bool enable) { gravity = enable; }
