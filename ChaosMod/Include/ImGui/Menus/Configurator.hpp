@@ -129,7 +129,8 @@ class Configurator final
                 ImGui::SetTooltip("If enabled the patch timer will not pause while on a base.");
             }
 
-            ImGui::DragFloat("Time Between Patches (minutes)", &config->patchNotes.timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
+            constexpr float maxTime = 60 * 12;
+            ImGui::DragFloat("Time Between Patches (minutes)", &config->patchNotes.timeBetweenPatchesInMinutes, 5.0f, 5.0f, maxTime, "%.2f");
             ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerPatchMin), 1.0f, 1, 30);
             ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMinorMin), 1.0f, 15, 50);
             ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMajorMin), 1.0f, 30, 100);
