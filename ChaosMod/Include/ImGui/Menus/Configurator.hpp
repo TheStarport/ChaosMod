@@ -111,13 +111,16 @@ class Configurator final
 
         void RenderRandomTab() const
         {
-            ImGui::Checkbox("Enable Patch Notes", &config->chaosSettings.enable);
+            ImGui::NewLine();
+            ImGui::TextWrapped("Patch Notes is a feature where the game will frequently write updates to itself, updating the stats of equipment, ships, NPCs, "
+                    "and everything in between. Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
+            ImGui::NewLine();
+
+            ImGui::Checkbox("Enable Patch Notes", &config->patchNotes.enable);
+            ImGui::Checkbox("Display Colour Notes", &config->patchNotes.displayInColor);
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(
-                    "'Patch Notes' is a feature where the game will frequently write updates to itself, updating the stats of equipment, ships, NPCs, "
-                    "and everything in between.\n"
-                    "Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
+                ImGui::SetTooltip("Every change within the patch note system can be positive, negative, or neither.\nIf enabled, they will be colour coded to green, red, and yellow respectively.");
             }
 
             ImGui::Checkbox("Count Down On Bases", &config->patchNotes.countDownWhileOnBases);

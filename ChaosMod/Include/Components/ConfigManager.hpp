@@ -6,6 +6,7 @@ struct PatchNoteSettings
 {
         bool enable = false;
         bool countDownWhileOnBases = true;
+        bool displayInColor = true;
         float timeBetweenPatchesInMinutes = 10.f;
         uint changesPerPatchMin = 7;
         uint changesPerMinorMin = 15;

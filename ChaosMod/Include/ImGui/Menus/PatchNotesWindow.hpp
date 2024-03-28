@@ -104,7 +104,28 @@ class PatchNotesWindow final
 
                     if (patchFilter[0] == '\0' || strstr(lowerA, patchFilter) != nullptr)
                     {
-                        ImGui::Text(change.first.c_str()); // NOLINT(clang-diagnostic-format-security)
+                        if (Get<ConfigManager>()->patchNotes.displayInColor)
+                        {
+                            ImVec4 col = { 1.f, 1.f, 1.f, 1.f };
+                            if (change.first[0] == '+')
+                            {
+                                col = { 0.30f, 1.00f, 0.30f, 1.0f };
+                            }
+                            else if (change.first[0] == '-')
+                            {
+                                col = { 1.f, 0.15f, 0.f, 1.f };
+                            }
+                            else if (change.first[0] == '~')
+                            {
+                                col = { 1.f, 0.85f, 0.f, 1.f };
+                            }
+
+                            ImGui::TextColored(col, change.first.c_str());
+                        }
+                        else
+                        {
+                            ImGui::Text(change.first.c_str()); // NOLINT(clang-diagnostic-format-security)
+                        }
                     }
                     free(lowerA);
                 }
