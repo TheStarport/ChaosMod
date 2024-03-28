@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
-#include "CoreComponents/PatchNotes.hpp"
 #include "Components/ConfigManager.hpp"
+#include "CoreComponents/PatchNotes.hpp"
 #include "ImGui/ImGuiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -11,10 +11,12 @@
 
 const std::vector<std::string> ReleaseNouns = {
 #include "Patches/Nouns.txt"
+
 };
 
 const std::vector<std::string> ReleaseAdjectives = {
 #include "Patches/Adjectives.txt"
+
 };
 
 void PatchNotes::LoadPatches()
@@ -161,7 +163,7 @@ void PatchNotes::ResetPatches(const bool reapply, bool clean)
     }
 }
 
-void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch, bool showPatchNotes)
+void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch, const bool showPatchNotes)
 {
     appliedPatches.push(patch);
 
@@ -181,7 +183,7 @@ void PatchNotes::ApplyPatch(const std::shared_ptr<Patch>& patch, bool showPatchN
     }
 }
 
-void PatchNotes::GeneratePatch()
+void PatchNotes::GeneratePatch(const PatchVersion version)
 {
     uint changeCount;
 
@@ -193,7 +195,16 @@ void PatchNotes::GeneratePatch()
         lastVersion = semver::from_string(lastPatch->version);
     }
 
-    const auto versionIncrement = Get<Random>()->Uniform(1u, 20u);
+    uint versionIncrement;
+    switch (version)
+    {
+        case PatchVersion::Patch: versionIncrement = 1; break;
+        case PatchVersion::Minor: versionIncrement = 15; break;
+        case PatchVersion::Major: versionIncrement = 20; break;
+        case PatchVersion::Undetermined:
+        default: versionIncrement = Get<Random>()->Uniform(1u, 20u); break;
+    }
+
     if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;

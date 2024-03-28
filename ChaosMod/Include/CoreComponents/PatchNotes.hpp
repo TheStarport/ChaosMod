@@ -21,10 +21,18 @@ class PatchNotes
         static std::shared_ptr<Change> GetChangePtr(ChangeType type);
 
     public:
+        enum class PatchVersion
+        {
+            Undetermined,
+            Patch,
+            Minor,
+            Major
+        };
+
         static void LoadPatches();
         static std::vector<StringPatch> &GetPatchNotes();
         static void ResetPatches(bool reapply, bool clean);
-        static void GeneratePatch();
+        static void GeneratePatch(PatchVersion version = PatchVersion::Undetermined);
         static void RevertLastPatch();
         static ChangeType GetRandomChangeType();
 };
