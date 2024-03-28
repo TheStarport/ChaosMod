@@ -29,8 +29,6 @@ class Configurator final
         ImGui::FileBrowser fileBrowser{ ImGuiFileBrowserFlags_ConfirmOnEnter };
 
         bool confirmImport = false;
-
-        bool showExportModal = false;
         std::string exportPath;
 
         void RenderChaosTab() const
@@ -228,6 +226,7 @@ class Configurator final
             fileBrowser.ClearSelected();
 
             ImGuiManager::ImportConfig(path.generic_string());
+            ImGui::OpenPopup("Imported Config");
         }
 
         void Render()
@@ -277,8 +276,7 @@ class Configurator final
                 {
                     exportPath = std::filesystem::current_path().append("presets\\exported.json").string();
                     config->Save(exportPath);
-                    ImGui::OpenPopup("Exported Config Modal");
-                    showExportModal = true;
+                    ImGui::OpenPopup("Exported Config");
                 }
 
                 if (ImGui::IsItemHovered())
@@ -348,12 +346,23 @@ class Configurator final
                 ImGui::EndTabBar();
             }
 
-            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
             ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-            if (ImGui::BeginPopupModal("Exported Config Modal", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            if (ImGui::BeginPopupModal("Exported Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
                 ImGui::Text("Exported Config To:");
                 ImGui::Text(exportPath.c_str());
+
+                if (ImGui::Button("OK", ImVec2(120, 0)))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+            else if (ImGui::BeginPopupModal("Imported Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Config successfully imported");
 
                 if (ImGui::Button("OK", ImVec2(120, 0)))
                 {
