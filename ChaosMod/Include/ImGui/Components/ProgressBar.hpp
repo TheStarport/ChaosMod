@@ -126,7 +126,7 @@ class ProgressBar final
         {
             if (ImGui::BeginMainMenuBar())
             {
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->progressBarColor);
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->chaosSettings.progressBarColor);
                 ImGui::ProgressBar(progress, ImVec2(-FLT_MIN, 0), "");
                 ImGui::PopStyleColor();
                 ImGui::EndMainMenuBar();
@@ -165,14 +165,14 @@ class ProgressBar final
             }
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->progressBarColor);
+            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->chaosSettings.progressBarColor);
 
-            switch (Get<ConfigManager>()->progressBarType)
+            switch (Get<ConfigManager>()->chaosSettings.progressBarType)
             {
-                case ConfigManager::ProgressBar::TopBar: DrawTopBar(); break;
-                case ConfigManager::ProgressBar::SideBar: DrawSideBars(); break;
-                case ConfigManager::ProgressBar::Clock: DrawClock(); break;
-                case ConfigManager::ProgressBar::Countdown: DrawCountdown(); break;
+                case ChaosSettings::ProgressBar::TopBar: DrawTopBar(); break;
+                case ChaosSettings::ProgressBar::SideBar: DrawSideBars(); break;
+                case ChaosSettings::ProgressBar::Clock: DrawClock(); break;
+                case ChaosSettings::ProgressBar::Countdown: DrawCountdown(); break;
             }
 
             ImGui::PopStyleColor();

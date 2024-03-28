@@ -35,27 +35,12 @@ class Configurator final
         {
             ImGui::TextWrapped("PLACEHOLDER DESCRIPTION THAT IS SUPER DESCRIPTIVE ABOUT THINGS THAT NEED DESCRIBING FOR THIS DESCRIPTIVE TAB OF DESCRIPTIONS.");
 
-            ImGui::SliderFloat("Time Between Chaos", &config->timeBetweenChaos, 5.0f, 120.0f);
-            ImGui::SliderFloat("Default Effect Duration", &config->defaultEffectDuration, 20.0f, 300.0f);
-            ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->totalAllowedConcurrentEffects), 1, 12);
-            ImGui::SliderInt("Time Between Auto Saves", reinterpret_cast<PINT>(&config->timeBetweenSavesInSeconds), 60 * 3, 60 * 10);
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::SetTooltip(
-                    "Chaos Mod, by its nature, is unstable. The game might crash or soft lock you. It might set you to be hostile to everyone, "
-                    "or remove all your money.\n"
-                    "For this reason, the game will auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
-            }
+            ImGui::Checkbox("Enable Chaos Timer", &config->chaosSettings.enable);
+            ImGui::SliderFloat("Time Between Chaos", &config->chaosSettings.timeBetweenChaos, 5.0f, 120.0f);
+            ImGui::SliderFloat("Default Effect Duration", &config->chaosSettings.defaultEffectDuration, 20.0f, 300.0f);
+            ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->chaosSettings.totalAllowedConcurrentEffects), 1, 12);
 
-            ImGui::Checkbox("Allow Saving During Combat", &config->allowAutoSavesDuringCombat);
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::SetTooltip(
-                    "By default, the game will not autosave when hostiles are within 2k of the player. If they are it will push the timer back by 30 seconds.\n"
-                    "This is done because this can break mission scripts and NPC spawns in some cases. You can enable it if you want, but you've been warned!");
-            }
-
-            ImGui::Checkbox("Block Teleports During Missions", &config->blockTeleportsDuringMissions);
+            ImGui::Checkbox("Block Teleports During Missions", &config->chaosSettings.blockTeleportsDuringMissions);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip("Many missions can softlock if the player is teleports away, into a different system, or to a base. If true, this will "
@@ -63,10 +48,29 @@ class Configurator final
             }
         }
 
+        void RenderAutoSaveTab() const
+        {
+            ImGui::NewLine();
+            ImGui::TextWrapped("Chaos Mod, by its nature, is unstable. The game might crash or soft lock you. It might set you to be hostile to everyone, or remove all your money."
+                    "For this reason, the game can auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
+            ImGui::NewLine();
+
+            ImGui::Checkbox("Enable Custom Autosaves", &config->autoSaveSettings.enable);
+            ImGui::SliderInt("Time Between Auto Saves", reinterpret_cast<PINT>(&config->autoSaveSettings.timeBetweenSavesInSeconds), 60 * 3, 60 * 10);
+
+            ImGui::Checkbox("Allow Saving During Combat", &config->autoSaveSettings.allowAutoSavesDuringCombat);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip(
+                    "By default, the game will not autosave when hostiles are within 2k of the player. If they are it will push the timer back by 30 seconds.\n"
+                    "This is done because this can break mission scripts and NPC spawns in some cases. You can enable it if you want, but you've been warned!");
+            }
+        }
+
         void RenderTwitchTab() const
         {
-            ImGui::Checkbox("Enable Twitch Voting", &config->enableTwitchVoting);
-            ImGui::SliderFloat("Twitch Voting Weight", &config->baseTwitchVoteWeight, 0.1f, 1.0f);
+            ImGui::Checkbox("Enable Twitch Voting", &config->chaosSettings.enableTwitchVoting);
+            ImGui::SliderFloat("Twitch Voting Weight", &config->chaosSettings.baseTwitchVoteWeight, 0.1f, 1.0f);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip(
@@ -76,7 +80,7 @@ class Configurator final
             }
 
             static bool initialized = false;
-            ImGui::BeginDisabled(!config->enableTwitchVoting || initialized);
+            ImGui::BeginDisabled(!config->chaosSettings.enableTwitchVoting || initialized);
             if (ImGui::Button("Initialize Voting Proxy") && Get<TwitchVoting>()->Initialize())
             {
                 initialized = true;
@@ -86,28 +90,28 @@ class Configurator final
 
         void RenderStyleTab() const
         {
-            static DWORD startingProgressBarColor = config->progressBarColor;
+            static DWORD startingProgressBarColor = config->chaosSettings.progressBarColor;
             static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
             static float progressColor[3] = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
             ImGui::ColorEdit3("Chaos Progress Color", progressColor, ImGuiColorEditFlags_PickerHueBar);
-            config->progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
+            config->chaosSettings.progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
 
-            static DWORD startingProgressBarTextColor = config->progressBarTextColor;
+            static DWORD startingProgressBarTextColor = config->chaosSettings.progressBarTextColor;
             static auto startingProgressBarTextColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarTextColor);
             static float progressTextColor[3] = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
             ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
-            config->progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
+            config->chaosSettings.progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
             const char* timerOptions[] = { "Progress Bar: Top", "Progress Bar: Sides", "Clock", "Countdown" };
 
-            ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->progressBarType), timerOptions, IM_ARRAYSIZE(timerOptions));
+            ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->chaosSettings.progressBarType), timerOptions, IM_ARRAYSIZE(timerOptions));
 
-            ImGui::Checkbox("Show Time Remaining On Effects", &config->showTimeRemainingOnEffects);
+            ImGui::Checkbox("Show Time Remaining On Effects", &config->chaosSettings.showTimeRemainingOnEffects);
         }
 
         void RenderRandomTab() const
         {
-            ImGui::Checkbox("Enable Patch Notes", &config->enablePatchNotes);
+            ImGui::Checkbox("Enable Patch Notes", &config->chaosSettings.enable);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip(
@@ -116,21 +120,21 @@ class Configurator final
                     "Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
             }
 
-            ImGui::Checkbox("Count Down On Bases", &config->countDownWhileOnBases);
+            ImGui::Checkbox("Count Down On Bases", &config->patchNotes.countDownWhileOnBases);
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip("If enabled the patch timer will not pause while on a base.");
             }
 
-            ImGui::DragFloat("Time Between Patches (minutes)", &config->timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
-            ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->changesPerPatchMin), 1.0f, 1, 30);
-            ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->changesPerMinorMin), 1.0f, 15, 50);
-            ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->changesPerMajorMin), 1.0f, 30, 100);
+            ImGui::DragFloat("Time Between Patches (minutes)", &config->patchNotes.timeBetweenPatchesInMinutes, 1.0f, 1.0f, 60.0f, "%.2f");
+            ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerPatchMin), 1.0f, 1, 30);
+            ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMinorMin), 1.0f, 15, 50);
+            ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMajorMin), 1.0f, 30, 100);
         }
 
         void RenderEffectToggleTab() const
         {
-            auto& configEffects = Get<ConfigManager>()->toggledEffects;
+            auto& configEffects = Get<ConfigManager>()->chaosSettings.toggledEffects;
 
             magic_enum::enum_for_each<EffectType>(
                 [&configEffects](auto val)
@@ -249,7 +253,7 @@ class Configurator final
                 doDecrement = true;
             }
 
-            ImGui::SetNextWindowSize({ 800.f, 800.f }, ImGuiCond_Always);
+            ImGui::SetNextWindowSize({ 900.f, 800.f }, ImGuiCond_Always);
             if (!ImGui::Begin(importer ? "Config Importer" : "Configurator", &show, ImGuiWindowFlags_NoResize))
             {
                 ImGui::End();
@@ -312,6 +316,13 @@ class Configurator final
                 {
                     ImGui::BeginDisabled(importer);
                     RenderChaosTab();
+                    ImGui::EndDisabled();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Autosave Settings"))
+                {
+                    ImGui::BeginDisabled(importer);
+                    RenderAutoSaveTab();
                     ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }

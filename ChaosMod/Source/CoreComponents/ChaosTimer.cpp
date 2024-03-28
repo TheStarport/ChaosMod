@@ -69,7 +69,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    const auto& configEffects = Get<ConfigManager>()->toggledEffects;
+    const auto& configEffects = Get<ConfigManager>()->chaosSettings.toggledEffects;
 
     for (uint attempts = 0; attempts < 15; attempts++)
     {
@@ -93,7 +93,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        if (Get<ConfigManager>()->blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
+        if (Get<ConfigManager>()->chaosSettings.blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
         {
             continue;
         }
@@ -164,11 +164,11 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     }
 
     // Too many active effects
-    if (activeEffects.size() >= Get<ConfigManager>()->totalAllowedConcurrentEffects)
+    if (activeEffects.size() >= Get<ConfigManager>()->chaosSettings.totalAllowedConcurrentEffects)
     {
         // Clean out those without timers
         std::erase_if(activeEffects, [](const auto& active) { return !active.first->GetEffectInfo().isTimed; });
-        if (activeEffects.size() >= Get<ConfigManager>()->totalAllowedConcurrentEffects)
+        if (activeEffects.size() >= Get<ConfigManager>()->chaosSettings.totalAllowedConcurrentEffects)
         {
             // If still too large skip
             PlayEffectSkip();
@@ -184,7 +184,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     effect->Begin();
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
-    float timing = info.isTimed ? modifiers * (info.timingModifier * Get<ConfigManager>()->defaultEffectDuration) : 30.0f;
+    float timing = info.isTimed ? modifiers * (info.timingModifier * Get<ConfigManager>()->chaosSettings.defaultEffectDuration) : 30.0f;
 
     if (info.fixedTimeOverride != 0.0f)
     {
@@ -198,7 +198,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 ChaosTimer::ChaosTimer()
 {
     patchNotes = new PatchNotes();
-    patchTime = Get<ConfigManager>()->timeBetweenPatchesInMinutes * 60;
+    patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
 
     auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
@@ -252,7 +252,7 @@ void ChaosTimer::InitEffects()
     }
 }
 
-float ChaosTimer::GetTimeUntilChaos() const { return Get<ConfigManager>()->timeBetweenChaos - currentTime; }
+float ChaosTimer::GetTimeUntilChaos() const { return Get<ConfigManager>()->chaosSettings.timeBetweenChaos - currentTime; }
 
 std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 {
@@ -355,12 +355,12 @@ void ChaosTimer::Update(const float delta)
     const auto currentShip = Utils::GetCShip();
 
     // Check that the game is not paused and patch notes are enabled
-    if (Get<ConfigManager>()->enablePatchNotes && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->countDownWhileOnBases || currentShip))
+    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || currentShip))
     {
         patchTime -= delta;
         if (patchTime <= 0.0f)
         {
-            patchTime = Get<ConfigManager>()->timeBetweenPatchesInMinutes * 60;
+            patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
             PatchNotes::GeneratePatch();
         }
     }
@@ -406,7 +406,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    if (!Get<ConfigManager>()->enableTwitchVoting && currentTime > Get<ConfigManager>()->timeBetweenChaos)
+    if (!Get<ConfigManager>()->chaosSettings.enableTwitchVoting && currentTime > Get<ConfigManager>()->chaosSettings.timeBetweenChaos)
     {
         TriggerChaos();
 
@@ -416,7 +416,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    ImGuiManager::SetProgressBarPercentage(currentTime / Get<ConfigManager>()->timeBetweenChaos);
+    ImGuiManager::SetProgressBarPercentage(currentTime / Get<ConfigManager>()->chaosSettings.timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);

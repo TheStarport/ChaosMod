@@ -17,6 +17,7 @@
 #include "ImGui/Menus/EffectSelector.hpp"
 #include "ImGui/Menus/PatchNotesWindow.hpp"
 #include "ImGui/Menus/SelectionWheel.hpp"
+#include "ImGui/Menus/IntroWindow.hpp"
 
 #include "imgui_internal.h"
 
@@ -224,6 +225,7 @@ void ImGuiManager::Render()
     DebugMenu::Render();
     EffectHistory::Render();
     EffectSelector::Render();
+    IntroWindow::Render();
     PatchNotesWindow::Render();
     ProgressBar::Render();
     ScrollingCredits::Render();

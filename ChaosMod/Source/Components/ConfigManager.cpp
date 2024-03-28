@@ -56,6 +56,7 @@ std::shared_ptr<ConfigManager> ConfigManager::Load()
             catch (std::exception& ex)
             {
                 Log(std::format("Failed to parse chaos.json {}. Attempting to reset file.", ex.what()));
+                SetComponent<ConfigManager>();
             }
         }
     }
@@ -71,14 +72,14 @@ std::shared_ptr<ConfigManager> ConfigManager::Load()
     {
         auto& info = effect->GetEffectInfo();
         auto name = std::string(magic_enum::enum_name<EffectType>(info.category));
-        if (!instance->toggledEffects.contains(name))
+        if (!instance->chaosSettings.toggledEffects.contains(name))
         {
-            instance->toggledEffects[name] = {};
+            instance->chaosSettings.toggledEffects[name] = {};
         }
 
-        if (!instance->toggledEffects[name].contains(info.effectName))
+        if (!instance->chaosSettings.toggledEffects[name].contains(info.effectName))
         {
-            instance->toggledEffects[name][info.effectName] = true;
+            instance->chaosSettings.toggledEffects[name][info.effectName] = true;
         }
     }
 

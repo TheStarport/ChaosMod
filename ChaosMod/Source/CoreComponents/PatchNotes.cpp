@@ -26,7 +26,7 @@ void PatchNotes::LoadPatches()
     GetUserDataPath(path.data());
     path.erase(std::ranges::find(path, '\0'), path.end());
 
-    Log(std::format("Attempting to load chaos.json. {}", path + "\\patches.json"));
+    Log(std::format("Attempting to load patch notes: {}", path + "\\patches.json"));
 
     std::ifstream file(path + "\\patches.json", std::ios_base::binary | std::ios_base::in);
 
@@ -208,20 +208,20 @@ void PatchNotes::GeneratePatch(const PatchVersion version)
     if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerPatchMin, Get<ConfigManager>()->changesPerPatchMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerPatchMin, Get<ConfigManager>()->patchNotes.changesPerPatchMin * 2);
     }
     else if (versionIncrement < 20 && lastVersion.minor != 255)
     {
         lastVersion.minor++;
         lastVersion.patch = 0;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerMinorMin, Get<ConfigManager>()->changesPerMinorMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerMinorMin, Get<ConfigManager>()->patchNotes.changesPerMinorMin * 2);
     }
     else
     {
         lastVersion.patch = 0;
         lastVersion.minor = 0;
         lastVersion.major++;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->changesPerMajorMin, Get<ConfigManager>()->changesPerMajorMin * 2);
+        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerMajorMin, Get<ConfigManager>()->patchNotes.changesPerMajorMin * 2);
         patch->releaseName = std::format("{} {}",
                                          ReleaseAdjectives[Get<Random>()->Uniform(0u, ReleaseAdjectives.size() - 1)],
                                          ReleaseNouns[Get<Random>()->Uniform(0u, ReleaseNouns.size() - 1)]);

@@ -109,7 +109,7 @@ void TwitchVoting::Poll()
         return;
     }
 
-    if (!Get<ConfigManager>()->enableTwitchVoting)
+    if (!Get<ConfigManager>()->chaosSettings.enableTwitchVoting)
     {
         if (pipeHandle != INVALID_HANDLE_VALUE)
         {
@@ -183,7 +183,7 @@ void TwitchVoting::Poll()
                 return;
             }
 
-            if (const float value = Get<Random>()->UniformFloat(0.0f, 1.0f); value <= Get<ConfigManager>()->baseTwitchVoteWeight)
+            if (const float value = Get<Random>()->UniformFloat(0.0f, 1.0f); value <= Get<ConfigManager>()->chaosSettings.baseTwitchVoteWeight)
             {
                 auto* effect = effectSelection[selectedResult];
                 if (!effect->CanSelect())

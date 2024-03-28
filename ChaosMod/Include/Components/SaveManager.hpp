@@ -69,6 +69,11 @@ class SaveManager
 
         static void SaveTimer(float delta)
         {
+            if (Get<ConfigManager>()->autoSaveSettings.enable)
+            {
+                return;
+            }
+
             timer -= delta;
             if (timer <= 0.0f)
             {
@@ -81,11 +86,11 @@ class SaveManager
             const auto ship = Utils::GetCShip();
             if (!ship || OffsetHelper::IsInMission())
             {
-                timer = static_cast<float>(Get<ConfigManager>()->timeBetweenSavesInSeconds);
+                timer = static_cast<float>(Get<ConfigManager>()->autoSaveSettings.timeBetweenSavesInSeconds);
                 return;
             }
 
-            if (!Get<ConfigManager>()->allowAutoSavesDuringCombat)
+            if (!Get<ConfigManager>()->autoSaveSettings.allowAutoSavesDuringCombat)
             {
                 bool hostileNear = false;
                 Utils::ForEachObject<CShip>(CObject::CSHIP_OBJECT,
@@ -119,7 +124,7 @@ class SaveManager
                 }
             }
 
-            timer = static_cast<float>(Get<ConfigManager>()->timeBetweenSavesInSeconds);
+            timer = static_cast<float>(Get<ConfigManager>()->autoSaveSettings.timeBetweenSavesInSeconds);
 
             auto slot = SaveFile();
             Get<ChatConsole>()->Tra(0xFFFFFF40, -1);
