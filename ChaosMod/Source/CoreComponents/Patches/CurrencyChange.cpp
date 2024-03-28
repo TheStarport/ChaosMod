@@ -55,6 +55,28 @@ void CurrencyChange::Generate()
     positivity = ChangePositivity::Neither;
 }
 
+void CurrencyChange::Multiply(float multiplier)
+{
+    auto good = GoodList_get()->find_by_id(goodHash);
+
+    std::string name;
+    if (good->type == GoodInfo::Type::Commodity || good->type == GoodInfo::Type::Equipment)
+    {
+        const auto equip = Archetype::GetEquipment(good->equipmentId);
+        name = ChaosMod::GetInfocardName(equip->idsName);
+    }
+    else if (good->type == GoodInfo::Type::Ship)
+    {
+        good = (GoodList_get()->find_by_id(good->hullGoodId));
+        const auto equip = Archetype::GetShip(good->equipmentId);
+        name = ChaosMod::GetInfocardName(equip->idsName);
+    }
+
+    const auto diff = (oldPrice - newPrice) * multiplier;
+    newPrice = std::abs(oldPrice - diff);
+    description = std::format("~ {}: Base Price   {:.0f}  ->  {:.0f}", name, oldPrice, newPrice);
+}
+
 nlohmann::json CurrencyChange::ToJson()
 {
     auto json = Change::ToJson();
@@ -63,6 +85,7 @@ nlohmann::json CurrencyChange::ToJson()
     json["newPrice"] = newPrice;
     return json;
 }
+
 void CurrencyChange::FromJson(nlohmann::basic_json<> json)
 {
     Change::FromJson(json);

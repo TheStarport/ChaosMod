@@ -33,6 +33,7 @@ class PatchNotes
         static std::vector<StringPatch> &GetPatchNotes();
         static void ResetPatches(bool reapply, bool clean);
         static void GeneratePatch(PatchVersion version = PatchVersion::Undetermined);
+        static void DoubleDown();
         static void RevertLastPatch();
         static ChangeType GetRandomChangeType();
 };

@@ -244,6 +244,22 @@ void PatchNotes::GeneratePatch(const PatchVersion version)
     SavePatches();
 }
 
+void PatchNotes::DoubleDown()
+{
+    const auto lastPatch = availablePatches.back();
+    for (const auto& change : lastPatch->changes)
+    {
+        change->Multiply(2.f);
+    }
+
+    // Reapply just this one patch
+    RevertPatch(lastPatch);
+    ApplyPatch(lastPatch);
+
+    SavePatches();
+    ImGuiManager::ShowPatchNotes();
+}
+
 void PatchNotes::RevertLastPatch()
 {
     const auto lastPatch = availablePatches.back();
@@ -317,4 +333,52 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
     // clang-format on
 
     return change;
+}
+
+void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, const bool isBuff)
+{
+    std::string newFieldName = std::regex_replace(field->name, std::regex("([a-z])([A-Z])"), "$1 $2");
+    bool lastCharWasSpace = false;
+    for (uint i = 0; i < newFieldName.size(); ++i)
+    {
+        if (lastCharWasSpace || i == 0)
+        {
+            newFieldName[i] = static_cast<char>(std::toupper(newFieldName[i]));
+            lastCharWasSpace = false;
+            continue;
+        }
+        if (newFieldName[i] == ' ')
+        {
+            lastCharWasSpace = true;
+        }
+    }
+
+    char symbol = '~';
+    if (fieldData.nbb)
+    {
+        positivity = ChangePositivity::Neither;
+    }
+    else if (isBuff && !fieldData.inverted)
+    {
+        positivity = ChangePositivity::Boon;
+        symbol = '+';
+    }
+    else
+    {
+        positivity = ChangePositivity::Nerf;
+        symbol = '-';
+    }
+
+    if (field->type == FieldType::Float)
+    {
+        description = std::format("{} {}: {}   {:.2f}  ->  {:.2f}", symbol, itemName, newFieldName, *(float*)oldValue, *(float*)field->ptr);
+    }
+    else if (field->type == FieldType::Int)
+    {
+        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(int*)oldValue, *(int*)field->ptr);
+    }
+    else if (field->type == FieldType::Bool)
+    {
+        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(int*)field->ptr, !*(int*)field->ptr);
+    }
 }

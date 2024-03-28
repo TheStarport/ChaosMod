@@ -26,6 +26,13 @@ class Change
     protected:
         virtual ~Change() = default;
 
+        struct FieldData
+        {
+            std::optional<Clamp> clamp;
+            bool inverted = false;
+            bool nbb = false;
+        };
+
         struct MissileMap
         {
                 uint motorId;
@@ -112,6 +119,8 @@ class Change
             return returnValue;
         }
 
+    void SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, const bool isBuff);
+
     public:
         enum class ChangePositivity
         {
@@ -136,7 +145,7 @@ class Change
             json["description"] = description;
             json["positivity"] = positivity;
             return json;
-        };
+        }
 
         virtual void FromJson(nlohmann::basic_json<> json)
         {
@@ -144,6 +153,9 @@ class Change
             description = json["description"];
             positivity = json["positivity"];
         }
+
+        // Multiply the change value by the modifier, if applicable
+        virtual void Multiply(float multiplier) {};
 };
 
 class CurrencyChange : public Change
@@ -160,6 +172,7 @@ class CurrencyChange : public Change
         void Apply() override;
         void Revert() override;
         void Generate() override;
+        void Multiply(float multiplier) override;
         nlohmann::json ToJson() override;
         void FromJson(nlohmann::basic_json<> json) override;
 
@@ -213,13 +226,6 @@ class EquipmentChange : public Change
         std::string field;
         std::array<byte, 4> newData{};
         std::array<byte, 4> oldData{};
-
-        struct FieldData
-        {
-                std::optional<Clamp> clamp;
-                bool inverted = false;
-                bool nbb = false;
-        };
 
         static constexpr std::pair<std::vector<FieldData>, std::vector<uint>> GetFieldData()
         {
@@ -328,6 +334,37 @@ class EquipmentChange : public Change
             return erasure;
         }
 
+        std::string GetEquipmentName(T* item)
+        {
+            if constexpr (Type == ChangeType::GunExplosion)
+            {
+                for (auto& [munition, missileData] : missileMap)
+                {
+                    if (missileData.explosionId == item->id)
+                    {
+                        return ChaosMod::GetInfocardName(Archetype::GetEquipment(munition)->idsName);
+                    }
+                }
+            }
+            else if constexpr (Type == ChangeType::GunMotor)
+            {
+                for (auto& [munition, missileData] : missileMap)
+                {
+                    if (missileData.motorId == item->archId)
+                    {
+                        return ChaosMod::GetInfocardName(Archetype::GetEquipment(munition)->idsName);
+                    }
+                }
+            }
+            else
+            {
+                return ChaosMod::GetInfocardName(item->idsName);
+            }
+
+            // Will never happen, but suppresses the warning I guess
+            return "";
+        }
+
     public:
         inline static std::vector<uint> possibleEquipment;
 
@@ -389,6 +426,54 @@ class EquipmentChange : public Change
                      });
         }
 
+        void Multiply(float multiplier) override
+        {
+            const auto erasure = GetArchetypePtr();
+            ASSERT(erasure.has_value(), "Failed to get archetype pointer!!");
+
+            auto item = std::any_cast<std::add_pointer_t<T>>(erasure);
+            auto fields = GetEditableFields<T>(item);
+
+            int index = -1;
+            for (auto& field : fields)
+            {
+                index++;
+                if (field.name != this->field)
+                {
+                    continue;
+                }
+
+                bool isBuff = false;
+                if (field.type == FieldType::Float)
+                {
+                    float oldValue, newValue;
+                    memcpy_s(&oldValue, sizeof(float), oldData.data(), oldData.size());
+                    memcpy_s(&newValue, sizeof(float), newData.data(), newData.size());
+                    const auto diff = (oldValue - newValue) * multiplier;
+                    newValue = std::abs(oldValue - diff);
+                    memcpy_s(newData.data(), newData.size(), &newValue, sizeof(float));
+                    isBuff = oldValue < newValue;
+                }
+                else if (field.type == FieldType::Int)
+                {
+                    int oldValue, newValue;
+                    memcpy_s(&oldValue, sizeof(int), oldData.data(), oldData.size());
+                    memcpy_s(&newValue, sizeof(int), newData.data(), newData.size());
+                    const auto diff = static_cast<int>((oldValue - newValue) * multiplier);
+                    newValue = std::abs(oldValue - diff);
+                    memcpy_s(newData.data(), newData.size(), &newValue, sizeof(int));
+                    isBuff = oldValue < newValue;
+                }
+
+                const auto allFieldData = GetFieldData();
+                auto& fieldData = allFieldData.first[index];
+
+                auto name = GetEquipmentName(item);
+
+                SetChangeNameAndDescription(&field, fieldData, name, oldData.data(), isBuff);
+            }
+        }
+
         void Generate() override
         {
             hash = possibleEquipment[Get<Random>()->Uniform(0u, possibleEquipment.size() - 1)];
@@ -408,8 +493,8 @@ class EquipmentChange : public Change
                 value = &fields[statIndex];
                 if constexpr (Type == ChangeType::GunAmmo)
                 {
-                    if (!item->motorId && value->name == "seeker_fov_deg" || value->name == "seeker_range" || value->name == "max_angular_velocity" ||
-                        value->name == "seeker" || value->name == "detonation_dist")
+                    if (!item->motorId && (value->name == "seeker_fov_deg" || value->name == "seeker_range" || value->name == "max_angular_velocity" ||
+                        value->name == "seeker" || value->name == "detonation_dist"))
                     {
                         statIndex = UINT_MAX;
                     }
@@ -446,22 +531,6 @@ class EquipmentChange : public Change
                 name = ChaosMod::GetInfocardName(item->idsName);
             }
 
-            std::string newFieldName = std::regex_replace(value->name, std::regex("([a-z])([A-Z])"), "$1 $2");
-            bool lastCharWasSpace = false;
-            for (uint i = 0; i < newFieldName.size(); ++i)
-            {
-                if (lastCharWasSpace || i == 0)
-                {
-                    newFieldName[i] = static_cast<char>(std::toupper(newFieldName[i]));
-                    lastCharWasSpace = false;
-                    continue;
-                }
-                if (newFieldName[i] == ' ')
-                {
-                    lastCharWasSpace = true;
-                }
-            }
-
             auto buff = static_cast<bool>(Get<Random>()->Uniform(0u, 1u));
 
             const auto& data = fieldData[statIndex];
@@ -484,22 +553,6 @@ class EquipmentChange : public Change
                 clamp = Clamp(INT_MIN, INT_MAX);
             }
 
-            char symbol = '~';
-            if (data.nbb)
-            {
-                positivity = ChangePositivity::Neither;
-            }
-            else if (buff && !data.inverted)
-            {
-                positivity = ChangePositivity::Boon;
-                symbol = '+';
-            }
-            else
-            {
-                positivity = ChangePositivity::Nerf;
-                symbol = '-';
-            }
-
             if (value->type == FieldType::Float)
             {
                 auto fp = *(float*)value->ptr;
@@ -512,7 +565,6 @@ class EquipmentChange : public Change
                     fp = std::clamp(AdjustField(fp, buff), clamp->min, clamp->max);
                 }
 
-                description = std::format("{} {}: {}   {:.2f}  ->  {:.2f}", symbol, name, newFieldName, *(float*)value->ptr, fp);
                 memcpy_s(newData.data(), newData.size(), &fp, 4);
             }
             else if (value->type == FieldType::Int)
@@ -527,17 +579,16 @@ class EquipmentChange : public Change
                     i = std::clamp(AdjustField(i, buff), static_cast<int>(clamp->min), static_cast<int>(clamp->max));
                 }
 
-                description = std::format("{} {}: {}   {}  ->  {}", symbol, name, newFieldName, *(int*)value->ptr, i);
                 memcpy_s(newData.data(), newData.size(), &i, 4);
             }
             else if (value->type == FieldType::Bool)
             {
                 *static_cast<bool*>(value->ptr) = !*static_cast<bool*>(value->ptr);
                 bool newState = *static_cast<bool*>(value->ptr);
-                description = std::format("{} {}: {}   {}  ->  {}", symbol, name, newFieldName, !newState, newState);
                 memcpy_s(newData.data(), newData.size(), &newState, 4);
             }
 
+            SetChangeNameAndDescription(value, data, name, oldData.data(), buff);
             field = value->name;
         }
 

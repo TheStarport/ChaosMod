@@ -241,9 +241,6 @@ void ChaosTimer::FrameUpdate(const float delta)
 
 void ChaosTimer::InitEffects()
 {
-    // Assets loaded, we can now apply our patches
-    PatchNotes::ResetPatches(true, false);
-
     for (const auto possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
     {
         effect->Init();

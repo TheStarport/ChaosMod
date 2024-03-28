@@ -112,6 +112,8 @@ void ChaosMod::DelayedInit()
     Get<ChaosTimer>()->InitEffects();
 
     PatchNotes::LoadPatches();
+    // Apply the patches for the first time
+    PatchNotes::ResetPatches(true, false);
     OnSound::Init();
     ShipInfocardOverride::Init();
     Get<EventManager>()->SetupDetours();
