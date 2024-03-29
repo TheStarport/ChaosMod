@@ -45,7 +45,8 @@ jobs:
         run: |
           echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
           BODY=$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p' | awk '{print "- "$0}')
-          echo "$BODY" >> RELEASE.md
+          # Reverse the array and print to file
+          printf '%s\n' "${BODY[@]}" | tac >> RELEASE.MD
           WIN_HOME=$(echo $HOME | tr '/' '\\')
           WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
           WIN_HOME=${WIN_HOME^}
