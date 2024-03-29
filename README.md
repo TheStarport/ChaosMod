@@ -56,7 +56,7 @@ when working with a non-vanilla/modified install of Freelancer.
 
 ## Building
 The project is built using the Clang compiler, MSVC toolchain, and CMake.
-As we use CMake presets, build it via the command line is fairly trivial.
+As we use CMake presets, building it via the command line is fairly trivial.
 
 *Disclaimer: Only builds with Visual Studio 2022 + Clang 16 have been tested and confirmed to work.*
 
@@ -137,3 +137,4 @@ Documentation for various features pending!!
 - [Naveen Himal](https://sketchfab.com/3d-models/christ-the-redeemer-d6f51d0fad7142a08ed26455f84f72ca) - Christ The Redeemer Model
 - [CATENCODE](https://sketchfab.com/3d-models/the-flying-spaghetti-monster-7b4dd5fa121a4021875d9b72c7aa52c8) - Flying Spaghetti Monster Model
 - [savounited](https://sketchfab.com/3d-models/alduin-dragon-2242802d82f14846bd4a2337a1794701) - Alduin Dragon Model
+- [Milaein](https://sketchfab.com/3d-models/low-poly-pirate-blunderbuss-gun-075bb97c059046e1b3c8447b54651d1b) - Blunderbuss Model
