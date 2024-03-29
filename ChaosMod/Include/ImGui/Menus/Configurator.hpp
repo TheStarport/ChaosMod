@@ -51,8 +51,9 @@ class Configurator final
         void RenderAutoSaveTab() const
         {
             ImGui::NewLine();
-            ImGui::TextWrapped("Chaos Mod, by its nature, is unstable. The game might crash or soft lock you. It might set you to be hostile to everyone, or remove all your money."
-                    "For this reason, the game can auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
+            ImGui::TextWrapped("Chaos Mod, by its nature, is unstable. The game might crash or soft lock you. It might set you to be hostile to everyone, or "
+                               "remove all your money."
+                               "For this reason, the game can auto save (even in space) frequently to give you plenty of places to return to during gameplay.");
             ImGui::NewLine();
 
             ImGui::Checkbox("Enable Custom Autosaves", &config->autoSaveSettings.enable);
@@ -100,7 +101,8 @@ class Configurator final
             static auto startingProgressBarTextColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarTextColor);
             static float progressTextColor[3] = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
             ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
-            config->chaosSettings.progressBarTextColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
+            config->chaosSettings.progressBarTextColor =
+                ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
             const char* timerOptions[] = { "Progress Bar: Top", "Progress Bar: Sides", "Clock", "Countdown" };
 
@@ -112,15 +114,17 @@ class Configurator final
         void RenderRandomTab() const
         {
             ImGui::NewLine();
-            ImGui::TextWrapped("Patch Notes is a feature where the game will frequently write updates to itself, updating the stats of equipment, ships, NPCs, "
-                    "and everything in between. Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
+            ImGui::TextWrapped(
+                "Patch Notes is a feature where the game will frequently write updates to itself, updating the stats of equipment, ships, NPCs, "
+                "and everything in between. Periodically when the game deploys a new patch, it will pause and allow you to read what has changed.");
             ImGui::NewLine();
 
             ImGui::Checkbox("Enable Patch Notes", &config->patchNotes.enable);
             ImGui::Checkbox("Display Colour Notes", &config->patchNotes.displayInColor);
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip("Every change within the patch note system can be positive, negative, or neither.\nIf enabled, they will be colour coded to green, red, and yellow respectively.");
+                ImGui::SetTooltip("Every change within the patch note system can be positive, negative, or neither.\nIf enabled, they will be colour coded to "
+                                  "green, red, and yellow respectively.");
             }
 
             ImGui::Checkbox("Count Down On Bases", &config->patchNotes.countDownWhileOnBases);
@@ -137,8 +141,8 @@ class Configurator final
 
             static char randomSeed[255];
             ImGui::InputText("Seed", randomSeed, sizeof(randomSeed));
-            ImGui::SameLine();
-            if(ImGui::Button("Generate Random Seed"))
+
+            if (ImGui::Button("Generate Random Seed"))
             {
                 const auto rand = Get<Random>();
                 const std::string str = std::format("{} {}", rand->RandomAdjective(), rand->RandomNoun());
@@ -153,6 +157,13 @@ class Configurator final
                 PatchNotes::Reseed(std::string_view(randomSeed));
                 std::fill_n(randomSeed, sizeof(randomSeed), '\0');
             }
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("WARNING: Changing the seed will reset all patch notes, "
+                                  "erasing any that have already been applied and returning the game to a vanilla state!");
+            }
+            
             ImGui::EndDisabled();
         }
 
