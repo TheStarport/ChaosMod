@@ -1,0 +1,19 @@
+on:
+    release:
+      types:
+        - released
+
+jobs:
+  message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish to Discord
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_ANNOUNCEMENT_WEBHOOK_URL }}
+          embed-title: Chaos Mod Release Published!
+          embed-url: ${{ github.event.release.release.html_url }}
+          embed-description: |
+            Changelog:
+            
+            ${{ github.event.release.release.body }}
