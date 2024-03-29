@@ -134,6 +134,26 @@ class Configurator final
             ImGui::DragInt("Changes Per Patch (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerPatchMin), 1.0f, 1, 30);
             ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMinorMin), 1.0f, 15, 50);
             ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMajorMin), 1.0f, 30, 100);
+
+            static char randomSeed[255];
+            ImGui::InputText("Seed", randomSeed, sizeof(randomSeed));
+            ImGui::SameLine();
+            if(ImGui::Button("Generate Random Seed"))
+            {
+                const auto rand = Get<Random>();
+                const std::string str = std::format("{} {}", rand->RandomAdjective(), rand->RandomNoun());
+                std::fill_n(randomSeed, sizeof(randomSeed), '\0');
+                strcpy_s(randomSeed, str.c_str());
+            }
+
+            ImGui::BeginDisabled(randomSeed[0] == '\0');
+            ImGui::SameLine();
+            if (ImGui::Button("Use Seed?"))
+            {
+                PatchNotes::Reseed(std::string_view(randomSeed));
+                std::fill_n(randomSeed, sizeof(randomSeed), '\0');
+            }
+            ImGui::EndDisabled();
         }
 
         void RenderEffectToggleTab() const

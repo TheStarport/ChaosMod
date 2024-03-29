@@ -19,6 +19,7 @@ class PatchNotes
         static void RevertPatch(const std::shared_ptr<Patch> &patch);
         static void ApplyPatch(const std::shared_ptr<Patch> &patch, bool showPatchNotes = true);
         static std::shared_ptr<Change> GetChangePtr(ChangeType type);
+        inline static Random randomEngine;
 
     public:
         enum class PatchVersion
@@ -36,4 +37,6 @@ class PatchNotes
         static void DoubleDown();
         static void RevertLastPatch();
         static ChangeType GetRandomChangeType();
+        static void Reseed(std::string_view seed);
+        static void Reseed(std::istream &seed);
 };

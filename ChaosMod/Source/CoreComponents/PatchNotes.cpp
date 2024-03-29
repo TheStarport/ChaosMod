@@ -9,16 +9,6 @@
 
 #include <neargye/semver.hpp>
 
-const std::vector<std::string> ReleaseNouns = {
-#include "Patches/Nouns.txt"
-
-};
-
-const std::vector<std::string> ReleaseAdjectives = {
-#include "Patches/Adjectives.txt"
-
-};
-
 void PatchNotes::LoadPatches()
 {
     std::string path;
@@ -41,7 +31,8 @@ void PatchNotes::LoadPatches()
     try
     {
         const auto json = nlohmann::json::parse(content);
-        ASSERT(json.is_array(), "Patch notes must be an array.");
+        ASSERT(json.is_object(), "Patch notes must be an object.");
+        auto patches = json["patches"];
 
         file.close();
 
@@ -54,14 +45,14 @@ void PatchNotes::LoadPatches()
         availablePatches.clear();
         patchNotes.clear();
 
-        for (const auto& obj : json)
+        for (const auto& obj : patches)
         {
             ASSERT(obj.is_object(), "Every array item must be an object.");
 
             const auto patch = std::make_shared<Patch>();
             patch->date = obj["date"];
             patch->version = obj["version"];
-            auto _ = semver::from_string(patch->version); // Not used, excepts if invalid
+            (void)semver::from_string(patch->version); // Not used, excepts if invalid
             if (obj.contains("release"))
             {
                 patch->releaseName = obj["release"];
@@ -80,6 +71,10 @@ void PatchNotes::LoadPatches()
 
             availablePatches.emplace_back(patch);
         }
+
+        auto seed = json["seed"].get<std::string>();
+        std::istringstream iss(seed);
+        randomEngine.Reseed(iss);
     }
     catch (std::exception& ex)
     {
@@ -91,7 +86,7 @@ void PatchNotes::LoadPatches()
 void PatchNotes::SavePatches()
 {
     using namespace nlohmann;
-    auto json = json::array();
+    auto array = json::array();
     for (const auto& patch : availablePatches)
     {
         auto obj = json::object();
@@ -106,8 +101,15 @@ void PatchNotes::SavePatches()
         obj["changes"] = changes;
         obj["version"] = patch->version;
         obj["release"] = patch->releaseName;
-        json.push_back(obj);
+        array.push_back(obj);
     }
+
+    auto json = json::object();
+    json["patches"] = array;
+
+    std::stringstream seed;
+    randomEngine.GetCurrentSeed(seed);
+    json["seed"] = seed.str();
 
     std::string path;
     path.resize(MAX_PATH, '\0');
@@ -202,29 +204,27 @@ void PatchNotes::GeneratePatch(const PatchVersion version)
         case PatchVersion::Minor: versionIncrement = 15; break;
         case PatchVersion::Major: versionIncrement = 20; break;
         case PatchVersion::Undetermined:
-        default: versionIncrement = Get<Random>()->Uniform(1u, 20u); break;
+        default: versionIncrement = randomEngine.Uniform(1u, 20u); break;
     }
 
     if (versionIncrement < 15 && lastVersion.patch != 255)
     {
         lastVersion.patch++;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerPatchMin, Get<ConfigManager>()->patchNotes.changesPerPatchMin * 2);
+        changeCount = randomEngine.Uniform(Get<ConfigManager>()->patchNotes.changesPerPatchMin, Get<ConfigManager>()->patchNotes.changesPerPatchMin * 2);
     }
     else if (versionIncrement < 20 && lastVersion.minor != 255)
     {
         lastVersion.minor++;
         lastVersion.patch = 0;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerMinorMin, Get<ConfigManager>()->patchNotes.changesPerMinorMin * 2);
+        changeCount = randomEngine.Uniform(Get<ConfigManager>()->patchNotes.changesPerMinorMin, Get<ConfigManager>()->patchNotes.changesPerMinorMin * 2);
     }
     else
     {
         lastVersion.patch = 0;
         lastVersion.minor = 0;
         lastVersion.major++;
-        changeCount = Get<Random>()->Uniform(Get<ConfigManager>()->patchNotes.changesPerMajorMin, Get<ConfigManager>()->patchNotes.changesPerMajorMin * 2);
-        patch->releaseName = std::format("{} {}",
-                                         ReleaseAdjectives[Get<Random>()->Uniform(0u, ReleaseAdjectives.size() - 1)],
-                                         ReleaseNouns[Get<Random>()->Uniform(0u, ReleaseNouns.size() - 1)]);
+        changeCount = randomEngine.Uniform(Get<ConfigManager>()->patchNotes.changesPerMajorMin, Get<ConfigManager>()->patchNotes.changesPerMajorMin * 2);
+        patch->releaseName = std::format("{} {}", randomEngine.RandomAdjective(), randomEngine.RandomNoun());
     }
 
     patch->version = lastVersion.to_string();
@@ -235,7 +235,7 @@ void PatchNotes::GeneratePatch(const PatchVersion version)
         auto type = GetRandomChangeType();
         const auto change = GetChangePtr(static_cast<ChangeType>(type));
 
-        change->Generate();
+        change->Generate(randomEngine);
         patch->changes.emplace_back(change);
     }
 
@@ -281,8 +281,17 @@ ChangeType PatchNotes::GetRandomChangeType()
     };
     // Half the chance of currency change cause of how many there are
 
-    return static_cast<ChangeType>(Get<Random>()->Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
+    return static_cast<ChangeType>(randomEngine.Weighted(effectTypeDistribution.begin(), effectTypeDistribution.end()) + 1);
 }
+
+// Unlike the other reseed, this will one will reset the entire engine to a clean slate
+void PatchNotes::Reseed(const std::string_view seed)
+{
+    ResetPatches(false, true);
+    randomEngine.Reseed(seed);
+}
+
+void PatchNotes::Reseed(std::istream& seed) { randomEngine.Reseed(seed); }
 
 std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
 {
@@ -335,7 +344,8 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
     return change;
 }
 
-void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, const bool isBuff)
+void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue,
+    void* newValue, const bool isBuff)
 {
     std::string newFieldName = std::regex_replace(field->name, std::regex("([a-z])([A-Z])"), "$1 $2");
     bool lastCharWasSpace = false;
@@ -371,14 +381,14 @@ void Change::SetChangeNameAndDescription(const EditableField* field, const Field
 
     if (field->type == FieldType::Float)
     {
-        description = std::format("{} {}: {}   {:.2f}  ->  {:.2f}", symbol, itemName, newFieldName, *(float*)oldValue, *(float*)field->ptr);
+        description = std::format("{} {}: {}   {:.2f}  ->  {:.2f}", symbol, itemName, newFieldName, *(float*)oldValue, *(float*)newValue);
     }
     else if (field->type == FieldType::Int)
     {
-        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(int*)oldValue, *(int*)field->ptr);
+        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(int*)oldValue, *(int*)newValue);
     }
     else if (field->type == FieldType::Bool)
     {
-        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(int*)field->ptr, !*(int*)field->ptr);
+        description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(bool*)oldValue, *(bool*)newValue);
     }
 }

@@ -28,9 +28,9 @@ class Change
 
         struct FieldData
         {
-            std::optional<Clamp> clamp;
-            bool inverted = false;
-            bool nbb = false;
+                std::optional<Clamp> clamp;
+                bool inverted = false;
+                bool nbb = false;
         };
 
         struct MissileMap
@@ -99,12 +99,12 @@ class Change
 
         template <typename T>
             requires std::is_integral_v<T> || std::is_floating_point_v<T>
-        static T AdjustField(T existingValue, bool increase, std::optional<std::pair<T, T>> minMax = std::nullopt)
+        static T AdjustField(T existingValue, bool increase, Random& randomEngine, std::optional<std::pair<T, T>> minMax = std::nullopt)
         {
             const auto value = static_cast<float>(existingValue);
             const float percentage = value * 0.01f;
 
-            auto percentageChange = Get<Random>()->Uniform(1, 300);
+            auto percentageChange = randomEngine.Uniform(1, 300);
             if (!increase)
             {
                 percentageChange = std::clamp(-percentageChange, -95, -1); // If lowering make sure we don't end up negative
@@ -119,7 +119,8 @@ class Change
             return returnValue;
         }
 
-    void SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, const bool isBuff);
+        void SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName,
+            void* oldValue, void* newValue, bool isBuff);
 
     public:
         enum class ChangePositivity
@@ -136,7 +137,7 @@ class Change
 
         virtual void Apply() = 0;
         virtual void Revert() = 0;
-        virtual void Generate() = 0;
+        virtual void Generate(Random& randomEngine) = 0;
 
         virtual nlohmann::json ToJson()
         {
@@ -155,7 +156,7 @@ class Change
         }
 
         // Multiply the change value by the modifier, if applicable
-        virtual void Multiply(float multiplier) {};
+        virtual void Multiply(float multiplier){};
 };
 
 class CurrencyChange : public Change
@@ -171,7 +172,7 @@ class CurrencyChange : public Change
 
         void Apply() override;
         void Revert() override;
-        void Generate() override;
+        void Generate(Random& randomEngine) override;
         void Multiply(float multiplier) override;
         nlohmann::json ToJson() override;
         void FromJson(nlohmann::basic_json<> json) override;
@@ -470,13 +471,13 @@ class EquipmentChange : public Change
 
                 auto name = GetEquipmentName(item);
 
-                SetChangeNameAndDescription(&field, fieldData, name, oldData.data(), isBuff);
+                SetChangeNameAndDescription(&field, fieldData, name, oldData.data(), newData.data(), isBuff);
             }
         }
 
-        void Generate() override
+        void Generate(Random& randomEngine) override
         {
-            hash = possibleEquipment[Get<Random>()->Uniform(0u, possibleEquipment.size() - 1)];
+            hash = possibleEquipment[randomEngine.Uniform(0u, possibleEquipment.size() - 1)];
 
             const auto erasure = GetArchetypePtr();
             ASSERT(erasure.has_value(), "Failed to get archetype pointer!!");
@@ -489,12 +490,12 @@ class EquipmentChange : public Change
             EditableField* value = nullptr;
             while (statIndex == UINT_MAX)
             {
-                statIndex = Get<Random>()->Weighted(weights.begin(), weights.end());
+                statIndex = randomEngine.Weighted(weights.begin(), weights.end());
                 value = &fields[statIndex];
                 if constexpr (Type == ChangeType::GunAmmo)
                 {
                     if (!item->motorId && (value->name == "seeker_fov_deg" || value->name == "seeker_range" || value->name == "max_angular_velocity" ||
-                        value->name == "seeker" || value->name == "detonation_dist"))
+                                           value->name == "seeker" || value->name == "detonation_dist"))
                     {
                         statIndex = UINT_MAX;
                     }
@@ -531,7 +532,7 @@ class EquipmentChange : public Change
                 name = ChaosMod::GetInfocardName(item->idsName);
             }
 
-            auto buff = static_cast<bool>(Get<Random>()->Uniform(0u, 1u));
+            auto buff = static_cast<bool>(randomEngine.Uniform(0u, 1u));
 
             const auto& data = fieldData[statIndex];
             auto clamp = data.clamp;
@@ -562,7 +563,7 @@ class EquipmentChange : public Change
                 }
                 else
                 {
-                    fp = std::clamp(AdjustField(fp, buff), clamp->min, clamp->max);
+                    fp = std::clamp(AdjustField(fp, buff, randomEngine), clamp->min, clamp->max);
                 }
 
                 memcpy_s(newData.data(), newData.size(), &fp, 4);
@@ -576,7 +577,7 @@ class EquipmentChange : public Change
                 }
                 else
                 {
-                    i = std::clamp(AdjustField(i, buff), static_cast<int>(clamp->min), static_cast<int>(clamp->max));
+                    i = std::clamp(AdjustField(i, buff, randomEngine), static_cast<int>(clamp->min), static_cast<int>(clamp->max));
                 }
 
                 memcpy_s(newData.data(), newData.size(), &i, 4);
@@ -588,7 +589,7 @@ class EquipmentChange : public Change
                 memcpy_s(newData.data(), newData.size(), &newState, 4);
             }
 
-            SetChangeNameAndDescription(value, data, name, oldData.data(), buff);
+            SetChangeNameAndDescription(value, data, name, oldData.data(), newData.data(), buff);
             field = value->name;
         }
 

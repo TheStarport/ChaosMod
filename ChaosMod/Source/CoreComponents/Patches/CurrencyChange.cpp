@@ -27,9 +27,9 @@ void CurrencyChange::Revert()
     good->price = oldPrice;
 }
 
-void CurrencyChange::Generate()
+void CurrencyChange::Generate(Random& randomEngine)
 {
-    goodHash = possibleGoods[Get<Random>()->Uniform(0u, possibleGoods.size() - 1)];
+    goodHash = possibleGoods[randomEngine.Uniform(0u, possibleGoods.size() - 1)];
 
     auto good = GoodList_get()->find_by_id(goodHash);
 
@@ -48,7 +48,7 @@ void CurrencyChange::Generate()
 
     oldPrice = good->price;
     // clang-format off
-    newPrice = AdjustField(good->price, static_cast<bool>(Get<Random>()->Uniform(0u, 1u)), {{ 1.f, 999999.f }});
+    newPrice = AdjustField(good->price, static_cast<bool>(randomEngine.Uniform(0u, 1u)), randomEngine, {{ 1.f, 999999.f }});
     // clang-format on
 
     description = std::format("~ {}: Base Price   {:.0f}  ->  {:.0f}", name, oldPrice, newPrice);
