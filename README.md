@@ -99,7 +99,7 @@ cd ChaosMod
 Run the following commands in order to build debug (for release, just change 'debug' to 'release'):
 ```bash
 cmake --preset vs2022-msvc-debug -S . -B ./build/vs2022-msvc-debug
-cmake --build .build/vs2022-msvc-debug --target ChaosMod --config Debug
+cmake --build ./build/vs2022-msvc-debug --target ChaosMod --config Debug
 ```
 
 If you prefer to use an IDE:
