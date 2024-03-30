@@ -1,0 +1,26 @@
+name: Sonarcloud Scanning
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  sonarcloud:
+    runs-on: windows-latest
+    env:
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: "Set PR Number ENV"
+        shell: bash
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "${{ github.event.pull_request.number }}" >> "$GITHUB_ENV"
+
+      - name: "Build ChaosMod"
+        uses: './.github/actions/build'
+        with:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

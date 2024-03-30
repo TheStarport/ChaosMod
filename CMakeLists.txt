@@ -111,7 +111,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreServer.lib"
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE "Winmm.lib")
 
-    if (DEFINED ENV{FL_CHAOS_MOD})
+    if (DEFINED ENV{FL_CHAOS_MOD} AND NOT ${CMAKE_GENERATOR} STREQUAL "Ninja")
         message(STATUS "Adding post build step")
         set(OUT_PATH ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE_INIT}/*.dll)
         string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
