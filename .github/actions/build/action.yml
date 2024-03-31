@@ -15,15 +15,6 @@ runs:
           core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-    - name: "Set Sonar Scan Args"
-      shell: bash
-      id: sonar-args
-      run: |
-        if [[ -z "${PR_NUMBER}" ]]; then
-          echo "SONAR_ARGS=" >> "$GITHUB_ENV"
-        else
-          echo "SONAR_ARGS=--define sonar.pullrequest.key=${PR_NUMBER}" >> "$GITHUB_OUTPUTS"
-        fi
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
@@ -39,16 +30,6 @@ runs:
         echo DX9_SDK=$WIN_HOME/dx9
         echo "DX9_SDK=$WIN_HOME/dx9" >> $GITHUB_ENV
       shell: bash
-
-    - name: Download and set up sonar-scanner
-      env:
-        SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
-      shell: pwsh
-      run: |
-        New-Item -Force -ItemType directory -Path $HOME\.sonar 
-        curl -sSLo $HOME\.sonar\sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }} 
-        unzip -o $HOME\.sonar\sonar-scanner.zip -d $HOME\.sonar\
-        echo "$HOME\.sonar\sonar-scanner-5.0.1.3006-windows\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
 
     - uses: ilammy/msvc-dev-cmd@v1.10.0
       with:
@@ -84,9 +65,3 @@ runs:
     - name: Compile ChaosMod
       run: cmake --build ${{ github.workspace }}\build\ninja --target ChaosMod --config Release
       shell: pwsh
-
-    - name: Run sonar-scanner
-      env:
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
-      shell: cmd
-      run: sonar-scanner -X ${{ steps.sonar-args.outputs.SONAR_ARGS }}
