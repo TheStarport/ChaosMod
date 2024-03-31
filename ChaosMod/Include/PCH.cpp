@@ -21,3 +21,8 @@ void Assert(const bool cond, const std::string& text, const std::string& file, c
         throw std::runtime_error(text + ". In file: " + file + " on line: " + std::to_string(line));
     }
 }
+
+void DoNothing()
+{
+    // This is a CICD Test
+}
