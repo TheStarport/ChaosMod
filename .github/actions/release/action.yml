@@ -8,7 +8,7 @@ runs:
       id: date
       shell: bash
       run: |
-        echo "name=date::$(date +'%Y-%m-%d-%H-%M')" >> "$GITHUB_OUTPUT"
+        echo "date=$(date +'%Y-%m-%d-%H-%M')" >> "$GITHUB_OUTPUT"
         BODY=$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p' | awk '{print "- "$0}')
         printf '%s\n' "${BODY[@]}" | tac > RELEASE.MD
 
