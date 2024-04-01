@@ -14,6 +14,7 @@ runs:
 
     - name: "Install Inno"
       run: choco install innosetup --acceptlicense
+      shell: pwsh
 
     - name: "Restore HD Installer"
       id: hde-cache
@@ -26,17 +27,20 @@ runs:
       if: steps.hde-cache.outputs.cache-hit != 'true'
       run:
         curl -s -o ${{ github.workspace }}/Installer/Assets/External/FreelancerHDESetup_v06_silent_test.exe https://f003.backblazeb2.com/b2api/v2/b2_download_file_by_id?fileId=4_z0d41f4d9e10a9adf85d20013_f212668fac620798a_d20240305_m125353_c003_v0312019_t0022_u01709643233941
+      shell: pwsh
 
     - name: "Pre-Build Installer"
+      shell: pwsh
       run: |
         cd ${{ github.workspace }}
         mkdir Archive
         Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
-        Get-ChildItem -Path ".\build\vs2022-msvc-release\Release" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
+        Get-ChildItem -Path ".\build\ninja" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
         7z a -r ./chaosmod.7z ./Archive/*
         Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
 
     - name: "Build Installer"
+      shell: pwsh
       run: |
         cd ${{ github.workspace }}/Installer
         & "${env:programfiles(x86)}\Inno Setup 6\iscc.exe" /O+ ".\setup.iss"
