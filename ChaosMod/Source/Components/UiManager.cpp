@@ -24,7 +24,7 @@
 typedef LRESULT(__stdcall* OriginalWndProc)(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam);
 FunctionDetour wndProcDetour(reinterpret_cast<OriginalWndProc>(0x5B2570));
 
-LRESULT __stdcall UiManager::WndProc(HWND hWnd, uint msg, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall UiManager::WndProc(const HWND hWnd, const uint msg, const WPARAM wParam, const LPARAM lParam)
 {
     Get<UiManager>()->window = hWnd;
 
@@ -178,7 +178,7 @@ void UiManager::SetCursor(const std::string& str)
 typedef bool(__cdecl* WinKeyType)(uint msg, WPARAM wParam, LPARAM lParam);
 FunctionDetour winKeyDetour(reinterpret_cast<WinKeyType>(0x577850));
 
-bool UiManager::WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam)
+bool UiManager::WinKeyDetour(const uint msg, const WPARAM wParam, const LPARAM lParam)
 {
     switch (msg)
     {
@@ -202,8 +202,6 @@ bool UiManager::WinKeyDetour(uint msg, WPARAM wParam, LPARAM lParam)
 
 UiManager::UiManager()
 {
-    const auto fl = reinterpret_cast<char*>(GetModuleHandle(nullptr));
-
     IMGUI_CHECKVERSION();
     context = ImGui::CreateContext();
 
@@ -212,10 +210,10 @@ UiManager::UiManager()
 
     ImGui::StyleColorsDark();
 
-    const auto rp8 = reinterpret_cast<char*>(LoadLibrary(L"RP8.dll"));
-    char* pAddress = rp8 + 0x5E188;
-    auto fpD3D8CreateHook = reinterpret_cast<FARPROC>(CreateDirect3D8);
-    MemUtils::WriteProcMem(pAddress, &fpD3D8CreateHook, 4);
+    const auto rp8 = reinterpret_cast<DWORD>(LoadLibrary(L"RP8.dll"));
+    const auto address = rp8 + 0x5E188;
+    const auto d3D8CreateHook = reinterpret_cast<FARPROC>(CreateDirect3D8);
+    MemUtils::WriteProcMem(address, &d3D8CreateHook, 4);
 
     winKeyDetour.Detour(WinKeyDetour);
     cursorDetour.Detour(OnCursorChangeDetour);

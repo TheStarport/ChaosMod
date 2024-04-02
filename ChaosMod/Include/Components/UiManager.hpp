@@ -32,9 +32,10 @@ class UiManager final : public Component
 
         UiManager();
         ~UiManager() override;
+        UiManager(const UiManager& other) = delete;
+
         void LoadCursors();
+        void Render();
 
         static void Setup(LPDIRECT3DDEVICE9 device, HWND window);
-
-        void Render();
 };

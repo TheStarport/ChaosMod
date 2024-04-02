@@ -7,10 +7,13 @@
 #include <magic_enum.hpp>
 #include <nlohmann/json.hpp>
 
+#include <Memory/OffsetHelper.hpp>
 #include <neargye/semver.hpp>
 
 void PatchNotes::LoadPatches()
 {
+    patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
+
     std::string path;
     path.resize(MAX_PATH, '\0');
     GetUserDataPath(path.data());
@@ -342,6 +345,20 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
     // clang-format on
 
     return change;
+}
+
+void PatchNotes::Update(float delta)
+{
+    // Check that the game is not paused and patch notes are enabled
+    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || Utils::GetCShip()))
+    {
+        patchTime -= delta;
+        if (patchTime <= 0.0f)
+        {
+            patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
+            PatchNotes::GeneratePatch();
+        }
+    }
 }
 
 void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue,

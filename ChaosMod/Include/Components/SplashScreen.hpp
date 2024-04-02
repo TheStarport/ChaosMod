@@ -29,5 +29,6 @@ class SplashScreen final : public Component
     public:
         explicit SplashScreen(HWND parentWindow);
         ~SplashScreen() override;
+        SplashScreen(const SplashScreen& other) = delete;
         void SetLoadingMessage(int progress);
 };

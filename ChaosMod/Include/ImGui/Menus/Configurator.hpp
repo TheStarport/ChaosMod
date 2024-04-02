@@ -93,20 +93,20 @@ class Configurator final
         {
             static DWORD startingProgressBarColor = config->chaosSettings.progressBarColor;
             static auto startingProgressBarColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarColor);
-            static float progressColor[3] = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
-            ImGui::ColorEdit3("Chaos Progress Color", progressColor, ImGuiColorEditFlags_PickerHueBar);
+            static std::array progressColor = { startingProgressBarColorVec.x, startingProgressBarColorVec.y, startingProgressBarColorVec.z };
+            ImGui::ColorEdit3("Chaos Progress Color", progressColor.data(), ImGuiColorEditFlags_PickerHueBar);
             config->chaosSettings.progressBarColor = ImGui::ColorConvertFloat4ToU32(ImVec4(progressColor[0], progressColor[1], progressColor[2], 0xFF));
 
             static DWORD startingProgressBarTextColor = config->chaosSettings.progressBarTextColor;
             static auto startingProgressBarTextColorVec = ImGui::ColorConvertU32ToFloat4(startingProgressBarTextColor);
-            static float progressTextColor[3] = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
-            ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor, ImGuiColorEditFlags_PickerHueBar);
+            static std::array progressTextColor = { startingProgressBarTextColorVec.x, startingProgressBarTextColorVec.y, startingProgressBarTextColorVec.z };
+            ImGui::ColorEdit3("Chaos Progress Text Color", progressTextColor.data(), ImGuiColorEditFlags_PickerHueBar);
             config->chaosSettings.progressBarTextColor =
                 ImGui::ColorConvertFloat4ToU32(ImVec4(progressTextColor[0], progressTextColor[1], progressTextColor[2], 0xFF));
 
-            const char* timerOptions[] = { "Progress Bar: Top", "Progress Bar: Sides", "Clock", "Countdown" };
+            static std::array timerOptions = { "Progress Bar: Top", "Progress Bar: Sides", "Clock", "Countdown" };
 
-            ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->chaosSettings.progressBarType), timerOptions, IM_ARRAYSIZE(timerOptions));
+            ImGui::Combo("Chaos Progress Bar Type:", reinterpret_cast<int*>(&config->chaosSettings.progressBarType), timerOptions.data(), timerOptions.size());
 
             ImGui::Checkbox("Show Time Remaining On Effects", &config->chaosSettings.showTimeRemainingOnEffects);
         }
@@ -139,23 +139,23 @@ class Configurator final
             ImGui::DragInt("Changes Per Minor (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMinorMin), 1.0f, 15, 50);
             ImGui::DragInt("Changes Per Major (Min)", reinterpret_cast<int*>(&config->patchNotes.changesPerMajorMin), 1.0f, 30, 100);
 
-            static char randomSeed[255];
-            ImGui::InputText("Seed", randomSeed, sizeof(randomSeed));
+            static std::array<char, 255> randomSeed;
+            ImGui::InputText("Seed", randomSeed.data(), randomSeed.size());
 
             if (ImGui::Button("Generate Random Seed"))
             {
                 const auto rand = Get<Random>();
                 const std::string str = std::format("{} {}", rand->RandomAdjective(), rand->RandomNoun());
-                std::fill_n(randomSeed, sizeof(randomSeed), '\0');
-                strcpy_s(randomSeed, str.c_str());
+                std::fill_n(randomSeed.data(), randomSeed.size(), '\0');
+                strcpy_s(randomSeed.data(), randomSeed.size(), str.c_str());
             }
 
             ImGui::BeginDisabled(randomSeed[0] == '\0');
             ImGui::SameLine();
             if (ImGui::Button("Use Seed?"))
             {
-                PatchNotes::Reseed(std::string_view(randomSeed));
-                std::fill_n(randomSeed, sizeof(randomSeed), '\0');
+                PatchNotes::Reseed(std::string_view(randomSeed.data()));
+                std::fill_n(randomSeed.data(), randomSeed.size(), '\0');
             }
 
             if (ImGui::IsItemHovered())
@@ -193,8 +193,7 @@ class Configurator final
                     auto& configCategoryEffects = configEffects[categoryName];
 
                     ImGui::PushID(categoryName.c_str());
-                    bool all = std::all_of(configCategoryEffects.begin(),
-                                           configCategoryEffects.end(),
+                    bool all = std::ranges::all_of(configCategoryEffects,
                                            [](std::pair<const std::string, bool>& individualEffect) { return individualEffect.second; });
 
                     if (ImGui::Checkbox("All?##ID", &all))

@@ -4,6 +4,7 @@
 
 class PatchNotes
 {
+        inline static float patchTime;
         struct StringPatch
         {
                 std::string version;
@@ -30,6 +31,7 @@ class PatchNotes
             Major
         };
 
+        static void Update(float delta);
         static void LoadPatches();
         static std::vector<StringPatch> &GetPatchNotes();
         static void ResetPatches(bool reapply, bool clean);

@@ -9,7 +9,9 @@ class Teleporter : public Component
                 uint system{};
                 Vector position{};
                 Matrix orientation{};
-        } savedPosition = {};
+        };
+
+        SavedPosition savedPosition = {};
 
         struct EntryStack
         {

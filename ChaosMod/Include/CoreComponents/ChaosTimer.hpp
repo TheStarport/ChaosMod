@@ -23,7 +23,6 @@ class ChaosTimer final : public Component
         inline static FunctionDetour<ConsumeFireResourcesType> consumeFireResourcesDetour{ reinterpret_cast<ConsumeFireResourcesType>(
             GetProcAddress(GetModuleHandleA("common.dll"), "?ConsumeFireResources@CELauncher@@UAEXXZ")) };
 
-        float patchTime = 0.0f;
         float currentTime = 0.0f;
         float modifiers = 1.0f;
         bool doubleTime = false;
@@ -36,15 +35,14 @@ class ChaosTimer final : public Component
 
         std::unordered_map<ActiveEffect*, float> activeEffects;
         std::vector<PersistentEffect*> persistentEffects;
-        PatchNotes* patchNotes;
 
     public:
+        ChaosTimer(const ChaosTimer& other) = delete;
         ChaosTimer();
-        ~ChaosTimer() override;
         void DelayActiveEffect(ActiveEffect* effect, float delay);
         void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();
-        bool DoubleTimeActive() const;
+        [[nodiscard]] bool DoubleTimeActive() const;
         void AdjustModifier(float modifier);
         void Update(float delta);
         void FrameUpdate(float delta);

@@ -197,9 +197,6 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
 ChaosTimer::ChaosTimer()
 {
-    patchNotes = new PatchNotes();
-    patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
-
     auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
     const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
@@ -209,8 +206,7 @@ ChaosTimer::ChaosTimer()
     consumeFireResourcesDetour.Detour(OnConsumeFireResources);
 }
 
-ChaosTimer::~ChaosTimer() { delete patchNotes; }
-
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ChaosTimer::DelayActiveEffect(ActiveEffect* effect, const float delay)
 {
     if (const auto found = activeEffects.find(effect); found != activeEffects.end())
@@ -353,17 +349,6 @@ void ChaosTimer::Update(const float delta)
 {
     // If they don't have a ship lets not do chaos (aka are they in space?)
     const auto currentShip = Utils::GetCShip();
-
-    // Check that the game is not paused and patch notes are enabled
-    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || currentShip))
-    {
-        patchTime -= delta;
-        if (patchTime <= 0.0f)
-        {
-            patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
-            PatchNotes::GeneratePatch();
-        }
-    }
 
     if (!currentShip)
     {
