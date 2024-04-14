@@ -11,17 +11,20 @@
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "1"
             },
             "hidden": true
         },
         {
-            "name": "ninja-multi",
+            "name": "ninja",
             "inherits": "default",
-            "displayName": "Ninja Multi-Config",
-            "generator": "Ninja Multi-Config"
+            "displayName": "Ninja",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         },
-        
         {
             "name": "vs2022-msvc",
             "inherits": "default",

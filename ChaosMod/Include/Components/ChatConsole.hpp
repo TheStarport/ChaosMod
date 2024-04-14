@@ -1,6 +1,6 @@
 #pragma once
 
-class ChatConsole : public Component
+class ChatConsole final : public Component
 {
         enum class Node
         {
@@ -14,15 +14,13 @@ class ChatConsole : public Component
         };
 
         union VPtr {
-                PCHAR c{};
-                PUSHORT s;
-                PINT i;
-                PWCHAR w;
+                char* c{};
+                ushort* s;
+                uint* i;
+                wchar_t* w;
         };
 
-        inline static char* brdl{};
-        inline static size_t size = 0;
-        size_t capacity = 0;
+        inline static std::vector<char> buffer;
 
         VPtr data{};
 
@@ -79,32 +77,27 @@ class ChatConsole : public Component
             TRA_Color = 0xFFFFFF00
         };
 
-        void AddNode(uint node, uint len)
+        void AddNode(const uint node, const uint len)
         {
-            const uint newSize = size + 8u + len;
-            if (newSize > capacity)
+            if (const uint newSize = buffer.size() + 8u + len; newSize > buffer.capacity())
             {
-                capacity = newSize;
-                char* temp = new char[capacity];
-                memcpy(temp, brdl, size);
-                delete[] brdl;
-                brdl = temp;
-                data.c = brdl + size;
+                // Double the buffer size if needed
+                buffer.reserve(buffer.size() * 2);
+                data.c = buffer.data() + buffer.size();
             }
-            size = newSize;
 
             *data.i++ = node;
             *data.i++ = len;
         }
 
-        void Tra(UINT tra, UINT mask)
+        void Tra(const UINT tra, const UINT mask)
         {
             AddNode(static_cast<int>(Node::TRANode), 8);
             *data.i++ = tra; // TextRenderAttributes
             *data.i++ = mask;
         }
 
-        void Style(USHORT style)
+        void Style(const USHORT style)
         {
             AddNode(static_cast<int>(Node::StyleNode), 2);
             *data.s++ = style;
@@ -116,9 +109,9 @@ class ChatConsole : public Component
             *data.s++ = 0;                                     //  word (wchar_t) alignment
         }
 
-        void Print(const std::wstring& str, bool shouldFlush = false)
+        void Print(const std::wstring& str, const bool shouldFlush = false)
         {
-            const int len = sizeof(wchar_t) * str.size() + 2;
+            const uint len = sizeof(wchar_t) * str.size() + 2;
 
             AddNode(static_cast<int>(Node::TextNode), len);
             memcpy(data.w, str.c_str(), len);
@@ -128,13 +121,12 @@ class ChatConsole : public Component
             {
                 using Flush = void (*)(int, char*, unsigned int);
                 static auto flush = reinterpret_cast<Flush>(0x46A150);
-                flush(0, brdl, size);
-                data.c = brdl;
-                size = 0;
+                flush(0, buffer.data(), buffer.size());
+                data.c = buffer.data();
             }
         }
 
-        void Print(const std::string& str, bool flush = false)
+        void Print(const std::string& str, const bool flush = false)
         {
             const auto newStr = StringUtils::stows(str);
             Print(newStr, flush);

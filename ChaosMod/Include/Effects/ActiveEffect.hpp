@@ -62,7 +62,7 @@ class ActiveEffect
         virtual ~ActiveEffect() = default;
         explicit ActiveEffect(EffectInfo effectInfo) : effectInfo(std::move(effectInfo)) { allEffects.emplace_back(this); }
 
-        const EffectInfo& GetEffectInfo() { return effectInfo; }
+        const EffectInfo& GetEffectInfo() const { return effectInfo; }
         static const std::vector<ActiveEffect*>& GetAllEffects() { return allEffects; }
 
         ActiveEffect(const ActiveEffect&) = delete;
@@ -84,8 +84,6 @@ class RegisterEffect final
     public:
         explicit RegisterEffect(ActiveEffect* effect) : effect(effect)
         {
-            printf("");
-            printf("");
         }
         ~RegisterEffect() { delete effect; }
 

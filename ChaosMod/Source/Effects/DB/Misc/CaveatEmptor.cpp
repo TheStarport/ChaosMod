@@ -6,7 +6,7 @@
 class CaveatEmptor final : public ActiveEffect
 {
         // TODO: Have destroyed equipment persist after dock
-        typedef void(__fastcall* DestroySubObjects)(CEqObj* obj, void* edx, DamageList* list, bool b);
+        using DestroySubObjects = void (__fastcall*)(CEqObj*, void*, DamageList*, bool);
         inline static DestroySubObjects destroySubObjects = reinterpret_cast<DestroySubObjects>(0x62ABA50);
 
         static bool DelayedGroupExplosion(float delta)

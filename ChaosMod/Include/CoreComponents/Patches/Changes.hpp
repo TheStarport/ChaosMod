@@ -110,7 +110,7 @@ class Change
                 percentageChange = std::clamp(-percentageChange, -95, -1); // If lowering make sure we don't end up negative
             }
 
-            T returnValue = static_cast<T>(value + percentage * static_cast<float>(percentageChange));
+            auto returnValue = static_cast<T>(value + percentage * static_cast<float>(percentageChange));
             if (minMax.has_value())
             {
                 returnValue = std::clamp(returnValue, minMax.value().first, minMax.value().second);
@@ -156,7 +156,7 @@ class Change
         }
 
         // Multiply the change value by the modifier, if applicable
-        virtual void Multiply(float multiplier){};
+        virtual void Multiply(float multiplier) {};
 };
 
 class CurrencyChange : public Change
@@ -305,7 +305,7 @@ class EquipmentChange : public Change
             }
             else if constexpr (Type == ChangeType::GunExplosion)
             {
-                ID_String id;
+                ID_String id{};
                 id.id = hash;
                 auto explosion = Archetype::GetExplosion(id);
                 if (!explosion)
@@ -436,16 +436,16 @@ class EquipmentChange : public Change
             auto fields = GetEditableFields<T>(item);
 
             int index = -1;
-            for (auto& field : fields)
+            for (auto& editableField : fields)
             {
                 index++;
-                if (field.name != this->field)
+                if (editableField.name != field)
                 {
                     continue;
                 }
 
                 bool isBuff = false;
-                if (field.type == FieldType::Float)
+                if (editableField.type == FieldType::Float)
                 {
                     float oldValue, newValue;
                     memcpy_s(&oldValue, sizeof(float), oldData.data(), oldData.size());
@@ -455,23 +455,23 @@ class EquipmentChange : public Change
                     memcpy_s(newData.data(), newData.size(), &newValue, sizeof(float));
                     isBuff = oldValue < newValue;
                 }
-                else if (field.type == FieldType::Int)
+                else if (editableField.type == FieldType::Int)
                 {
                     int oldValue, newValue;
                     memcpy_s(&oldValue, sizeof(int), oldData.data(), oldData.size());
                     memcpy_s(&newValue, sizeof(int), newData.data(), newData.size());
-                    const auto diff = static_cast<int>((oldValue - newValue) * multiplier);
-                    newValue = std::abs(oldValue - diff);
+                    const auto diff = static_cast<float>(oldValue - newValue) * multiplier;
+                    newValue = std::abs(oldValue - static_cast<int>(diff));
                     memcpy_s(newData.data(), newData.size(), &newValue, sizeof(int));
                     isBuff = oldValue < newValue;
                 }
 
-                const auto allFieldData = GetFieldData();
-                auto& fieldData = allFieldData.first[index];
+                const auto [allFieldData, counts] = GetFieldData();
+                auto& fieldData = allFieldData[index];
 
                 auto name = GetEquipmentName(item);
 
-                SetChangeNameAndDescription(&field, fieldData, name, oldData.data(), newData.data(), isBuff);
+                SetChangeNameAndDescription(&editableField, fieldData, name, oldData.data(), newData.data(), isBuff);
             }
         }
 
@@ -551,7 +551,7 @@ class EquipmentChange : public Change
             }
             else
             {
-                clamp = Clamp(INT_MIN, INT_MAX);
+                clamp = Clamp(static_cast<float>(INT_MIN), static_cast<float>(INT_MAX));
             }
 
             if (value->type == FieldType::Float)

@@ -1,0 +1,67 @@
+name: "Build ChaosMod"
+author: laz
+description: "Composite action for building chaos mod"
+inputs:
+  SONAR_TOKEN:
+    description: 'Token used for accessing sonarcloud'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Export GitHub Actions cache environment variables
+      uses: actions/github-script@v6
+      with:
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        fetch-depth: 0
+
+    - name: Set Work ENVs
+      id: vars
+      run: |
+        WIN_HOME=$(echo $HOME | tr '/' '\\')
+        WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
+        WIN_HOME=${WIN_HOME^}
+        echo $WIN_HOME
+        echo DX9_SDK=$WIN_HOME/dx9
+        echo "DX9_SDK=$WIN_HOME/dx9" >> $GITHUB_ENV
+      shell: bash
+
+    - uses: ilammy/msvc-dev-cmd@v1.10.0
+      with:
+        arch: x86
+
+    - name: "Restore DX9 Cache"
+      id: dx9-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/dx9
+        key: dx9-cache
+
+    - name: "Cache DX9 SDK"
+      if: steps.dx9-cache.outputs.cache-hit != 'true'
+      run: |
+        echo Downloading DXSDK June 2010
+        curl -s -L -o "_DX2010_.exe" "https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe"
+        echo Extracting include files
+        7z x _DX2010_.exe DXSDK/Include -o_DX2010_ > nul
+        echo Extracting lib files
+        7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_ > nul
+        echo Moving SDK to home directory
+        mkdir $DX9_SDK
+        mv _DX2010_/DXSDK/* $DX9_SDK
+        echo Cleaning up install files
+        rm -fR _DX*_ _DX*_.exe
+      shell: bash
+
+    - name: CMake Generate
+      run: cmake --preset ninja -S ${{ github.workspace }} -B ${{ github.workspace }}\build\ninja
+      shell: pwsh
+
+    - name: Compile ChaosMod
+      run: cmake --build ${{ github.workspace }}\build\ninja --target ChaosMod --config Release
+      shell: pwsh
