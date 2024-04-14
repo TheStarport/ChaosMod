@@ -9,7 +9,7 @@ runs:
       shell: bash
       run: |
         echo "date=$(date +'%Y-%m-%d-%H-%M')" >> "$GITHUB_OUTPUT"
-        BODY=$(git log master --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p' | awk '{print "- "$0}')
+        BODY=$(git log ${GITHUB_REF##*/} --since='24 hours ago' | sed -En 's/^ +?([a-z]+:\w*)/\1/p' | awk '{print "- "$0}')
         printf '%s\n' "${BODY[@]}" | tac > RELEASE.MD
 
     - name: "Install Inno"
