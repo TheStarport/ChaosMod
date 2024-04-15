@@ -35,9 +35,10 @@ runs:
         cd ${{ github.workspace }}
         mkdir Archive
         Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
-        Get-ChildItem -Path "${{ github.workspace }}" -Recurse
+        Get-ChildItem -Path ".\build\ninja" -Filter ".dll"
+        Get-ChildItem -Path ".\build\ninja" -Filter ".dll" | Move-Item -Destination ".\Archive\EXE"
+        Get-ChildItem -Path ".\Archive\EXE" -Filter ".dll"
         exit 1
-        Get-ChildItem -Path ".\build\ninja" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
         7z a -r ./chaosmod.7z ./Archive/*
         Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
 
