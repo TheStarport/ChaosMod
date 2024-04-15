@@ -36,9 +36,11 @@ jobs:
           submodules: 'recursive'
 
       - name: "Build ChaosMod"
+        id: "build"
         uses: "./.github/actions/build"
         with:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: "Release ChaosMod"
+        if: steps.build.outcome == 'success'
         uses: "./.github/actions/release"
