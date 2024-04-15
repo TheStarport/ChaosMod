@@ -35,7 +35,7 @@ runs:
         cd ${{ github.workspace }}
         mkdir Archive
         Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
-        Get-ChildItem -Path "${{ github.workspace }}\build" -Filter ".dll" -Recurse | Write-Output $_.FullPath
+        Get-ChildItem -Path "${{ github.workspace }}" -Recurse
         exit 1
         Get-ChildItem -Path ".\build\ninja" -Filter ".dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
         7z a -r ./chaosmod.7z ./Archive/*
