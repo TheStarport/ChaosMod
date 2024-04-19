@@ -197,7 +197,7 @@ void PatchResolution()
         std::array<byte, 2> patch= { 0x90, 0xE9 };
         MemUtils::WriteProcMem(0x40f617, patch.data(), 2);
         PBYTE fovX = reinterpret_cast<PBYTE>(HkCb_Fovx_Naked) - 0x40f618 - 5;
-        MemUtils::WriteProcMem(0x40f618 + 1, patch.data(), 4);
+        MemUtils::WriteProcMem(0x40f618 + 1, &fovX, 4);
     }
 
     // Set the FOV for the UI elements on the main screen.
@@ -238,8 +238,7 @@ void PatchResolution()
         MemUtils::WriteProcMem(0x5B16CD + 1, &fp, 4);
     }
 
-    // Change the font sizes ~ Jason Hood. I gave up on my implementation
-    // and used his.
+    // Change the font sizes ~ Jason Hood. I gave up on my implementation and used his.
     {
         static DWORD fontAdjustedWidth = *screenHeight * 4 / 3;
         if (aspectRatio >= 1.6)
@@ -247,12 +246,12 @@ void PatchResolution()
             fontAdjustedWidth = *screenHeight * 5 / 4;
         }
 
-        const PDWORD adjustedWidth = &fontAdjustedWidth;
-        MemUtils::WriteProcMem(0x415cc7, adjustedWidth, 4);
-        MemUtils::WriteProcMem(0x416663, adjustedWidth, 4);
-        MemUtils::WriteProcMem(0x416913, adjustedWidth, 4);
-        MemUtils::WriteProcMem(0x416be3, adjustedWidth, 4);
-        MemUtils::WriteProcMem(0x412e8d, adjustedWidth, 4);
+        const auto adjustedWidth = &fontAdjustedWidth;
+        MemUtils::WriteProcMem(0x415cc7, &adjustedWidth, 4);
+        MemUtils::WriteProcMem(0x416663, &adjustedWidth, 4);
+        MemUtils::WriteProcMem(0x416913, &adjustedWidth, 4);
+        MemUtils::WriteProcMem(0x416be3, &adjustedWidth, 4);
+        MemUtils::WriteProcMem(0x412e8d, &adjustedWidth, 4);
     }
 
     // Change cinematic aspect ratio
@@ -285,7 +284,7 @@ void PatchResolution()
     // Patch navmap to use 4/3 fov
     {
         const BYTE patch[] = { 0x68, 0x5d, 0xba, 0xd9, 0x41, 0x90, 0x90, 0x90, 0x90, 0x90 };
-        MemUtils::WriteProcMem(0x495B88, patch, 10);
+        MemUtils::WriteProcMem(0x495B88, &patch, 10);
     }
 }
 
