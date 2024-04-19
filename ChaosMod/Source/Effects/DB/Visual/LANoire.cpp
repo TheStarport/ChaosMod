@@ -5,9 +5,9 @@
 
 class LANoire final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("LANoire", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "LANoire", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("LANoire", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "LANoire", false); }
 
     public:
         explicit LANoire(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

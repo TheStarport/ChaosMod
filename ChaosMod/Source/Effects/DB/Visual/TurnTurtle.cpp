@@ -5,9 +5,9 @@
 
 class TurnTurtle final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("TurnTurtle", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "TurnTurtle", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("TurnTurtle", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "TurnTurtle", false); }
 
     public:
         explicit TurnTurtle(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

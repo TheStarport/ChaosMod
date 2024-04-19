@@ -5,9 +5,9 @@
 
 class CinematicMode final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Vignette", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Vignette", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("Vignette", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Vignette", false); }
 
     public:
         explicit CinematicMode(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

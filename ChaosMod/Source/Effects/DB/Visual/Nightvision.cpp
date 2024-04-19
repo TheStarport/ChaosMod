@@ -5,9 +5,9 @@
 
 class Nightvision final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Nightvision", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Nightvision", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("Nightvision", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Nightvision", false); }
 
     public:
         explicit Nightvision(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

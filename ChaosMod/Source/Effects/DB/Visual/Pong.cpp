@@ -5,9 +5,9 @@
 
 class Pong final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Pong", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Pong", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("Pong", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Pong", false); }
 
     public:
         explicit Pong(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

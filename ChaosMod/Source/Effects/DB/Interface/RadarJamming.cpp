@@ -92,7 +92,7 @@ class RadarJamming final : public ActiveEffect
 
         void Begin() override
         {
-            Get<ReshadeManager>()->ToggleTechnique("GlitchB", true);
+            Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "GlitchB", true);
             jitterReducer.clear();
 
             getTargetLeadFirePosDetour.Detour(GetTargetLeadFirePosDetour);
@@ -101,7 +101,7 @@ class RadarJamming final : public ActiveEffect
 
         void End() override
         {
-            Get<ReshadeManager>()->ToggleTechnique("GlitchB", false);
+            Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "GlitchB", false);
 
             getTargetLeadFirePosDetour.UnDetour();
             getTargetLeadFirePosInspectDetour.UnDetour();

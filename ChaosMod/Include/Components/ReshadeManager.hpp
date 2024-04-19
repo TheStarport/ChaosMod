@@ -29,9 +29,11 @@ class ReshadeManager : public Component
 
     public:
         [[nodiscard]]
-        std::optional<std::pair<Vector, reshade::api::effect_uniform_variable>> GetUniformFloat(const std::string& name, size_t valueCount = 3) const;
-        void SetUniformFloat(const std::string& name, const Vector& value, size_t count) const;
-        void ToggleTechnique(const std::string& techniqueName, bool state) const;
+        std::optional<std::pair<Vector, reshade::api::effect_uniform_variable>> GetUniformFloat(std::string_view fx, const std::string& name, size_t valueCount = 3) const;
+        void SetUniformFloat(std::string_view fx, const std::string& name, const Vector& value, size_t count) const;
+        void SetUniformInt(std::string_view fx, std::string_view name, int value, int value2 = 0) const;
+        void UpdateTexture(std::string_view fx, std::string_view name, uint32_t width, uint32_t height, const uint8_t* pixels) const;
+        void ToggleTechnique(std::string_view fx, const std::string& techniqueName, bool state) const;
         void SetHModule(HMODULE module);
         void InitReshade() const;
 };

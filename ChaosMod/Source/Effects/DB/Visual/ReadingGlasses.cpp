@@ -5,9 +5,9 @@
 
 class ReadingGlasses final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("Magnifier", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Magnifier", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("Magnifier", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "Magnifier", false); }
 
     public:
         explicit ReadingGlasses(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

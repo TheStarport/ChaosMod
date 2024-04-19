@@ -5,9 +5,9 @@
 
 class Jpeg final : public ActiveEffect
 {
-        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("JPEG", true); }
+        void Begin() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "JPEG", true); }
 
-        void End() override { Get<ReshadeManager>()->ToggleTechnique("JPEG", false); }
+        void End() override { Get<ReshadeManager>()->ToggleTechnique("ChaosMod.fx", "JPEG", false); }
 
     public:
         explicit Jpeg(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}
