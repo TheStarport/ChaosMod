@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.23)
 
 set(PROJECT_NAME "ChaosMod")
 
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message(STATUS "Found CCache, applying rules")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+endif()
+
 project("${PROJECT_NAME}" LANGUAGES C CXX)
 
 message(STATUS "Detected compiler: ${CMAKE_CXX_COMPILER}")
