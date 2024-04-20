@@ -19,8 +19,15 @@ void ReshadeManager::OnInitEffect(effect_runtime* runtime)
         Get<GlobalTimers>()->AddTimer(
             [i](auto delta)
             {
-                i->ToggleTechnique("ChaosMod.fx", "", false);
-                i->ToggleTechnique("Movie.fx", "", false);
+                for (const auto& entry : std::filesystem::recursive_directory_iterator("reshade-shaders"))
+                {
+                    if (!entry.is_regular_file() || entry.file_size() > UINT_MAX || !entry.path().generic_string().ends_with(".fx"))
+                    {
+                        continue;
+                    }
+
+                    i->ToggleTechnique(entry.path().filename().generic_string(), "", false);
+                }
                 return true;
             },
             1.0f);
