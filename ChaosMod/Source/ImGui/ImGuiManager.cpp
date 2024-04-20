@@ -220,16 +220,21 @@ void ImGuiManager::Render()
 
     ActiveEffectsText::Render();
     CargoSpawner::Render();
-    ChaosOptionText::Render();
+
     configurator->Render();
     DebugMenu::Render();
     EffectHistory::Render();
     EffectSelector::Render();
     IntroWindow::Render();
     PatchNotesWindow::Render();
-    ProgressBar::Render();
-    ScrollingCredits::Render();
     SelectionWheel::Render();
+
+    if (Get<ConfigManager>()->chaosSettings.enable)
+    {
+        ChaosOptionText::Render();
+        ProgressBar::Render();
+        ScrollingCredits::Render();
+    }
 
     if (configImporter)
     {

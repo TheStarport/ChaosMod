@@ -352,6 +352,11 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 void ChaosTimer::Update(const float delta)
 {
     auto config = Get<ConfigManager>();
+    if (!config->chaosSettings.enable)
+    {
+        return;
+    }
+
     timeSinceLastUpdate -= delta;
     if (timeSinceLastUpdate < 0.f && config->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilChaos)
     {
