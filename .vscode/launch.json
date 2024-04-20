@@ -5,7 +5,7 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Launch CopyChaosAssets.ps1",
-            "script": "${workspaceRoot}/CopyChaosAssets.ps1",
+            "script": "${workspaceRoot}/BinUtils/CopyChaosAssets.ps1",
             "args": ["-Count 55 -DelayMilliseconds 250"],
             "cwd": "${workspaceRoot}"
         },

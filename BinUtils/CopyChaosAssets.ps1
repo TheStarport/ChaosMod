@@ -7,9 +7,10 @@
  v1.2 2023-10-12: Script now compiles infocards from an frc file using Adoxa's tool on launch
  v1.3 2023-10-19: Include XML -> ALE pipeline utilizing the Freelancer XML project
  v1.4 2023-10-20: Fixed the XML -> ALE pipeline, up to 500 jobs now run in parallel when unpacking and packing files. Add timers and some additional checks.
+ v1.5 2024-04-20: Cleaned up unused script elements, adjusted paths and Start-Process functions to work with the new EXE
 #>
 
-Param ($noLaunch, $noXml)
+Param ($noLaunch)
 $init = { function Get-LogColor {
         Param([Parameter(Position = 0)]
             [String]$logEntry)
@@ -47,45 +48,7 @@ function TailFileUntilProcessStops {
     }
 }
 
-$func = {
-    param(     
-        [Parameter(Mandatory)]   
-        [string]$proc,
-        [Parameter(Mandatory)]
-        [string]$params
-    )
-    Start-Process -FilePath "$proc" -Wait -ArgumentList $params
-}
-
-$rootDir = "$PSScriptRoot\.."
-
-function Convert {
-    param(     
-        [Parameter(Mandatory)]   
-        [boolean]$toXml
-    )
-
-    $source = if ($toXml -eq $true) { $effectPackedPath } else { $effectXMLPath }
-    $destination = if ($toXml -eq $true) { $effectXMLPath } else { $effectALEOutputPath }
-    $exePath = if ($toXml -eq $true) { "UTFXML.exe" } else { "XMLUTF.exe" }
-    $filter = if ($toXml -eq $true) { ".ale" } else { ".ale.xml" }
-
-    $files = Get-ChildItem "$source" -Filter "*$filter"
-
-    $counter = [pscustomobject] @{ Value = 0 }
-    $groupSize = 100
-
-    $groups = $files | Group-Object -Property { [math]::Floor($counter.Value++ / $groupSize) }
-    
-    foreach ($group in $groups) {
-        $jobs = foreach ($file in $group.Group) {
-            Start-Job -ScriptBlock $func -Arg @("$rootDir\$exePath", "-o $destination $($file.FullName)")
-            $trimmedDestination = $destination.TrimStart("$rootDir")
-            Write-Host "Converting $($file) and writing it to $trimmedDestination"
-        }
-        Receive-Job $jobs -Wait -AutoRemoveJob
-    }
-}
+$rootDir = "$PSScriptRoot/../"
 
 #Define a timer
 $watch = New-Object System.Diagnostics.Stopwatch
@@ -104,32 +67,6 @@ $watch.Stop()
 $time = Write-Output $watch.Elapsed.TotalSeconds
 $watch.reset()
 Write-Host "Infocards compiled in $time seconds!" -ForegroundColor Green
-
-if ($noXml -eq $false)
-{
-    #Set ALE and XML directories
-    $effectXMLPath = "$rootDir\Assets\DATA\CHAOS\VFX\XML"
-    $effectPackedPath = "$rootDir\Assets\DATA\CHAOS\VFX"
-    $effectALEOutputPath = "$rootDir\Assets\DATA"
-
-    #Unpack the ALE files to XML for source control
-    Write-Host "Unpacking ALE assets to XML for source control..."  -ForegroundColor Blue
-    $watch.Start() 
-    Convert -toXml $true
-    $watch.Stop()
-    $time = Write-Output $watch.Elapsed.TotalSeconds
-    Write-Host "ALE assets unpacked in $time seconds!" -ForegroundColor Green
-    $watch.reset()
-
-    #Repack the XML files to ALE for build
-    Write-Host "Packing ALE assets for build..." -ForegroundColor Blue
-    $watch.Start() 
-    Convert -toXml $false
-    $watch.Stop()
-    $time = Write-Output $watch.Elapsed.TotalSeconds
-    Write-Host "ALE assets packed in $time seconds!" -ForegroundColor Green
-    $watch.reset()
-}
 
 #Look for Freelancer.exe and terminate the process if it exists.
 Write-Host "Looking for current instances of Freelancer.exe" -ForegroundColor Blue
@@ -174,7 +111,7 @@ else {
 if (!$noLaunch) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
     $spewLocation = "$env:LOCALAPPDATA\Freelancer\FLSpew.txt"
-    $freelancerJob = Start-Process -PassThru -FilePath "$env:FL_CHAOS_MOD\Freelancer.exe" -ArgumentList "-w"
+    $freelancerJob = Start-Process -PassThru -FilePath "$env:FL_CHAOS_MOD\Freelancer.exe" -ArgumentList "-w" -WorkingDirectory $env:FL_CHAOS_MOD
     $freelancerJobId = $freelancerJob.Id
     Write-Host "Starting Chaos Mod in windowed mode at $startTime with PID $freelancerJobId" -ForegroundColor Green
     Write-Host "Logging $spewLocation to console" -ForegroundColor Magenta
