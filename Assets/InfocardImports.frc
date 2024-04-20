@@ -305,3 +305,27 @@ H 458860
 S 458861 SETTINGS WHEEL
 S 458862 A wheel opened in the centre of the screen with various chaos mod settings
 S 458863 CONSOLE
+S 458864 The Flying Spaghetti Monster
+S 458865 Aldwyn, the World Eater
+S 458866 Church of the Flying Spaghetti Monster
+S 458867 Hostile
+H 458868
+	\bALLIES:\B
+	Linguine, Lasagna, Pici, Tagliatelle, Fusilli
+	
+	\bENEMIES:\B
+	Forks
+	
+	The Church of the Flying Spaghetti Monster, after having existed in secrecy for hundreds of years, came into mainstream life in Sirius only a few years ago.
+
+H 458869
+	\bALLIES:\B
+	None
+	
+	\bENEMIES:\B
+	Everyone
+	
+	This faction is always hostile to everyone.
+
+S 458870 CFSM
+S 458871 Hostile
