@@ -2,8 +2,8 @@
 
 #include "../ImGuiManager.hpp"
 
+#include "CoreComponents/TwitchVoting.hpp"
 #include "Components/ConfigManager.hpp"
-#include "Components/TwitchVoting.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
 
@@ -251,6 +251,27 @@ class Configurator final
                 });
         }
 
+        void RenderDiscordTab()
+        {
+            ImGui::NewLine();
+
+            ImGui::TextWrapped(
+                "ChaosMod comes with Discord Rich Pressence support. This allows those using Discord to have chaos mod appear on their profile as the active"
+                " activity while playing the game.");
+            ImGui::NewLine();
+
+            ImGui::Checkbox("Enable Discord Rich Pressence", &config->discordSettings.enable);
+
+            static std::array timerOptions = { "Time Playing", "Time Until Next Chaos Effect", "Time Until Next Patch Note" };
+            ImGui::Combo("Discord Timer Type:", reinterpret_cast<int*>(&config->discordSettings.timerType), timerOptions.data(), timerOptions.size());
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("You can configure what kind of timer is displayed on the rich pressence by changing this. "
+                                  "By default it will simply say how long you have played.");
+            }
+        }
+
         void HandleFileBrowser()
         {
             fileBrowser.Display();
@@ -385,6 +406,13 @@ class Configurator final
                 {
                     ImGui::BeginDisabled(importer);
                     RenderEffectToggleTab();
+                    ImGui::EndDisabled();
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Discord"))
+                {
+                    ImGui::BeginDisabled(importer);
+                    RenderDiscordTab();
                     ImGui::EndDisabled();
                     ImGui::EndTabItem();
                 }

@@ -2,6 +2,8 @@
 
 #include "Components/ConfigManager.hpp"
 #include "CoreComponents/PatchNotes.hpp"
+
+#include "Components/DiscordManager.hpp"
 #include "ImGui/ImGuiManager.hpp"
 
 #include <magic_enum.hpp>
@@ -347,16 +349,29 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
     return change;
 }
 
-void PatchNotes::Update(float delta)
+void PatchNotes::Update(const float delta)
 {
+    timeSinceLastUpdate -= delta;
+
     // Check that the game is not paused and patch notes are enabled
-    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused() && (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || Utils::GetCShip()))
+    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused())
     {
-        patchTime -= delta;
-        if (patchTime <= 0.0f)
+        if (timeSinceLastUpdate < 0.f && Get<ConfigManager>()->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilPatchNote)
         {
-            patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
-            PatchNotes::GeneratePatch();
+            timeSinceLastUpdate = 15.f;
+            const auto lastEffectTimestamp = static_cast<int64>(TimeUtils::UnixTime<std::chrono::seconds>());
+            const auto nextEffectTimestamp = lastEffectTimestamp + static_cast<int64>(patchTime);
+            Get<DiscordManager>()->SetActivity("Waiting for the next patch", lastEffectTimestamp, nextEffectTimestamp);
+        }
+
+        if (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || Utils::GetCShip())
+        {
+            patchTime -= delta;
+            if (patchTime <= 0.0f)
+            {
+                patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
+                PatchNotes::GeneratePatch();
+            }
         }
     }
 }

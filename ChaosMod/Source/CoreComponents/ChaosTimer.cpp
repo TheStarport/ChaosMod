@@ -3,8 +3,9 @@
 #include "CoreComponents/ChaosTimer.hpp"
 
 #include "Components/ConfigManager.hpp"
-#include "Effects/ActiveEffect.hpp"
+#include "Components/DiscordManager.hpp"
 #include "Components/ShipManipulator.hpp"
+#include "Effects/ActiveEffect.hpp"
 
 #include "Effects/AddressTable.hpp"
 #include "ImGui/ImGuiManager.hpp"
@@ -176,7 +177,7 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
         }
     }
 
-    auto& info = effect->GetEffectInfo();
+    const auto& info = effect->GetEffectInfo();
     Log(std::format("Starting Effect: {} ({})", info.effectName, magic_enum::enum_name(info.category)));
 
     ImGuiManager::AddToEffectHistory(info.effectName, info.description);
@@ -193,11 +194,14 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
     activeEffects[effect] = timing;
     PlayNextEffect();
+
+    // Force discord update
+    timeSinceLastUpdate = 0.f;
 }
 
 ChaosTimer::ChaosTimer()
 {
-    auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
+    const auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
 
     const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
     MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
@@ -347,6 +351,16 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 
 void ChaosTimer::Update(const float delta)
 {
+    auto config = Get<ConfigManager>();
+    timeSinceLastUpdate -= delta;
+    if (timeSinceLastUpdate < 0.f && config->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilChaos)
+    {
+        timeSinceLastUpdate = 15.f;
+        const auto lastEffectTimestamp = static_cast<int64>(TimeUtils::UnixTime<std::chrono::seconds>());
+        const auto nextEffectTimestamp = lastEffectTimestamp + static_cast<int64>(GetTimeUntilChaos());
+        Get<DiscordManager>()->SetActivity("Dreading the next act of Chaos", lastEffectTimestamp, nextEffectTimestamp);
+    }
+
     // If they don't have a ship lets not do chaos (aka are they in space?)
     const auto currentShip = Utils::GetCShip();
 
@@ -391,7 +405,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    if (!Get<ConfigManager>()->chaosSettings.enableTwitchVoting && currentTime > Get<ConfigManager>()->chaosSettings.timeBetweenChaos)
+    if (!config->chaosSettings.enableTwitchVoting && currentTime > config->chaosSettings.timeBetweenChaos)
     {
         TriggerChaos();
 
@@ -401,7 +415,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    ImGuiManager::SetProgressBarPercentage(currentTime / Get<ConfigManager>()->chaosSettings.timeBetweenChaos);
+    ImGuiManager::SetProgressBarPercentage(currentTime / config->chaosSettings.timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);

@@ -443,4 +443,5 @@ FodyWeavers.xsd
 enc_temp_folder/*
 
 .idea/
+vendor/
 compile_commands.json

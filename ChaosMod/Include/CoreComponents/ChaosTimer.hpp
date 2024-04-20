@@ -28,6 +28,8 @@ class ChaosTimer final : public Component
         bool doubleTime = false;
         CShip* lastPlayerShip = nullptr;
 
+        float timeSinceLastUpdate = 15.f;
+
         static void PlayBadEffect();
         static void PlayEffectSkip();
         static void PlayNextEffect();

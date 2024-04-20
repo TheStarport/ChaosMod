@@ -1,10 +1,10 @@
 #include "PCH.hpp"
 
-#include "Components/TwitchVoting.hpp"
+#include "CoreComponents/TwitchVoting.hpp"
 
-#include "CoreComponents/ChaosTimer.hpp"
 #include "Components/ConfigManager.hpp"
 #include "Components/UiManager.hpp"
+#include "CoreComponents/ChaosTimer.hpp"
 
 #include "ImGui/ImGuiManager.hpp"
 

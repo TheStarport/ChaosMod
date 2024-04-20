@@ -53,6 +53,21 @@ struct AutoSaveSettings
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(AutoSaveSettings, enable, timeBetweenSavesInSeconds, allowAutoSavesDuringCombat);
 };
 
+struct DiscordSettings
+{
+    enum class TimerType
+    {
+        TimePlaying,
+        TimeUntilChaos,
+        TimeUntilPatchNote
+    };
+
+    bool enable = false;
+    TimerType timerType = TimerType::TimePlaying;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DiscordSettings, enable, timerType);
+};
+
 class ConfigManager : public Component
 {
     public:
@@ -67,8 +82,9 @@ class ConfigManager : public Component
         ChaosSettings chaosSettings{};
         AutoSaveSettings autoSaveSettings{};
         PatchNoteSettings patchNotes{};
+        DiscordSettings discordSettings{};
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, firstTime, chaosSettings, autoSaveSettings, patchNotes);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigManager, firstTime, chaosSettings, autoSaveSettings, patchNotes, discordSettings);
 
         void Save(std::string_view path = "");
         static std::shared_ptr<ConfigManager> Load();

@@ -1,5 +1,5 @@
 #pragma once
-#include "Effects/ActiveEffect.hpp"
+#include "../Effects/ActiveEffect.hpp"
 
 class TwitchVoting final : public Component
 {

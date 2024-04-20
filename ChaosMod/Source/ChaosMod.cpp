@@ -1,11 +1,13 @@
 // ReSharper disable CppClangTidyPerformanceNoIntToPtr
 #include "PCH.hpp"
 
+#include "../Include/CoreComponents/TwitchVoting.hpp"
 #include "Components/CameraController.hpp"
+#include "Components/DiscordManager.hpp"
 #include "Components/EventManager.hpp"
+#include "Components/GlobalTimers.hpp"
 #include "Components/HudInterface.hpp"
 #include "Components/KeyManager.hpp"
-#include "Components/GlobalTimers.hpp"
 #include "Components/MoviePlayer.hpp"
 #include "Components/PersonalityHelper.hpp"
 #include "Components/ReshadeManager.hpp"
@@ -13,7 +15,6 @@
 #include "Components/ShipManipulator.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Components/SplashScreen.hpp"
-#include "Components/TwitchVoting.hpp"
 #include "Components/Teleporter.hpp"
 #include "Components/UiManager.hpp"
 
@@ -469,11 +470,14 @@ void Update(const double delta)
         Get<ChaosTimer>()->Update(SixtyFramesPerSecond);
         Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
         timeCounter -= SixtyFramesPerSecond;
+
+        Get<DiscordManager>()->Update();
     }
 
     Get<TwitchVoting>()->Poll();
     Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
     PatchNotes::Update(static_cast<float>(delta));
+
     timingDetour->UnDetour();
     timingDetour->GetOriginalFunc()(delta);
     timingDetour->Detour(Update);
@@ -530,6 +534,7 @@ ChaosMod::ChaosMod()
     SetComponent<UiManager>();
     SetComponent<KeyManager>();
     SetComponent<ReshadeManager>();
+    SetComponent<DiscordManager>();
 
     // Setup hooks
     const HMODULE common = GetModuleHandleA("common");

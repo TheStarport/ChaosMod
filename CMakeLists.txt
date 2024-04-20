@@ -26,6 +26,9 @@ if (NOT DEFINED ENV{DX9_SDK})
     message(FATAL_ERROR "ENV: DX9_SDK not defined. The DX9 SDK is required.")
 endif()
 
+message(STATUS "Running powershell setup")
+execute_process(COMMAND "powershell" "${PROJECT_SOURCE_DIR}/setup.ps1")
+
 set(CODE_DIR "${PROJECT_SOURCE_DIR}/ChaosMod")
 
 set(SOURCE_PATH "${CODE_DIR}/Source" )
@@ -34,6 +37,7 @@ set(SDK_PATH "${PROJECT_SOURCE_DIR}/vendor/flhook-sdk")
 set(imgui "${PROJECT_SOURCE_DIR}/vendor/imgui")
 set(imgui_fb "${PROJECT_SOURCE_DIR}/vendor/imgui-filebrowser")
 set(reshade "${PROJECT_SOURCE_DIR}/vendor/reshade")
+set(DISCORD_GAME_SDK "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk")
 
 file(GLOB_RECURSE SOURCE_FILES LIST_DIRECTORIES false
         "${SOURCE_PATH}/*.c*"
@@ -47,6 +51,8 @@ file(GLOB_RECURSE SOURCE_FILES LIST_DIRECTORIES false
         "${imgui}/*.cpp"
         "${imgui_fb}/*.h"
         "${reshade}/*.hpp"
+        "${DISCORD_GAME_SDK}/cpp/*.h"
+        "${DISCORD_GAME_SDK}/cpp/*.cpp"
 )
 
 # Disable PCH for C files
@@ -76,6 +82,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_PATH}/External/uvw)
 target_include_directories(${PROJECT_NAME} PRIVATE ${imgui})
 target_include_directories(${PROJECT_NAME} PRIVATE ${imgui_fb})
 target_include_directories(${PROJECT_NAME} PRIVATE ${reshade})
+
+# Discord Game SDK
+target_include_directories(${PROJECT_NAME} PRIVATE ${DISCORD_GAME_SDK}/cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DISCORD_GAME_SDK}/lib/x86/discord_game_sdk.dll.lib)
+
 
 # DirectX SDK
 target_include_directories(${PROJECT_NAME} PRIVATE $ENV{DX9_SDK}/Include)
@@ -125,8 +136,10 @@ if (WIN32)
         set(OUT_PATH ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE_INIT}/*.dll)
         string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND copy /Y "${OUT_PATH}" "$ENV{FL_CHAOS_MOD}"
-            COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
+                COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk/lib/x86"
+                    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+                COMMAND copy /Y "${OUT_PATH}" "$ENV{FL_CHAOS_MOD}"
+                COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
         )
     else()
         message(STATUS "ENV: FL_CHAOS_MOD not defined. Not adding post build step.")

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ImGui/ImGuiManager.hpp"
+#include "CoreComponents/TwitchVoting.hpp"
 #include "Components/ConfigManager.hpp"
-#include "Components/TwitchVoting.hpp"
+#include "ImGui/ImGuiManager.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
 #include "imgui.h"

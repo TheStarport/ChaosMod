@@ -21,6 +21,7 @@ class PatchNotes
         static void ApplyPatch(const std::shared_ptr<Patch> &patch, bool showPatchNotes = true);
         static std::shared_ptr<Change> GetChangePtr(ChangeType type);
         inline static Random randomEngine;
+        inline static float timeSinceLastUpdate = 15.f;
 
     public:
         enum class PatchVersion
