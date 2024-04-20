@@ -1,9 +1,9 @@
-// ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 
 #include "miniaudio.h"
+#include "Components/ReshadeManager.hpp"
 
 class AsmrRainSoundsForSleeping final : public ActiveEffect
 {
@@ -12,11 +12,16 @@ class AsmrRainSoundsForSleeping final : public ActiveEffect
 
         void Begin() override
         {
+            Get<ReshadeManager>()->ToggleTechnique("Rain.fx", "Rain", true);
             ma_sound_seek_to_pcm_frame(&sound, 0);
             ma_sound_start(&sound);
         }
 
-        void End() override { ma_sound_stop(&sound); }
+        void End() override
+        {
+            Get<ReshadeManager>()->ToggleTechnique("Rain.fx", "Rain", false);
+            ma_sound_stop(&sound);
+        }
 
         void Cleanup() override
         {
@@ -39,6 +44,6 @@ class AsmrRainSoundsForSleeping final : public ActiveEffect
 SetupEffect(AsmrRainSoundsForSleeping, {
     .effectName = "ASMR Rain Sounds For Sleeping",
     .description = "The best rain sounds with thunder will help you relax, quickly fall asleep and have beautiful dreams",
-    .category = EffectType::Audio,
+    .category = EffectType::Visual,
     .timingModifier = 3.0f
 });

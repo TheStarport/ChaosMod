@@ -9,6 +9,8 @@
 
 ///////////////Include/////////////////////
 
+#include "ReShade.fxh"
+
 uniform int Frame < source = "framecount"; >;
 #define pix float2(BUFFER_RCP_WIDTH, BUFFER_RCP_HEIGHT);
 #define PI 3.1415926535
@@ -34,7 +36,7 @@ uniform int bokehShape <
 	ui_type  = "combo";
 	ui_label = "Bokeh Shape";
 	ui_items = "pentagon\0pentagon CA\0hexagon\0hexagon CA\0heptagon\0heptagon CA\0octagon\0octagon CA\0Circle\0Circle CA\0";
-> = 1;
+> = 5;
 
 uniform float uiscale <
 	ui_type  = "slider";
@@ -61,7 +63,7 @@ uniform float uicount <
 	ui_tooltip = "The probability of new raindrops landing\n"
 	             "on the camera lense relevant to time.";
 	ui_max = 2;
-> = 0.15;
+> = 0.60;
 
 ///////////////UI//////////////////////////
 ///////////////Textures-Samplers///////////
@@ -282,7 +284,7 @@ uniform float uicount <
 ///////////////Pixel Shader////////////////
 ///////////////Techniques//////////////////
 
-	technique DynamicRaindrops
+	technique Rain
 	<
         ui_label = "NiceGuy RainDrops";
 	    ui_tooltip = "||         NiceGuy Raindrops || Version 1.0.0           ||\n"
