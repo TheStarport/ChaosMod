@@ -58,6 +58,7 @@ class Teleporter : public Component
         void WarpToRandomStar(bool inSystem);
         void WarpToRandomSolar(bool inSystem);
         void WarpToRandomSystem();
+        void WarpToPoint(uint system, const Vector& pos, const Vector& rot = {0.f, 0.f, 0.f}) const;
         void BeamToRandomBase(bool inSystem);
         void SaveCurrentPosition();
         void RestorePreviousPosition();

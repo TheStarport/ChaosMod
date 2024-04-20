@@ -403,6 +403,22 @@ void Teleporter::WarpToRandomSystem()
 
     ChangeSystem(system->id, ship->position, ship->orientation);
 }
+void Teleporter::WarpToPoint(const uint system, const Vector& pos, const Vector& rot) const
+{
+    const auto ship = Utils::GetCShip();
+    if (!ship)
+    {
+        return;
+    }
+
+    if (ship->system != system)
+    {
+        ChangeSystem(system, pos, EulerMatrix(rot));
+        return;
+    }
+
+    pub::SpaceObj::Relocate(ship->id, ship->system, savedPosition.position, savedPosition.orientation);
+}
 
 void Teleporter::BeamToRandomBase(const bool inSystem)
 {
