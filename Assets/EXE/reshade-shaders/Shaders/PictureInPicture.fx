@@ -1,26 +1,23 @@
 #include "ReShade.fxh"
 
-static const float2 Source = float2(0, 0);
-static const float2 Dest = float2(0, 0);
 static const float Ratio = 0.4;
 static const float2 Size = float2(BUFFER_WIDTH, BUFFER_HEIGHT) * Ratio;
 static const float Opacity = 1.0;
-static const float Zoom = 1.0;
 static const bool EnableOutline = true;
 static const float OutlineWidth = 2.0;
 static const float OutlineOpacity = 1.0;
 
-float4 PS_PictureInPicture(float4 vpos : SV_Position, float2 texcoord : TEXCOORD) : SV_Target {
-    float2 pos = texcoord / ReShade::PixelSize;
-    float4 color = tex2Dlod(ReShade::BackBuffer, float4(texcoord, 0, 0));
+float4 PS_PictureInPicture(float4 vpos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
+    float2 pos = uv / ReShade::PixelSize;
+    float4 color = tex2Dlod(ReShade::BackBuffer, float4(uv, 0, 0));
     float2 areaCenter = Size;
 
-    float2 destPos = (pos.xy - Dest - 1);
+    float2 destPos = (pos.xy - 1);
 
     float2 destCoord = destPos * ReShade::PixelSize * (1 / Ratio);
 
-    float2 destTopLeft = Dest;
-    float2 destBottomRight = Dest + Size;
+    float2 destTopLeft = float(0, 0);
+    float2 destBottomRight = Size;
 
     float4 colorDest = tex2Dlod(ReShade::BackBuffer, float4(destCoord, 0, 0));
 
@@ -41,9 +38,10 @@ float4 PS_PictureInPicture(float4 vpos : SV_Position, float2 texcoord : TEXCOORD
     return color;
 }
 
-//techniques
-technique PictureInPicture {
-    pass {
+technique PictureInPicture
+{
+    pass
+    {
         VertexShader = PostProcessVS;
         PixelShader = PS_PictureInPicture;
     }
