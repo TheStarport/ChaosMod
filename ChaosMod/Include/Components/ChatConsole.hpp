@@ -13,18 +13,23 @@ class ChatConsole final : public Component
             StyleNode
         };
 
-        union VPtr {
-                char* c{};
+        union ChatData {
+                char* c;
                 ushort* s;
                 uint* i;
                 wchar_t* w;
         };
 
-        inline static std::vector<char> buffer;
-
-        VPtr data{};
+        std::vector<char> buffer;
+        uint size = 0;
+        ChatData data{};
 
     public:
+        ChatConsole()
+        {
+            data.c = buffer.data();
+        }
+
         // The bits in brackets are the defaults, overridden by the definition in
         // DATA\FONTS\rich_fonts.ini.
 
@@ -79,12 +84,15 @@ class ChatConsole final : public Component
 
         void AddNode(const uint node, const uint len)
         {
-            if (const uint newSize = buffer.size() + 8u + len; newSize > buffer.capacity())
+            const uint newSize = size + 8u + len;
+            if (newSize > buffer.capacity())
             {
                 // Double the buffer size if needed
-                buffer.reserve(buffer.size() * 2);
-                data.c = buffer.data() + buffer.size();
+                buffer.resize(newSize);
+                data.c = buffer.data() + size;
             }
+
+            size = newSize;
 
             *data.i++ = node;
             *data.i++ = len;
@@ -121,8 +129,9 @@ class ChatConsole final : public Component
             {
                 using Flush = void (*)(int, char*, unsigned int);
                 static auto flush = reinterpret_cast<Flush>(0x46A150);
-                flush(0, buffer.data(), buffer.size());
+                flush(0, buffer.data(), size);
                 data.c = buffer.data();
+                size = 0;
             }
         }
 
