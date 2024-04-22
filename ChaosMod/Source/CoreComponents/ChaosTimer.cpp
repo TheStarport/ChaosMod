@@ -351,11 +351,7 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 
 void ChaosTimer::Update(const float delta)
 {
-    auto config = Get<ConfigManager>();
-    if (!config->chaosSettings.enable)
-    {
-        return;
-    }
+    const auto config = Get<ConfigManager>();
 
     timeSinceLastUpdate -= delta;
     if (timeSinceLastUpdate < 0.f && config->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilChaos)
@@ -410,7 +406,7 @@ void ChaosTimer::Update(const float delta)
 
     currentTime += delta;
 
-    if (!config->chaosSettings.enableTwitchVoting && currentTime > config->chaosSettings.timeBetweenChaos)
+    if (config->chaosSettings.enable && !config->chaosSettings.enableTwitchVoting && currentTime > config->chaosSettings.timeBetweenChaos)
     {
         TriggerChaos();
 
@@ -427,9 +423,7 @@ void ChaosTimer::Update(const float delta)
 
     while (effect != std::end(activeEffects))
     {
-        auto& info = effect->first->GetEffectInfo();
-
-        if (info.isTimed)
+        if (auto& info = effect->first->GetEffectInfo(); info.isTimed)
         {
             effect->first->Update(delta);
         }
@@ -464,8 +458,7 @@ const std::unordered_map<ActiveEffect*, float>& ChaosTimer::GetActiveEffects() {
 const std::vector<PersistentEffect*>& ChaosTimer::GetActivePersistentEffects() { return Get<ChaosTimer>()->persistentEffects; }
 void ChaosTimer::EndEffectPrematurely(const ActiveEffect* effect)
 {
-    auto& all = Get<ChaosTimer>()->activeEffects;
-    for (auto& iter : all)
+    for (auto& all = Get<ChaosTimer>()->activeEffects; auto& iter : all)
     {
         if (iter.first == effect)
         {
