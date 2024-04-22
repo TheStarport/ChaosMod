@@ -25,7 +25,9 @@ class DrawingHelper final : public Component
         LPDIRECT3DINDEXBUFFER9 indexBuffer = nullptr;   // Buffer to hold indices
 
         LPDIRECT3DVERTEXBUFFER9 videoBuffer = nullptr;
-        LPDIRECT3DTEXTURE9 videoTexture = nullptr; // Buffer to hold the two sides
+        LPDIRECT3DTEXTURE9 videoTexture = nullptr; // Buffer to hold playing video
+        uint videoWidth = 0;
+        uint videoHeight = 0;
 
         LPD3DXSPRITE sprite = nullptr;
 
@@ -460,7 +462,7 @@ class DrawingHelper final : public Component
         glm::vec2 GetResolution() const
         {
             D3DDISPLAYMODE mode;
-            device->GetDisplayMode(0, &mode);
+            (void)device->GetDisplayMode(0, &mode);
 
             return { static_cast<float>(mode.Width), static_cast<float>(mode.Height) };
         }
@@ -472,15 +474,15 @@ class DrawingHelper final : public Component
                 D3DXMATRIX identity;
                 D3DXMatrixIdentity(&identity);
 
-                device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-                device->SetTransform(D3DTS_VIEW, &identity);
-                device->SetTransform(D3DTS_PROJECTION, &identity);
-                device->SetTexture(0, videoTexture);
+                (void)device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+                (void)device->SetTransform(D3DTS_VIEW, &identity);
+                (void)device->SetTransform(D3DTS_PROJECTION, &identity);
+                (void)device->SetTexture(0, videoTexture);
 
                 // maybe some stuff with setting texture stages, unsure
-                device->SetStreamSource(0, videoBuffer, 0, sizeof(Vertex2D));
-                device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
-                device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+                (void)device->SetStreamSource(0, videoBuffer, 0, sizeof(Vertex2D));
+                (void)device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
+                (void)device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
             }
 
             for (auto& call : awaitingCalls)
@@ -491,38 +493,55 @@ class DrawingHelper final : public Component
             awaitingCalls.clear();
         }
 
-        IDirect3DDevice9* GetDeviceHandle() const { return device; }
+        [[nodiscard]] IDirect3DDevice9* GetDeviceHandle() const { return device; }
 
         void ClearVideoTexture()
         {
-            videoTexture->Release();
-            videoTexture = nullptr;
+            if (videoTexture)
+            {
+                videoTexture->Release();
+                videoTexture = nullptr;
+            }
         }
 
-        IDirect3DTexture9* GetVideoSurface()
+        IDirect3DTexture9* GetVideoSurface(const uint width, const uint height)
         {
-            if (!videoTexture)
+            if (width == 0 || height == 0)
             {
+                throw std::logic_error("A video surface cannot have a 0px width or height.");
+            }
+
+            if (videoWidth != width || videoHeight != height)
+            {
+                ClearVideoTexture();
+
                 const auto res = GetResolution();
-                device->CreateTexture(1440u, 960u, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &videoTexture, nullptr);
+                if(device->CreateTexture(width, height, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &videoTexture, nullptr) != S_OK)
+                {
+
+                    videoTexture = nullptr;
+                    return nullptr;
+                }
 
                 // clang-format off
-                static Vertex2D vertices[] = 
+                static Vertex2D vertices[] =
                 {
                     { 0.0f,0.0f - res.y * 0.33f, 0.0f, 1.0f, 0.0f,0.0f, },
-                    { res.x, 0.0f - res.y * 0.33f, 0.0f, 1.0f, 1.0f, 0.0f, }, 
+                    { res.x, 0.0f - res.y * 0.33f, 0.0f, 1.0f, 1.0f, 0.0f, },
                     { 0.0f, res.y * 1.33f,  0.0f, 1.0f, 0.0f, 1.0f, },
                     {  res.x, res.y * 1.33f, 0.0f, 1.0f, 1.0f, 1.0f, },
                 };
                 // clang-format on
 
                 constexpr uint size = sizeof(Vertex2D) * 4;
-                device->CreateVertexBuffer(size, NULL, D3DFVF_XYZRHW | D3DFVF_TEX1, D3DPOOL_DEFAULT, &videoBuffer, nullptr);
+                (void)device->CreateVertexBuffer(size, NULL, D3DFVF_XYZRHW | D3DFVF_TEX1, D3DPOOL_DEFAULT, &videoBuffer, nullptr);
 
                 void* data;
-                videoBuffer->Lock(0, size, &data, D3DLOCK_DISCARD);
-                memcpy_s(data, size, vertices, size);
-                videoBuffer->Unlock();
+                if (videoBuffer->Lock(0, size, &data, D3DLOCK_DISCARD) == S_OK)
+                {
+                    memcpy_s(data, size, vertices, size);
+                    (void)videoBuffer->Unlock();
+                }
             }
 
             return videoTexture;

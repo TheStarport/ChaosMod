@@ -88,8 +88,6 @@ class MoviePlayer final : public Component
 
             currentPlayingMovie = &data->second;
 
-            texture = Get<DrawingHelper>()->GetVideoSurface();
-
             avformat_open_input(&formatContext, data->second.path.c_str(), nullptr, nullptr);
             avformat_find_stream_info(formatContext, nullptr);
 
@@ -109,7 +107,7 @@ class MoviePlayer final : public Component
             avcodec_parameters_to_context(codecContext, codecParameters);
             avcodec_open2(codecContext, codec, nullptr);
 
-            AVFrame* frameRgb = av_frame_alloc();
+            AVFrame* frameRgb = av_frame_alloc(); // NOLINT
 
             const int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB24, codecContext->width, codecContext->height, 1);
 
@@ -120,15 +118,23 @@ class MoviePlayer final : public Component
 
             ma_sound_init_from_data_source(&engine, &data->second.audioBufferWrapper, MA_SOUND_FLAG_NO_SPATIALIZATION, nullptr, &miniAudioSound);
 
-            stopwatch->Reset();
-            stopwatch->Start();
             ma_sound_set_volume(&miniAudioSound, 0.2f);
             ma_sound_start(&miniAudioSound);
+
+            texture = Get<DrawingHelper>()->GetVideoSurface(codecContext->width, codecContext->height);
+            if (!texture)
+            {
+                StopMovie();
+                return;
+            }
+
+            stopwatch->Reset();
+            stopwatch->Start();
         }
 
         void FrameUpdate()
         {
-            if (!currentPlayingMovie.has_value())
+            if (!currentPlayingMovie.has_value() || !texture)
             {
                 return;
             }
@@ -174,19 +180,23 @@ class MoviePlayer final : public Component
                     sws_scale(sws_ctx, frame->data, frame->linesize, 0, swapFrame->height, swapFrame->data, swapFrame->linesize);
 
                     D3DLOCKED_RECT lockedRect;
-                    if (HRESULT l; (l = texture->LockRect(0, &lockedRect, nullptr, D3DLOCK_DISCARD)) == S_OK)
+                    if (texture->LockRect(0, &lockedRect, nullptr, D3DLOCK_DISCARD) == S_OK)
                     {
                         auto* dest = static_cast<unsigned char*>(lockedRect.pBits);
 
-                        for (int i = 0; i < swapFrame->width * swapFrame->height * 3; i += 3)
+                        for(int y = 0; y < swapFrame->height; y++)
                         {
-                            *dest++ = swapFrame->data[0][i + 2];
-                            *dest++ = swapFrame->data[0][i + 1];
-                            *dest++ = swapFrame->data[0][i];
-                            *dest++ = transparency;
+                            const auto* src = &swapFrame->data[0][swapFrame->linesize[0] * y];
+                            for(int i = 0; i < swapFrame->width * 3; i += 3)
+                            {
+                                *dest++ = src[i + 2];
+                                *dest++ = src[i + 1];
+                                *dest++ = src[i];
+                                *dest++ = transparency;
+                            }
                         }
 
-                        texture->UnlockRect(0);
+                        (void)texture->UnlockRect(0);
                     }
 
                     av_frame_free(&swapFrame);
