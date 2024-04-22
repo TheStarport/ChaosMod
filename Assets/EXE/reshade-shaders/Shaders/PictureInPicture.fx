@@ -16,7 +16,7 @@ float4 PS_PictureInPicture(float4 vpos : SV_Position, float2 uv : TEXCOORD) : SV
 
     float2 destCoord = destPos * ReShade::PixelSize * (1 / Ratio);
 
-    float2 destTopLeft = float(0, 0);
+    float2 destTopLeft = float2(0, 0);
     float2 destBottomRight = Size;
 
     float4 colorDest = tex2Dlod(ReShade::BackBuffer, float4(destCoord, 0, 0));
