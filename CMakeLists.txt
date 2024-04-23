@@ -126,8 +126,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreFLServerEXE
 target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreRemoteClient.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreServer.lib")
 
-# Build Scripts
+# Copy Discord SDK
+file(COPY "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk/lib/x86/discord_game_sdk.dll"
+        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
+# Build Scripts
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE "Winmm.lib")
 
@@ -136,8 +139,6 @@ if (WIN32)
         set(OUT_PATH ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE_INIT}/*.dll)
         string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk/lib/x86"
-                    $<TARGET_FILE_DIR:${PROJECT_NAME}>
                 COMMAND copy /Y "${OUT_PATH}" "$ENV{FL_CHAOS_MOD}"
                 COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
         )
