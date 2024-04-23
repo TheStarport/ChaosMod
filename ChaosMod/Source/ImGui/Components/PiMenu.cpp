@@ -10,8 +10,8 @@ namespace ImGuiExt
     {
             static constexpr int maxPieMenuStack = 8;
             static constexpr int maxPieItemCount = 12;
-            static constexpr int radiusEmpty = 30;
-            static constexpr int radiusMin = 30;
+            static constexpr int radiusEmpty = 15;
+            static constexpr int radiusMin = 15;
             static constexpr int minItemCount = 3;
             static constexpr int minItemCountPerLevel = 3;
 
@@ -75,7 +75,6 @@ namespace ImGuiExt
     void EndPieMenuEx()
     {
         IM_ASSERT(pieMenuContext.currentIndex >= 0);
-        PieMenuContext::PieMenu& oPieMenu = pieMenuContext.pieMenuStack[pieMenuContext.currentIndex];
 
         --pieMenuContext.currentIndex;
     }
@@ -128,10 +127,10 @@ namespace ImGuiExt
         drawList->PushClipRectFullScreen();
 
         const ImVec2 mousePos = ImGui::GetIO().MousePos;
-        const ImVec2 dragDelta = ImVec2(mousePos.x - pieMenuContext.center.x, mousePos.y - pieMenuContext.center.y);
+        const auto dragDelta = ImVec2(mousePos.x - pieMenuContext.center.x, mousePos.y - pieMenuContext.center.y);
         const float dragDistSqr = dragDelta.x * dragDelta.x + dragDelta.y * dragDelta.y;
 
-        float currentRadius = static_cast<float>(PieMenuContext::radiusEmpty);
+        auto currentRadius = static_cast<float>(PieMenuContext::radiusEmpty);
 
         auto area = ImRect(pieMenuContext.center, pieMenuContext.center);
 
@@ -146,7 +145,7 @@ namespace ImGuiExt
             const float menuHeight = sqrt(pieMenu.maxItemSqrDiameter);
 
             const float minRadius = currentRadius;
-            const float maxRadius = minRadius + (menuHeight * pieMenu.currentIndex) / (2.f);
+            const float maxRadius = minRadius + (menuHeight * pieMenu.currentIndex) / (3.f);
 
             const float itemArcSpan = 2 * IM_PI / ImMax(PieMenuContext::minItemCount + PieMenuContext::minItemCountPerLevel * index, pieMenu.currentIndex);
             float dragAngle = atan2f(dragDelta.y, dragDelta.x);
@@ -156,9 +155,8 @@ namespace ImGuiExt
             for (int itemN = 0; itemN < pieMenu.currentIndex; itemN++)
             {
                 const char* itemLabel = pieMenu.itemNames[itemN].Data;
-                const float innerSpacing = style.ItemInnerSpacing.x / minRadius / 2;
-                const float minInnerSpacing = style.ItemInnerSpacing.x / (minRadius * 2.f);
-                const float maxInnerSpacing = style.ItemInnerSpacing.x / (maxRadius * 2.f);
+                const float minInnerSpacing = style.ItemInnerSpacing.x / (minRadius * 3.f);
+                const float maxInnerSpacing = style.ItemInnerSpacing.x / (maxRadius * 3.f);
                 const float itemInnerAngMin = itemArcSpan * (itemN - 0.5f + minInnerSpacing) + fRotate;
                 const float itemInnerAngMax = itemArcSpan * (itemN + 0.5f - minInnerSpacing) + fRotate;
                 const float itemOuterAngMin = itemArcSpan * (itemN - 0.5f + maxInnerSpacing) + fRotate;
