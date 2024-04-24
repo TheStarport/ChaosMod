@@ -186,13 +186,14 @@ class MoviePlayer final : public Component
 
                         for(int y = 0; y < swapFrame->height; y++)
                         {
+                            auto* destRow = &dest[y * lockedRect.Pitch];
                             const auto* src = &swapFrame->data[0][swapFrame->linesize[0] * y];
                             for(int i = 0; i < swapFrame->width * 3; i += 3)
                             {
-                                *dest++ = src[i + 2];
-                                *dest++ = src[i + 1];
-                                *dest++ = src[i];
-                                *dest++ = transparency;
+                                *destRow++ = src[i + 2];
+                                *destRow++ = src[i + 1];
+                                *destRow++ = src[i];
+                                *destRow++ = transparency;
                             }
                         }
 

@@ -17,8 +17,7 @@ class ArkSurvivalEvolvedExperience final : public ActiveEffect
 
         void Update(float delta) override
         {
-            const auto ship = Utils::GetCShip();
-            if (ship && ship->system != lastSystem)
+            if (const auto ship = Utils::GetCShip(); ship && ship->system != lastSystem)
             {
                 const auto reshade = Get<ReshadeManager>();
                 reshade->SetUniformFloat("qUINT_bloom.fx", "BLOOM_CURVE", { 1.5f, 0.f, 0.f }, 1);
@@ -33,7 +32,7 @@ class ArkSurvivalEvolvedExperience final : public ActiveEffect
                     // Bad system, dial it down
                     reshade->SetUniformFloat("qUINT_bloom.fx", "BLOOM_INTENSITY", { 1.45f, 0.f, 0.f }, 1);
                 }
-                lastSystem == ship->system;
+                lastSystem = ship->system;
             }
         }
 
