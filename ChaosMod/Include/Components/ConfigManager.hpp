@@ -26,13 +26,24 @@ struct ChaosSettings
             Countdown
         };
 
+        enum class TwitchVoteVisibility
+        {
+            NotVisible,
+            TotalOnly,
+            PerEffectTotal,
+            PerEffectPercentage
+        };
+
         bool enable = false;
         bool blockTeleportsDuringMissions = false;
         float timeBetweenChaos = 45.0f;
         float defaultEffectDuration = 135.0f;
         uint totalAllowedConcurrentEffects = 8;
+
         bool enableTwitchVoting = false;
         float baseTwitchVoteWeight = 1.0f;
+        TwitchVoteVisibility twitchVoteVisibility = TwitchVoteVisibility::NotVisible;
+
         DWORD progressBarColor = 0xFFFFFFFF;
         DWORD progressBarTextColor = 0xFF00FF00;
         bool showTimeRemainingOnEffects = false;
@@ -40,7 +51,7 @@ struct ChaosSettings
         std::map<std::string, std::map<std::string, bool>> toggledEffects;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ChaosSettings, enable, blockTeleportsDuringMissions, timeBetweenChaos, defaultEffectDuration,
-                                       totalAllowedConcurrentEffects, enableTwitchVoting, baseTwitchVoteWeight, progressBarColor, progressBarTextColor,
+                                       totalAllowedConcurrentEffects, enableTwitchVoting, baseTwitchVoteWeight, twitchVoteVisibility, progressBarColor, progressBarTextColor,
                                        showTimeRemainingOnEffects, toggledEffects, progressBarType);
 };
 

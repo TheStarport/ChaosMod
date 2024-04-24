@@ -80,6 +80,20 @@ class Configurator final
                     "be more preferable if you have fewer engaged viewers as to still allow for a degree of randomness.");
             }
 
+            static std::array timerOptions = { "Do Not Show", "Total Only", "Vote Per Effect (Total)", "Vote Per Effect (Percentage)" };
+
+            ImGui::Combo("Twitch Vote Visibilty:", reinterpret_cast<int*>(&config->chaosSettings.twitchVoteVisibility),
+                timerOptions.data(), timerOptions.size());
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip(
+                    "When using Twitch votes, you can decide how visible votes shall be:\n\n"
+                    "Do Not Show:                  Do not display how many votes have been cast for the next effect. Total surprise.\n"
+                    "Total Only:                   Display only the amount of votes that have been cast, but not what they have been cast for.\n"
+                    "Vote Per Effect (Total):      Display how many votes in total have been cast for each potential effect.\n"
+                    "Vote Per Effect (Percentage): Display how many votes as a percentage have been cast for each potential effect.");
+            }
+
             static bool initialized = false;
             ImGui::BeginDisabled(!config->chaosSettings.enableTwitchVoting || initialized);
             if (ImGui::Button("Initialize Voting Proxy") && Get<TwitchVoting>()->Initialize())

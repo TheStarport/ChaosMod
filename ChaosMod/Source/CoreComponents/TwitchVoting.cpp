@@ -10,11 +10,11 @@
 
 #include <nlohmann/json.hpp>
 
-std::string TwitchVoting::GetPipeJson(std::string_view identifier, std::vector<std::string> params)
+std::string TwitchVoting::GetPipeJson(std::string_view identifier, const std::vector<std::string>& params)
 {
     nlohmann::json finalJSON;
-    finalJSON["Identifier"] = identifier;
-    finalJSON["Options"] = params;
+    finalJSON["identifier"] = identifier;
+    finalJSON["options"] = params;
     return finalJSON.dump();
 }
 
@@ -262,6 +262,11 @@ void TwitchVoting::Poll()
     }
 }
 
+const TwitchVoting::VoteInfo& TwitchVoting::GetCurrentVoteInfo() const
+{
+    return voteInfo;
+}
+
 void TwitchVoting::SendToPipe(const std::string_view identifier, const std::vector<std::string>& params) const
 {
     auto msg = GetPipeJson(identifier, params);
@@ -295,9 +300,9 @@ void TwitchVoting::HandleMsg(std::string_view message)
             return;
         }
 
-        if (const std::string identifier = receivedJson["Identifier"]; identifier == "voteresult")
+        if (const std::string identifier = receivedJson["identifier"]; identifier == "voteresult")
         {
-            int result = receivedJson["SelectedOption"];
+            int result = receivedJson["selectedOption"];
 
             hasReceivedResult = true;
 
@@ -306,17 +311,21 @@ void TwitchVoting::HandleMsg(std::string_view message)
         }
         else if (identifier == "currentvotes")
         {
-            if (const std::vector<int> options = receivedJson["Votes"]; options.size() == votes.size())
+            const std::vector<int> votes = receivedJson["votes"];
+            const std::vector<float> votePercentages = receivedJson["votePercentages"];
+            voteInfo.totalVotes = receivedJson["totalVotes"];
+            if (votes.size() == voteInfo.votes.size())
             {
-                for (uint idx = 0; idx < options.size(); idx++)
+                for (uint idx = 0; idx < voteInfo.votes.size(); idx++)
                 {
-                    votes[idx] = options[idx];
+                    voteInfo.votes[idx] = votes[idx];
+                    voteInfo.votePercentages[idx] = votePercentages[idx];
                 }
             }
         }
         else if (identifier == "error")
         {
-            Log(std::format("Error from pipe! {}", receivedJson["Message"].get<std::string>()));
+            Log(std::format("Error from pipe! {}", receivedJson["message"].get<std::string>()));
         }
     }
 }

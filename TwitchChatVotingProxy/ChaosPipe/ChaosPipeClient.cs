@@ -1,5 +1,6 @@
 ﻿using System.IO.Pipes;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Timers;
 using Serilog;
 using Timer = System.Timers.Timer;
@@ -30,45 +31,16 @@ internal class ChaosPipeClient : IChaosPipeClient
     private readonly Timer _pipeTick = new();
     private readonly StreamWriter? _pipeWriter;
     private Task<string?>? _readPipeTask;
-
-    private class PipeMessage
+    
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
-        public string? Identifier { get; set; } = null;
-        public List<string>? Options { get; set; } = null;
-    }
-
-    public class CurrentVotesResult
-    {
-        public string Identifier { get; } = "currentvotes";
-        public List<int> Votes { get; }
-
-        public CurrentVotesResult(List<int> votes)
+        AllowTrailingCommas = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters =
         {
-            Votes = votes;
+            new JsonStringEnumConverter()
         }
-    }
-
-    public class VoteResultObject
-    {
-        public string Identifier { get; } = "voteresult";
-        public int? SelectedOption { get; }
-
-        public VoteResultObject(int? selectedOption)
-        {
-            SelectedOption = selectedOption;
-        }
-    }
-
-    private class ErrorObject
-    {
-        public string Identifier { get; } = "error";
-        public string Message { get; }
-
-        public ErrorObject(string message)
-        {
-            Message = $"{message} Reverting to normal mode.";
-        }
-    }
+    };
 
     public ChaosPipeClient()
     {
@@ -79,7 +51,11 @@ internal class ChaosPipeClient : IChaosPipeClient
         // Connect to the chaos mod pipe
         try
         {
-            _pipe.Connect(5000);
+            #if DEBUG
+                _pipe.Connect(Timeout.Infinite);
+            #else
+                _pipe.Connect(5000);
+            #endif
             _pipeReader = new StreamReader(_pipe);
             _pipeWriter = new StreamWriter(_pipe)
             {
@@ -139,7 +115,7 @@ internal class ChaosPipeClient : IChaosPipeClient
         else
         {
             CurrentVotesResult res = new(args.CurrentVotes);
-            SendMessageToPipe(JsonSerializer.Serialize(res));
+            SendMessageToPipe(JsonSerializer.Serialize(res, _jsonSerializerOptions));
         }
     }
     /// <summary>
@@ -159,7 +135,7 @@ internal class ChaosPipeClient : IChaosPipeClient
             args.ChosenOption = 0;
         }
         VoteResultObject result = new(args.ChosenOption);
-        SendMessageToPipe(JsonSerializer.Serialize(result));
+        SendMessageToPipe(JsonSerializer.Serialize(result, _jsonSerializerOptions));
         _logger.Debug($"Vote result sent to pipe: {args.ChosenOption}");
     }
     
@@ -204,7 +180,7 @@ internal class ChaosPipeClient : IChaosPipeClient
             _readPipeTask = null;
 
             // Evaluate message
-            var pipe = JsonSerializer.Deserialize<PipeMessage>(message);
+            var pipe = JsonSerializer.Deserialize<PipeMessage>(message, _jsonSerializerOptions);
             switch (pipe?.Identifier)
             {
                 case "hello_back":

@@ -98,7 +98,7 @@ internal class ChaosModController
     /// </summary>
     private void OnGetCurrentVotes(object? sender, GetCurrentVotesArgs args)
     {
-        args.CurrentVotes = _activeVoteOptions.Select(_ => _.Votes).ToList();
+        args.CurrentVotes = _activeVoteOptions.Select(x => x.Votes).ToList();
     }
 
     /// <summary>

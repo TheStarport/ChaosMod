@@ -3,6 +3,15 @@
 
 class TwitchVoting final : public Component
 {
+    public:
+        struct VoteInfo
+        {
+                int totalVotes = 0;
+                std::array<int, 4> votes = {};
+                std::array<float, 4> votePercentages = {};
+        };
+
+    private:
         HANDLE processHandle = nullptr;
         void* pipeHandle = INVALID_HANDLE_VALUE;
         u64 lastPing = 0;
@@ -18,10 +27,11 @@ class TwitchVoting final : public Component
 
         bool isVotingRunning = false;
 
-        std::array<int, 4> votes = {};
+        VoteInfo voteInfo{};
+
         std::vector<ActiveEffect*> effectSelection;
 
-        static std::string GetPipeJson(std::string_view identifier, std::vector<std::string> params);
+        static std::string GetPipeJson(std::string_view identifier, const std::vector<std::string>& params);
         bool SpawnVotingProxy();
         void HandleMsg(std::string_view message);
         void SendToPipe(std::string_view identifier, const std::vector<std::string>& params = {}) const;
@@ -31,4 +41,5 @@ class TwitchVoting final : public Component
         ~TwitchVoting() override;
         bool Initialize();
         void Poll();
+        const VoteInfo& GetCurrentVoteInfo() const;
 };
