@@ -8,6 +8,7 @@ public enum VotingMode
     Percentage,
 }
 
+[Serializable]
 public class Configuration
 {
     public VotingMode VotingMode { get; set; } = VotingMode.Majority;
@@ -17,6 +18,7 @@ public class Configuration
     public string? TwitchToken { get; set; }
     public List<string> PermittedUsernames { get; set; } = new();
     public string? VotingPrefix { get; set; }
+    public bool SendMessageUpdates { get; set; }
 
     [JsonIgnore]
     public bool TwitchEnabled => !(string.IsNullOrEmpty(TwitchUsername) || string.IsNullOrEmpty(TwitchChannelName)
