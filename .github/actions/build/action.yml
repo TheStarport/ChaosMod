@@ -31,6 +31,9 @@ runs:
         echo "DX9_SDK=$WIN_HOME/dx9" >> $GITHUB_ENV
       shell: bash
 
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+
     - uses: ilammy/msvc-dev-cmd@v1.10.0
       with:
         arch: x86
@@ -57,6 +60,14 @@ runs:
         echo Cleaning up install files
         rm -fR _DX*_ _DX*_.exe
       shell: bash
+
+    - name: Dotnet Restore Voting Proxy
+      run: dotnet restore ${{ github.workspace }}/TwitchChatVotingProxy/ -p:RestorePackagesConfig=true -p:Configuration=Release
+      shell: pwsh
+
+    - name: Dotnet Build Voting Proxy
+      run: dotnet publish ${{ github.workspace }}/TwitchChatVotingProxy/ -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
+      shell: pwsh
 
     - name: CMake Generate
       run: cmake --preset ninja -S ${{ github.workspace }} -B ${{ github.workspace }}\build\ninja
