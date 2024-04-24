@@ -21,31 +21,33 @@ std::string TwitchVoting::GetPipeJson(std::string_view identifier, std::vector<s
 bool TwitchVoting::SpawnVotingProxy()
 {
     // A previous instance of the voting proxy could still be running, wait for it to release the mutex
-    if (const auto mutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex"))
+    if (const auto mutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVotingMutex"))
     {
         WaitForSingleObject(mutex, INFINITE);
         ReleaseMutex(mutex);
         CloseHandle(mutex);
     }
 
+    processHandle = nullptr;
+
     STARTUPINFOA startupInfo = {};
     PROCESS_INFORMATION procInfo = {};
 
-    static char votingProxyArgs[] = "TwitchChatVotingProxy.exe --startProxy";
+    std::string votingProxyArgs = "TwitchChatVotingProxy.exe --startProxy";
 
-#ifdef _DEBUG
-    DWORD attributes = NULL;
-    if (std::filesystem::exists(".forcenovotingconsole"))
-    {
-        attributes = CREATE_NO_WINDOW;
-    }
+    const auto config = Get<ConfigManager>();
 
-    bool result = CreateProcessA(nullptr, votingProxyArgs, nullptr, nullptr, TRUE, attributes, nullptr, nullptr, &startupInfo, &procInfo);
-#else
-    bool result = CreateProcessA(nullptr, votingProxyArgs, nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &startupInfo, &procInfo);
-#endif
-
-    if (!result)
+    if (const bool result = CreateProcessA(nullptr,
+                                     votingProxyArgs.data(),
+                                     nullptr,
+                                     nullptr,
+                                     TRUE,
+                                     CREATE_NO_WINDOW,
+                                     nullptr,
+                                     nullptr,
+                                     &startupInfo,
+                                     &procInfo);
+        !result)
     {
         LPSTR messageBuffer = nullptr;
         const size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -66,6 +68,8 @@ bool TwitchVoting::SpawnVotingProxy()
     // Sleep for 1 second to give the proxy time to start
     Sleep(1000);
 
+    processHandle = procInfo.hProcess;
+
     return true;
 }
 
@@ -78,7 +82,33 @@ void TwitchVoting::Cleanup()
         CloseHandle(pipeHandle);
 
         pipeHandle = INVALID_HANDLE_VALUE;
+
+        if(WaitForSingleObject(processHandle, 0) != WAIT_TIMEOUT)
+        {
+            TerminateProcess(processHandle, 0);
+            CloseHandle(processHandle);
+            processHandle = nullptr;
+        }
     }
+
+    // Backup to ensure no dangling process
+    const auto snapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 entry;
+    entry.dwSize = sizeof (entry);
+    BOOL res = Process32First(snapShot, &entry);
+    while (res)
+    {
+        if (wcscmp(entry.szExeFile, L"TwitchChatVotingProxy.exe") == 0)
+        {
+            if (const auto hProcess = OpenProcess(PROCESS_TERMINATE, 0, entry.th32ProcessID); hProcess != nullptr)
+            {
+                TerminateProcess(hProcess, 9);
+                CloseHandle(hProcess);
+            }
+        }
+        res = Process32Next(snapShot, &entry);
+    }
+    CloseHandle(snapShot);
 }
 
 TwitchVoting::~TwitchVoting() { Cleanup(); }
@@ -89,7 +119,10 @@ bool TwitchVoting::Initialize()
     SpawnVotingProxy();
 
     pipeHandle = CreateNamedPipe(
-        LR"(\\.\pipe\ChaosModVVotingPipe)", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BufferSize, BufferSize, 0, nullptr);
+        LR"(\\.\pipe\ChaosModVotingPipe)", PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
+        1, BufferSize, BufferSize,
+        0, nullptr);
 
     if (pipeHandle == INVALID_HANDLE_VALUE)
     {
@@ -111,11 +144,7 @@ void TwitchVoting::Poll()
 
     if (!Get<ConfigManager>()->chaosSettings.enableTwitchVoting)
     {
-        if (pipeHandle != INVALID_HANDLE_VALUE)
-        {
-            Cleanup();
-        }
-
+        Cleanup();
         return;
     }
 
@@ -127,6 +156,7 @@ void TwitchVoting::Poll()
         if (noPingRuns++ == 5)
         {
             Log("Connection to voting proxy process lost. Check chaosmod/chaosproxy.log for more information.");
+            Cleanup();
             return;
         }
 
@@ -153,6 +183,7 @@ void TwitchVoting::Poll()
 
     if (bytesRead > 0)
     {
+        DLog(buffer);
         HandleMsg(buffer);
     }
 
@@ -211,22 +242,23 @@ void TwitchVoting::Poll()
 
         effectSelection = Get<ChaosTimer>()->GetNextEffects();
 
+        int index = alternatedVotingRound ? 1 : 5;
+
         std::vector<std::string> effectNames;
 
-        alternatedVotingRound = !alternatedVotingRound;
-
-        int index = !alternatedVotingRound ? 1 : 5;
-        for (ActiveEffect* effect : effectSelection)
+        for (const ActiveEffect* effect : effectSelection)
         {
             auto info = effect->GetEffectInfo();
             effectNames.push_back(std::format("{}.) {}", index++, info.effectName));
         }
 
-        effectNames.emplace_back(std::format("{}.) Random Effect", !alternatedVotingRound ? 4 : 8));
+        effectNames.emplace_back(std::format("{}.) Random Effect", alternatedVotingRound ? 4 : 8));
 
         SendToPipe("vote", effectNames);
 
         ImGuiManager::SetVotingChoices(effectNames);
+
+        alternatedVotingRound = !alternatedVotingRound;
     }
 }
 
@@ -263,8 +295,7 @@ void TwitchVoting::HandleMsg(std::string_view message)
             return;
         }
 
-        const std::string identifier = receivedJson["Identifier"];
-        if (identifier == "voteresult")
+        if (const std::string identifier = receivedJson["Identifier"]; identifier == "voteresult")
         {
             int result = receivedJson["SelectedOption"];
 
@@ -275,8 +306,7 @@ void TwitchVoting::HandleMsg(std::string_view message)
         }
         else if (identifier == "currentvotes")
         {
-            const std::vector<int> options = receivedJson["Votes"];
-            if (options.size() == votes.size())
+            if (const std::vector<int> options = receivedJson["Votes"]; options.size() == votes.size())
             {
                 for (uint idx = 0; idx < options.size(); idx++)
                 {

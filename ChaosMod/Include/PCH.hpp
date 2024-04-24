@@ -75,6 +75,11 @@ class ChaosMod : public Singleton<ChaosMod>
 };
 
 void Log(const std::string& log);
+#ifdef _DEBUG
+#define DLog(x) Log(x)
+#else
+#define DLog(x)
+#endif
 
 void SetWireFrames();
 void Assert(bool cond, const std::string& text, const std::string& file, int line);
