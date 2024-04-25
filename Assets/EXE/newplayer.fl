@@ -96,7 +96,9 @@ house = 0, fc_f_grp
 house = 0, gd_im_grp
 house = 0, gd_z_grp
 house = -0.3, gd_bh_grp
-house = -1, chaos_jesus
+house = -0.9, chaos_jesus
+house = -0.9, chaos_pasta_church
+house = -0.9, chaos_hostile
 
 [StoryInfo]
 Mission = Mission_01a
