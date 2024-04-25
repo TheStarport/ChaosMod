@@ -21,7 +21,7 @@ class FusRohDah final : public ActiveEffect
                         .WithSystem(ship->system)
                         .WithPosition(ship->get_position(), 1500.f)
                         .WithLevel(50)
-                        .WithPersonality("gun_jesus")
+                        .WithPersonality("pilot_dragon")
                         .WithReputation("chaos_hostile")
                         .WithName(458865)
                         .WithFuse("chaos_teleport_fx")
