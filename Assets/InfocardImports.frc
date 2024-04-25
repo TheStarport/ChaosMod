@@ -329,3 +329,9 @@ H 458869
 
 S 458870 CFSM
 S 458871 Hostile
+S 458872 Italian Weapon of War
+H 458873
+	\m\bITALIAN WEAPON OF WAR\B
+	\l
+	Ancient tales, old as man itself, told of an ancient weapon of war, one that could bring millions to their knees. The unholiest of rituals performed has brought it here today... 
+	\l
