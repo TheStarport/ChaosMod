@@ -33,6 +33,10 @@ enum class AddressTable : DWORD
     DamageHit5 = 0x87330,
     DamageHit6 = 0x87680,
     DamageApply = 0x841EC,
+
+    // NPCs
+    NpcDensityCapRange = 0x058F46,
+
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)
