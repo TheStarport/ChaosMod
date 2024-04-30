@@ -354,7 +354,7 @@ void PatchNotes::Update(const float delta)
     timeSinceLastUpdate -= delta;
 
     // Check that the game is not paused and patch notes are enabled
-    if (Get<ConfigManager>()->patchNotes.enable && !OffsetHelper::IsGamePaused())
+    if (Get<ConfigManager>()->patchNotes.enable)
     {
         if (timeSinceLastUpdate < 0.f && Get<ConfigManager>()->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilPatchNote)
         {

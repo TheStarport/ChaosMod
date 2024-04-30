@@ -466,17 +466,25 @@ void Update(const double delta)
     timeCounter += delta;
     while (timeCounter > SixtyFramesPerSecond)
     {
-        SaveManager::SaveTimer(SixtyFramesPerSecond);
-        Get<ChaosTimer>()->Update(SixtyFramesPerSecond);
-        Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
-        timeCounter -= SixtyFramesPerSecond;
+        if (!OffsetHelper::IsGamePaused())
+        {
+            SaveManager::SaveTimer(SixtyFramesPerSecond);
+            Get<ChaosTimer>()->Update(SixtyFramesPerSecond);
+            Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
+        }
 
         Get<DiscordManager>()->Update();
+
+        timeCounter -= SixtyFramesPerSecond;
+    }
+
+    if (!OffsetHelper::IsGamePaused())
+    {
+        Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
+        PatchNotes::Update(static_cast<float>(delta));
     }
 
     Get<TwitchVoting>()->Poll();
-    Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
-    PatchNotes::Update(static_cast<float>(delta));
 
     timingDetour->UnDetour();
     timingDetour->GetOriginalFunc()(delta);
@@ -538,8 +546,9 @@ ChaosMod::ChaosMod()
 
     // Setup hooks
     const HMODULE common = GetModuleHandleA("common");
+    const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     timingDetour = std::make_unique<FunctionDetour<GlobalTimeFunc>>(
-        reinterpret_cast<GlobalTimeFunc>(GetProcAddress(common, "?UpdateGlobalTime@Timing@@YAXN@Z"))); // NOLINT
+        reinterpret_cast<GlobalTimeFunc>(fl + 0x1B2890)); // NOLINT
     thornLoadDetour = std::make_unique<FunctionDetour<ScriptLoadPtr>>(
         reinterpret_cast<ScriptLoadPtr>(GetProcAddress(common, "?ThornScriptLoad@@YAPAUIScriptEngine@@PBD@Z"))); // NOLINT
 
