@@ -194,9 +194,12 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
     pub::SpaceObj::GetBurnRadius(solar->id, burnRadius, burnLoc);
     if (radius < burnRadius)
     {
-        // Set to the larger radius (plus 500 for good measure)
-        radius = burnRadius + 500;
+        // Set to the larger radius
+        radius = burnRadius;
     }
+
+    // Add an extra 500, just to be safe
+    radius += 500;
 
     bool moor = false;
 
@@ -357,8 +360,16 @@ void Teleporter::WarpToRandomStar(const bool inSystem)
         return;
     }
 
+    // Warp to the system, then the star.
     WarpToRandomSystem();
-    WarpToRandomStar(true);
+
+    Get<GlobalTimers>()->AddTimer(
+            [this](float delta)
+            {
+                WarpToRandomStar(true);
+                return true;
+            },
+            1.0f);
 }
 
 void Teleporter::WarpToRandomSolar(const bool inSystem)
