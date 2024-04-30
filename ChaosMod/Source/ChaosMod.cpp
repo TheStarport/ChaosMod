@@ -187,7 +187,7 @@ void PatchResolution()
 
     // Disable the reading of the znear/zfar/fovy parameters.
     {
-        std::array<byte, 1> patch = { 0x00 };
+        constexpr std::array<byte, 1> patch = { 0x00 };
         MemUtils::WriteProcMem(0x5C8994, patch.data(), 1);
         MemUtils::WriteProcMem(0x5C899C, patch.data(), 1);
         MemUtils::WriteProcMem(0x5C89A4, patch.data(), 1);
@@ -195,9 +195,9 @@ void PatchResolution()
 
     // Force the fovx to predefined values.
     {
-        std::array<byte, 2> patch= { 0x90, 0xE9 };
+        constexpr std::array<byte, 2> patch= { 0x90, 0xE9 };
         MemUtils::WriteProcMem(0x40f617, patch.data(), 2);
-        PBYTE fovX = reinterpret_cast<PBYTE>(HkCb_Fovx_Naked) - 0x40f618 - 5;
+        const PBYTE fovX = reinterpret_cast<PBYTE>(HkCb_Fovx_Naked) - 0x40f618 - 5;
         MemUtils::WriteProcMem(0x40f618 + 1, &fovX, 4);
     }
 
@@ -320,34 +320,34 @@ void RequiredMemEdits()
     MemUtils::NopAddress(0x598C0B, 7);
 
     // Set borderless window mode
-    std::array<byte, 2> borderlessPatch = { 0x00, 0x00 };
+    constexpr std::array<byte, 2> borderlessPatch = { 0x00, 0x00 };
     constexpr DWORD borderlessWindowPatch1 = 0x02477A;
     constexpr DWORD borderlessWindowPatch2 = 0x02490D;
     MemUtils::WriteProcMem(fl + borderlessWindowPatch1, borderlessPatch.data(), 2);
     MemUtils::WriteProcMem(fl + borderlessWindowPatch2, borderlessPatch.data(), 2);
 
     // Ensure the game remains running when out of focus
-    std::array<byte, 1> focusPatch = { 0xEB };
+    constexpr std::array<byte, 1> focusPatch = { 0xEB };
     MemUtils::WriteProcMem(fl + 0x1B2665, focusPatch.data(), focusPatch.size());
 
     // Disable Multi-player
-    std::array<byte, 20> disableMp = { 0xE8, 0x47, 0xE5, 0xEA, 0xFF, 0x83, 0x7C, 0x24, 0x50, 0x02, 0x75, 0x11, 0xDB, 0x05, 0x4C, 0x46, 0x57, 0x00, 0xEB, 0x0D };
+    const std::array<byte, 20> disableMp = { 0xE8, 0x47, 0xE5, 0xEA, 0xFF, 0x83, 0x7C, 0x24, 0x50, 0x02, 0x75, 0x11, 0xDB, 0x05, 0x4C, 0x46, 0x57, 0x00, 0xEB, 0x0D };
     MemUtils::WriteProcMem(fl + 0x174634, disableMp.data(), disableMp.size());
 
-    std::array<byte, 2> disableMp2 = { 0x00, 0x00 };
+    constexpr std::array<byte, 2> disableMp2 = { 0x00, 0x00 };
     MemUtils::WriteProcMem(fl + 0x174744, disableMp2.data(), disableMp2.size());
 
     // Cloaking devices can be internal equipment
-    std::array<byte, 3> cloakingDevicesAsInternalEquipment = { 0x40, 0x17, 0x2D };
+    constexpr std::array<byte, 3> cloakingDevicesAsInternalEquipment = { 0x40, 0x17, 0x2D };
     MemUtils::WriteProcMem(common + 0x139B74, cloakingDevicesAsInternalEquipment.data(), cloakingDevicesAsInternalEquipment.size());
 
-    std::array<byte, 1> holdDownMissiles = { 0x0 };
+    constexpr std::array<byte, 1> holdDownMissiles = { 0x0 };
     MemUtils::WriteProcMem(fl + 0x11D281, holdDownMissiles.data(), 1);
 
-    std::array<byte, 1> planetsKeepOnSpinning = { 0xEB };
+    constexpr std::array<byte, 1> planetsKeepOnSpinning = { 0xEB };
     MemUtils::WriteProcMem(common + 0x0E698E, planetsKeepOnSpinning.data(), 1);
 
-    float nearPlaneFrustum = 0.05f;
+    constexpr float nearPlaneFrustum = 0.05f;
     MemUtils::WriteProcMem(fl + 0x210530, &nearPlaneFrustum, sizeof(float));
 
     ProtectExecuteReadWrite(reinterpret_cast<void*>(0x46b650), 5);
@@ -355,7 +355,7 @@ void RequiredMemEdits()
     *reinterpret_cast<PDWORD>(0x46b651) = static_cast<DWORD>(0x46b580) - static_cast<DWORD>(0x46b651) - 4;
 
     // bypass the single player tests preventing chat
-    std::array<byte, 1> bypassSpChecks = { 0x0 };
+    constexpr std::array<byte, 1> bypassSpChecks = { 0x0 };
     MemUtils::WriteProcMem(0x46a11f + 1, bypassSpChecks.data(), 1);
     MemUtils::WriteProcMem(0x437374 + 1, bypassSpChecks.data(), 1);
     MemUtils::WriteProcMem(0x54ae67 + 1, bypassSpChecks.data(), 1);
@@ -364,17 +364,17 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(0x574f74 + 1, bypassSpChecks.data(), 1);
 
     // Remove cruise speed display limit
-    std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
+    constexpr std::array<byte, 2> removeCruiseSpeedDisplayLimit = { 0x90, 0xE9 };
     MemUtils::WriteProcMem(fl + 0x0D5936, removeCruiseSpeedDisplayLimit.data(), 2);
 
     // Remove level requirements when buying ships and equipment
-    std::array<byte, 1> removeLevelRequirement = { 0xEB };
+    constexpr std::array<byte, 1> removeLevelRequirement = { 0xEB };
     MemUtils::WriteProcMem(fl + 0x080499, removeLevelRequirement.data(), removeLevelRequirement.size());
     MemUtils::WriteProcMem(fl + 0x082E95, removeLevelRequirement.data(), removeLevelRequirement.size());
     MemUtils::WriteProcMem(fl + 0xB948D, removeLevelRequirement.data(), removeLevelRequirement.size());
 
     // Allow ESC to skip cutscenes
-    std::array<byte, 3> skipStory = { 0xEB, 0x0C, 0x90 };
+    constexpr std::array<byte, 3> skipStory = { 0xEB, 0x0C, 0x90 };
     MemUtils::WriteProcMem(fl + 0x5685F, skipStory.data(), skipStory.size());
 
     // Regenerate restart.fl on each launch and ensure that it's only loaded after regeneration
@@ -391,47 +391,47 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(server + 0x6900F, regenerateRestartFl.data(), regenerateRestartFl.size());
 
     // disable PlayerEnemyClamp altogether; instead making NPC enemy target selection random.
-    std::array<byte, 2> disableNpcClamp = { 0xEB, 0x39 };
+    constexpr std::array<byte, 2> disableNpcClamp = { 0xEB, 0x39 };
     MemUtils::WriteProcMem(common + 0x08E86A, disableNpcClamp.data(), disableNpcClamp.size());
 
     // NPCs use scanner (enables CMs).
-    std::array<byte, 1> useScanner = { 0x00 };
+    constexpr std::array<byte, 1> useScanner = { 0x00 };
     MemUtils::WriteProcMem(common + 0x013E52C, useScanner.data(), useScanner.size());
 
     // Allow the fc_n_grp faction to drop [phantom_loot] loot..
-    std::array<byte, 1> nomadPhantom = { 0x01 };
+    constexpr std::array<byte, 1> nomadPhantom = { 0x01 };
     MemUtils::WriteProcMem(content + 0x0BD2D8, nomadPhantom.data(), nomadPhantom.size());
 
     //  Adjust cruise speed according to drag_modifier.
-    std::array<byte, 1> cruiseDragModifier = { 0xEB };
+    constexpr std::array<byte, 1> cruiseDragModifier = { 0xEB };
     MemUtils::WriteProcMem(common + 0x053796, cruiseDragModifier.data(), cruiseDragModifier.size());
 
     // Enable thruster sounds when going backwards
-    std::array<byte, 6> thrusterSounds1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xE4, 0x08 };
+    const std::array<byte, 6> thrusterSounds1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xE4, 0x08 };
     MemUtils::WriteProcMem(fl + 0x012F217, thrusterSounds1.data(), thrusterSounds1.size());
 
-    std::array<byte, 1> thrusterSounds2 = { 0x00 };
+    constexpr std::array<byte, 1> thrusterSounds2 = { 0x00 };
     MemUtils::WriteProcMem(fl + 0x012F221, thrusterSounds2.data(), thrusterSounds2.size());
 
     // Ensure that drag modifier works even if inside
-    std::array<byte, 2> dragModifierAllZone = { 0x41, 0x74 };
+    constexpr std::array<byte, 2> dragModifierAllZone = { 0x41, 0x74 };
     MemUtils::WriteProcMem(common + 0x0DAD24, dragModifierAllZone.data(), dragModifierAllZone.size());
 
     // Allow the fc_n_grp faction to drop [phantom_loot] loot..
-    int missileFlag = 15;
+    constexpr int missileFlag = 15;
     MemUtils::WriteProcMem(content + 0x0F20F0, &missileFlag, sizeof(int));
 
     // Fix sounds not playing on negative thrust
-    std::array<byte, 6> soundFix1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xe4, 0x08 };
-    std::array<byte, 1> soundFix2 = { 0x00 };
+    const std::array<byte, 6> soundFix1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xe4, 0x08 };
+    constexpr std::array<byte, 1> soundFix2 = { 0x00 };
     MemUtils::WriteProcMem(fl + 0x12F217, soundFix1.data(), soundFix1.size());
     MemUtils::WriteProcMem(fl + 0x12F221, soundFix2.data(), soundFix2.size());
 
     // Allow the player to form on hostiles
-    float newFormationMin = -2.0f;
+    constexpr float newFormationMin = -2.0f;
     MemUtils::WriteProcMem(common + 0x13F540, &newFormationMin, sizeof(float));
 
-    std::array<byte, 26> uiSmoothness = { 0x60, 0x8B, 0x86, 0x85, 0x03, 0x00, 0x00, 0x8D, 0x9E, 0x5E, 0x03, 0x00, 0x00,
+    const std::array<byte, 26> uiSmoothness = { 0x60, 0x8B, 0x86, 0x85, 0x03, 0x00, 0x00, 0x8D, 0x9E, 0x5E, 0x03, 0x00, 0x00,
                                           0x50, 0x53, 0xE8, 0x37, 0x6C, 0xFD, 0xFF, 0x83, 0xC4, 0x08, 0x61, 0xEB, 0x63 };
     MemUtils::WriteProcMem(fl + 0x18B2D5, uiSmoothness.data(), uiSmoothness.size());
 
@@ -440,12 +440,17 @@ void RequiredMemEdits()
     MemUtils::NopAddress(fl + 0xCE71E, 2);
 
     // Patch HP_Fire extra audio not being played
-    std::array<byte, 9> hpFirePatch = { 0x83, 0xFA, 0xFF, 0xBA, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3 };
+    const std::array<byte, 9> hpFirePatch = { 0x83, 0xFA, 0xFF, 0xBA, 0xFF, 0xFF, 0xFF, 0xFF, 0xC3 };
     MemUtils::WriteProcMem(common + 0x039F77, hpFirePatch.data(), hpFirePatch.size());
 
     // Replace the word 'MULTIPLAYER' with 'CHAOS MOD' in the options menu
-    uint menu3Ids = 458753;
+    constexpr uint menu3Ids = 458753;
     MemUtils::WriteProcMem(fl + 0xAABFC, &menu3Ids, 4);
+
+    // Disable target cycling within wing formations
+    // Appears to prevent several AI spawning realated crashes, but full consequences not understood.
+    MemUtils::NopAddress(0x062EE640, 3);
+    MemUtils::NopAddress(0x062EE64A, 2);
 
     BugFixes::SetupDetours();
 
@@ -517,7 +522,7 @@ ChaosMod::ChaosMod()
     freeLibraryDetour.Detour(FreeLibraryDetour);
 
     // The very first thing we do is change the saved data folder so we can save and load properly
-    std::string newSavedDataFolder = "FLChaosMod";
+    const std::string newSavedDataFolder = "FLChaosMod";
     MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
 
     CreateDefaultPerfOptions();
@@ -592,8 +597,8 @@ FunctionDetour startUpDetour(DALib::Startup);
 
 bool OnStartUp(HWND window, const char* unk)
 {
-    float newX = 0.5f;
-    float newY = 0.5f;
+    constexpr float newX = 0.5f;
+    constexpr float newY = 0.5f;
 
     MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
     MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));

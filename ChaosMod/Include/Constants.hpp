@@ -34,8 +34,11 @@ class Constants final
         inline static std::array bannedSystems{ CreateID("st01"),  CreateID("st02"),  CreateID("st03"),
                                                 CreateID("st02c"), CreateID("st03b"), CreateID("FP7_System") };
 
-        inline static std::array storyFactions{ MakeId("chaos_jesus"), MakeId("fc_ouk_grp"), MakeId("fc_q_grp"),  MakeId("fc_uk_grp"), MakeId("fc_f_grp"),
-                                                MakeId("fc_or_grp"),   MakeId("fc_rn_grp"),  MakeId("fc_kn_grp"), MakeId("fc_ln_grp"), MakeId("fc_n_grp") };
+        inline static std::array storyFactions{
+            MakeId("chaos_jesus"), MakeId("fc_ouk_grp"), MakeId("fc_q_grp"),  MakeId("fc_uk_grp"), MakeId("fc_f_grp"),
+            MakeId("fc_or_grp"),   MakeId("fc_rn_grp"),  MakeId("fc_kn_grp"), MakeId("fc_ln_grp"), MakeId("fc_n_grp"),
+            MakeId("chaos_pasta_church"), MakeId("chaos_hostile")
+        };
 
     public:
         Constants() = delete;

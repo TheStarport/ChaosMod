@@ -24,6 +24,8 @@ enum class AddressTable : DWORD
     TradelaneSpeed = 0x13F3CC,
     CollisionDamage = 0x18D184,
 
+    ShipCanFireWhenCloaked = 0x3A023,
+
     ShipDestroyedFunction = 0x87274,
 
     DamageHit1 = 0x853F4,
