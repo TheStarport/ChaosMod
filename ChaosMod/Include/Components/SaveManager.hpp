@@ -67,9 +67,9 @@ class SaveManager
     public:
         SaveManager() = delete;
 
-        static void SaveTimer(float delta)
+        static void SaveTimer(const float delta)
         {
-            if (Get<ConfigManager>()->autoSaveSettings.enable)
+            if (!Get<ConfigManager>()->autoSaveSettings.enable)
             {
                 return;
             }
