@@ -5,13 +5,13 @@
 
 class Tachycardia final : public MemoryEffect
 {
+    using MemoryEffect::MemoryEffect;
+
     // clang-format off
     MemoryListStart(offsets)
     MemoryListItem("content.dll", NpcDensityCapRange, sizeof(float))
     MemoryListEnd(offsets);
     // clang-format on
-
-
 
     void Begin() override
     {
@@ -32,9 +32,6 @@ class Tachycardia final : public MemoryEffect
         const auto& spacePopController = static_cast<const uint&>(reinterpret_cast<uint>(GetModuleHandleA("content.dll")) + 0x12FE64);
         pub::Controller::SetHeartbeatInterval(spacePopController, 3.f);
     }
-
-    public:
-        explicit Tachycardia(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) {}
 };
 
 // clang-format off

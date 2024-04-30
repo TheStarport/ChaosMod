@@ -6,6 +6,8 @@
 
 class DirtyHax final : public MemoryEffect
 {
+    using MemoryEffect::MemoryEffect;
+
         // clang-format off
         MemoryListStart(offsets)
         MemoryListItem("common.dll", ShipCanFireWhenCloaked, sizeof(float))
@@ -15,8 +17,6 @@ class DirtyHax final : public MemoryEffect
         std::vector<ResourcePtr<SpawnedObject>> npcs;
         void Spawn()
         {
-            
-            
             const auto ship = Utils::GetCShip();
 
             for (auto npc : npcs)
@@ -69,10 +69,21 @@ class DirtyHax final : public MemoryEffect
 
             Spawn();
         }
-        void OnLoad() override { Spawn(); }
 
-    public:
-        explicit DirtyHax(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) {}
+        void OnLoad() override { Spawn(); }
+    
+        void End() override
+        {
+            MemoryEffect::End();
+
+            for (auto npc : npcs)
+            {
+                if (const auto resource = npc.Acquire())
+                {
+                    dynamic_cast<CShip*>(resource->obj)->cloakPercentage = 0.f;
+                }
+            }
+        }
 };
 
 // clang-format off
