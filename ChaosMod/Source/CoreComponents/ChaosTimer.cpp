@@ -182,8 +182,6 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
     ImGuiManager::AddToEffectHistory(info.effectName, info.description);
 
-    effect->Begin();
-
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
     float timing = info.isTimed ? modifiers * (info.timingModifier * Get<ConfigManager>()->chaosSettings.defaultEffectDuration) : 30.0f;
 
@@ -192,7 +190,11 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
         timing = info.fixedTimeOverride;
     }
 
+    // Set the time then call the begin function (in case an effect wants to increase its own duration)
     activeEffects[effect] = timing;
+    effect->Begin();
+
+    // Play next effect audio
     PlayNextEffect();
 
     // Force discord update
