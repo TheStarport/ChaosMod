@@ -41,7 +41,6 @@ std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 
 using CreateIdFunc = uint (*)(const char* str);
 std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
-FILE* hashFile = nullptr;
 std::map<std::string, uint> hashMap;
 
 std::optional<std::string> ChaosMod::HashLookup(const uint hash)
@@ -75,15 +74,11 @@ uint CreateIdDetour(const char* string)
     if (const std::string str = string; !hashMap.contains(str))
     {
         hashMap[str] = hash;
-#ifdef _DEBUG
-        if (!hashFile)
-        {
-            (void)fopen_s(&hashFile, "hashmap.csv", "wb");
-        }
-
+        FILE* hashFile = nullptr;
+        (void)fopen_s(&hashFile, "hashmap.csv", "a");
         (void)fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
         (void)fflush(hashFile);
-#endif
+        (void)fclose(hashFile);
     }
 
     createIdDetour->Detour(CreateIdDetour);
@@ -296,6 +291,8 @@ void RequiredMemEdits()
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
     const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
 
+    // delete hashmap if it exsts
+    (void)remove("hashmap.csv");
     createIdDetour = std::make_unique<FunctionDetour<CreateIdFunc>>(CreateID);
     createIdDetour->Detour(CreateIdDetour);
 
