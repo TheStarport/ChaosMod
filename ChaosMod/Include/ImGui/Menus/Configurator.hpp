@@ -33,7 +33,9 @@ class Configurator final
 
         void RenderChaosTab() const
         {
-            ImGui::TextWrapped("PLACEHOLDER DESCRIPTION THAT IS SUPER DESCRIPTIVE ABOUT THINGS THAT NEED DESCRIBING FOR THIS DESCRIPTIVE TAB OF DESCRIPTIONS.");
+            ImGui::TextWrapped("The 'Chaos' feature, for which the entire mod is named, is a periodic timer that will trigger random effects while in space. "
+                               "This could be beneficial like giving you OP weapons, or it could be detrimental where we spawn hostile NPCs. "
+                               "It could be neither where the effect just makes the universe different or annoying.");
 
             ImGui::Checkbox("Enable Chaos Timer", &config->chaosSettings.enable);
             ImGui::SliderFloat("Time Between Chaos", &config->chaosSettings.timeBetweenChaos, 5.0f, 120.0f);
