@@ -340,7 +340,7 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
         Vector forwards = { orientation[0][2], orientation[1][2], orientation[2][2] };
         forwards *= 1000.f;
 
-        Vector newVelocity = ship->get_velocity() + forwards;
+        Vector newVelocity = ShipManipulator::GetVelocity(ship) + forwards;
         Get<GlobalTimers>()->AddTimer(
             [ship, newVelocity](float delta)
             {

@@ -1,3 +1,4 @@
+#include "Components/ShipManipulator.hpp"
 #include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
@@ -7,25 +8,17 @@ class Yeet final : public ActiveEffect
         Vector movement{};
         void Begin() override
         {
-            auto ship = Utils::GetCShip();
-
-            ship->get_behavior_interface()->update_current_behavior_engage_engine(false);
-
             movement.x = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
             movement.y = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
             movement.z = Get<Random>()->Uniform(0, 1) ? -3000.f : 3000.f;
-
-            const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(ship) + 84)) + 152);
-            *reinterpret_cast<Vector*>(ptr + 164) = movement;
         }
 
         // Ensure they cannot restart their engine for 5% of effect duration
         void Update(float delta) override
         {
-            auto ship = Utils::GetCShip();
+            const auto ship = Utils::GetCShip();
             ship->get_behavior_interface()->update_current_behavior_engage_engine(false);
-            const uint ptr = *reinterpret_cast<uint*>(PCHAR(*reinterpret_cast<uint*>(uint(ship) + 84)) + 152);
-            *reinterpret_cast<Vector*>(ptr + 164) = movement;
+            ShipManipulator::SetVelocity(ship, movement);
         }
 
     public:

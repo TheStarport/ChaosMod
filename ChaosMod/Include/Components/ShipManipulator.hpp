@@ -4,8 +4,6 @@ class ShipManipulator final : public Component
 {
         using OnPhysicsUpdate = void (*)(unsigned, float);
         static void PhysicsUpdate(uint system, float delta);
-        static Vector GetAngularVelocity(CShip* ship);
-        static Vector GetVelocity(CShip* ship);
 
         bool spin = false;
         bool personalSpace = false;
@@ -19,6 +17,8 @@ class ShipManipulator final : public Component
         static void SetAngularVelocity(CObject* object, const Vector& newVelocity);
         static void SetVelocity(CObject* object, const Vector& newVelocity);
         static void SetPosition(CObject* object, const Vector& pos);
+        static Vector GetAngularVelocity(CObject* ship);
+        static Vector GetVelocity(CObject* ship);
 
         ShipManipulator();
 
@@ -26,5 +26,5 @@ class ShipManipulator final : public Component
         void MakeShipsSpin(bool shouldSpin);
         void EnableGravity(bool enable);
         void OverridePlayerAngularVelocity(const std::optional<Vector>& override);
-        void SetCocaineMode(const bool mode);
+        void SetCocaineMode(bool mode);
 };
