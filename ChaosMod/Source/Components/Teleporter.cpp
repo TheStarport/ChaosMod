@@ -98,6 +98,8 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix or
     }
 
     const auto patch = PBYTE(DWORD(GetModuleHandleA("server.dll")) + 0xf600);
+    ProtectExecuteReadWrite(patch + 0xD7, 0x3CA);
+
     patch[0x0d7] = 0xeb; // ignore exit object
     patch[0x0d8] = 0x40;
     patch[0x119] = 0xbb; // set the destination system
