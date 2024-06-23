@@ -1,14 +1,10 @@
 name: Post Announcement
 on:
-  workflow_run:
-    workflows: [ nightly ]
-    types: [ completed ]
   workflow_dispatch:
 
 jobs:
   discord:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Get Latest Release
         id: version
