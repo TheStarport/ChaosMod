@@ -38,8 +38,8 @@ class Configurator final
                                "It could be neither where the effect just makes the universe different or annoying.");
 
             ImGui::Checkbox("Enable Chaos Timer", &config->chaosSettings.enable);
-            ImGui::SliderFloat("Time Between Chaos", &config->chaosSettings.timeBetweenChaos, 5.0f, 120.0f);
-            ImGui::SliderFloat("Default Effect Duration", &config->chaosSettings.defaultEffectDuration, 20.0f, 300.0f);
+            ImGui::SliderFloat("Time Between Chaos", &config->chaosSettings.timeBetweenChaos, 5.0f, 120.0f, "%.0f");
+            ImGui::SliderFloat("Default Effect Duration", &config->chaosSettings.defaultEffectDuration, 20.0f, 300.0f, "%.0f");
             ImGui::SliderInt("Total Allowed Concurrent Effects", reinterpret_cast<PINT>(&config->chaosSettings.totalAllowedConcurrentEffects), 1, 12);
 
             ImGui::Checkbox("Block Teleports During Missions", &config->chaosSettings.blockTeleportsDuringMissions);
@@ -73,7 +73,7 @@ class Configurator final
         void RenderTwitchTab() const
         {
             ImGui::Checkbox("Enable Twitch Voting", &config->chaosSettings.enableTwitchVoting);
-            ImGui::SliderFloat("Twitch Voting Weight", &config->chaosSettings.baseTwitchVoteWeight, 0.1f, 1.0f);
+            ImGui::SliderFloat("Twitch Voting Weight", &config->chaosSettings.baseTwitchVoteWeight, 0.1f, 1.0f, "%.2f");
             if (ImGui::IsItemHovered())
             {
                 ImGui::SetTooltip(
