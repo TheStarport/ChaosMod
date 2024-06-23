@@ -27,6 +27,7 @@
 #include "Memory/ShipInfocardOverride.hpp"
 
 #include "Memory/AssetTracker.hpp"
+#include "Memory/OnSystemStatusChange.hpp"
 
 #include <reshade.hpp>
 
@@ -111,6 +112,7 @@ void ChaosMod::DelayedInit()
     // Apply the patches for the first time
     PatchNotes::ResetPatches(true, false);
     OnSound::Init();
+    OnSystemStatusChange::Init();
     ShipInfocardOverride::Init();
     Get<EventManager>()->SetupDetours();
 }

@@ -13,7 +13,7 @@ CEquip* __stdcall OnSound::DetourThrusterFind(CEquipManager* equipManager, Equip
 {
     originalThrusterSounds = { *interiorSoundName, *exteriorSoundName };
 
-    if (const auto equip = equipManager->FindFirst(thrusterClass))
+    if (const auto equip = equipManager->FindFirst(static_cast<int>(thrusterClass)))
     {
         if (const auto customSound = customThrusterSoundMap.find(equip->archetype->archId); customSound != customThrusterSoundMap.end())
         {

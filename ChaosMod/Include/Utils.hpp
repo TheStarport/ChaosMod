@@ -2,12 +2,17 @@
 
 #pragma comment(lib, "Shell32.lib")
 
+#include "Components/SpaceObjectSpawner.hpp"
+#include "ResourcePtr.hpp"
+
 extern DWORD dummy;
 #define ProtectExecuteReadWrite(addr, size) VirtualProtect(addr, size, PAGE_EXECUTE_READWRITE, &dummy)
 #define ProtectReadWrite(addr, size)        VirtualProtect(addr, size, PAGE_READWRITE, &dummy)
 
 namespace Utils
 {
+    void CatchupNpc(ResourcePtr<SpawnedObject> obj, bool& catchingUp, float catchUpDistance = 2000.f);
+
     // Get data values from game
     Archetype::Ship* GetShipArch();
     CShip* GetCShip();

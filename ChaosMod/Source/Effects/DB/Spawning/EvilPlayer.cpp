@@ -6,6 +6,9 @@
 class SpawnEvilPlayer final : public ActiveEffect
 {
         int i = 0;
+        float correctionTimer = 1.f;
+        bool catchingUp = false;
+
         ResourcePtr<SpawnedObject> clone;
         void Spawn()
         {
@@ -28,10 +31,12 @@ class SpawnEvilPlayer final : public ActiveEffect
                 EquipDesc desc;
                 traverser.currentEquip->GetEquipDesc(desc);
 
-                SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0 : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
+                SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0u : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
 
                 items.emplace_back(item);
             }
+
+            items.emplace_back("infinite_power", 0, "");
 
             const std::string nickname = "cloned_player_loadout_evil_" + std::to_string(i++);
             SpaceObjectSpawner::CreateNewLoadout(nickname, items);
@@ -50,13 +55,6 @@ class SpawnEvilPlayer final : public ActiveEffect
 
             if (const auto npc = clone.Acquire(); npc)
             {
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 1000.f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(npc->spaceObj, &op);
-
                 int reputation;
                 pub::Player::GetRep(1, reputation);
                 int npcReputation;
@@ -67,6 +65,17 @@ class SpawnEvilPlayer final : public ActiveEffect
 
         void Begin() override { Spawn(); }
         void OnLoad() override { Spawn(); }
+
+        void Update(const float delta) override
+        {
+            correctionTimer -= delta;
+            if (correctionTimer < 0.f)
+            {
+                correctionTimer = 1.f;
+
+                Utils::CatchupNpc(clone, catchingUp);
+            }
+        }
 
     public:
         explicit SpawnEvilPlayer(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

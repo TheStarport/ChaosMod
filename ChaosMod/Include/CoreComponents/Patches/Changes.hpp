@@ -1,5 +1,7 @@
 #pragma once
 
+#include "FLCore/Common/Globals.hpp"
+
 #include <nlohmann/json.hpp>
 #include <regex>
 
@@ -623,69 +625,65 @@ class EquipmentChange : public Change
             {
                 if constexpr (Type == ChangeType::Ship)
                 {
-                    const auto ships = reinterpret_cast<BinarySearchTree<Ship*>*>(0x63FCAC0);
-                    for (auto node = ships->begin(); node != ships->end(); ++node)
+                    for (const auto ship : GameData::ships)
                     {
-                        if (std::ranges::find(ignoredShips, node->value->archId) != ignoredShips.end() || !node->value->idsName ||
-                            node->value->maxNanobots == UINT_MAX || node->value->maxShieldBats == UINT_MAX ||
-                            ChaosMod::GetInfocardName(node->value->idsName).empty())
+                        if (std::ranges::find(ignoredShips, ship->data->archId) != ignoredShips.end() || !ship->data->idsName ||
+                            ship->data->maxNanobots == UINT_MAX || ship->data->maxShieldBats == UINT_MAX ||
+                            ChaosMod::GetInfocardName(ship->data->idsName).empty())
                         {
                             continue;
                         }
 
-                        possibleEquipment.emplace_back(node->key);
+                        possibleEquipment.emplace_back(ship->key);
                     }
                 }
                 else if constexpr (Type == ChangeType::GunExplosion)
                 {
-                    const auto explosions = reinterpret_cast<BinarySearchTree<Explosion>*>(0x63FCF3C);
-                    for (auto node = explosions->begin(); node != explosions->end(); ++node)
+                    for (const auto explosion : GameData::explosions)
                     {
-                        if (std::ranges::find_if(missileMap, [node](auto& map) { return map.second.explosionId == node->key; }) == missileMap.end())
+                        if (std::ranges::find_if(missileMap, [explosion](auto& map) { return map.second.explosionId == explosion->key; }) == missileMap.end())
                         {
                             continue;
                         }
 
-                        possibleEquipment.emplace_back(node->key);
+                        possibleEquipment.emplace_back(explosion->key);
                     }
                 }
                 else if constexpr (Type == ChangeType::GunMotor)
                 {
-                    const auto motors = reinterpret_cast<BinarySearchTree<MotorData>*>(0x63FCA70);
-                    for (auto node = motors->begin(); node != motors->end(); ++node)
+                    for (const auto motor : GameData::motorData)
                     {
-                        if (std::ranges::find_if(missileMap, [node](auto& map) { return map.second.motorId == node->key; }) == missileMap.end())
+                        if (std::ranges::find_if(missileMap, [motor](auto& map) { return map.second.motorId == motor->key; }) == missileMap.end())
                         {
                             continue;
                         }
 
-                        possibleEquipment.emplace_back(node->key);
+                        possibleEquipment.emplace_back(motor->key);
                     }
                 }
                 else
                 {
                     const auto goodList = GoodList_get();
 
-                    const auto equipment = reinterpret_cast<BinarySearchTree<Equipment*>*>(0x63FCAD4);
-                    for (auto node = equipment->begin(); node != equipment->end(); ++node)
+                    for (const auto equipment : GameData::equipment)
                     {
-                        if (node->value->idsName == 0 || node->value->idsInfo == 0 || ChaosMod::GetInfocardName(node->value->idsName).empty())
+                        if (equipment->data->idsName == 0 || equipment->data->idsInfo == 0 || ChaosMod::GetInfocardName(equipment->data->idsName).empty())
                         {
                             continue;
                         }
 
                         if constexpr (Type == ChangeType::GunAmmo)
                         {
-                            const auto munition = reinterpret_cast<Munition*>(node->value);
+                            const auto munition = reinterpret_cast<Munition*>(equipment->data);
                             if (munition->motorId && munition->explosionArchId)
                             {
-                                missileMap[node->key] = MissileMap{ munition->motorId, munition->explosionArchId };
+                                missileMap[equipment->key] = MissileMap{ munition->motorId, munition->explosionArchId };
                             }
                         }
 
-                        if (node->value->get_class_type() == GetClassType() || !node->value->idsName)
+                        if (equipment->data->get_class_type() == GetClassType() || !equipment->data->idsName)
                         {
-                            auto goodId = Arch2Good(node->value->archId);
+                            auto goodId = Arch2Good(equipment->data->archId);
                             auto good = goodList->find_by_id(goodId);
 
                             if (!good || good->price == 0.0f)
@@ -693,7 +691,7 @@ class EquipmentChange : public Change
                                 continue;
                             }
 
-                            possibleEquipment.emplace_back(node->key);
+                            possibleEquipment.emplace_back(equipment->key);
                         }
                     }
                 }

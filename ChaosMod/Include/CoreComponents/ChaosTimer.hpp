@@ -5,11 +5,13 @@
 
 class OnHit;
 class OnSound;
+class OnSystemStatusChange;
 class PatchNotes;
 class ChaosTimer final : public Component
 {
         friend OnHit;
         friend OnSound;
+        friend OnSystemStatusChange;
 
         inline static FARPROC oldShipDestroyed = nullptr;
         static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
@@ -17,6 +19,8 @@ class ChaosTimer final : public Component
 
         static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
         static uint OnSoundEffect(uint hash);
+        static void OnSystemUnload();
+        static void OnJumpInComplete();
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher* launcher);
         static void __fastcall OnConsumeFireResources(CELauncher* launcher);
 

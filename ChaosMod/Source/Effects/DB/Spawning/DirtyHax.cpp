@@ -46,17 +46,10 @@ class DirtyHax final : public MemoryEffect
 
         void SaveNpc(const CShip* ship, ResourcePtr<SpawnedObject> npc)
         {
-            if (auto acquired = npc.Acquire())
+            if (const auto acquired = npc.Acquire())
             {
                 dynamic_cast<CShip*>(acquired->obj)->cloakPercentage = 1.f;
                 npcs.emplace_back(npc);
-
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 500.0f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(npc.Acquire()->spaceObj, &op);
             }
         }
 
@@ -81,6 +74,22 @@ class DirtyHax final : public MemoryEffect
                 if (const auto resource = npc.Acquire())
                 {
                     dynamic_cast<CShip*>(resource->obj)->cloakPercentage = 0.f;
+                }
+            }
+        }
+
+        float correctionTimer = 1.0f;
+        bool catchingUp = false;
+        void Update(const float delta) override
+        {
+            correctionTimer -= delta;
+            if (correctionTimer < 0.f)
+            {
+                correctionTimer = 1.f;
+
+                for (const auto& npc : npcs)
+                {
+                    Utils::CatchupNpc(npc, catchingUp);
                 }
             }
         }

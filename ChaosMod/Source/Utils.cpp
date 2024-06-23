@@ -6,9 +6,39 @@ DWORD dummy;
 
 namespace Utils
 {
+    void CatchupNpc(ResourcePtr<SpawnedObject> obj, bool& catchingUp, const float catchUpDistance)
+    {
+        const auto player = Utils::GetCShip();
+        const auto npc = obj.Acquire();
+        if (!npc || !player)
+        {
+            return;
+        }
+
+        const auto distance = glm::length(player->position - npc->obj->position);
+        if (catchingUp && std::abs(distance) < catchUpDistance * 0.33333f)
+        {
+            catchingUp = false;
+
+            pub::AI::DirectiveCancelOp op;
+            op.fireWeapons = true;
+            pub::AI::SubmitDirective(npc->spaceObj, &op);
+        }
+        else if (!catchingUp && std::abs(distance) > catchUpDistance)
+        {
+            catchingUp = true;
+
+            pub::AI::DirectiveFollowOp op;
+            op.maxDistance = 400.f;
+            op.followSpaceObj = player->id;
+            op.dunno2 = 400.f;
+            pub::AI::SubmitDirective(npc->spaceObj, &op);
+        }
+    }
+
     Archetype::Ship* GetShipArch()
     {
-        auto shipId = (uint*)0x67337C;
+        const auto shipId = (uint*)0x67337C;
         return Archetype::GetShip(*shipId);
     }
 

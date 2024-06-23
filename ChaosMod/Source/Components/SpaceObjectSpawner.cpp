@@ -3,8 +3,9 @@
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Components/PersonalityHelper.hpp"
 
-#include "Memory/AssetTracker.hpp"
 #include "Constants.hpp"
+#include "FLCore/Common/Globals.hpp"
+#include "Memory/AssetTracker.hpp"
 
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithNpc(const std::string& npcNickname)
 {
@@ -179,11 +180,10 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
 
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithRandomReputation()
 {
-    auto* groups = reinterpret_cast<FlMap<Reputation::RepGroup>*>(0x64018EC);
-
-    const uint randomGroupIndex = Get<Random>()->Uniform(0u, groups->size() - 1);
+    auto& groups = GameData::repGroups;
+    const uint randomGroupIndex = Get<Random>()->Uniform(0u, groups.size() - 1);
     uint currentIndex = 0;
-    for (auto listItem = groups->begin(); listItem != groups->end(); ++listItem, ++currentIndex)
+    for (auto listItem = groups.begin(); listItem != groups.end(); ++listItem, ++currentIndex)
     {
         if (currentIndex == randomGroupIndex)
         {

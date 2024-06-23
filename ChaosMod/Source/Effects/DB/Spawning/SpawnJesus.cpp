@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
+#include "Effects/ActiveEffect.hpp"
 
 class SpawnJesus final : public ActiveEffect
 {
@@ -26,20 +26,23 @@ class SpawnJesus final : public ActiveEffect
                         .WithName(458757)
                         .WithFuse("chaos_teleport_fx")
                         .Spawn();
-
-            if (jesus.Acquire())
-            {
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 500.f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(jesus.Acquire()->spaceObj, &op);
-            }
         }
 
         void Begin() override { Spawn(); }
         void OnLoad() override { Spawn(); }
+
+        float correctionTimer = 1.0f;
+        bool catchingUp = false;
+        void Update(const float delta) override
+        {
+            correctionTimer -= delta;
+            if (correctionTimer < 0.f)
+            {
+                correctionTimer = 1.f;
+
+                Utils::CatchupNpc(jesus, catchingUp, 4000.f);
+            }
+        }
 
     public:
         explicit SpawnJesus(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

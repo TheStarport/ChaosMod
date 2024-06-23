@@ -314,6 +314,31 @@ uint ChaosTimer::OnSoundEffect(const uint hash)
     return hash;
 }
 
+void ChaosTimer::OnSystemUnload()
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& effect : ActiveEffect::GetAllEffects())
+    {
+        effect->OnSystemUnload();
+    }
+}
+
+void ChaosTimer::OnJumpInComplete()
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        key->OnJumpInComplete();
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        effect->OnJumpInComplete();
+    }
+}
+
 void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 {
     const auto i = Get<ChaosTimer>();
@@ -374,6 +399,7 @@ void ChaosTimer::Update(const float delta)
         // If they are not in a base, and don't have a ship we assume they are in the death screen
         if (!base)
         {
+            OnSystemUnload();
             return;
         }
 

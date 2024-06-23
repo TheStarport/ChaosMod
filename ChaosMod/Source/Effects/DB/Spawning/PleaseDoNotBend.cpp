@@ -26,20 +26,23 @@ class PleaseDoNotBend final : public ActiveEffect
                           .WithName(458856)
                           .WithFuse("chaos_teleport_fx")
                           .Spawn();
-
-            if (maxwell.Acquire())
-            {
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 500.f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(maxwell.Acquire()->spaceObj, &op);
-            }
         }
 
         void Begin() override { Spawn(); }
         void OnLoad() override { Spawn(); }
+
+            float correctionTimer = 1.0f;
+            bool catchingUp = false;
+            void Update(const float delta) override
+            {
+                correctionTimer -= delta;
+                if (correctionTimer < 0.f)
+                {
+                    correctionTimer = 1.f;
+
+                    Utils::CatchupNpc(maxwell, catchingUp, 4000.f);
+                }
+            }
 
     public:
         explicit PleaseDoNotBend(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

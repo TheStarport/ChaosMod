@@ -28,7 +28,7 @@ class ClonePlayer final : public ActiveEffect
                 EquipDesc desc;
                 traverser.currentEquip->GetEquipDesc(desc);
 
-                SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0 : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
+                SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0u : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
 
                 items.emplace_back(item);
             }
@@ -48,19 +48,31 @@ class ClonePlayer final : public ActiveEffect
                         .WithFuse("chaos_teleport_fx")
                         .Spawn();
 
-            if (clone.Acquire())
+            if (const auto npc = clone.Acquire(); npc)
             {
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 500.f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(clone.Acquire()->spaceObj, &op);
+                int reputation;
+                pub::Player::GetRep(1, reputation);
+                int npcReputation;
+                pub::SpaceObj::GetRep(npc->spaceObj, npcReputation);
+                pub::Reputation::SetAttitude(npcReputation, reputation, 1.f);
             }
         }
 
         void Begin() override { Spawn(); }
         void OnLoad() override { Spawn(); }
+
+        float correctionTimer = 1.0f;
+        bool catchingUp = false;
+        void Update(const float delta) override
+        {
+            correctionTimer -= delta;
+            if (correctionTimer < 0.f)
+            {
+                correctionTimer = 1.f;
+
+                Utils::CatchupNpc(clone, catchingUp);
+            }
+        }
 
     public:
         explicit ClonePlayer(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

@@ -13,7 +13,7 @@ class CoolantLeak final : public ActiveEffect
                 return;
             }
 
-            CEquipTraverser tr(Power);
+            CEquipTraverser tr(static_cast<int>(EquipmentClass::Power));
             const CEquip* equip;
             float powerIncrease = 0.0f;
             while ((equip = ship->equip_manager.Traverse(tr)))

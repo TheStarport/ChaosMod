@@ -34,7 +34,7 @@ using u64 = unsigned long long;
 #include <unordered_set>
 #include <vector>
 
-#include <FLCore/FLCoreCommon.h>
+#include <FLCore/Common.hpp>
 #include <FLCore/FLCoreDALib.h>
 #include <FLCore/FLCoreServer.h>
 #include <Singleton.hpp>

@@ -69,6 +69,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
         "NOMINMAX;"
         "IMGUI_DEFINE_MATH_OPERATORS;"
         "ImTextureID=ImU64;"
+        "USE_GLM;"
 )
 
 # Conditionally add debug flags

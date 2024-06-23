@@ -82,7 +82,7 @@ class RadarJamming final : public ActiveEffect
             const auto response = getTargetLeadFirePosInspectDetour.GetOriginalFunc()(inspect, edx, id, output);
             getTargetLeadFirePosInspectDetour.Detour(GetTargetLeadFirePosInspectDetour);
 
-            if (inspect->cobj != Utils::GetCShip() && response)
+            if (inspect->cobject() != Utils::GetCShip() && response)
             {
                 ApplyJitter(inspect, output);
             }

@@ -26,20 +26,34 @@ class FusRohDah final : public ActiveEffect
                         .WithName(458865)
                         .WithFuse("chaos_teleport_fx")
                         .Spawn();
-
-            if (dragon.Acquire())
-            {
-                pub::AI::DirectiveTrailOp op;
-                op.x0C = ship->id;
-                op.x10 = 500.f;
-                op.x14 = true;
-                op.fireWeapons = true;
-                pub::AI::SubmitDirective(dragon.Acquire()->spaceObj, &op);
-            }
         }
 
         void Begin() override { Spawn(); }
         void OnLoad() override { Spawn(); }
+        void OnSystemUnload() override
+        {
+            auto ship = dragon.Acquire();
+            if (ship)
+            {
+                ((CShip*)ship->obj)->flush_animations();
+                Get<SpaceObjectSpawner>()->Despawn(dragon);
+            }
+        }
+
+        void OnJumpInComplete() override { Spawn(); }
+
+        float correctionTimer = 1.0f;
+        bool catchingUp = false;
+        void Update(const float delta) override
+        {
+            correctionTimer -= delta;
+            if (correctionTimer < 0.f)
+            {
+                correctionTimer = 1.f;
+
+                Utils::CatchupNpc(dragon, catchingUp, 6000.f);
+            }
+        }
 
     public:
         explicit FusRohDah(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

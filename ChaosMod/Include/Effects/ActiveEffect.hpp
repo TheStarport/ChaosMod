@@ -59,6 +59,9 @@ class ActiveEffect
         virtual void FrameUpdate(float delta) {}
         virtual void End() {}
         virtual void Cleanup() {}
+        // Called regardless of whether the effect is active or not
+        virtual void OnSystemUnload() {}
+        virtual void OnJumpInComplete() {}
         virtual ~ActiveEffect() = default;
         explicit ActiveEffect(EffectInfo effectInfo) : effectInfo(std::move(effectInfo)) { allEffects.emplace_back(this); }
 

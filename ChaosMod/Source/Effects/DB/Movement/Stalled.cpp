@@ -18,7 +18,7 @@ class Stalled final : public ActiveEffect
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_stalled"));
 
             auto ship = Utils::GetCShip();
-            CEquipTraverser traverser{ Engine };
+            CEquipTraverser traverser{ static_cast<int>(EquipmentClass::Engine) };
             CEquip* equip;
 
             while ((equip = ship->equip_manager.Traverse(traverser)))
@@ -26,7 +26,7 @@ class Stalled final : public ActiveEffect
                 equip->Activate(false);
             }
 
-            traverser = { Thruster };
+            traverser = { static_cast<int>(EquipmentClass::Thruster) };
 
             while ((equip = ship->equip_manager.Traverse(traverser)))
             {
