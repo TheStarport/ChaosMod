@@ -37,7 +37,7 @@ class DontStarve final : public PersistentEffect
 
         void End() override { PersistentEffect::End(); }
 
-        std::array<uint, 2> possibleFoodItems = { CreateID("commodity_luxury_food"), CreateID("commodity_food") };
+        std::array<uint, 2> possibleFuel = { CreateID("commodity_luxury_food"), CreateID("commodity_food") };
 
         float timeSinceLastEaten = 5.f;
         void Update(const float delta) override
@@ -59,7 +59,7 @@ class DontStarve final : public PersistentEffect
                     EquipDesc desc;
                     traverser.currentEquip->GetEquipDesc(desc);
 
-                    if (std::ranges::find(possibleFoodItems, traverser.currentEquip->archetype->archId) != possibleFoodItems.end())
+                    if (std::ranges::find(possibleFuel, traverser.currentEquip->archetype->archId) != possibleFuel.end())
                     {
                         foundFood = true;
                         break;
