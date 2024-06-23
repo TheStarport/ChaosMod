@@ -424,6 +424,11 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     spawnedObject->obj =
         static_cast<CSimple*>(CObject::Find(spaceObj, CObject::Class::CSHIP_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
 
+    if (spawnedObject->obj)
+    {
+        spawnedObject->obj->Release();
+    }
+
     spawnedObject->spaceObj = spaceObj;
 
     Get<SpaceObjectSpawner>()->spawnedObjects.emplace_back(spawnedObject);
@@ -535,12 +540,14 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     }
 
     auto spawnedObject = std::make_shared<SpawnedObject>();
-    spawnedObject->obj = static_cast<CSimple*>(CObject::Find(spaceId, CObject::Class::CSHIP_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+    spawnedObject->obj = static_cast<CSimple*>(CObject::Find(spaceId, CObject::Class::CSOLAR_OBJECT)); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
 
     if (!spawnedObject->obj)
     {
         return {};
     }
+
+    spawnedObject->obj->Release();
 
     spawnedObject->spaceObj = spaceId;
 
