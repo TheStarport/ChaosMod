@@ -34,7 +34,7 @@ runs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1.1
 
-    - uses: ilammy/msvc-dev-cmd@v1.10.0
+    - uses: ilammy/msvc-dev-cmd@v1.13.0
       with:
         arch: x86
 

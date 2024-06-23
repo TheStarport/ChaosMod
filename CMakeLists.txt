@@ -106,8 +106,8 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE glm::glm)
 find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
 target_include_directories("${PROJECT_NAME}" PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
 
-find_path(NEARGYE_SEMVER_INCLUDE_DIRS "neargye/semver.hpp")
-target_include_directories("${PROJECT_NAME}" PRIVATE ${NEARGYE_SEMVER_INCLUDE_DIRS})
+find_package(semver CONFIG REQUIRED)
+target_link_libraries("${PROJECT_NAME}" PRIVATE semver::semver)
 
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries("${PROJECT_NAME}" PRIVATE nlohmann_json::nlohmann_json)

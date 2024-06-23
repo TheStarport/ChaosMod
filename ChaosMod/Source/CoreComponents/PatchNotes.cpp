@@ -10,7 +10,7 @@
 #include <nlohmann/json.hpp>
 
 #include <Memory/OffsetHelper.hpp>
-#include <neargye/semver.hpp>
+#include <semver.hpp>
 
 void PatchNotes::LoadPatches()
 {

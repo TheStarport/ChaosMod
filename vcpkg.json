@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "fl-chaos-mod",
     "version": "1.0",
-    "builtin-baseline": "a109b7ccb27f0b90871c560647bbbc7ecd3da127",
+    "builtin-baseline": "c4467cb686f92671f0172aa8299a77d908175b4e",
     "dependencies": [
         {
             "name": "magic-enum",
