@@ -9,7 +9,13 @@ class SurpriseMechanics final : public ActiveEffect
         void Begin() override
         {
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_quite_ethical"));
-            pub::Player::AddCargo(1, chaosEquipment[Get<Random>()->Uniform(0u, chaosEquipment.size() - 1)], 1, 1.0f, false);
+            auto rand = Get<Random>();
+
+            auto itemCount = rand->Uniform(0u, 4u);
+            for (auto i = 0u; i <= itemCount; i++)
+            {
+                pub::Player::AddCargo(1, chaosEquipment[rand->Uniform(0u, chaosEquipment.size() - 1)], 1, 1.0f, false);
+            }
         }
 
     public:
