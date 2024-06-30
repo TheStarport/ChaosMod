@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "fl-chaos-mod",
     "version": "1.0",
-    "builtin-baseline": "c4467cb686f92671f0172aa8299a77d908175b4e",
+    "builtin-baseline": "0a2903a310d23d5388f9f4a468e3a006c7a85b38",
     "dependencies": [
         {
             "name": "magic-enum",
@@ -26,11 +26,15 @@
         },
         {
             "name": "neargye-semver",
-            "version>=": "0.3.0#1"
+            "version>=": "0.3.1#0"
         },
         {
             "name": "refl-cpp",
             "version>=": "0.12.4"
+        },
+        {
+            "name": "xbyak",
+            "version>=": "7.6#0"
         }
     ]
 }

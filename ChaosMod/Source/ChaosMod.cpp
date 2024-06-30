@@ -1,4 +1,5 @@
 // ReSharper disable CppClangTidyPerformanceNoIntToPtr
+#include "CrashCatcher.hpp"
 #include "PCH.hpp"
 
 #include "../Include/CoreComponents/TwitchVoting.hpp"
@@ -518,6 +519,8 @@ void CreateDefaultPerfOptions()
 FunctionDetour freeLibraryDetour(FreeLibrary);
 ChaosMod::ChaosMod()
 {
+    cc = new CrashCatcher();
+
     freeLibraryDetour.Detour(FreeLibraryDetour);
 
     // The very first thing we do is change the saved data folder so we can save and load properly
@@ -551,13 +554,17 @@ ChaosMod::ChaosMod()
     // Setup hooks
     const HMODULE common = GetModuleHandleA("common");
     const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
-    timingDetour = std::make_unique<FunctionDetour<GlobalTimeFunc>>(
-        reinterpret_cast<GlobalTimeFunc>(fl + 0x1B2890)); // NOLINT
+    timingDetour = std::make_unique<FunctionDetour<GlobalTimeFunc>>(reinterpret_cast<GlobalTimeFunc>(fl + 0x1B2890)); // NOLINT
     thornLoadDetour = std::make_unique<FunctionDetour<ScriptLoadPtr>>(
         reinterpret_cast<ScriptLoadPtr>(GetProcAddress(common, "?ThornScriptLoad@@YAPAUIScriptEngine@@PBD@Z"))); // NOLINT
 
     timingDetour->Detour(Update);
     thornLoadDetour->Detour(ScriptLoadHook);
+}
+
+ChaosMod::~ChaosMod()
+{
+    delete cc;
 }
 
 HMODULE dll;

@@ -59,15 +59,18 @@ enum class Language
     UwU
 };
 
+class CrashCatcher;
 class ChaosMod : public Singleton<ChaosMod>
 {
         static void DelayedInit();
         static void* ScriptLoadHook(const char* script);
         static void __stdcall TerminateAllThreads();
         static BOOL __stdcall FreeLibraryDetour(const HMODULE handle);
+        CrashCatcher* cc;
 
     public:
         ChaosMod();
+        ~ChaosMod();
 
         static std::optional<std::string> HashLookup(uint hash);
         static void SetLanguage(Language lang);
