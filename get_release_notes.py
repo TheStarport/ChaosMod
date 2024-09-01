@@ -1,10 +1,12 @@
-import argparse
-import os
 import sys
 import time
+
+import argparse
+import os
+import random
 import requests
+import string
 from datetime import datetime
-import random, string
 
 
 def random_letters(length):
@@ -12,48 +14,48 @@ def random_letters(length):
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--date", action="store", required=True)
-parser.add_argument("-t", "--token", action="store", required=True)
-args = parser.parse_args()
+def get_release_notes(date: str, token: str | None = None) -> (str, str):
+    target_date = time.mktime(datetime.strptime(date, "%Y/%m/%d").timetuple())
 
-target_date = time.mktime(datetime.strptime(args.date, "%Y/%m/%d").timetuple())
+    headers = {
+        "Accept": "application/vnd.github+json"
+    }
 
-r = requests.get('https://api.github.com/repos/TheStarport/ChaosMod/releases',
-                 headers={
-                     "Accept": "application/vnd.github+json",
-                     "Authorization": "Bearer " + args.token
-                 })
+    if token is not None:
+        headers["Authorization"] = "Bearer " + token
 
-print("Status Code: " + str(r.status_code))
+    r = requests.get('https://api.github.com/repos/TheStarport/ChaosMod/releases', headers=headers)
 
-releases = r.json()
+    print("Status Code: " + str(r.status_code))
 
-body = ""
-url = ""
+    releases = r.json()
 
-# Iterate over releases in reverse order
-for release in releases[::-1]:
-    created_at = release["created_at"]
+    body = ""
+    url = ""
 
-    if time.mktime(time.strptime(created_at, '%Y-%m-%dT%H:%M:%SZ')) < target_date:
-        continue
+    # Iterate over releases in reverse order
+    for release in releases[::-1]:
+        created_at = release["created_at"]
 
-    url = release["html_url"]
-    body = body + release["body"]
+        if time.mktime(time.strptime(created_at, '%Y-%m-%dT%H:%M:%SZ')) < target_date:
+            continue
 
-if len(body) == 0:
-    print("Invalid date passed in or no releases have been created in the specified time frame.")
-    sys.exit(1)
+        url = release["html_url"]
+        body = body + release["body"]
 
-env_file = os.getenv('GITHUB_ENV')
-with open(env_file, "a") as env:
-    eof = random_letters(12)
-    env.write(f"URL<<{eof}\n")
-    env.write(f"{url}\n{eof}\n")
+    if len(body) == 0:
+        raise ValueError("Invalid date passed in or no releases have been created in the specified time frame.")
 
-with open(env_file, "a") as env:
-    eof = random_letters(12)
-    env.write(f"BODY<<{eof}\n")
-    env.write(f"{body}\n{eof}\n")
+    env_file = os.getenv('GITHUB_ENV')
+    if env_file is not None:
+        with open(env_file, "a") as env:
+            eof = random_letters(12)
+            env.write(f"URL<<{eof}\n")
+            env.write(f"{url}\n{eof}\n")
 
+        with open(env_file, "a") as env:
+            eof = random_letters(12)
+            env.write(f"BODY<<{eof}\n")
+            env.write(f"{body}\n{eof}\n")
+
+    return url, body

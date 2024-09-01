@@ -442,6 +442,8 @@ FodyWeavers.xsd
 #Temporary Folders
 enc_temp_folder/*
 
+CMakePresets.json
+.venv/
 .idea/
 vendor/
 compile_commands.json

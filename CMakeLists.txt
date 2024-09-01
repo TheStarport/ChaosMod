@@ -22,8 +22,8 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CMAKE_CXX_COMPILER_ID STR
     message(FATAL_ERROR "Only LLVM Clang and MSVC compilers is currently supported.")
 endif()
 
-if (NOT DEFINED ENV{DX9_SDK})
-    message(FATAL_ERROR "ENV: DX9_SDK not defined. The DX9 SDK is required.")
+if (NOT IS_DIRECTORY ${PROJECT_SOURCE_DIR}/vendor/DXSDK)
+    message(FATAL_ERROR "DXSDK Not found. Did you run 'python cli.py requirements'?")
 endif()
 
 message(STATUS "Running powershell setup")
@@ -38,6 +38,8 @@ set(imgui "${PROJECT_SOURCE_DIR}/vendor/imgui")
 set(imgui_fb "${PROJECT_SOURCE_DIR}/vendor/imgui-filebrowser")
 set(reshade "${PROJECT_SOURCE_DIR}/vendor/reshade")
 set(DISCORD_GAME_SDK "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk")
+set(DXSDK "${PROJECT_SOURCE_DIR}/vendor/DXSDK")
+set(FFMPEG_DIR "${PROJECT_SOURCE_DIR}/vendor/ffmpeg")
 
 file(GLOB_RECURSE SOURCE_FILES LIST_DIRECTORIES false
         "${SOURCE_PATH}/*.c*"
@@ -88,35 +90,43 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${reshade})
 target_include_directories(${PROJECT_NAME} PRIVATE ${DISCORD_GAME_SDK}/cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DISCORD_GAME_SDK}/lib/x86/discord_game_sdk.dll.lib)
 
-
 # DirectX SDK
-target_include_directories(${PROJECT_NAME} PRIVATE $ENV{DX9_SDK}/Include)
-target_link_directories("${PROJECT_NAME}" PRIVATE $ENV{DX9_SDK}/Lib/x86)
+target_include_directories(${PROJECT_NAME} PRIVATE ${DXSDK}/Include)
+target_link_directories("${PROJECT_NAME}" PRIVATE ${DXSDK}/Lib/x86)
+
+# FFMPEG
+target_include_directories("${PROJECT_NAME}" PRIVATE ${FFMPEG_DIR}/include)
+target_link_libraries("${PROJECT_NAME}" PRIVATE
+        "${FFMPEG_DIR}/lib/avcodec.lib"
+        "${FFMPEG_DIR}/lib/avdevice.lib"
+        "${FFMPEG_DIR}/lib/avfilter.lib"
+        "${FFMPEG_DIR}/lib/avformat.lib"
+        "${FFMPEG_DIR}/lib/avutil.lib"
+        "${FFMPEG_DIR}/lib/avformat.lib"
+        "${FFMPEG_DIR}/lib/postproc.lib"
+        "${FFMPEG_DIR}/lib/swresample.lib"
+        "${FFMPEG_DIR}/lib/swscale.lib"
+)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${INCLUDE_PATH}/PCH.hpp)
 
-find_package(FFMPEG REQUIRED)
-target_include_directories("${PROJECT_NAME}" PRIVATE ${FFMPEG_INCLUDE_DIRS})
-target_link_directories("${PROJECT_NAME}" PRIVATE ${FFMPEG_LIBRARY_DIRS})
-target_link_libraries("${PROJECT_NAME}" PRIVATE ${FFMPEG_LIBRARIES})
-
-find_package(glm CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}" PRIVATE glm::glm)
-
-find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
-target_include_directories("${PROJECT_NAME}" PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
-
-find_package(semver CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}" PRIVATE semver::semver)
-
-find_package(nlohmann_json CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}" PRIVATE nlohmann_json::nlohmann_json)
-
-find_path(REFL_CPP_INCLUDE_DIRS "refl.hpp")
-target_include_directories("${PROJECT_NAME}" PRIVATE ${REFL_CPP_INCLUDE_DIRS})
-
-find_package(magic_enum CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}" PRIVATE magic_enum::magic_enum)
+# Import Conan Packages
+find_package(glm)
+find_package(magic_enum)
+find_package(miniaudio)
+find_package(semver)
+find_package(nlohmann_json)
+find_package(refl-cpp)
+find_package(xbyak)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        glm::glm
+        magic_enum::magic_enum
+        miniaudio::miniaudio
+        semver::semver
+        nlohmann_json::nlohmann_json
+        refl-cpp::refl-cpp
+        xbyak::xbyak
+)
 
 # FLCore
 
@@ -130,6 +140,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreServer.lib"
 # Copy Discord SDK
 file(COPY "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk/lib/x86/discord_game_sdk.dll"
         DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+# If we are building on Linux, import the MSVC headers
+if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+    if (NOT DEFINED ENV{MSVC_INCLUDE})
+        message(FATAL_ERROR "MSVC_INCLUDE was not found and running on Linux")
+    endif()
+    string(REPLACE ":" " " MSVC_INCLUDES $ENV{MSVC_INCLUDE})
+    separate_arguments(MSVC_INCLUDES)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${MSVC_INCLUDES})
+endif()
 
 # Build Scripts
 if (WIN32)

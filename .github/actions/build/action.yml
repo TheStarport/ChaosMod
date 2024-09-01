@@ -20,17 +20,6 @@ runs:
         submodules: 'recursive'
         fetch-depth: 0
 
-    - name: Set Work ENVs
-      id: vars
-      run: |
-        WIN_HOME=$(echo $HOME | tr '/' '\\')
-        WIN_HOME="${WIN_HOME:1:1}:${WIN_HOME:2:${#WIN_HOME}-1}"
-        WIN_HOME=${WIN_HOME^}
-        echo $WIN_HOME
-        echo DX9_SDK=$WIN_HOME/dx9
-        echo "DX9_SDK=$WIN_HOME/dx9" >> $GITHUB_ENV
-      shell: bash
-
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1.1
 
@@ -38,27 +27,51 @@ runs:
       with:
         arch: x86
 
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: "Install Pip Packages"
+      shell: bash
+      run: pip install -r requirements.txt
+
     - name: "Restore DX9 Cache"
-      id: dx9-cache
+      id: dependency-dx9
       uses: actions/cache@v4
       with:
-        path: ~/dx9
-        key: dx9-cache
+        path: ${{ github.workspace }}/vendor/DXSDK
+        key: dependency-dx9
 
-    - name: "Cache DX9 SDK"
-      if: steps.dx9-cache.outputs.cache-hit != 'true'
+    - name: "Restore Discord Game SDK"
+      id: dependency-game-sdk
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vendor/discord_game_sdk
+        key: dependency-discord
+
+    - name: "Restore FFMPEG"
+      id: dependency-ffmpeg
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vendor/ffmpeg
+        key: dependency-ffmpeg
+
+    - name: "Restore Conan"
+      id: dependency-conan
+      uses: actions/cache@v4
+      with:
+        path: ~/.conan2
+        key: dependency-conan
+
+    - name: "Cache Dependencies"
+      if: steps.dependency-dx9.outputs.cache-hit != 'true' || 
+        steps.dependency-discord.outputs.cache-hit != 'true' || 
+        steps.dependency-ffmpeg.outputs.cache-hit != 'true' ||
+        steps.dependency-conan.outputs.cache-hit != 'true'
       run: |
-        echo Downloading DXSDK June 2010
-        curl -s -L -o "_DX2010_.exe" "https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe"
-        echo Extracting include files
-        7z x _DX2010_.exe DXSDK/Include -o_DX2010_ > nul
-        echo Extracting lib files
-        7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_ > nul
-        echo Moving SDK to home directory
-        mkdir $DX9_SDK
-        mv _DX2010_/DXSDK/* $DX9_SDK
-        echo Cleaning up install files
-        rm -fR _DX*_ _DX*_.exe
+        python cli.py requirements
+        python cli.py install -r
       shell: bash
 
     - name: Dotnet Restore Voting Proxy
@@ -69,10 +82,6 @@ runs:
       run: dotnet publish ${{ github.workspace }}/TwitchChatVotingProxy/ -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
       shell: pwsh
 
-    - name: CMake Generate
-      run: cmake --preset ninja -S ${{ github.workspace }} -B ${{ github.workspace }}\build\ninja
-      shell: pwsh
-
-    - name: Compile ChaosMod
-      run: cmake --build ${{ github.workspace }}\build\ninja --target ChaosMod --config Release
-      shell: pwsh
+    - name: Compile Chaos Mod
+      run: python cli.py build -r
+      shell: bash

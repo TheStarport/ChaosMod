@@ -60,46 +60,47 @@ As we use CMake presets, building it via the command line is fairly trivial.
 
 *Disclaimer: Only builds with Visual Studio 2022 + Clang 16 have been tested and confirmed to work.*
 
-### Cloning
+### Cloning & Building Locally
 
-VCPKG is required in order to install various dependencies that ChaosMod has. 
-If you already have VCPKG installed, you can skip this step. The VCPKG_ROOT environment variable must be set
-and must point to the where ever VCPKG is cloned to.
+The following tools are required in order to setup ChaosMod on all operating systems:
+- 7z (7-Zip Archive Manager)
+- Python 3.11+
+- CMake
+- MSVC Compiler supporting C++20 onwards ([msvc-wine](https://github.com/mstorsjo/msvc-wine) if on Linux)
 
-```cmd
-git clone https://github.com/microsoft/vcpkg
-cd vcpkg
-.\bootstrap-vcpkg.bat
-.\vcpkg integrate install
-cd ..
-```
+Conan is used to setup the project and manage dependencies within ChaosMod. 
+The `FL_CHAOS_MOD` environment variable can be set to inform chaos mod to copy any output DLL files after a build
+to the specified directory.
 
-VCPKG_ROOT:
-
-If you are on Windows, you can set the ENV with the setx command.
-
-CMD:
-```cmd
-setx VCPKG_ROOT %cd%\vcpkg
-```
-
-Powershell:
-```ps
-[Environment]::SetEnvironmentVariable("VCPKG_ROOT", $pwd.Path + "\vcpkg", "User")
-```
-
-(On Windows, the terminal must be restarted in order to use updated environment variables)
-
-Run the following commands to setup the environment (it is assumed Visual Studio and CMake are installed):
-```bash
+On both Linux and Windows (bash or powershell) run the following commands to get setup:
+```sh
 git clone --recurse-submodules https://github.com/TheStarport/ChaosMod
 cd ChaosMod
+python -m venv .venv
+
+# Pick next command depending on your environment:
+# Bash: source ./venv/bin/activate
+# Powershell ./venv/bin/activate.ps1
+
+pip install -r requirements.txt
 ```
 
-Run the following commands in order to build debug (for release, just change 'debug' to 'release'):
+After running the above commands you should be able to use the `cli.py` file in order to manage the repo.
+In order run the following commands to generate a build:
+```
+python cli.py requirements
+python cli.py build
+```
+
+The requirements command will download needed dependencies, while the build command will install conan packages and
+prepare CMake presets. `-r` can be passed to the build command to prepare a release build on Windows. 
+On the first run, a build will automatically be run to ensure everything works as intended.
+
+After running the CLI, builds can be run manually via the following commands 
+(for release, just change 'debug' to 'release'):
 ```bash
-cmake --preset vs2022-msvc-debug -S . -B ./build/vs2022-msvc-debug
-cmake --build ./build/vs2022-msvc-debug --target ChaosMod --config Debug
+cmake --preset debug -S . -B ./build/Debug
+cmake --build ./build/Debug --target ChaosMod --config Debug
 ```
 
 If you prefer to use an IDE:

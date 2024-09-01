@@ -21,7 +21,7 @@ jobs:
       - run: pip3 install requests
 
       - name: Get Release Notes
-        run: python ${{ github.workspace }}/get_release_notes.py -d ${{ inputs.date }} -t ${{ github.token }}
+        run: python ${{ github.workspace }}/cli.py notes -d ${{ inputs.date }} -t ${{ github.token }}
 
       - name: Publish to Discord
         uses: tsickert/discord-webhook@v5.3.0
