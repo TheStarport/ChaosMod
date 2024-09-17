@@ -443,6 +443,7 @@ FodyWeavers.xsd
 enc_temp_folder/*
 
 CMakePresets.json
+ConanPresets.json
 .venv/
 .idea/
 vendor/
