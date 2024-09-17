@@ -11,6 +11,11 @@ if(CCACHE_FOUND)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 endif()
 
+set(CMAKE_CXX_FLAGS           "${CMAKE_CXX_FLAGS} /D \"SAFESEH:NO\"")
+set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} /SAFESEH:NO")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /SAFESEH:NO")
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
+
 project("${PROJECT_NAME}" LANGUAGES C CXX)
 
 message(STATUS "Detected compiler: ${CMAKE_CXX_COMPILER}")
@@ -25,9 +30,6 @@ endif()
 if (NOT IS_DIRECTORY ${PROJECT_SOURCE_DIR}/vendor/DXSDK)
     message(FATAL_ERROR "DXSDK Not found. Did you run 'python cli.py requirements'?")
 endif()
-
-message(STATUS "Running powershell setup")
-execute_process(COMMAND "powershell" "${PROJECT_SOURCE_DIR}/setup.ps1")
 
 set(CODE_DIR "${PROJECT_SOURCE_DIR}/ChaosMod")
 
