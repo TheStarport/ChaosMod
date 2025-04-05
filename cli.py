@@ -107,7 +107,7 @@ def requirements(purge: bool):
     os.remove("_DX2010_.exe")
 
     log("Extracting FFMPEG...")
-    run("7z x vendor/ffmpeg-7.0.2-gpl.7z -ovendor/ffmpeg", no_log=True)
+    run("7z x vendor/ffmpeg.7z -ovendor/ffmpeg", no_log=True)
 
     log("Done")
 

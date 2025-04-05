@@ -64,7 +64,7 @@ class MoviePlayer final : public Component
             ma_sound_stop(&miniAudioSound);
             ma_sound_uninit(&miniAudioSound);
 
-            avcodec_close(codecContext);
+            avcodec_free_context(&codecContext);
             avformat_close_input(&formatContext);
 
             Get<DrawingHelper>()->ClearVideoTexture();
@@ -103,6 +103,12 @@ class MoviePlayer final : public Component
 
             codecParameters = formatContext->streams[videoStream]->codecpar;
             codec = avcodec_find_decoder(codecParameters->codec_id);
+
+            if (codecContext != nullptr)
+            {
+                avcodec_free_context(&codecContext);
+            }
+
             codecContext = avcodec_alloc_context3(codec);
             avcodec_parameters_to_context(codecContext, codecParameters);
             avcodec_open2(codecContext, codec, nullptr);
