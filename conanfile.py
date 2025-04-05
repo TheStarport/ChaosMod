@@ -26,7 +26,7 @@ class CompressorRecipe(ConanFile):
         self.requires("xbyak/7.07")
 
     def build_requirements(self):
-        self.tool_requires("cmake/3.22.6")
+        self.tool_requires("cmake/3.31.6")
 
     def layout(self):
         multi = platform.system() == "Windows"
