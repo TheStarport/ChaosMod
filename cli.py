@@ -99,8 +99,9 @@ def requirements(purge: bool):
         dx.write(payload.content)
 
     log("Extracting contents from _DX2010_.exe ...")
-    run("7z x _DX2010_.exe DXSDK/Include -ovendor", no_log=True)
-    run("7z x _DX2010_.exe DXSDK/Lib/x86 -ovendor", no_log=True)
+    if run("7z x _DX2010_.exe DXSDK/Include -ovendor", no_log=True) != 0 or run("7z x _DX2010_.exe DXSDK/Lib/x86 -ovendor", no_log=True) != 0:
+        log("Unable to extract DXSDK! Ensure that 7z (7Zip command line) is available on the path.")
+        raise EnvironmentError("Unable to extract DXSDK")
 
     log("Extracted contents successfully. Cleaning up...")
     os.remove("_DX2010_.exe")
