@@ -103,22 +103,6 @@ const BYTE* __stdcall CrashCatcher::EngBase124BDCatch(const BYTE* data)
     return data;
 }
 
-double CrashCatcher::TimingSeconds(int64& delta)
-{
-    double seconds = Timing::seconds(delta);
-    if (seconds < 0 || seconds > 10.0)
-    {
-        Log(std::format("Time delta invalid seconds={:.2f} ticksDelta={}", seconds, delta));
-        delta = 1000000;
-        seconds = Timing::seconds(delta);
-    }
-    else if (seconds > 1.0)
-    {
-       Log(std::format("Time lag detected seconds={:.2f} ticksDelta={}", seconds, delta));
-    }
-    return seconds;
-}
-
 CrashCatcher::FixEngBase11A6D::FixEngBase11A6D()
 {
     push(eax);
@@ -267,18 +251,11 @@ CrashCatcher::CrashCatcher()
     static FixContent6F8B330 fixContent6F8B330;
     static FixContent6F78DD0 fixContent6F78DD0;
 
-    const auto flServerModule = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     const auto serverModule = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
 
     auto hook = reinterpret_cast<FARPROC>(CrashCatcher::GetRoot);
     MemUtils::ReadProcMem(serverModule + 0x84018, &oldGetRootProc, 4);
     MemUtils::WriteProcMem(serverModule + 0x84018, &hook, 4);
-
-    // Patch the time functions to work around bugs on multiprocessor
-    // and virtual machines.
-    const auto timingSeconds = reinterpret_cast<FARPROC>(TimingSeconds);
-    MemUtils::ReadProcMem(flServerModule + 0x1B0A0, &oldTimingSeconds, 4);
-    MemUtils::WriteProcMem(flServerModule + 0x1B0A0, &timingSeconds, 4);
 
     const auto engBaseModule = reinterpret_cast<DWORD>(GetModuleHandleA("engbase.dll"));
     contentModule = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
@@ -352,14 +329,10 @@ CrashCatcher::CrashCatcher()
 
 CrashCatcher::~CrashCatcher()
 {
-    const auto flServerModule = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     const auto serverModule = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
     const auto contentModule = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
     const auto engBaseModule = reinterpret_cast<DWORD>(GetModuleHandleA("engbase.dll"));
 	MemUtils::WriteProcMem(serverModule + 0x84018, &oldGetRootProc, 4);
-
-	// Unload the timing patches.
-	MemUtils::WriteProcMem(flServerModule + 0x1B0A0, &oldTimingSeconds, 4);
 
 	{
 		const uchar patch[] = {0xe8, 0x6e, 0xe7, 0xff, 0xff};

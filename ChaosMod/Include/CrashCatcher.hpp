@@ -8,7 +8,6 @@ class CrashCatcher
     inline static DWORD contentModule = 0;
 
     // Old Function Pointers
-    inline static FARPROC oldTimingSeconds = nullptr;
     inline static FARPROC oldGetRootProc = nullptr;
     inline static FARPROC crashProc6F671A0Old = nullptr;
     inline static FARPROC crashProc6F8B330Old = nullptr;
@@ -54,7 +53,6 @@ class CrashCatcher
     static void CrashProc6F671A0(int arg1);
     static DWORD __stdcall EngBase11A6DCatch(const BYTE* data);
     static const BYTE* __stdcall EngBase124BDCatch(const BYTE* data);
-    static double TimingSeconds(int64& delta);
     static CObject* GetRoot(CObject* child);
     static DWORD __stdcall C4800HookNaked();
     static int C4800Hook(int* a1, int* a2, int* zone, double* a4, int a5, int a6);
