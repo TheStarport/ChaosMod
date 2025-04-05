@@ -79,8 +79,10 @@ cd ChaosMod
 python -m venv .venv
 
 # Pick next command depending on your environment:
-# Bash: source ./venv/bin/activate
-# Powershell ./venv/bin/activate.ps1
+# Bash (Linux): source ./.venv/bin/activate
+# Powershell (Linux): ./.venv/bin/activate.ps1
+# Bash (Windows): source ./.venv/Scripts/activate
+# Powershell (Windows): ./.venv/Scripts/activate.ps1
 
 pip install -r requirements.txt
 ```
@@ -115,7 +117,47 @@ If you prefer to use an IDE:
 See [contributing guidelines](CONTRIBUTING.md) for more information.
 
 ## Docs
-Documentation for various features pending!!
+
+Note: *These docs are not very fleshed out and provide the minimum amount of info*.
+
+When running with Chaos Mod for the first time, no features are enabled. Everything must be configured in order for it
+to have any effect. By default, the mod options menu is bound to middle mouse. In some cases this doesn't occur, but
+the key for it can be rebound in the options menu.
+
+From the mod options menu you can enable the various features and tweak them to your liking. 
+
+### Twitch Integration
+
+If using the Twitch Integration with the Chaos mode, a few more steps are required. First you open the Twitch Voting
+Proxy application that ships with this mod, it should be located in the EXE folder. You need to run it once, and it should
+then generate an empty JSON config file in the current working directory. Open this config file up for editing. It should
+look something similar to this:
+
+```json
+{
+  "votingMode": "Majority",
+  "retainVotes": false,
+  "twitchUsername": "YourTwitchName",
+  "twitchChannelName": "YourTwitchName",
+  "twitchToken": "Token",
+  "permittedUsernames": [],
+  "votingPrefix": null,
+  "sendMessageUpdates": true
+}
+```
+
+Briefly summarised:
+- votingMode, can be either "Majority" or "Percentage". Majority is which ever has the most votes, if two options 
+have the same amount it's 50/50. Percentage turns votes into ratios, e.g. if 100 people vote, 75 for option 1 and 25 for 
+option 2. Option 1 has a 75% chance of being picked.
+- retainVotes, votes for options that are not selected give that person 2 votes next round (does not stack beyond 2).
+- twitchUsername, the name of the bot/user that will be in the channel counting votes
+- twitchChannelName, the name of the channel that people will be typing their votes in
+- twitchToken, the token for the aforementioned user/bot; users can obtain their token [here](https://twitchapps.com/tmi/)
+- votingPrefix, by default votes are done by typing a number 1-8, this is the behaviour when this is set to null. You can
+if desired set it to something like "!", which would mean to vote you'd type "!4", etc.
+- sendMessageUpdates, when true a message will be piped into the Twitch Chat informing people when a voting round changes,
+or when an option is successfully picked.
 
 ## Credits
 
