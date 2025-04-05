@@ -10,7 +10,7 @@
  v1.5 2024-04-20: Cleaned up unused script elements, adjusted paths and Start-Process functions to work with the new EXE
 #>
 
-Param ($noLaunch)
+Param ($noLaunch, $copyDir)
 $init = { function Get-LogColor {
         Param([Parameter(Position = 0)]
             [String]$logEntry)
@@ -80,38 +80,27 @@ if ($freelancer) {
     $freelancer.WaitForExit()
 }
 
-#Checks if FL_CHAOS_MOD doesn't exist and then prompts the user to enter it for this session.
-if (!$env:FL_CHAOS_MOD) {
-    $env:FL_CHAOS_MOD = Read-Host -Prompt "Enter the full path for the EXE folder of the Freelancer instance you wish to run. This environment variable will only persist for the duration of this PowerShell session and should be set permanently using the System.Environment class."
-    $checkCopyPath = Test-Path -Path $env:FL_CHAOS_MOD
-    if($checkCopyPath -eq $false){
-        Write-Host "The FL_CHAOS_MOD environment variable has been set to a path that does not exist. Asset copy may fail!" -ForegroundColor Red
-    }
-    Write-Host "FL_CHAOS_MOD has been set to $env:FL_CHAOS_MOD" -ForegroundColor Blue
+#Checks if CoypDir param was provided
+if (!$copyDir) {
+    Write-Host "No copy path specified, cannot continue."
+    exit 1
 }
 
-#Check the FL_CHAOS_MOD environment variable exists and if so, copy the files over to the application's directory.
-if ($env:FL_CHAOS_MOD) {
-    $fullCopyDestination = Resolve-Path $env:FL_CHAOS_MOD\..\
-    Write-Host "Copying asset files from $rootDir\ to $fullCopyDestination" -ForegroundColor Blue
-    $watch.Start() 
-    Copy-Item -Path "$rootDir\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
-    Copy-Item -Path "$rootDir\Assets\EXE\" -Destination "$fullCopyDestination" -Recurse -Force
-    $watch.Stop()
-    $time = Write-Output $watch.Elapsed.TotalSeconds
-    Write-Host "Asset files copied over in $time seconds!" -ForegroundColor Green
-    $watch.reset()
-}
-else {
-    Write-Host "The FL_CHAOS_MOD environment variable is not set! Aborting..." -ForegroundColor Red
-    exit
-}
+$fullCopyDestination = Resolve-Path $copyDir
+Write-Host "Copying asset files from $rootDir\ to $fullCopyDestination" -ForegroundColor Blue
+$watch.Start() 
+Copy-Item -Path "$rootDir\Assets\DATA\" -Destination "$fullCopyDestination" -Recurse -Force
+Copy-Item -Path "$rootDir\Assets\EXE\" -Destination "$fullCopyDestination" -Recurse -Force
+$watch.Stop()
+$time = Write-Output $watch.Elapsed.TotalSeconds
+Write-Host "Asset files copied over in $time seconds!" -ForegroundColor Green
+$watch.reset()
 
 #Launch the application and filter the logs into the PowerShell console.
 if (!$noLaunch) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
     $spewLocation = "$env:LOCALAPPDATA\Freelancer\FLSpew.txt"
-    $freelancerJob = Start-Process -PassThru -FilePath "$env:FL_CHAOS_MOD\Freelancer.exe" -ArgumentList "-w" -WorkingDirectory $env:FL_CHAOS_MOD
+    $freelancerJob = Start-Process -PassThru -FilePath "$copyDir\EXE\Freelancer.exe" -ArgumentList "-w" -WorkingDirectory "$copyDir\EXE"
     $freelancerJobId = $freelancerJob.Id
     Write-Host "Starting Chaos Mod in windowed mode at $startTime with PID $freelancerJobId" -ForegroundColor Green
     Write-Host "Logging $spewLocation to console" -ForegroundColor Magenta

@@ -448,3 +448,5 @@ ConanPresets.json
 .idea/
 vendor/
 compile_commands.json
+
+build.conf

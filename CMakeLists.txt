@@ -23,11 +23,15 @@ message(STATUS "Detected compiler: ${CMAKE_CXX_COMPILER}")
 set(PROJECT_VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 20)
 
+# Load config
+include("LoadConf.cmake")
+
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(FATAL_ERROR "Only LLVM Clang and MSVC compilers is currently supported.")
 endif()
 
-if (NOT IS_DIRECTORY ${PROJECT_SOURCE_DIR}/vendor/DXSDK)
+set(VENDOR_PATH ${PROJECT_SOURCE_DIR}/vendor)
+if (NOT IS_DIRECTORY ${VENDOR_PATH}/DXSDK)
     message(FATAL_ERROR "DXSDK Not found. Did you run 'python cli.py requirements'?")
 endif()
 
@@ -35,13 +39,13 @@ set(CODE_DIR "${PROJECT_SOURCE_DIR}/ChaosMod")
 
 set(SOURCE_PATH "${CODE_DIR}/Source" )
 set(INCLUDE_PATH "${CODE_DIR}/Include")
-set(SDK_PATH "${PROJECT_SOURCE_DIR}/vendor/flhook-sdk")
-set(imgui "${PROJECT_SOURCE_DIR}/vendor/imgui")
-set(imgui_fb "${PROJECT_SOURCE_DIR}/vendor/imgui-filebrowser")
-set(reshade "${PROJECT_SOURCE_DIR}/vendor/reshade")
-set(DISCORD_GAME_SDK "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk")
-set(DXSDK "${PROJECT_SOURCE_DIR}/vendor/DXSDK")
-set(FFMPEG_DIR "${PROJECT_SOURCE_DIR}/vendor/ffmpeg")
+set(SDK_PATH "${VENDOR_PATH}/flhook-sdk")
+set(imgui "${VENDOR_PATH}/imgui")
+set(imgui_fb "${VENDOR_PATH}/imgui-filebrowser")
+set(reshade "${VENDOR_PATH}/reshade")
+set(DISCORD_GAME_SDK "${VENDOR_PATH}/discord_game_sdk")
+set(DXSDK "${VENDOR_PATH}/DXSDK")
+set(FFMPEG_DIR "${VENDOR_PATH}/ffmpeg")
 
 file(GLOB_RECURSE SOURCE_FILES LIST_DIRECTORIES false
         "${SOURCE_PATH}/*.c*"
@@ -140,7 +144,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreRemoteClien
 target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreServer.lib")
 
 # Copy Discord SDK
-file(COPY "${PROJECT_SOURCE_DIR}/vendor/discord_game_sdk/lib/x86/discord_game_sdk.dll"
+file(COPY "${VENDOR_PATH}/discord_game_sdk/lib/x86/discord_game_sdk.dll"
         DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 # If we are building on Linux, import the MSVC headers
@@ -157,13 +161,16 @@ endif()
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE "Winmm.lib")
 
-    if (DEFINED ENV{FL_CHAOS_MOD} AND NOT ${CMAKE_GENERATOR} STREQUAL "Ninja")
+    if (DEFINED BINARY_COPY_DESTINATION AND NOT ${CMAKE_GENERATOR} STREQUAL "Ninja")
         message(STATUS "Adding post build step")
         set(OUT_PATH ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE_INIT}/*.dll)
         string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
+        file(TO_NATIVE_PATH ${VENDOR_PATH} VENDOR_PATH)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND copy /Y "${OUT_PATH}" "$ENV{FL_CHAOS_MOD}"
-                COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -NoXml true
+                COMMAND copy /Y "${OUT_PATH}" "${BINARY_COPY_DESTINATION}\\EXE"
+                COMMAND copy /Y "${VENDOR_PATH}\\discord_game_sdk\\lib\\x86\\discord_game_sdk.dll" "${BINARY_COPY_DESTINATION}\\EXE"
+                COMMAND copy /Y "${VENDOR_PATH}\\ffmpeg\\bin\\*.dll" "${BINARY_COPY_DESTINATION}\\EXE"
+                COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -CopyDir ${BINARY_COPY_DESTINATION}
         )
     else()
         message(STATUS "ENV: FL_CHAOS_MOD not defined. Not adding post build step.")
