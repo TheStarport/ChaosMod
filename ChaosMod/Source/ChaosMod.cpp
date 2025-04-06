@@ -449,8 +449,8 @@ void RequiredMemEdits()
 
     // Disable target cycling within wing formations
     // Appears to prevent several AI spawning realated crashes, but full consequences not understood.
-    MemUtils::NopAddress(0x062EE640, 3);
-    MemUtils::NopAddress(0x062EE64A, 2);
+    //MemUtils::NopAddress(0x062EE640, 3);
+    //MemUtils::NopAddress(0x062EE64A, 2);
 
     BugFixes::SetupDetours();
 
