@@ -38,7 +38,7 @@ runs:
         Get-ChildItem -Path ".\build" -Filter "*.dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
         Get-ChildItem -Path ".\TwitchChatVotingProxy\bin\x86\Release\net6.0-windows\win-x86\publish" -Filter "*.exe" | Move-Item -Destination ".\Archive\EXE"
         Get-ChildItem -Path ".\vendor\ffmpeg\bin" -Filter "*.dll" | Move-Item -Destination ".\Archive\EXE"
-        7z a -r ./chaosmod.7z ./Archive/*
+        7z a -r ./chaosmod.7z ./Archive/* -mx=9
         Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
 
     - name: "Build Installer"
@@ -47,7 +47,7 @@ runs:
         cd ${{ github.workspace }}/Installer
         & "${env:programfiles(x86)}\Inno Setup 6\iscc.exe" /O+ ".\setup.iss"
         cd ..
-        7z a -r .\Installer.7z .\Installer/Output*
+        7z a -r .\Installer.7z .\Installer/Output* -mx=9
         Rename-Item -Path .\chaosmod.7z -NewName Assets.7z
 
     - name: Create Release
