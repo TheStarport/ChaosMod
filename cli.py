@@ -22,9 +22,6 @@ def try_purge(directory: str, name: str, should_purge: bool):
         if should_purge:
             log(f"Found existing {name}, purging...")
             shutil.rmtree(directory)
-        else:
-            raise EnvironmentError("Running the requirements command when existing directories are present requires "
-                                   "the --purge flag to be present.")
 
 
 def run(cmd: str, no_log: bool = False, allow_error: bool = False) -> int:
@@ -99,7 +96,7 @@ def requirements(purge: bool):
         dx.write(payload.content)
 
     log("Extracting contents from _DX2010_.exe ...")
-    if run("7z x _DX2010_.exe DXSDK/Include -ovendor", no_log=True) != 0 or run("7z x _DX2010_.exe DXSDK/Lib/x86 -ovendor", no_log=True) != 0:
+    if run("7z x _DX2010_.exe DXSDK/Include -ovendor -y", no_log=True) != 0 or run("7z x _DX2010_.exe DXSDK/Lib/x86 -ovendor -y", no_log=True) != 0:
         log("Unable to extract DXSDK! Ensure that 7z (7Zip command line) is available on the path.")
         raise EnvironmentError("Unable to extract DXSDK")
 
@@ -107,7 +104,7 @@ def requirements(purge: bool):
     os.remove("_DX2010_.exe")
 
     log("Extracting FFMPEG...")
-    run("7z x vendor/ffmpeg.7z -ovendor/ffmpeg", no_log=True)
+    run("7z x vendor/ffmpeg.7z -ovendor/ffmpeg -y", no_log=True)
 
     log("Done")
 
