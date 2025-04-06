@@ -43,7 +43,9 @@ these releases contain two 7zip files: an installer and an assets package.
 ### Installer
 The installer contains *everything* the mod is going to require, outside of a vanilla install of Freelancer.
 Running the installer requires a copy of vanilla Freelancer, but it will create a build of Freelancer HD Edition and
-then apply ChaosMod over the top of it.
+then apply ChaosMod over the top of it. In the release package, you'll need to download each of the Installer.7z.00\* 
+files. The archive is split into parts due to Github's file upload limit. Once you have downloaded each of the parts,
+open Installer.7z.001 with 7Zip in order to extract it.
 
 *Disclaimer: the installer's progress bar does not work correctly, and it takes a long time. It may look like it's 
 frozen, but be patient.*

@@ -47,13 +47,13 @@ runs:
         cd ${{ github.workspace }}/Installer
         & "${env:programfiles(x86)}\Inno Setup 6\iscc.exe" /O+ ".\setup.iss"
         cd ..
-        7z a -r .\Installer.7z .\Installer/Output* -mx=9
+        7z -v1400m a -r .\Installer.7z .\Installer/Output* -mx=9
         Rename-Item -Path .\chaosmod.7z -NewName Assets.7z
 
     - name: Create Release
       id: create_release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ github.workspace }}/*.7z"
+        artifacts: "${{ github.workspace }}/*.7z,${{ github.workspace }}/*.00*"
         bodyFile: "RELEASE.md"
         tag: ${{ steps.date.outputs.date }}
