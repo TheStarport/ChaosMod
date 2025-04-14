@@ -5,7 +5,9 @@
         "minor": 23,
         "patch": 0
     },
-    "include": [ "./ConanPresets.json" ],
+    "include": [
+        "./ConanPresets.json"
+    ],
     "configurePresets": [
         {
             "name": "debug",

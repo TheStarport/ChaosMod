@@ -442,7 +442,6 @@ FodyWeavers.xsd
 #Temporary Folders
 enc_temp_folder/*
 
-CMakePresets.json
 ConanPresets.json
 .venv/
 .idea/
