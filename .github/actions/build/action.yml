@@ -71,7 +71,7 @@ runs:
         steps.dependency-conan.outputs.cache-hit != 'true'
       run: |
         python cli.py requirements
-        python cli.py install -r
+        python cli.py install
       shell: bash
 
     - name: Dotnet Restore Voting Proxy

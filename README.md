@@ -57,10 +57,11 @@ replacing any files that are found. Please note that, unlike the installer, no s
 when working with a non-vanilla/modified install of Freelancer.
 
 ## Building
-The project is built using the Clang compiler, MSVC toolchain, and CMake.
+The project is built with CMake using the MSVC toolchain, 
+and can be built using either the MSVC compiler or the clang compiler. 
 As we use CMake presets, building it via the command line is fairly trivial.
 
-*Disclaimer: Only builds with Visual Studio 2022 + Clang 16 have been tested and confirmed to work.*
+*Disclaimer: Only builds with Visual Studio 2022 + Clang 19 have been tested and confirmed to work.*
 
 ### Cloning & Building Locally
 
@@ -99,9 +100,11 @@ python cli.py build
 The requirements command will download needed dependencies, while the build command will install conan packages and
 prepare CMake presets. `-r` can be passed to the build command to prepare a release build on Windows. 
 On the first run, a build will automatically be run to ensure everything works as intended.
+If you wish to use the clang compiler, rather than MSVC, which has more curated diagnostics, 
+append `--clang` to the build command.
 
-After running the CLI, builds can be run manually via the following commands 
-(for release, just change 'debug' to 'release'):
+After running the CLI, builds can be run manually via the following commands, like the previous, append `-clang` for
+building using the clang compiler (for release, just change 'debug' to 'release'):
 ```bash
 cmake --preset debug -S . -B ./build/Debug
 cmake --build ./build/Debug --target ChaosMod --config Debug

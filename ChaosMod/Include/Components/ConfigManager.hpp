@@ -13,7 +13,7 @@ struct PatchNoteSettings
         uint changesPerMajorMin = 40;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PatchNoteSettings, enable, countDownWhileOnBases, timeBetweenPatchesInMinutes, changesPerPatchMin, changesPerMinorMin,
-                                       changesPerMajorMin);
+                                       changesPerMajorMin, displayInColor);
 };
 
 struct ChaosSettings

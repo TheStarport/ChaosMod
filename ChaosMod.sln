@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchChatVotingProxy", "TwitchChatVotingProxy\TwitchChatVotingProxy.csproj", "{A958ED37-FA5C-44BB-8714-E7DDA134DE85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VotingProxy", "Sidecars\VotingProxy\VotingProxy.csproj", "{A958ED37-FA5C-44BB-8714-E7DDA134DE85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChaosController", "Sidecars\ChaosController\ChaosController.csproj", "{998C7697-CAF3-42FB-9F48-9C72E8BAA0B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChaosMod.Common", "Sidecars\ChaosMod.Common\ChaosMod.Common.csproj", "{7B7BD624-5E9B-406A-91A3-2005043788A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChaosMod.Api", "Sidecars\ChaosMod.Api\ChaosMod.Api.csproj", "{1DB51CE3-E42F-496B-84F3-9AFCBD206B83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{A958ED37-FA5C-44BB-8714-E7DDA134DE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A958ED37-FA5C-44BB-8714-E7DDA134DE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A958ED37-FA5C-44BB-8714-E7DDA134DE85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{998C7697-CAF3-42FB-9F48-9C72E8BAA0B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{998C7697-CAF3-42FB-9F48-9C72E8BAA0B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{998C7697-CAF3-42FB-9F48-9C72E8BAA0B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{998C7697-CAF3-42FB-9F48-9C72E8BAA0B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B7BD624-5E9B-406A-91A3-2005043788A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B7BD624-5E9B-406A-91A3-2005043788A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B7BD624-5E9B-406A-91A3-2005043788A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B7BD624-5E9B-406A-91A3-2005043788A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB51CE3-E42F-496B-84F3-9AFCBD206B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB51CE3-E42F-496B-84F3-9AFCBD206B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB51CE3-E42F-496B-84F3-9AFCBD206B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB51CE3-E42F-496B-84F3-9AFCBD206B83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

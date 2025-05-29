@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
-#include "DirectX/d3d.hpp"
 #include "Components/UiManager.hpp"
+#include "DirectX/d3d.hpp"
 
 #include "Components/ConfigManager.hpp"
 #include "ImGui/Helpers/ImGuiWin32.hpp"
@@ -117,7 +117,6 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
             return nullptr;
         }
     }
-
 
     Get<ReshadeManager>()->InitReshade();
 
@@ -285,8 +284,8 @@ void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 
     auto& io = ImGui::GetIO();
 
-    const static std::string ini = std::format("{}/imgui.ini", path);
-    const static std::string log = std::format("{}/imgui.log", path);
+    const static std::string ini = std::format("{}/imgui.ini", std::string(path));
+    const static std::string log = std::format("{}/imgui.log", std::string(path));
     io.IniFilename = ini.c_str();
     io.LogFilename = log.c_str();
 

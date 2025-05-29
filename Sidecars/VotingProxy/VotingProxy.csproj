@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>false</SelfContained>
+        <StartupObject>ChaosMod.VotingProxy.VotingProxy</StartupObject>
+        <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+        <LangVersion>latest</LangVersion>
+        <RootNamespace>ChaosMod.VotingProxy</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Flurl.Http" Version="4.0.2"/>
+        <PackageReference Include="libc.hwid" Version="7.0.0"/>
+        <PackageReference Include="Serilog" Version="4.3.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+        <PackageReference Include="TwitchLib" Version="3.5.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ChaosMod.Api\ChaosMod.Api.csproj"/>
+        <ProjectReference Include="..\ChaosMod.Common\ChaosMod.Common.csproj"/>
+    </ItemGroup>
+
+</Project>
