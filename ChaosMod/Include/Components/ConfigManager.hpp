@@ -34,6 +34,12 @@ struct ChaosSettings
             PerEffectPercentage
         };
 
+        enum class VotingMode
+        {
+            Majority,
+            Percentage
+        };
+
         bool enable = false;
         bool blockTeleportsDuringMissions = false;
         float timeBetweenChaos = 45.0f;
@@ -42,17 +48,20 @@ struct ChaosSettings
 
         bool enableTwitchVoting = false;
         float baseTwitchVoteWeight = 1.0f;
-        TwitchVoteVisibility twitchVoteVisibility = TwitchVoteVisibility::NotVisible;
+        TwitchVoteVisibility twitchVoteVisibility = TwitchVoteVisibility::PerEffectPercentage;
+        VotingMode votingMode = VotingMode::Majority;
+        std::string votingPrefix = "";
+        bool sendMessageUpdates = true;
 
         DWORD progressBarColor = 0xFFFFFFFF;
         DWORD progressBarTextColor = 0xFF00FF00;
         bool showTimeRemainingOnEffects = false;
-        ProgressBar progressBarType = ProgressBar::Clock;
+        ProgressBar progressBarType = ProgressBar::Countdown;
         std::map<std::string, std::map<std::string, bool>> toggledEffects;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ChaosSettings, enable, blockTeleportsDuringMissions, timeBetweenChaos, defaultEffectDuration,
-                                       totalAllowedConcurrentEffects, enableTwitchVoting, baseTwitchVoteWeight, twitchVoteVisibility, progressBarColor, progressBarTextColor,
-                                       showTimeRemainingOnEffects, toggledEffects, progressBarType);
+                                       totalAllowedConcurrentEffects, enableTwitchVoting, baseTwitchVoteWeight, twitchVoteVisibility, votingMode, votingPrefix,
+                                       sendMessageUpdates, progressBarColor, progressBarTextColor, showTimeRemainingOnEffects, toggledEffects, progressBarType);
 };
 
 struct AutoSaveSettings
@@ -66,17 +75,17 @@ struct AutoSaveSettings
 
 struct DiscordSettings
 {
-    enum class TimerType
-    {
-        TimePlaying,
-        TimeUntilChaos,
-        TimeUntilPatchNote
-    };
+        enum class TimerType
+        {
+            TimePlaying,
+            TimeUntilChaos,
+            TimeUntilPatchNote
+        };
 
-    bool enable = false;
-    TimerType timerType = TimerType::TimePlaying;
+        bool enable = false;
+        TimerType timerType = TimerType::TimePlaying;
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DiscordSettings, enable, timerType);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DiscordSettings, enable, timerType);
 };
 
 class ConfigManager : public Component

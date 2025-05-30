@@ -25,6 +25,8 @@ class CompressorRecipe(ConanFile):
         self.requires("nlohmann_json/3.11.3")
         self.requires("refl-cpp/0.12.4")
         self.requires("xbyak/7.07")
+        self.requires("cppzmq/4.10.0")
+        self.requires("concurrentqueue/1.0.4")
 
     def build_requirements(self):
         self.tool_requires("cmake/3.31.6")

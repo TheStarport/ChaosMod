@@ -1,6 +1,9 @@
 #pragma once
 #include "../Effects/ActiveEffect.hpp"
 
+#include <moodycamel/concurrentqueue.h>
+#include <zmq_addon.hpp>
+
 class TwitchVoting final : public Component
 {
     public:
@@ -12,14 +15,21 @@ class TwitchVoting final : public Component
         };
 
     private:
-        HANDLE processHandle = nullptr;
-        void* pipeHandle = INVALID_HANDLE_VALUE;
+        HANDLE votingProxyProcessHandle = nullptr;
+        zmq::context_t mqContext;
+        std::unique_ptr<zmq::socket_t> sock;
+
+        // Send-Receive payloads from another thread
+        std::jthread voteThread;
+        moodycamel::ConcurrentQueue<std::string> commandQueue;
+        moodycamel::ConcurrentQueue<std::function<void()>> responseQueue;
+
         u64 lastPing = 0;
         u64 lastVoteFetch = 0;
         int noPingRuns = 0;
         int selectedResult = -1;
 
-        bool receivedHello = false;
+        bool handshakeCompleted = false;
         bool hasReceivedResult = false;
 
         bool isVotingRoundDone = true;
@@ -34,12 +44,14 @@ class TwitchVoting final : public Component
         static std::string GetPipeJson(std::string_view identifier, const std::vector<std::string>& params);
         bool SpawnVotingProxy();
         void HandleMsg(std::string_view message);
-        void SendToPipe(std::string_view identifier, const std::vector<std::string>& params = {}) const;
+        void SendToSocket(std::string_view identifier, const std::vector<std::string>& params = {});
         void Cleanup();
+        void HandleSocketPayloads(const std::stop_token& t);
 
     public:
         ~TwitchVoting() override;
         bool Initialize();
         void Poll();
         const VoteInfo& GetCurrentVoteInfo() const;
+        bool IsInitialized() const;
 };

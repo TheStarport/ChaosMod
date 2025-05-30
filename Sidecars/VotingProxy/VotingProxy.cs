@@ -10,23 +10,33 @@ namespace ChaosMod.VotingProxy;
 
 internal enum ExitCode
 {
-    Unknown,
     Ok,
+    Unknown,
     BadConfig,
-    PipeError
+    SocketError,
+    AlreadyRunning
 }
 
 internal class VotingProxy
 {
+    private static ChaosCommunicator? _chaosCommunicator;
     private static void Exit(ExitCode code)
     {
+        _chaosCommunicator?.Dispose();
         Environment.Exit((int)code);
     }
 
-    private static readonly ILogger Logger = Log.Logger.ForContext<VotingProxy>();
+    private static ILogger _logger = null!;
 
     private static async Task Main(string[] args)
     {
+        // ReSharper disable once NotAccessedVariable
+        var mutex = new Mutex(true, "ChaosModVotingMutex", out var @new);
+        if (@new)
+        {
+            Exit(ExitCode.AlreadyRunning);
+        }
+
         AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
         var logPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -39,11 +49,14 @@ internal class VotingProxy
             .MinimumLevel.Information()
             #endif
             .WriteTo.File(logPath,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}")
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}",
+                flushToDiskInterval: TimeSpan.FromSeconds(1))
             .WriteTo.Console(
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}")
             .CreateLogger();
-        Logger.Information("Starting Freelancer: Chaos Mod - Twitch Proxy");
+
+        _logger = Log.Logger.ForContext<VotingProxy>();
+        _logger.Information("Starting Freelancer: Chaos Mod - Twitch Proxy");
         var jsonPath = Path.Join(Directory.GetCurrentDirectory(), "ChaosModVoting.json");
         var jsonSerializerOptions = new JsonSerializerOptions
         {
@@ -60,7 +73,7 @@ internal class VotingProxy
         var config = ChaosModConfig.Load(false);
         if (config is null)
         {
-            Logger.Fatal("Unable to deserialize JSON configuration.");
+            _logger.Fatal("Unable to deserialize JSON configuration.");
             Exit(ExitCode.BadConfig);
             return;
         }
@@ -69,49 +82,47 @@ internal class VotingProxy
 
         if (args.Length < 1 || args[0] != "--startProxy")
         {
-            Logger.Fatal("Please don't start the voting proxy process manually as it's only supposed to be launched by the mod itself."
-                         + "\nPass --startProxy as an argument if you want to start the proxy yourself for debugging purposes.");
+            _logger.Fatal("Please don't start the voting proxy process manually as it's only supposed to be launched by the mod itself."
+                          + "\nPass --startProxy as an argument if you want to start the proxy yourself for debugging purposes.");
 
             Console.ReadKey();
             Exit(ExitCode.BadConfig);
         }
 
-        var mutex = new Mutex(false, "ChaosModVotingMutex");
-        mutex.WaitOne();
+        // Setup socket connections
+        _logger.Information("Starting chaos sockets and waiting for connection...");
 
-        // Create components
-        Logger.Information("Starting chaos pipe and waiting for connection...");
-        var chaosPipe = new ChaosPipeClient();
-        if (!chaosPipe.IsConnected())
+        try
         {
-            Logger.Fatal("Unable to connect to Chaos Pipe. Terminating.");
-            Exit(ExitCode.PipeError);
+            _chaosCommunicator = new ChaosCommunicator();
         }
+        catch (Exception ex)
+        {
+            _logger.Fatal(ex, "Unable to connect/bind to Chaos ports");
+            Exit(ExitCode.SocketError);
+            return;
+        }
+
+        var pullMessageCts = new CancellationTokenSource();
+        var pullMessageTask = Task.Run(() => _chaosCommunicator.PullMessage(pullMessageCts.Token), pullMessageCts.Token);
 
         var votingReceivers = new List<(string Name, IVotingReceiver VotingReceiver)>();
 
         if (config.ChaosSettings.EnableTwitchVoting)
         {
             var twitch = await TwitchState.Create();
-            if (!twitch.Validated && !await twitch.Login())
-            {
-                Logger.Error("Unable to login to Twitch. Terminating.");
-            }
-            else
-            {
-                votingReceivers.Add(("Twitch", new TwitchVotingReceiver(config, chaosPipe, twitch)));
-            }
+            votingReceivers.Add(("Twitch", new TwitchVotingReceiver(config, _chaosCommunicator, twitch)));
         }
 
         if (votingReceivers.Count == 0)
         {
-            Logger.Fatal("No voting receivers found.");
+            _logger.Fatal("No voting receivers found.");
             Exit(ExitCode.BadConfig);
         }
 
         foreach (var votingReceiver in votingReceivers)
         {
-            Logger.Information($"Initializing {votingReceiver.Name} voting");
+            _logger.Information("Initializing {VotingReceiverName} voting", votingReceiver.Name);
 
             try
             {
@@ -120,50 +131,43 @@ internal class VotingProxy
                     continue;
                 }
 
-                Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting");
+                _logger.Fatal("Failed to initialize {VotingReceiverName} voting", votingReceiver.Name);
                 return;
             }
             catch (Exception exception)
             {
-                Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting\nException occured: ${exception}");
-                chaosPipe.SendErrorMessage($"Error occured while initializing {votingReceiver.Name} voting." +
-                                           $" Check chaosproxy.log for details.");
+                _logger.Fatal("Failed to initialize {VotingReceiverName} voting\nException occured: ${Exception}", votingReceiver.Name, exception);
+                _chaosCommunicator.SendErrorMessage($"Error occured while initializing {votingReceiver.Name} voting." +
+                                                    $" Check VotingProxy.log for details.");
 
                 return;
             }
         }
 
         // Start the chaos mod controller
-        Logger.Information("Initializing controller");
+        _logger.Information("Initializing controller");
 
-        _ = new ChaosModController(chaosPipe, votingReceivers.Select(item => item.VotingReceiver).ToArray(),
+        _ = new ChaosModController(_chaosCommunicator, votingReceivers.Select(item => item.VotingReceiver).ToArray(),
             config);
 
-        Logger.Information("Sending hello to mod");
-
-        chaosPipe.SendMessageToPipe("hello");
-        while (!chaosPipe.GotHelloBack && chaosPipe.IsConnected())
+        if (_chaosCommunicator.HandshakeCompleted)
         {
-            await Task.Delay(100);
+            _logger.Information("Received 'hello back' from mod!");
         }
 
-        if (chaosPipe.GotHelloBack)
+        while (!pullMessageTask.IsCompleted)
         {
-            Logger.Information("Received hello_back from mod!");
+            await Task.Delay(100, pullMessageCts.Token);
         }
 
-        while (chaosPipe.IsConnected())
-        {
-            await Task.Delay(100);
-        }
-
-        Logger.Information("Pipe disconnected, ending program.");
+        _logger.Information("Chaos sockets disconnected, ending program.");
+        mutex.ReleaseMutex();
         Exit(ExitCode.Ok);
     }
 
     private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs e)
     {
-        Logger.Fatal(e.ExceptionObject as Exception, "Fatal exception within the voting proxy.");
+        _logger.Fatal(e.ExceptionObject as Exception, "Fatal exception within the voting proxy.");
         Console.ReadLine();
         Exit(ExitCode.Unknown);
     }

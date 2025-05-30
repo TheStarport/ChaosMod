@@ -1,6 +1,6 @@
 ﻿namespace ChaosMod.VotingProxy.ChaosPipe;
 
-internal interface IChaosPipeClient
+internal interface IChaosCommunicator
 {
     event EventHandler<GetCurrentVotesArgs> OnGetCurrentVotes;
     /// <summary>

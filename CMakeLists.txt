@@ -124,6 +124,8 @@ find_package(semver)
 find_package(nlohmann_json)
 find_package(refl-cpp)
 find_package(xbyak)
+find_package(cppzmq)
+find_package(concurrentqueue)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         glm::glm
         magic_enum::magic_enum
@@ -132,6 +134,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         nlohmann_json::nlohmann_json
         refl-cpp::refl-cpp
         xbyak::xbyak
+        cppzmq
+        concurrentqueue::concurrentqueue
 )
 
 # FLCore

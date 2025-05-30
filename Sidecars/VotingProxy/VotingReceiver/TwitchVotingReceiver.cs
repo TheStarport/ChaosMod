@@ -10,7 +10,7 @@ namespace ChaosMod.VotingProxy.VotingReceiver;
 /// <summary>
 ///     Twitch voting receiver implementation
 /// </summary>
-internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaosPipe, TwitchState twitch) : IVotingReceiver
+internal class TwitchVotingReceiver(ChaosModConfig config, ChaosCommunicator communicator, TwitchState twitch) : IVotingReceiver
 {
     private const int ReconnectInterval = 1000;
 
@@ -18,35 +18,29 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
 
     private readonly ILogger _logger = Log.Logger.ForContext<TwitchVotingReceiver>();
 
-    private bool _isReady;
+    private readonly ChaosCommunicator _communicator = communicator;
 
     public async Task<bool> Init()
     {
-        _logger.Information("Initializing Twitch Voting Receiver");
+        if (!twitch.Validated && !await twitch.Login())
+        {
+            _logger.Error("Unable to login to Twitch. Terminating.");
+            return false;
+        }
 
-        if (!twitch.ConnectToTwitch())
+        if (!twitch.ConnectToTwitch(client =>
+            {
+                client.OnDisconnected += OnDisconnected;
+                client.OnConnected += OnConnected;
+                client.OnError += OnError;
+                client.OnIncorrectLogin += OnIncorrectLogin;
+                client.OnFailureToReceiveJoinConfirmation += OnFailureToReceiveJoinConfirmation;
+                client.OnJoinedChannel += OnJoinedChannel;
+                client.OnMessageReceived += OnMessageReceived;
+            }))
         {
             _logger.Error("Twitch connection failed");
             return false;
-        }
-
-        twitch.Client!.OnDisconnected += OnDisconnected;
-        twitch.Client.OnConnected += OnConnected;
-        twitch.Client.OnError += OnError;
-        twitch.Client.OnIncorrectLogin += OnIncorrectLogin;
-        twitch.Client.OnFailureToReceiveJoinConfirmation += OnFailureToReceiveJoinConfirmation;
-        twitch.Client.OnJoinedChannel += OnJoinedChannel;
-        twitch.Client.OnMessageReceived += OnMessageReceived;
-
-        if (!twitch.Client.Connect())
-        {
-            _logger.Error("Failed to connect to channel");
-            return false;
-        }
-
-        while (!_isReady)
-        {
-            await Task.Delay(100);
         }
 
         return true;
@@ -71,12 +65,12 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
         {
             foreach (var msg in message.Split("\n"))
             {
-                twitch.Client.SendMessage(twitch.Channel!.Information.BroadcasterName, msg);
+                twitch.Client.SendMessage(twitch.Client.JoinedChannels[0].Channel, msg);
             }
         }
         catch (Exception e)
         {
-            _logger.Error(e, $"Failed to send message \"{message}\" to channel \"{twitch.Channel!.Information.BroadcasterName}\"");
+            _logger.Error(e, $"Failed to send message \"{message}\" to channel \"{twitch.Channel!.Information.BroadcasterLogin}\"");
         }
 
         return Task.CompletedTask;
@@ -105,7 +99,7 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
     private void OnIncorrectLogin(object? sender, OnIncorrectLoginArgs e)
     {
         _logger.Error("Invalid Twitch login credentials, check user name and oauth.");
-        chaosPipe.SendErrorMessage("Invalid Twitch credentials. Please verify your config.");
+        _communicator.SendErrorMessage("Invalid Twitch credentials. Please verify your config.");
         twitch.Client?.Disconnect();
     }
 
@@ -115,7 +109,8 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
     private void OnFailureToReceiveJoinConfirmation(object? sender, OnFailureToReceiveJoinConfirmationArgs e)
     {
         _logger.Error("Invalid Twitch channel, please check specified Twitch channel.");
-        chaosPipe.SendErrorMessage("Invalid Twitch channel. Please verify your config.");
+        _communicator.SendErrorMessage("Invalid Twitch channel. Please verify your config.");
+        _communicator.Dispose();
         twitch.Client?.Disconnect();
     }
 
@@ -125,7 +120,6 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
     private void OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
     {
         _logger.Information($"Successfully joined Twitch channel \"{twitch.Channel!.Information.BroadcasterName}\"");
-        _isReady = true;
     }
 
     /// <summary>
@@ -135,12 +129,15 @@ internal class TwitchVotingReceiver(ChaosModConfig config, ChaosPipeClient chaos
     {
         var chatMessage = e.ChatMessage;
 
+        _logger.Debug("Twitch Message - {username}: {chatMessage}", chatMessage.Username, chatMessage.Message);
+
         var @event = new MessageArgs
         {
             Message = chatMessage.Message.Trim(),
             ClientId = chatMessage.UserId,
             Username = chatMessage.Username.ToLower() // lower case the username to allow case-insensitive comparisons
         };
+
         Message?.Invoke(this, @event);
     }
 }

@@ -7,7 +7,7 @@ namespace ChaosMod.VotingProxy;
 
 internal class ChaosModController
 {
-    private readonly IChaosPipeClient _chaosPipe;
+    private readonly IChaosCommunicator _chaosPipe;
     private readonly IVotingReceiver[] _votingReceivers;
     private readonly ChaosModConfig _config;
 
@@ -17,7 +17,7 @@ internal class ChaosModController
     private int _voteCounter;
     private bool _voteRunning;
 
-    public ChaosModController(IChaosPipeClient chaosPipe, IVotingReceiver[] votingReceivers,
+    public ChaosModController(IChaosCommunicator chaosPipe, IVotingReceiver[] votingReceivers,
         ChaosModConfig config)
     {
         _chaosPipe = chaosPipe;
@@ -122,20 +122,22 @@ internal class ChaosModController
     /// </summary>
     private async void OnNewVote(object? sender, NewVoteArgs e)
     {
-        _activeVoteOptions = e.VoteOptionNames.ToList().Select(IVoteOption (voteOptionName, index) =>
-        {
-            // We want the options to alternate between matches.
-            // If we are on an even round we basically select the index (+1 for non programmers).
-            // If we are on an odd round, we add to the index the option count.
-            // This gives us a pattern like following:
-            // Round 0: [O1, O2, O3, ...]
-            // Round 1: [O4, O5, O6, ...]
-            var match = _voteCounter % 2 == 0
-                ? _config.ChaosSettings.VotingPrefix + index + 1
-                : _config.ChaosSettings.VotingPrefix + index + 1 + _activeVoteOptions.Count;
+        _activeVoteOptions = e.VoteOptionNames
+            .ToList()
+            .Select(IVoteOption (voteOptionName, index) =>
+            {
+                // We want the options to alternate between matches.
+                // If we are on an even round we basically select the index (+1 for non programmers).
+                // If we are on an odd round, we add to the index the option count.
+                // This gives us a pattern like following:
+                // Round 0: [O1, O2, O3, ...]
+                // Round 1: [O4, O5, O6, ...]
+                var match = _voteCounter % 2 == 0
+                    ? _config.ChaosSettings.VotingPrefix + (index + 1)
+                    : _config.ChaosSettings.VotingPrefix + (index + 1 + _activeVoteOptions.Count);
 
-            return new VoteOption(voteOptionName, [match]);
-        }).ToList();
+                return new VoteOption(voteOptionName, [match]);
+            }).ToList();
 
         var msg = "Time for a new effect! Vote between:";
         foreach (var voteOption in _activeVoteOptions)

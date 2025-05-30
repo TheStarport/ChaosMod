@@ -55,7 +55,7 @@ public class ChaosSettings
 
     // Twitch Settings
 
-    public TwitchVoteVisibility TwitchVoteVisibility = TwitchVoteVisibility.NotVisible;
+    public TwitchVoteVisibility TwitchVoteVisibility = TwitchVoteVisibility.PerEffectPercentage;
     public VotingMode VotingMode = VotingMode.Majority;
     public string VotingPrefix = string.Empty;
     public bool SendMessageUpdates;

@@ -11,6 +11,7 @@ using TwitchLib.Client;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
+using ILogger = Serilog.ILogger;
 
 namespace ChaosMod.Common.Twitch;
 
@@ -23,12 +24,17 @@ public class TwitchState
     private const string KeySplitter = "FLCHS";
 
     private static readonly string[] Scopes =
-    {
+    [
         "chat:read",
+        "chat:edit",
         "user:read:chat",
         "channel:manage:polls", // Read/create polls (mirror game polls to channel, sync channel poll to game state, check if a poll is running before making one)
-        "channel:moderate" // Needed to get PubSub events when a chat message is deleted by a mod
-    };
+        "channel:moderate", // Needed to get PubSub events when a chat message is deleted by a mod
+        "user:bot",
+        "channel:bot",
+        "user:write:chat",
+        "moderator:manage:announcements"
+    ];
 
     private static readonly ILogger Logger = Log.Logger.ForContext<TwitchState>();
     private TwitchState()
@@ -130,27 +136,13 @@ public class TwitchState
                     }
                 };
 
-                var users = await TwitchApi.Helix.Users.GetUsersAsync();
-                User = users.Users[0]; // There should always be only one user connected
-                Channel = new ChannelDetails
-                {
-                    Information = (await TwitchApi.Helix.Channels.GetChannelInformationAsync(User.Id)).Data[0]
-                };
-
-                var hid = HwId.Generate();
-                if (hid is null)
-                {
-                    return;
-                }
-
-                await File.WriteAllTextAsync(TwitchFile, $"{StringCipher.Encrypt(AccessToken, hid)}{KeySplitter}{StringCipher.Encrypt(RefreshToken, hid)}",
-                    validateSource.Token);
+                await PostLoginInit();
                 return;
             }
         }
     }
 
-    public bool ConnectToTwitch()
+    public bool ConnectToTwitch(Action<TwitchClient> hooks)
     {
         if (User is null)
         {
@@ -168,8 +160,10 @@ public class TwitchState
         var websocket = new WebSocketClient(clientOptions);
         Client = new TwitchClient(websocket);
 
+        hooks(Client);
+
         var credentials = new ConnectionCredentials(User.Login, AccessToken);
-        Client.Initialize(credentials);
+        Client.Initialize(credentials, User.Login.ToLower());
         return Client.Connect();
     }
 
@@ -180,7 +174,6 @@ public class TwitchState
         {
             return;
         }
-
 
         var dataRaw = await File.ReadAllTextAsync(TwitchFile);
         if (dataRaw.IndexOf(KeySplitter, StringComparison.Ordinal) is -1)
@@ -209,14 +202,17 @@ public class TwitchState
         var validateResponse = await TwitchApi.Auth.ValidateAccessTokenAsync(AccessToken);
         if (validateResponse is not null)
         {
+            await PostLoginInit();
             return;
         }
 
         // Token has expired, try to refresh
-        var refresh = await ValidationUrl.PostMultipartAsync(mp => mp
-            .AddString("client_id", ClientId)
-            .AddString("grant_type", "refresh_token")
-            .AddString("refresh_token", RefreshToken));
+        var refresh = await ValidationUrl
+            .AllowAnyHttpStatus()
+            .PostMultipartAsync(mp => mp
+                .AddString("client_id", ClientId)
+                .AddString("grant_type", "refresh_token")
+                .AddString("refresh_token", RefreshToken));
 
         if ((HttpStatusCode)refresh.StatusCode is not HttpStatusCode.OK)
         {
@@ -229,6 +225,29 @@ public class TwitchState
         var tokenResponse = await refresh.GetJsonAsync<GetTokenResponse>();
         AccessToken = tokenResponse.AccessToken;
         RefreshToken = tokenResponse.RefreshToken;
+
+        await PostLoginInit();
+    }
+
+    private async Task PostLoginInit()
+    {
+        if (TwitchApi is null)
+        {
+            return;
+        }
+
+        var users = await TwitchApi.Helix.Users.GetUsersAsync();
+        User = users.Users[0]; // There should always be only one user connected
+        Channel = new ChannelDetails
+        {
+            Information = (await TwitchApi.Helix.Channels.GetChannelInformationAsync(User.Id)).Data[0]
+        };
+
+        var hid = HwId.Generate();
+        if (hid is null)
+        {
+            return;
+        }
 
         await File.WriteAllTextAsync(TwitchFile, $"{StringCipher.Encrypt(AccessToken, hid)}{KeySplitter}{StringCipher.Encrypt(RefreshToken, hid)}");
     }

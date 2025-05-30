@@ -2,8 +2,8 @@
 
 #include "../ImGuiManager.hpp"
 
-#include "CoreComponents/TwitchVoting.hpp"
 #include "Components/ConfigManager.hpp"
+#include "CoreComponents/TwitchVoting.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
 
@@ -84,24 +84,19 @@ class Configurator final
 
             static std::array timerOptions = { "Do Not Show", "Total Only", "Vote Per Effect (Total)", "Vote Per Effect (Percentage)" };
 
-            ImGui::Combo("Twitch Vote Visibilty:", reinterpret_cast<int*>(&config->chaosSettings.twitchVoteVisibility),
-                timerOptions.data(), timerOptions.size());
+            ImGui::Combo(
+                "Twitch Vote Visibilty:", reinterpret_cast<int*>(&config->chaosSettings.twitchVoteVisibility), timerOptions.data(), timerOptions.size());
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(
-                    "When using Twitch votes, you can decide how visible votes shall be:\n\n"
-                    "Do Not Show:                  Do not display how many votes have been cast for the next effect. Total surprise.\n"
-                    "Total Only:                   Display only the amount of votes that have been cast, but not what they have been cast for.\n"
-                    "Vote Per Effect (Total):      Display how many votes in total have been cast for each potential effect.\n"
-                    "Vote Per Effect (Percentage): Display how many votes as a percentage have been cast for each potential effect.");
+                ImGui::SetTooltip("When using Twitch votes, you can decide how visible votes shall be:\n\n"
+                                  "Do Not Show:                  Do not display how many votes have been cast for the next effect. Total surprise.\n"
+                                  "Total Only:                   Display only the amount of votes that have been cast, but not what they have been cast for.\n"
+                                  "Vote Per Effect (Total):      Display how many votes in total have been cast for each potential effect.\n"
+                                  "Vote Per Effect (Percentage): Display how many votes as a percentage have been cast for each potential effect.");
             }
 
-            static bool initialized = false;
-            ImGui::BeginDisabled(!config->chaosSettings.enableTwitchVoting || initialized);
-            if (ImGui::Button("Initialize Voting Proxy") && Get<TwitchVoting>()->Initialize())
-            {
-                initialized = true;
-            }
+            ImGui::BeginDisabled(!config->chaosSettings.enableTwitchVoting || Get<TwitchVoting>()->IsInitialized());
+            if (ImGui::Button("Initialize Voting Proxy") && Get<TwitchVoting>()->Initialize()) {}
             ImGui::EndDisabled();
         }
 
@@ -179,7 +174,7 @@ class Configurator final
                 ImGui::SetTooltip("WARNING: Changing the seed will reset all patch notes, "
                                   "erasing any that have already been applied and returning the game to a vanilla state!");
             }
-            
+
             ImGui::EndDisabled();
         }
 
@@ -210,7 +205,7 @@ class Configurator final
 
                     ImGui::PushID(categoryName.c_str());
                     bool all = std::ranges::all_of(configCategoryEffects,
-                                           [](std::pair<const std::string, bool>& individualEffect) { return individualEffect.second; });
+                                                   [](std::pair<const std::string, bool>& individualEffect) { return individualEffect.second; });
 
                     if (ImGui::Checkbox("All?##ID", &all))
                     {
