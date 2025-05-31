@@ -154,11 +154,17 @@ class SprechenSieDeutsch final : public ActiveEffect
         static void LoadLibraries()
         {
             // clang-format off
-            const std::array<std::pair<std::string, Language>, 4> languages = {{
-                    { "cn", Language::Chinese },
-                    { "de", Language::German },
-                    { "fr", Language::French },
-                    { "uwu", Language::UwU }
+            const std::array<std::pair<std::string, Language>, 10> languages = {{
+                { "cn", Language::Chinese },
+                { "de", Language::German },
+                { "fr", Language::French },
+                { "uwu", Language::UwU },
+                { "chef", Language::Chef },
+                { "cockney", Language::Cockney },
+                { "eleet", Language::Leet },
+                { "lolcat", Language::LolCat },
+                { "pirate", Language::Pirate },
+                { "scottish", Language::Scottish },
             }};
             // clang-format on
 

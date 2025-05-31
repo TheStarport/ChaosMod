@@ -56,7 +56,13 @@ enum class Language
     French,
     // Russian
     Chinese,
-    UwU
+    UwU,
+    Chef,
+    Cockney,
+    Leet,
+    LolCat,
+    Pirate,
+    Scottish
 };
 
 class CrashCatcher;
@@ -79,9 +85,9 @@ class ChaosMod : public Singleton<ChaosMod>
 
 void Log(const std::string& log);
 #ifdef _DEBUG
-#define DLog(x) Log(x)
+    #define DLog(x) Log(x)
 #else
-#define DLog(x)
+    #define DLog(x)
 #endif
 
 void SetWireFrames();
