@@ -92,9 +92,6 @@ double timeCounter;
 
 void ChaosMod::DelayedInit()
 {
-    // We no longer need the splash screen
-    ResetComponent<SplashScreen>();
-
     // Register all the components we can!
     SetComponent<EventManager>();
     SetComponent<CameraController>();

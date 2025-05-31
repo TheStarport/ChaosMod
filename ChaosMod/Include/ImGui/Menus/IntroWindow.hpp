@@ -14,9 +14,6 @@ class IntroWindow final
                 return;
             }
 
-            // We no longer need the splash screen
-            ResetComponent<SplashScreen>();
-
             ImVec2 center = ImGui::GetMainViewport()->GetCenter();
             ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
             ImGui::SetNextWindowSize(ImVec2(800, 0.0f), ImGuiCond_Always);

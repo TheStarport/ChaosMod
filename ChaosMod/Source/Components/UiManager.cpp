@@ -119,8 +119,6 @@ void* WINAPI CreateDirect3D8(uint SDKVersion)
     }
 
     Get<ReshadeManager>()->InitReshade();
-
-    Get<SplashScreen>()->SetLoadingMessage(55);
     return new Direct3D8(d3d);
 }
 
@@ -272,23 +270,22 @@ void UiManager::LoadCursors()
 
 void UiManager::Setup(const LPDIRECT3DDEVICE9 device, const HWND window)
 {
-    Get<SplashScreen>()->SetLoadingMessage(80);
+    ResetComponent<SplashScreen>();
     Get<UiManager>()->window = window;
-    ImGui_ImplDX9_Init(device);
-    ImGui_ImplWin32_Init(window);
-
-    ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
 
     char path[MAX_PATH];
     GetUserDataPath(path);
 
     auto& io = ImGui::GetIO();
-
-    const static std::string ini = std::format("{}/imgui.ini", std::string(path));
-    const static std::string log = std::format("{}/imgui.log", std::string(path));
+    const static std::string ini = std::format("{}/imgui.ini", std::string(path, strlen(path)));
+    const static std::string log = std::format("{}/imgui.log", std::string(path, strlen(path)));
     io.IniFilename = ini.c_str();
     io.LogFilename = log.c_str();
 
+    ImGui_ImplDX9_Init(device);
+    ImGui_ImplWin32_Init(window);
+
+    ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
     ImGuiManager::Init();
 
     // Use a more orange theme
