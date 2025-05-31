@@ -16,6 +16,7 @@
 #include "Components/ShipManipulator.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Components/SplashScreen.hpp"
+#include "Components/TTS.hpp"
 #include "Components/Teleporter.hpp"
 #include "Components/UiManager.hpp"
 
@@ -92,6 +93,8 @@ double timeCounter;
 
 void ChaosMod::DelayedInit()
 {
+    i()->cc = new CrashCatcher();
+
     // Register all the components we can!
     SetComponent<EventManager>();
     SetComponent<CameraController>();
@@ -103,6 +106,17 @@ void ChaosMod::DelayedInit()
     SetComponent<ChatConsole>();
     SetComponent<PersonalityHelper>();
     SetComponent<SpaceObjectSpawner>();
+    SetComponent<TTS>();
+
+    // Content.dll edits have to come later :(
+    const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
+    // Random mission NPCs will use missiles and torpedoes (changes their attack_preference to GUNS|GUIDED|UNGUIDED|TORPEDO).
+    constexpr int missileFlag = 15;
+    MemUtils::WriteProcMem(content + 0x0F20F0, &missileFlag, sizeof(int));
+
+    // Allow the fc_n_grp faction to drop [phantom_loot] loot..
+    constexpr std::array<byte, 1> nomadPhantom = { 0x01 };
+    MemUtils::WriteProcMem(content + 0x0BD2D8, nomadPhantom.data(), nomadPhantom.size());
 
     Get<ChaosTimer>()->InitEffects();
 
@@ -289,7 +303,6 @@ void RequiredMemEdits()
     const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
-    const auto content = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
 
     // delete hashmap if it exsts
     (void)remove("hashmap.csv");
@@ -396,10 +409,6 @@ void RequiredMemEdits()
     constexpr std::array<byte, 1> useScanner = { 0x00 };
     MemUtils::WriteProcMem(common + 0x013E52C, useScanner.data(), useScanner.size());
 
-    // Allow the fc_n_grp faction to drop [phantom_loot] loot..
-    constexpr std::array<byte, 1> nomadPhantom = { 0x01 };
-    MemUtils::WriteProcMem(content + 0x0BD2D8, nomadPhantom.data(), nomadPhantom.size());
-
     //  Adjust cruise speed according to drag_modifier.
     constexpr std::array<byte, 1> cruiseDragModifier = { 0xEB };
     MemUtils::WriteProcMem(common + 0x053796, cruiseDragModifier.data(), cruiseDragModifier.size());
@@ -414,10 +423,6 @@ void RequiredMemEdits()
     // Ensure that drag modifier works even if inside
     constexpr std::array<byte, 2> dragModifierAllZone = { 0x41, 0x74 };
     MemUtils::WriteProcMem(common + 0x0DAD24, dragModifierAllZone.data(), dragModifierAllZone.size());
-
-    // Allow the fc_n_grp faction to drop [phantom_loot] loot..
-    constexpr int missileFlag = 15;
-    MemUtils::WriteProcMem(content + 0x0F20F0, &missileFlag, sizeof(int));
 
     // Fix sounds not playing on negative thrust
     const std::array<byte, 6> soundFix1 = { 0xD9, 0xE1, 0xD9, 0x5C, 0xe4, 0x08 };
@@ -503,6 +508,7 @@ void Update(const double delta)
         }
 
         Get<DiscordManager>()->Update();
+        Get<TTS>()->Update(SixtyFramesPerSecond);
 
         timeCounter -= SixtyFramesPerSecond;
     }
@@ -543,8 +549,6 @@ void CreateDefaultPerfOptions()
 FunctionDetour freeLibraryDetour(FreeLibrary);
 ChaosMod::ChaosMod()
 {
-    cc = new CrashCatcher();
-
     freeLibraryDetour.Detour(FreeLibraryDetour);
 
     // The very first thing we do is change the saved data folder so we can save and load properly
@@ -598,6 +602,8 @@ void __stdcall ChaosMod::TerminateAllThreads()
 
     // Explicitly reset any components that make use of threads
     ResetComponent<MoviePlayer>();
+    ResetComponent<TTS>();
+    ResetComponent<TwitchVoting>();
 
     FreeLibraryAndExitThread(dll, 0);
 }

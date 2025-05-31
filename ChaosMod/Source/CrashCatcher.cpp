@@ -161,11 +161,7 @@ CObject* CrashCatcher::GetRoot(CObject* child)
     }
 }
 
-
-DWORD __stdcall CrashCatcher::C4800HookNaked()
-{
-    return contentModule;
-}
+DWORD __stdcall CrashCatcher::C4800HookNaked() { return contentModule; }
 
 int CrashCatcher::C4800Hook(int* a1, int* a2, int* zone, double* a4, int a5, int a6)
 {
@@ -332,42 +328,48 @@ CrashCatcher::~CrashCatcher()
     const auto serverModule = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
     const auto contentModule = reinterpret_cast<DWORD>(GetModuleHandleA("content.dll"));
     const auto engBaseModule = reinterpret_cast<DWORD>(GetModuleHandleA("engbase.dll"));
-	MemUtils::WriteProcMem(serverModule + 0x84018, &oldGetRootProc, 4);
+    MemUtils::WriteProcMem(serverModule + 0x84018, &oldGetRootProc, 4);
 
-	{
-		const uchar patch[] = {0xe8, 0x6e, 0xe7, 0xff, 0xff};
-		MemUtils::WriteProcMem(contentModule + 0xC608D, patch, 5);
-	}
+    if (contentModule)
+    {
+        {
+            const uchar patch[] = { 0xe8, 0x6e, 0xe7, 0xff, 0xff };
+            MemUtils::WriteProcMem(contentModule + 0xC608D, patch, 5);
+        }
 
-	{
-		const uchar patch[] = {0x8B, 0xF8, 0x8B, 0x17, 0x8B, 0xCF};
-		MemUtils::WriteProcMem(contentModule + 0x47bc2, patch, 6);
-	}
+        {
+            const uchar patch[] = { 0x8B, 0xF8, 0x8B, 0x17, 0x8B, 0xCF };
+            MemUtils::WriteProcMem(contentModule + 0x47bc2, patch, 6);
+        }
 
-	{
-		const uchar patch[] = {0x8B, 0x40, 0x10, 0x85, 0xc0};
-		MemUtils::WriteProcMem(engBaseModule + 0x0124BD, patch, 5);
-	}
+        MemUtils::WriteProcMem(contentModule + 0x11C970, &crashProc6F8B330Old, 4);
+        MemUtils::WriteProcMem(contentModule + 0x11CA00, &crashProc6F8B330Old, 4);
 
-	{
-		const uchar patch[] = {0x8B, 0x40, 0x28, 0xC2, 0x08, 0x00};
-		MemUtils::WriteProcMem(engBaseModule + 0x011a6d, patch, 6);
-	}
+        MemUtils::PatchCallAddr(contentModule, 0x5ED4B, crashProc6F78DD0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xBD96A, crashProc6F78DD0Old);
 
-	MemUtils::WriteProcMem(contentModule + 0x11C970, &crashProc6F8B330Old, 4);
-	MemUtils::WriteProcMem(contentModule + 0x11CA00, &crashProc6F8B330Old, 4);
+        MemUtils::PatchCallAddr(contentModule, 0xBDC80, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xBDCF9, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xBE41C, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC67E2, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC6AA5, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC6BE8, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC6F71, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC702A, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC713B, crashProc6F671A0Old);
+        MemUtils::PatchCallAddr(contentModule, 0xC7180, crashProc6F671A0Old);
+    }
 
-	MemUtils::PatchCallAddr(contentModule, 0x5ED4B, crashProc6F78DD0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xBD96A, crashProc6F78DD0Old);
+    if (engBaseModule)
+    {
+        {
+            const uchar patch[] = { 0x8B, 0x40, 0x10, 0x85, 0xc0 };
+            MemUtils::WriteProcMem(engBaseModule + 0x0124BD, patch, 5);
+        }
 
-	MemUtils::PatchCallAddr(contentModule, 0xBDC80, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xBDCF9, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xBE41C, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC67E2, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC6AA5, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC6BE8, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC6F71, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC702A, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC713B, crashProc6F671A0Old);
-	MemUtils::PatchCallAddr(contentModule, 0xC7180, crashProc6F671A0Old);
+        {
+            const uchar patch[] = { 0x8B, 0x40, 0x28, 0xC2, 0x08, 0x00 };
+            MemUtils::WriteProcMem(engBaseModule + 0x011a6d, patch, 6);
+        }
+    }
 }

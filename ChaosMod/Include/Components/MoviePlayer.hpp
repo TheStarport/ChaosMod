@@ -190,11 +190,11 @@ class MoviePlayer final : public Component
                     {
                         auto* dest = static_cast<unsigned char*>(lockedRect.pBits);
 
-                        for(int y = 0; y < swapFrame->height; y++)
+                        for (int y = 0; y < swapFrame->height; y++)
                         {
                             auto* destRow = &dest[y * lockedRect.Pitch];
                             const auto* src = &swapFrame->data[0][swapFrame->linesize[0] * y];
-                            for(int i = 0; i < swapFrame->width * 3; i += 3)
+                            for (int i = 0; i < swapFrame->width * 3; i += 3)
                             {
                                 *destRow++ = src[i + 2];
                                 *destRow++ = src[i + 1];
@@ -239,7 +239,7 @@ class MoviePlayer final : public Component
                 ma_audio_buffer_uninit(&data.audioBufferWrapper);
             }
 
-            ma_engine_uninit(&engine);
+            // ma_engine_uninit(&engine);
         }
 
         void RegisterMovie(const Movie movie, const std::string& path)

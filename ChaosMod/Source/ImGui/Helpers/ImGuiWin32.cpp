@@ -782,7 +782,7 @@ IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARA
             return 0;
         case WM_DEVICECHANGE:
     #ifndef IMGUI_IMPL_WIN32_DISABLE_GAMEPAD
-            if ((UINT)wParam == DBT_DEVNODES_CHANGED)
+            if ((UINT)wParam == DBT_DEVNODES_CHANGED && bd)
             {
                 bd->WantUpdateHasGamepad = true;
             }
