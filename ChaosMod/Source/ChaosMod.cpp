@@ -19,8 +19,8 @@
 #include "Components/Teleporter.hpp"
 #include "Components/UiManager.hpp"
 
-#include "CoreComponents/PatchNotes.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
+#include "CoreComponents/PatchNotes.hpp"
 
 #include "Memory/BugFixes.hpp"
 #include "Memory/OnHit.hpp"
@@ -35,7 +35,7 @@
 const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc")); // NOLINT
 const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));         // NOLINT
 
-using ScriptLoadPtr = void*(* )(const char*);
+using ScriptLoadPtr = void* (*)(const char*);
 using GlobalTimeFunc = void (*)(double delta);
 
 std::unique_ptr<FunctionDetour<ScriptLoadPtr>> thornLoadDetour;
@@ -193,7 +193,7 @@ void PatchResolution()
 
     // Force the fovx to predefined values.
     {
-        constexpr std::array<byte, 2> patch= { 0x90, 0xE9 };
+        constexpr std::array<byte, 2> patch = { 0x90, 0xE9 };
         MemUtils::WriteProcMem(0x40f617, patch.data(), 2);
         const PBYTE fovX = reinterpret_cast<PBYTE>(HkCb_Fovx_Naked) - 0x40f618 - 5;
         MemUtils::WriteProcMem(0x40f618 + 1, &fovX, 4);
@@ -331,7 +331,8 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(fl + 0x1B2665, focusPatch.data(), focusPatch.size());
 
     // Disable Multi-player
-    const std::array<byte, 20> disableMp = { 0xE8, 0x47, 0xE5, 0xEA, 0xFF, 0x83, 0x7C, 0x24, 0x50, 0x02, 0x75, 0x11, 0xDB, 0x05, 0x4C, 0x46, 0x57, 0x00, 0xEB, 0x0D };
+    const std::array<byte, 20> disableMp = { 0xE8, 0x47, 0xE5, 0xEA, 0xFF, 0x83, 0x7C, 0x24, 0x50, 0x02,
+                                             0x75, 0x11, 0xDB, 0x05, 0x4C, 0x46, 0x57, 0x00, 0xEB, 0x0D };
     MemUtils::WriteProcMem(fl + 0x174634, disableMp.data(), disableMp.size());
 
     constexpr std::array<byte, 2> disableMp2 = { 0x00, 0x00 };
@@ -432,7 +433,7 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(common + 0x13F540, &newFormationMin, sizeof(float));
 
     const std::array<byte, 26> uiSmoothness = { 0x60, 0x8B, 0x86, 0x85, 0x03, 0x00, 0x00, 0x8D, 0x9E, 0x5E, 0x03, 0x00, 0x00,
-                                          0x50, 0x53, 0xE8, 0x37, 0x6C, 0xFD, 0xFF, 0x83, 0xC4, 0x08, 0x61, 0xEB, 0x63 };
+                                                0x50, 0x53, 0xE8, 0x37, 0x6C, 0xFD, 0xFF, 0x83, 0xC4, 0x08, 0x61, 0xEB, 0x63 };
     MemUtils::WriteProcMem(fl + 0x18B2D5, uiSmoothness.data(), uiSmoothness.size());
 
     // Comm/Background chatter play immediately
@@ -448,9 +449,35 @@ void RequiredMemEdits()
     MemUtils::WriteProcMem(fl + 0xAABFC, &menu3Ids, 4);
 
     // Disable target cycling within wing formations
-    // Appears to prevent several AI spawning realated crashes, but full consequences not understood.
-    //MemUtils::NopAddress(0x062EE640, 3);
-    //MemUtils::NopAddress(0x062EE64A, 2);
+    // Appears to prevent several AI spawning related crashes, but full consequences not understood. (it breaks a lot of shite, don't turn back on)
+    // MemUtils::NopAddress(0x062EE640, 3);
+    // MemUtils::NopAddress(0x062EE64A, 2);
+
+    // Enable keyboard in turret view
+
+    byte patchByte = 0;
+    MemUtils::WriteProcMem(fl + 0x0C7903, &patchByte, sizeof(patchByte));
+    patchByte = 0xEB;
+    MemUtils::WriteProcMem(fl + 0x0DBB12, &patchByte, sizeof(patchByte));
+    MemUtils::WriteProcMem(fl + 0x0DBB58, &patchByte, sizeof(patchByte));
+    MemUtils::WriteProcMem(fl + 0x0DBB9E, &patchByte, sizeof(patchByte));
+    MemUtils::WriteProcMem(fl + 0x0DBBE4, &patchByte, sizeof(patchByte));
+
+    const std::array<byte, 6> cameraIsIndependentOfMovement1 = { 0xE8, 0x2F, 0x82, 0x0A, 0x00, 0x90 };
+    const std::array<byte, 6> cameraIsIndependentOfMovement2 = { 0xE8, 0xF0, 0x81, 0x0A, 0x00, 0x90 };
+    const std::array<byte, 19> cameraIsIndependentOfMovement3 = { 0xD9, 0x15, 0x70, 0x52, 0x67, 0x00, 0xD8, 0x0D, 0x84, 0x90,
+                                                                  0x67, 0x00, 0xD9, 0x1D, 0x7C, 0x90, 0x67, 0x00, 0xC3 };
+    const std::array<byte, 8> cameraIsIndependentOfMovement4 = { 0xD9, 0x15, 0x7C, 0x52, 0x67, 0x00, 0xEB, 0xDE };
+
+    MemUtils::WriteProcMem(fl + 0x11D89C, cameraIsIndependentOfMovement1.data(), cameraIsIndependentOfMovement1.size());
+    MemUtils::WriteProcMem(fl + 0x11D8BB, cameraIsIndependentOfMovement2.data(), cameraIsIndependentOfMovement2.size());
+    MemUtils::WriteProcMem(fl + 0x1C5AB0, cameraIsIndependentOfMovement3.data(), cameraIsIndependentOfMovement3.size());
+    MemUtils::WriteProcMem(fl + 0x1C5AD0, cameraIsIndependentOfMovement4.data(), cameraIsIndependentOfMovement4.size());
+
+    const std::array<byte, 47> disableTurretViewCameraLevel = { 0x9C, 0xA1, 0x44, 0x97, 0x67, 0x00, 0x83, 0xC0, 0xF8, 0x50, 0xFF, 0x15, 0x70, 0x64, 0x5C, 0x00,
+                                                                0x59, 0x91, 0x9D, 0x74, 0x0D, 0xA0, 0xCA, 0xEC, 0x67, 0x00, 0x88, 0x81, 0xF9, 0x00, 0x00, 0x00,
+                                                                0xEB, 0x25, 0xB0, 0x00, 0x86, 0x81, 0xF9, 0x00, 0x00, 0x00, 0xA2, 0xCA, 0xEC, 0x67, 0x00 };
+    MemUtils::WriteProcMem(fl + 0x14A65B, disableTurretViewCameraLevel.data(), disableTurretViewCameraLevel.size());
 
     BugFixes::SetupDetours();
 
@@ -562,10 +589,7 @@ ChaosMod::ChaosMod()
     thornLoadDetour->Detour(ScriptLoadHook);
 }
 
-ChaosMod::~ChaosMod()
-{
-    delete cc;
-}
+ChaosMod::~ChaosMod() { delete cc; }
 
 HMODULE dll;
 void __stdcall ChaosMod::TerminateAllThreads()
