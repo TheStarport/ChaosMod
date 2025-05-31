@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CoreComponents/TwitchVoting.hpp"
 #include "Components/ConfigManager.hpp"
+#include "CoreComponents/TwitchVoting.hpp"
 #include "ImGui/ImGuiManager.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
@@ -21,12 +21,12 @@ class CargoSpawner final
 
         // Map of type to vector of good id and ids name
         inline static std::unordered_map<Archetype::ClassType, std::vector<std::pair<uint, int>>> goodMap{
-            {            Archetype::ClassType::Commodity, {}},
-            {                  Archetype::ClassType::Gun, {}},
-            {          Archetype::ClassType::MineDropper, {}},
-            {Archetype::ClassType::CounterMeasureDropper, {}},
-            {             Archetype::ClassType::Thruster, {}},
-            {      Archetype::ClassType::ShieldGenerator, {}}
+            {             Archetype::ClassType::Commodity, {} },
+            {                   Archetype::ClassType::Gun, {} },
+            {           Archetype::ClassType::MineDropper, {} },
+            { Archetype::ClassType::CounterMeasureDropper, {} },
+            {              Archetype::ClassType::Thruster, {} },
+            {       Archetype::ClassType::ShieldGenerator, {} }
         };
 
         static void LoadEquipment()
@@ -38,7 +38,7 @@ class CargoSpawner final
                     continue;
                 }
 
-                if (good->type == GoodInfo::Type::Equipment)
+                if (good->type == GoodType::Equipment)
                 {
                     const auto equip = Archetype::GetEquipment(good->equipmentId);
                     if (!equip)
@@ -59,7 +59,7 @@ class CargoSpawner final
                             }
                     }
                 }
-                else if (good->type == GoodInfo::Type::Commodity)
+                else if (good->type == GoodType::Commodity)
                 {
                     goodMap[Archetype::ClassType::Commodity].emplace_back(good->goodId, good->idsName);
                 }

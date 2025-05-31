@@ -1,12 +1,12 @@
 #include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/GlobalTimers.hpp"
+#include "Effects/ActiveEffect.hpp"
 
 class CaveatEmptor final : public ActiveEffect
 {
         // TODO: Have destroyed equipment persist after dock
-        using DestroySubObjects = void (__fastcall*)(CEqObj*, void*, DamageList*, bool);
+        using DestroySubObjects = void(__fastcall*)(CEqObj*, void*, DamageList*, bool);
         inline static DestroySubObjects destroySubObjects = reinterpret_cast<DestroySubObjects>(0x62ABA50);
 
         static bool DelayedGroupExplosion(float delta)
@@ -39,11 +39,11 @@ class CaveatEmptor final : public ActiveEffect
             std::vector<CAttachedEquip*> attachedEquips;
 
             CEquipTraverser tr;
-            CEquip* equip = ship->equip_manager.Traverse(tr);
+            CEquip* equip = ship->equipManager.Traverse(tr);
             while (equip)
             {
                 auto external = CAttachedEquip::cast(equip);
-                equip = ship->equip_manager.Traverse(tr);
+                equip = ship->equipManager.Traverse(tr);
 
                 if (!external || external->GetParentConnector(true) == long(ship->index))
                 {

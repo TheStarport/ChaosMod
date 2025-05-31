@@ -16,11 +16,11 @@ class SadViolin final : public PersistentEffect
         static int Detour(const uint client, const pub::Audio::Tryptich& audio)
         {
             auto newAudio = audio;
-            if (newAudio.musicId == deathMusicHash)
+            if (newAudio.overrideMusic == deathMusicHash)
             {
                 auto index = Get<Random>()->Uniform(0u, deathReplacements.size() - 1);
                 Log(std::format("Picking new death sound index: {}", index));
-                newAudio.musicId = deathReplacements[index];
+                newAudio.overrideMusic = deathReplacements[index];
             }
 
             playMusicDetour->UnDetour();

@@ -36,12 +36,12 @@ class BloodMagic final : public ActiveEffect
 
             float capacity = 0.f;
 
-            auto traverser = ship->equip_manager.StartTraverse(EquipmentClass::Power);
-            auto equip = ship->equip_manager.Traverse(traverser);
+            auto traverser = ship->equipManager.StartTraverse(EquipmentClass::Power);
+            auto equip = ship->equipManager.Traverse(traverser);
             while (equip)
             {
                 capacity += static_cast<CEPower*>(equip)->GetCapacity();
-                equip = ship->equip_manager.Traverse(traverser);
+                equip = ship->equipManager.Traverse(traverser);
             }
 
             // While blood magic mode is on, always be at 100% power.

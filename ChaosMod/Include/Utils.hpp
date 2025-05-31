@@ -3,7 +3,6 @@
 #pragma comment(lib, "Shell32.lib")
 
 #include "Components/SpaceObjectSpawner.hpp"
-#include "ResourcePtr.hpp"
 
 extern DWORD dummy;
 #define ProtectExecuteReadWrite(addr, size) VirtualProtect(addr, size, PAGE_EXECUTE_READWRITE, &dummy)

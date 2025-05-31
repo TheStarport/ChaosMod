@@ -34,12 +34,12 @@ void CurrencyChange::Generate(Random& randomEngine)
     auto good = GoodList_get()->find_by_id(goodHash);
 
     std::string name;
-    if (good->type == GoodInfo::Type::Commodity || good->type == GoodInfo::Type::Equipment)
+    if (good->type == GoodType::Commodity || good->type == GoodType::Equipment)
     {
         const auto equip = Archetype::GetEquipment(good->equipmentId);
         name = ChaosMod::GetInfocardName(equip->idsName);
     }
-    else if (good->type == GoodInfo::Type::Ship)
+    else if (good->type == GoodType::Ship)
     {
         good = (GoodList_get()->find_by_id(good->hullGoodId));
         const auto equip = Archetype::GetShip(good->equipmentId);
@@ -60,12 +60,12 @@ void CurrencyChange::Multiply(float multiplier)
     auto good = GoodList_get()->find_by_id(goodHash);
 
     std::string name;
-    if (good->type == GoodInfo::Type::Commodity || good->type == GoodInfo::Type::Equipment)
+    if (good->type == GoodType::Commodity || good->type == GoodType::Equipment)
     {
         const auto equip = Archetype::GetEquipment(good->equipmentId);
         name = ChaosMod::GetInfocardName(equip->idsName);
     }
-    else if (good->type == GoodInfo::Type::Ship)
+    else if (good->type == GoodType::Ship)
     {
         good = (GoodList_get()->find_by_id(good->hullGoodId));
         const auto equip = Archetype::GetShip(good->equipmentId);
@@ -111,7 +111,7 @@ size_t CurrencyChange::GetEffectCount()
                 continue;
             }
 
-            if (good->type != GoodInfo::Type::Hull && good->price != 0.f && good->goodId && good->idsName)
+            if (good->type != GoodType::Hull && good->price != 0.f && good->goodId && good->idsName)
             {
                 possibleGoods.emplace_back(good->goodId);
             }

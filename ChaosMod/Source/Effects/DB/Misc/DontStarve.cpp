@@ -54,7 +54,7 @@ class DontStarve final : public PersistentEffect
                 timeSinceLastEaten = 5.0f;
 
                 bool foundFood = false;
-                for (auto traverser = ship->equip_manager.begin(); traverser != ship->equip_manager.end(); ++traverser)
+                for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
                 {
                     EquipDesc desc;
                     traverser.currentEquip->GetEquipDesc(desc);

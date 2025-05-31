@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
+#include "Effects/ActiveEffect.hpp"
 
 class SpawnEvilPlayer final : public ActiveEffect
 {
@@ -20,7 +20,7 @@ class SpawnEvilPlayer final : public ActiveEffect
             }
 
             std::vector<SpaceObjectSpawner::LoadoutItem> items;
-            for (auto traverser = ship->equip_manager.begin(); traverser != ship->equip_manager.end(); ++traverser)
+            for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
             {
                 auto nickname = ChaosMod::HashLookup(traverser.currentEquip->archetype->archId);
                 if (!nickname.has_value())

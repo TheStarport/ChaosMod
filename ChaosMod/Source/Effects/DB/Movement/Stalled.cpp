@@ -1,7 +1,7 @@
 #include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/ShipManipulator.hpp"
+#include "Effects/ActiveEffect.hpp"
 
 class Stalled final : public ActiveEffect
 {
@@ -21,14 +21,14 @@ class Stalled final : public ActiveEffect
             CEquipTraverser traverser{ static_cast<int>(EquipmentClass::Engine) };
             CEquip* equip;
 
-            while ((equip = ship->equip_manager.Traverse(traverser)))
+            while ((equip = ship->equipManager.Traverse(traverser)))
             {
                 equip->Activate(false);
             }
 
             traverser = { static_cast<int>(EquipmentClass::Thruster) };
 
-            while ((equip = ship->equip_manager.Traverse(traverser)))
+            while ((equip = ship->equipManager.Traverse(traverser)))
             {
                 equip->Activate(false);
             }

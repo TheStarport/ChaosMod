@@ -16,7 +16,7 @@ class CoolantLeak final : public ActiveEffect
             CEquipTraverser tr(static_cast<int>(EquipmentClass::Power));
             const CEquip* equip;
             float powerIncrease = 0.0f;
-            while ((equip = ship->equip_manager.Traverse(tr)))
+            while ((equip = ship->equipManager.Traverse(tr)))
             {
                 const auto power = static_cast<const CEPower*>(equip);
                 powerIncrease += power->GetChargeRate() * fps;

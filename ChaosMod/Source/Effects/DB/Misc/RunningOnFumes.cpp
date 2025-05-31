@@ -9,8 +9,10 @@ class RunningOnFumes final : public PersistentEffect
 
         using EngineDragDetourType = float(__fastcall*)(CEEngine*);
         using DragDetourType = float(__fastcall*)(CShip*);
-        inline static FunctionDetour<EngineDragDetourType> linearDragDetour { reinterpret_cast<EngineDragDetourType>(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x361E0) };
-        inline static FunctionDetour<DragDetourType> linearCruiseDragDetour { reinterpret_cast<DragDetourType>(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x53730) };
+        inline static FunctionDetour<EngineDragDetourType> linearDragDetour{ reinterpret_cast<EngineDragDetourType>(
+            reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x361E0) };
+        inline static FunctionDetour<DragDetourType> linearCruiseDragDetour{ reinterpret_cast<DragDetourType>(
+            reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x53730) };
 
         static float __fastcall LinearDragDetour(CEEngine* engine)
         {
@@ -95,7 +97,7 @@ class RunningOnFumes final : public PersistentEffect
                 }
 
                 ushort fuelToRemove = 0;
-                for (auto traverser = ship->equip_manager.begin(); traverser != ship->equip_manager.end(); ++traverser)
+                for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
                 {
                     if (std::ranges::find(possibleFuel, traverser.currentEquip->archetype->archId) != possibleFuel.end())
                     {

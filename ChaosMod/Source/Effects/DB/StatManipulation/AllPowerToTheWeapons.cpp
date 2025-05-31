@@ -22,7 +22,7 @@ class AllPowerToTheWeapons final : public ActiveEffect
 
         void Update(float delta) override
         {
-            auto ship = Utils::GetCShip();
+            const auto ship = Utils::GetCShip();
             if (!ship)
             {
                 return;
@@ -30,12 +30,12 @@ class AllPowerToTheWeapons final : public ActiveEffect
 
             float capacity = 0.f;
 
-            auto traverser = ship->equip_manager.StartTraverse(EquipmentClass::Power);
-            auto equip = ship->equip_manager.Traverse(traverser);
+            auto traverser = ship->equipManager.StartTraverse(EquipmentClass::Power);
+            auto equip = ship->equipManager.Traverse(traverser);
             while (equip)
             {
-                capacity += ((CEPower*)equip)->GetCapacity();
-                equip = ship->equip_manager.Traverse(traverser);
+                capacity += static_cast<CEPower*>(equip)->GetCapacity();
+                equip = ship->equipManager.Traverse(traverser);
             }
 
             // Infinite power while enabled
