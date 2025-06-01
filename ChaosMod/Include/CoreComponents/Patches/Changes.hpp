@@ -1,6 +1,7 @@
 #pragma once
 
-#include "FLCore/Common/Globals.hpp"
+#include <FLCore/Common/Globals.hpp>
+#include <FLCore/Common/Goods.hpp>
 
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -121,8 +122,8 @@ class Change
             return returnValue;
         }
 
-        void SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName,
-            void* oldValue, void* newValue, bool isBuff);
+        void SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, void* newValue,
+                                         bool isBuff);
 
     public:
         enum class ChangePositivity

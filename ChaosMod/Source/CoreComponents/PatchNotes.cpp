@@ -2,12 +2,12 @@
 
 #include "Components/ConfigManager.hpp"
 #include "CoreComponents/PatchNotes.hpp"
+#include "CoreComponents/Patches/Changes.hpp"
 
 #include "Components/DiscordManager.hpp"
 #include "ImGui/ImGuiManager.hpp"
 
 #include <magic_enum.hpp>
-#include <nlohmann/json.hpp>
 
 #include <Memory/OffsetHelper.hpp>
 #include <semver.hpp>
@@ -376,8 +376,8 @@ void PatchNotes::Update(const float delta)
     }
 }
 
-void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue,
-    void* newValue, const bool isBuff)
+void Change::SetChangeNameAndDescription(const EditableField* field, const FieldData& fieldData, std::string_view itemName, void* oldValue, void* newValue,
+                                         const bool isBuff)
 {
     std::string newFieldName = std::regex_replace(field->name, std::regex("([a-z])([A-Z])"), "$1 $2");
     bool lastCharWasSpace = false;
