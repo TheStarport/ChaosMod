@@ -34,11 +34,11 @@ runs:
       run: |
         cd ${{ github.workspace }}
         New-Item -ItemType Directory -Path Archive/EXE/utilities
-        Get-ChildItem -Path ".\Assets" | Move-Item -Destination ".\Archive"
-        Get-ChildItem -Path ".\build\Release" -Filter "*.dll" -Recurse | Move-Item -Destination ".\Archive\EXE"
-        Get-ChildItem -Path ".\Sidecars\VotingProxy\bin\Release\net8.0-windows\win-x86\publish\*" -Include "*.exe", "*.dll" | Move-Item -Destination ".\Archive\EXE\utilities\"
-        Get-ChildItem -Path ".\Sidecars\ChaosController\bin\Release\net8.0-windows\win-x86\publish\*" -Include "*.exe", "*.dll", "*.otf", "*.ttf" | Move-Item -Destination ".\Archive\EXE\utilities\"
-        Get-ChildItem -Path ".\vendor\ffmpeg\bin" -Filter "*.dll" | Move-Item -Destination ".\Archive\EXE"
+        Get-ChildItem -Path ".\Assets\*" | Copy-Item -Container -Recurse -Force -Destination ".\Archive\" 
+        Get-ChildItem -Path ".\build\Release" -Filter "*.dll" -Recurse | Copy-Item -Destination ".\Archive\EXE\"
+        Get-ChildItem -Path ".\Sidecars\VotingProxy\bin\Release\net8.0-windows\win-x86\publish\*" -Include "*.exe", "*.dll" | Copy-Item -Destination ".\Archive\EXE\utilities\"
+        Get-ChildItem -Path ".\Sidecars\ChaosController\bin\Release\net8.0-windows\win-x86\publish\*" -Include "*.exe", "*.dll", "*.otf", "*.ttf" | Copy-Item -Destination ".\Archive\EXE\utilities\"
+        Get-ChildItem -Path ".\vendor\ffmpeg\bin" -Filter "*.dll" | Copy-Item -Destination ".\Archive\EXE\"
         7z a -r ./chaosmod.7z ./Archive/* -mx=9
         Copy-Item -Path .\chaosmod.7z -Destination ./Installer/Assets/Mod
 

@@ -74,11 +74,11 @@ runs:
         python cli.py install
       shell: bash
 
-    - name: Dotnet Restore Voting Proxy
-      run: dotnet restore ${{ github.workspace }}/ChaosMod.sln -p:RestorePackagesConfig=true -p:Configuration=Release
+    - name: Dotnet Build and Restore
+      run: msbuild.exe ${{ github.workspace }}/ChaosMod.sln -t:Restore -p:Configuration=Release -p:Platform="Any CPU"
       shell: pwsh
 
-    - name: Dotnet Build Voting Proxy
+    - name: Dotnet Publish
       run: dotnet publish ${{ github.workspace }}/ChaosMod.sln -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
       continue-on-error: true # It will error even on success because it cannot publish the class libraries
       shell: pwsh
