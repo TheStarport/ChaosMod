@@ -2,12 +2,17 @@
 os=Windows
 arch=x86
 compiler=msvc
-compiler.version=193
+compiler.version=194
 compiler.runtime=dynamic
 compiler.cppstd=20
 
 [buildenv]
-CC={{ os.path.join(os.getenv("MSVC_PATH"), "bin", "x86", "cl") }}
-CXX={{ os.path.join(os.getenv("MSVC_PATH"), "bin", "x86", "cl") }}
-LD={{ os.path.join(os.getenv("MSVC_PATH"), "bin", "x86", "link") }}
-RC= {{ os.path.join(os.getenv("MSVC_PATH"), "bin", "x86", "rc") }}
+CC={{ os.path.join(os.getenv("MSVC"), "bin", "x86", "cl") }}
+CXX={{ os.path.join(os.getenv("MSVC"), "bin", "x86", "cl") }}
+LD={{ os.path.join(os.getenv("MSVC"), "bin", "x86", "link") }}
+RC= {{ os.path.join(os.getenv("MSVC"), "bin", "x86", "rc") }}
+
+
+[conf]
+tools.cmake.cmaketoolchain:generator=Ninja
+tools.cmake.cmaketoolchain:system_version=10.0

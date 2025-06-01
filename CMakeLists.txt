@@ -153,10 +153,10 @@ file(COPY "${VENDOR_PATH}/discord_game_sdk/lib/x86/discord_game_sdk.dll"
 
 # If we are building on Linux, import the MSVC headers
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
-    if (NOT DEFINED ENV{MSVC_INCLUDE})
-        message(FATAL_ERROR "MSVC_INCLUDE was not found and running on Linux")
+    if (NOT DEFINED ENV{MSVC})
+        message(FATAL_ERROR "MSVC was not found and running on Linux")
     endif ()
-    string(REPLACE ":" " " MSVC_INCLUDES $ENV{MSVC_INCLUDE})
+    string(REPLACE ":" " " MSVC_INCLUDES $ENV{MSVC})
     separate_arguments(MSVC_INCLUDES)
     target_include_directories(${PROJECT_NAME} PRIVATE ${MSVC_INCLUDES})
 endif ()
