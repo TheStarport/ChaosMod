@@ -80,7 +80,7 @@ if ($freelancer) {
     $freelancer.WaitForExit()
 }
 
-#Checks if CoypDir param was provided
+#Checks if CopyDir param was provided
 if (!$copyDir) {
     Write-Host "No copy path specified, cannot continue."
     exit 1
@@ -97,7 +97,7 @@ Write-Host "Asset files copied over in $time seconds!" -ForegroundColor Green
 $watch.reset()
 
 #Launch the application and filter the logs into the PowerShell console.
-if (!$noLaunch) {
+if ($noLaunch -eq $false) {
     $startTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
     $spewLocation = "$env:LOCALAPPDATA\Freelancer\FLSpew.txt"
     $freelancerJob = Start-Process -PassThru -FilePath "$copyDir\EXE\Freelancer.exe" -ArgumentList "-w" -WorkingDirectory "$copyDir\EXE"
