@@ -74,13 +74,16 @@ runs:
         python cli.py install
       shell: bash
 
-    - name: Dotnet Build and Restore
-      run: msbuild.exe ${{ github.workspace }}/ChaosMod.sln -t:Restore -p:Configuration=Release -p:Platform="Any CPU"
+    - name: Dotnet Restore
+      run: |
+        dotnet restore ${{ github.workspace }}/Sidecars/VotingProxy/VotingProxy.csproj -p:RestorePackagesConfig=true -p:Configuration=Release
+        dotnet restore ${{ github.workspace }}/Sidecars/ChaosController/ChaosController.csproj -p:RestorePackagesConfig=true -p:Configuration=Release
       shell: pwsh
 
     - name: Dotnet Publish
-      run: dotnet publish ${{ github.workspace }}/ChaosMod.sln -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
-      continue-on-error: true # It will error even on success because it cannot publish the class libraries
+      run: |
+        dotnet publish ${{ github.workspace }}/Sidecars/VotingProxy/VotingProxy.csproj -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
+        dotnet publish ${{ github.workspace }}/Sidecars/ChaosController/ChaosController.csproj -p:PublishSingleFile=true -r win-x86 -c Release --self-contained true
       shell: pwsh
 
     - name: Compile Chaos Mod
