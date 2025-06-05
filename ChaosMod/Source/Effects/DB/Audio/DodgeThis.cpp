@@ -9,7 +9,7 @@ class DodgeThis final : public ActiveEffect
             CreateID("chaos_bat_4"), CreateID("chaos_bat_5"), CreateID("chaos_bat_6"),
         };
 
-        void OnApplyDamageAfter(uint hitSpaceObj, DamageList* dmgList, const DamageEntry& dmgEntry) override
+        void OnMunitionHitAfter(EqObj* hisObject, MunitionImpactData* impact, DamageList* dmgList) override
         {
             pub::Audio::PlaySoundEffect(0, sounds[Get<Random>()->Uniform(0u, sounds.size() - 1)]);
         }

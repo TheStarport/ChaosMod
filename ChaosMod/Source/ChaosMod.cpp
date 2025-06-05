@@ -656,7 +656,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
     {
         dll = hModule;
 
-        // Defer our start up so we bypass the DLL loader lock
+        // Defer our start-up so we bypass the DLL loader lock
         // We need our threads :)
         startUpDetour.Detour(OnStartUp);
     }

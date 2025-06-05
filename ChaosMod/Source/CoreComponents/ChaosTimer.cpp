@@ -7,11 +7,11 @@
 #include "Components/ShipManipulator.hpp"
 #include "Effects/ActiveEffect.hpp"
 
-#include "Effects/AddressTable.hpp"
-#include "ImGui/ImGuiManager.hpp"
-#include "CoreComponents/PatchNotes.hpp"
 #include "Components/GlobalTimers.hpp"
 #include "Components/UiManager.hpp"
+#include "CoreComponents/PatchNotes.hpp"
+#include "Effects/AddressTable.hpp"
+#include "ImGui/ImGuiManager.hpp"
 #include "Memory/OffsetHelper.hpp"
 
 #include <magic_enum.hpp>
@@ -56,6 +56,132 @@ __declspec(naked) void ChaosTimer::NakedShipDestroyed()
     }
 }
 
+void ChaosTimer::OnMunitionHit(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList, const bool after)
+{
+    const auto i = Get<ChaosTimer>();
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        after ? key->OnMunitionHitAfter(hitObject, impact, dmgList) : key->OnMunitionHit(hitObject, impact, dmgList);
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        if (effect->Persisting())
+        {
+            after ? effect->OnMunitionHitAfter(hitObject, impact, dmgList) : effect->OnMunitionHit(hitObject, impact, dmgList);
+        }
+    }
+}
+
+bool ChaosTimer::OnExplosion(EqObj* hitObject, ExplosionDamageEvent* explosion, DamageList* dmgList)
+{
+    const auto i = Get<ChaosTimer>();
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        if (!key->OnExplosion(hitObject, explosion, dmgList))
+        {
+            return true;
+        }
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        if (effect->Persisting() && !effect->OnExplosion(hitObject, explosion, dmgList))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+uint ChaosTimer::OnSoundEffect(const uint hash)
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        if (const uint newHash = key->OnSoundEffect(hash); newHash != hash)
+        {
+            return newHash;
+        }
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        if (const uint newHash = effect->OnSoundEffect(hash); newHash != hash)
+        {
+            return newHash;
+        }
+    }
+
+    return hash;
+}
+
+void ChaosTimer::OnSystemUnload()
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& effect : ActiveEffect::GetAllEffects())
+    {
+        effect->OnSystemUnload();
+    }
+}
+
+void ChaosTimer::OnJumpInComplete()
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        key->OnJumpInComplete();
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        effect->OnJumpInComplete();
+    }
+}
+
+void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
+{
+    const auto i = Get<ChaosTimer>();
+
+    for (const auto& key : i->activeEffects | std::views::keys)
+    {
+        key->OnConsumeFireResources(launcher);
+    }
+
+    for (const auto& effect : i->persistentEffects)
+    {
+        effect->OnConsumeFireResources(launcher);
+    }
+
+    consumeFireResourcesDetour.UnDetour();
+    consumeFireResourcesDetour.GetOriginalFunc()(launcher);
+    consumeFireResourcesDetour.Detour(OnConsumeFireResources);
+
+    static uint blunderBuss = CreateID("chaos_blunderbuss");
+
+    if (launcher->archetype->archId == blunderBuss)
+    {
+        auto ship = launcher->GetOwner();
+
+        auto orientation = ship->get_orientation();
+        Vector forwards = { orientation[0][2], orientation[1][2], orientation[2][2] };
+        forwards *= 1000.f;
+
+        Vector newVelocity = ShipManipulator::GetVelocity(ship) + forwards;
+        Get<GlobalTimers>()->AddTimer(
+            [ship, newVelocity](float delta)
+            {
+                ShipManipulator::SetVelocity(ship, newVelocity);
+                return true;
+            },
+            0.05f);
+    }
+}
+
 void ChaosTimer::PlayBadEffect() { pub::Audio::PlaySoundEffect(1, CreateID("ui_select_remove")); }
 void ChaosTimer::PlayEffectSkip() { pub::Audio::PlaySoundEffect(1, CreateID("ui_open_infocard_button")); }
 void ChaosTimer::PlayNextEffect() { pub::Audio::PlaySoundEffect(1, CreateID("ui_close_infocard")); }
@@ -94,7 +220,8 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        if (Get<ConfigManager>()->chaosSettings.blockTeleportsDuringMissions && OffsetHelper::IsInMission() && effect->GetEffectInfo().category == EffectType::Teleport)
+        if (Get<ConfigManager>()->chaosSettings.blockTeleportsDuringMissions && OffsetHelper::IsInMission() &&
+            effect->GetEffectInfo().category == EffectType::Teleport)
         {
             continue;
         }
@@ -272,108 +399,6 @@ std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
     }
 
     return effects;
-}
-
-void ChaosTimer::OnApplyDamage(const uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, const bool after)
-{
-    const auto i = Get<ChaosTimer>();
-    for (const auto& key : i->activeEffects | std::views::keys)
-    {
-        after ? key->OnApplyDamageAfter(hitSpaceObj, dmgList, dmgEntry) : key->OnApplyDamage(hitSpaceObj, dmgList, dmgEntry);
-    }
-
-    for (const auto& effect : i->persistentEffects)
-    {
-        if (effect->Persisting())
-        {
-            after ? effect->OnApplyDamageAfter(hitSpaceObj, dmgList, dmgEntry) : effect->OnApplyDamage(hitSpaceObj, dmgList, dmgEntry);
-        }
-    }
-}
-
-uint ChaosTimer::OnSoundEffect(const uint hash)
-{
-    const auto i = Get<ChaosTimer>();
-
-    for (const auto& key : i->activeEffects | std::views::keys)
-    {
-        if (const uint newHash = key->OnSoundEffect(hash); newHash != hash)
-        {
-            return newHash;
-        }
-    }
-
-    for (const auto& effect : i->persistentEffects)
-    {
-        if (const uint newHash = effect->OnSoundEffect(hash); newHash != hash)
-        {
-            return newHash;
-        }
-    }
-
-    return hash;
-}
-
-void ChaosTimer::OnSystemUnload()
-{
-    const auto i = Get<ChaosTimer>();
-
-    for (const auto& effect : ActiveEffect::GetAllEffects())
-    {
-        effect->OnSystemUnload();
-    }
-}
-
-void ChaosTimer::OnJumpInComplete()
-{
-    const auto i = Get<ChaosTimer>();
-
-    for (const auto& key : i->activeEffects | std::views::keys)
-    {
-        key->OnJumpInComplete();
-    }
-
-    for (const auto& effect : i->persistentEffects)
-    {
-        effect->OnJumpInComplete();
-    }
-}
-
-void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
-{
-    const auto i = Get<ChaosTimer>();
-
-    for (const auto& key : i->activeEffects | std::views::keys)
-    {
-        key->OnConsumeFireResources(launcher);
-    }
-
-    for (const auto& effect : i->persistentEffects)
-    {
-        effect->OnConsumeFireResources(launcher);
-    }
-
-    consumeFireResourcesDetour.UnDetour();
-    consumeFireResourcesDetour.GetOriginalFunc()(launcher);
-    consumeFireResourcesDetour.Detour(OnConsumeFireResources);
-
-    if (launcher->archetype->archId == CreateID("chaos_blunderbuss"))
-    {
-        auto ship = launcher->GetOwner();
-
-        auto orientation = ship->get_orientation();
-        Vector forwards = { orientation[0][2], orientation[1][2], orientation[2][2] };
-        forwards *= 1000.f;
-
-        Vector newVelocity = ShipManipulator::GetVelocity(ship) + forwards;
-        Get<GlobalTimers>()->AddTimer(
-            [ship, newVelocity](float delta)
-            {
-                ShipManipulator::SetVelocity(ship, newVelocity);
-                return true;
-            },
-            0.05f);
-    }
 }
 
 void ChaosTimer::Update(const float delta)

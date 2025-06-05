@@ -1,5 +1,6 @@
 #pragma once
 
+struct MunitionImpactData;
 enum class EffectType
 {
     Audio,
@@ -51,9 +52,10 @@ class ActiveEffect
         virtual bool CanSelect() { return true; }
         virtual void OnLoad() {}
         virtual void OnShipDestroyed(DamageList* dmgList, CShip* ship) {}
-        virtual void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry) {}
-        virtual void OnApplyDamageAfter(uint hitSpaceObj, DamageList* dmgList, const DamageEntry& dmgEntry) {}
-        virtual void OnConsumeFireResources(CELauncher* launcher){};
+        virtual void OnMunitionHit(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList) {}
+        virtual void OnMunitionHitAfter(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList) {}
+        virtual bool OnExplosion(EqObj* hitObject, ExplosionDamageEvent* explosion, DamageList* dmgList) { return true; }
+        virtual void OnConsumeFireResources(CELauncher* launcher) {};
         virtual uint OnSoundEffect(const uint hash) { return hash; }
         virtual void Update(float delta) {}
         virtual void FrameUpdate(float delta) {}
@@ -85,9 +87,7 @@ class RegisterEffect final
         ActiveEffect* effect;
 
     public:
-        explicit RegisterEffect(ActiveEffect* effect) : effect(effect)
-        {
-        }
+        explicit RegisterEffect(ActiveEffect* effect) : effect(effect) {}
         ~RegisterEffect() { delete effect; }
 
         RegisterEffect(const RegisterEffect&) = delete;

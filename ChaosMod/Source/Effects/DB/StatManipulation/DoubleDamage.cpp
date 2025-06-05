@@ -4,32 +4,22 @@
 
 class DoubleDamage final : public ActiveEffect
 {
-        void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry) override
+        void OnMunitionHitAfter(EqObj* hitObject, MunitionImpactData* data, DamageList* dmgList) override
         {
-            const CShip* obj = dynamic_cast<CShip*>(CObject::FindFirst(CObject::CSHIP_OBJECT));
-            while (obj)
+            // Double the amount of damage that would be applied
+            float currentShield = 0.f;
+            float maxShield = 0.f;
+            bool shieldsUp = false;
+            pub::SpaceObj::GetShieldHealth(hitObject->get_id(), currentShield, maxShield, shieldsUp);
+
+            auto& entry = dmgList->damageEntries.front();
+            if (shieldsUp)
             {
-                if (obj->id == hitSpaceObj)
-                {
-                    // Double the amount of damage that would be applied
-                    float currentShield = 0.f;
-                    float maxShield = 0.f;
-                    bool shieldsUp = false;
-                    pub::SpaceObj::GetShieldHealth(hitSpaceObj, currentShield, maxShield, shieldsUp);
-
-                    if (shieldsUp)
-                    {
-                        dmgEntry.health -= currentShield - dmgEntry.health;
-                    }
-                    else
-                    {
-                        dmgEntry.health -= obj->hitPoints - dmgEntry.health;
-                    }
-
-                    break;
-                }
-
-                obj = dynamic_cast<CShip*>(CObject::FindNext());
+                entry.health -= currentShield - entry.health;
+            }
+            else
+            {
+                entry.health -= hitObject->ceqobj()->hitPoints - entry.health;
             }
         }
 

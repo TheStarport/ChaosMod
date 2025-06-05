@@ -4,22 +4,28 @@
 
 class Juggernog final : public ActiveEffect
 {
-        void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry) override
+        void OnMunitionHitAfter(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList) override
         {
+            const auto id = hitObject->get_id();
+            const auto ship = Utils::GetCShip();
+            if (!ship || ship->id != id)
+            {
+                return;
+            }
+
             float currentShield = 0.f;
             float maxShield = 0.f;
             bool shieldsUp = false;
-            pub::SpaceObj::GetShieldHealth(hitSpaceObj, currentShield, maxShield, shieldsUp);
-            if (const auto ship = Utils::GetCShip(); ship && ship->id == hitSpaceObj)
+            pub::SpaceObj::GetShieldHealth(id, currentShield, maxShield, shieldsUp);
+
+            auto& entry = dmgList->damageEntries.front();
+            if (shieldsUp)
             {
-                if (shieldsUp)
-                {
-                    dmgEntry.health += (currentShield - dmgEntry.health) * 0.5f;
-                }
-                else
-                {
-                    dmgEntry.health += (ship->hitPoints - dmgEntry.health) * 0.5f;
-                }
+                entry.health += (currentShield - entry.health) * 0.5f;
+            }
+            else
+            {
+                entry.health += (ship->hitPoints - entry.health) * 0.5f;
             }
         }
 

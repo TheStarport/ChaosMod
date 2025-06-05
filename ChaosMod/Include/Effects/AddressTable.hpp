@@ -28,17 +28,18 @@ enum class AddressTable : DWORD
 
     ShipDestroyedFunction = 0x87274,
 
-    DamageHit1 = 0x853F4,
-    DamageHit2 = 0x872CC,
-    DamageHit3 = 0x8761C,
-    DamageHit4 = 0x85458,
-    DamageHit5 = 0x87330,
-    DamageHit6 = 0x87680,
+    // Ship Danage Hooks
+    ShipEquipDamage = 0x8732C,
+    GuidedExplosionHit = 0x866C0,
+    SolarExplosionHit = 0x875F0,
+    SolarMunitionHit = 0x8729C,
+    ShipCollisionGroupDamaged = 0x87334,
+    ShipFuseLight = 0x87300,
+    ShipEquipmentDestroyed = 0x87340,
     DamageApply = 0x841EC,
 
     // NPCs
     NpcDensityCapRange = 0x058F46,
-
 };
 
 inline DWORD RelOfs(const std::string& str, AddressTable offset)

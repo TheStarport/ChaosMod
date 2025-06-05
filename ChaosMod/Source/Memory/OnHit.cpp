@@ -2,95 +2,155 @@
 
 #include "Memory/OnHit.hpp"
 
-#include "Effects/AddressTable.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
+#include "Effects/AddressTable.hpp"
 
-__declspec(naked) void OnHit::NakedOnHit1()
+FARPROC GuidedExplosionHitOrigFunc, SolarExplosionHitOrigFunc, ShipMunitionHitOrigFunc, ShipColGrpDmgFunc, ShipFuseLightFunc, ShipEquipDestroyedFunc;
+
+bool __stdcall OnHit::GuidedExplosionHit(EqObj* obj, ExplosionDamageEvent* explosion, DamageList* dmg) { return ChaosTimer::OnExplosion(obj, explosion, dmg); }
+
+__declspec(naked) void OnHit::GuidedExplosionHitNaked()
 {
     __asm
     {
+		push ecx
+		push[esp + 0xC]
+		push[esp + 0xC]
+		push ecx
+		call GuidedExplosionHit
+		pop ecx
+		test al, al
+		jz callOriginal
+		ret 0x8
+
+		callOriginal:
+		jmp [GuidedExplosionHitOrigFunc]
+    }
+}
+
+void __stdcall OnHit::SolarExplosionHit(EqObj* obj, ExplosionDamageEvent* explosion, DamageList* dmg) {}
+
+__declspec(naked) void OnHit::SolarExplosionHitNaked()
+{
+    __asm {
+		push ecx
+		push[esp + 0xC]
+		push[esp + 0xC]
+		push ecx
+		call SolarExplosionHit
+		pop ecx
+		ret 0x8
+    }
+}
+
+void __fastcall OnHit::ShipMunitionHit(EqObj* ship, void* edx, MunitionImpactData* data, DamageList* dmg)
+{
+    ChaosTimer::OnMunitionHit(ship, data, dmg, false);
+
+    ShipMunitionHitCall(ship, data, dmg);
+
+    ChaosTimer::OnMunitionHit(ship, data, dmg, true);
+}
+
+void __stdcall OnHit::ShipColGrpDmg(EqObj* obj, CArchGroup* colGrp, float& incDmg, DamageList* dmg) {}
+
+__declspec(naked) void OnHit::ShipColGrpDmgNaked()
+{
+    __asm {
+		push ecx
+		push [esp+0x10]
+		lea eax, [esp + 0x10]
+		push eax
+		push[esp + 0x10]
+		push ecx
+		call ShipColGrpDmg
+		pop ecx
+		jmp [ShipColGrpDmgFunc]
+    }
+}
+
+void __stdcall OnHit::ShipFuseLight(EqObj* ship, uint fuseCause, uint* fuseId, ushort sId, float radius, float fuseLifetime) {}
+
+__declspec(naked) void OnHit::ShipFuseLightNaked()
+{
+    __asm {
+		push ecx
+		push [esp+0x18]
+		push [esp+0x18]
+		push [esp+0x18]
+		push [esp+0x18]
+		push [esp+0x18]
+		push ecx
+		call ShipFuseLight
+		pop ecx
+		jmp [ShipFuseLightFunc]
+    }
+}
+
+using ShipEquipDamageType = void(__thiscall*)(EqObj*, CEquip*, float incDmg, DamageList* dmg);
+auto ShipEquipDamageFunc = reinterpret_cast<ShipEquipDamageType>(0x6CEA4A0);
+void __fastcall OnHit::ShipEquipDamage(EqObj* obj, void* edx, CAttachedEquip* equip, float incDmg, DamageList* dmg)
+{
+    ShipEquipDamageFunc(obj, equip, incDmg, dmg);
+}
+
+void __stdcall OnHit::ShipEquipmentDestroyed(EqObj* ship, const CEquip* eq, DamageEntry::SubObjFate fate, DamageList* dmgList) {}
+
+__declspec(naked) void OnHit::ShipEquipmentDestroyedNaked()
+{
+    __asm {
         push ecx
+        push[esp + 0x10]
+        push[esp + 0x10]
+        push[esp + 0x10]
         push ecx
-        call OnDamageHit
+        call ShipEquipmentDestroyed
         pop ecx
-        jmp [oldOnHit1]
+        jmp[ShipEquipDestroyedFunc]
     }
-}
-
-__declspec(naked) void OnHit::NakedOnHit2()
-{
-    __asm
-    {
-        push ecx
-        push ecx
-        call OnDamageHit
-        pop ecx
-        jmp [oldOnHit2]
-    }
-}
-
-__declspec(naked) void OnHit::NakedOnDamage()
-{
-    __asm
-    {
-        push [esp+0Ch]
-        push [esp+0Ch]
-        push [esp+0Ch]
-        push ecx
-        call OnDamage
-        mov eax, [esp]
-        add esp, 10h
-        jmp eax
-    }
-}
-
-void __stdcall OnHit::OnDamageHit(const char* ecx)
-{
-    char* p;
-    memcpy(&p, ecx + 0x10, 4);
-    uint client;
-    memcpy(&client, p + 0xB4, 4);
-    uint spaceId;
-    memcpy(&spaceId, p + 0xB0, 4);
-
-    dmgToClient = client;
-    dmgToSpaceId = spaceId;
-}
-
-void OnHit::OnDamage(DamageList* dmgList, DamageEntry dmgEntry)
-{
-    ChaosTimer::OnApplyDamage(dmgToSpaceId, dmgList, dmgEntry, false);
-
-    dmgList->add_damage_entry(dmgEntry.subObj, dmgEntry.health, dmgEntry.fate);
-
-    ChaosTimer::OnApplyDamage(dmgToSpaceId, dmgList, dmgEntry, true);
-
-    dmgToSpaceId = 0;
-    dmgToClient = 0;
 }
 
 void OnHit::Detour()
 {
-    auto naked1 = reinterpret_cast<PDWORD>(NakedOnHit1);
-    auto naked2 = reinterpret_cast<PDWORD>(NakedOnHit2);
-    auto nakedApply = reinterpret_cast<PDWORD>(NakedOnDamage);
+    static bool detoured = false;
+    if (detoured)
+    {
+        return;
+    }
 
-    auto offset = RelOfs("server.dll", AddressTable::DamageHit1);
-    MemUtils::ReadProcMem(offset, &oldOnHit1, 4);
-    MemUtils::WriteProcMem(offset, &naked1, 4);
-    offset = RelOfs("server.dll", AddressTable::DamageHit2);
-    MemUtils::WriteProcMem(offset, &naked1, 4);
-    offset = RelOfs("server.dll", AddressTable::DamageHit3);
-    MemUtils::WriteProcMem(offset, &naked1, 4);
+    detoured = true;
+    const auto shipEquipDamage = reinterpret_cast<PDWORD>(ShipEquipDamage);
+    const auto guidedExplosionHitNaked = reinterpret_cast<PDWORD>(GuidedExplosionHitNaked);
+    const auto solarExplosionHitNaked = reinterpret_cast<PDWORD>(SolarExplosionHitNaked);
+    const auto shipMunitionHit = reinterpret_cast<PDWORD>(ShipMunitionHit);
+    const auto shipColGrpDmgNaked = reinterpret_cast<PDWORD>(ShipColGrpDmgNaked);
+    const auto shipFuseLightNaked = reinterpret_cast<PDWORD>(ShipFuseLightNaked);
+    const auto shipEquipmentDestroyedNaked = reinterpret_cast<PDWORD>(ShipEquipmentDestroyedNaked);
 
-    offset = RelOfs("server.dll", AddressTable::DamageHit4);
-    MemUtils::ReadProcMem(offset, &oldOnHit2, 4);
-    MemUtils::WriteProcMem(offset, &naked2, 4);
-    offset = RelOfs("server.dll", AddressTable::DamageHit5);
-    MemUtils::WriteProcMem(offset, &naked2, 4);
-    offset = RelOfs("server.dll", AddressTable::DamageHit6);
-    MemUtils::WriteProcMem(offset, &naked2, 4);
+    auto offset = RelOfs("server.dll", AddressTable::ShipEquipDamage);
+    MemUtils::WriteProcMem(offset, &shipEquipDamage, 4);
 
-    offset = RelOfs("server.dll", AddressTable::DamageApply);
-    MemUtils::WriteProcMem(offset, &nakedApply, 4);
+    offset = RelOfs("server.dll", AddressTable::GuidedExplosionHit);
+    MemUtils::ReadProcMem(offset, &GuidedExplosionHitOrigFunc, 4);
+    MemUtils::WriteProcMem(offset, &guidedExplosionHitNaked, 4);
+
+    offset = RelOfs("server.dll", AddressTable::SolarExplosionHit);
+    MemUtils::ReadProcMem(offset, &SolarExplosionHitOrigFunc, 4);
+    MemUtils::WriteProcMem(offset, &solarExplosionHitNaked, 4);
+
+    offset = RelOfs("server.dll", AddressTable::SolarMunitionHit);
+    MemUtils::ReadProcMem(offset, &ShipMunitionHitOrigFunc, 4);
+    MemUtils::WriteProcMem(offset, &shipMunitionHit, 4);
+
+    offset = RelOfs("server.dll", AddressTable::ShipCollisionGroupDamaged);
+    MemUtils::ReadProcMem(offset, &ShipColGrpDmgFunc, 4);
+    MemUtils::WriteProcMem(offset, &shipColGrpDmgNaked, 4);
+
+    offset = RelOfs("server.dll", AddressTable::ShipFuseLight);
+    MemUtils::ReadProcMem(offset, &ShipFuseLightFunc, 4);
+    MemUtils::WriteProcMem(offset, &shipFuseLightNaked, 4);
+
+    offset = RelOfs("server.dll", AddressTable::ShipEquipmentDestroyed);
+    MemUtils::ReadProcMem(offset, &ShipEquipDestroyedFunc, 4);
+    MemUtils::WriteProcMem(offset, &shipEquipmentDestroyedNaked, 4);
 }

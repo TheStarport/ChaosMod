@@ -13,17 +13,7 @@ class ChaosTimer final : public Component
         friend OnSound;
         friend OnSystemStatusChange;
 
-        inline static FARPROC oldShipDestroyed = nullptr;
-        static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
-        static void NakedShipDestroyed();
-
-        static void OnApplyDamage(uint hitSpaceObj, DamageList* dmgList, DamageEntry& dmgEntry, bool after);
-        static uint OnSoundEffect(uint hash);
-        static void OnSystemUnload();
-        static void OnJumpInComplete();
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher* launcher);
-        static void __fastcall OnConsumeFireResources(CELauncher* launcher);
-
         inline static FunctionDetour<ConsumeFireResourcesType> consumeFireResourcesDetour{ reinterpret_cast<ConsumeFireResourcesType>(
             GetProcAddress(GetModuleHandleA("common.dll"), "?ConsumeFireResources@CELauncher@@UAEXXZ")) };
 
@@ -33,6 +23,17 @@ class ChaosTimer final : public Component
         CShip* lastPlayerShip = nullptr;
 
         float timeSinceLastUpdate = 15.f;
+
+        inline static FARPROC oldShipDestroyed = nullptr;
+        static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
+        static void NakedShipDestroyed();
+
+        static void OnMunitionHit(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList, bool after);
+        static bool OnExplosion(EqObj* hitObject, ExplosionDamageEvent* explosion, DamageList* dmgList);
+        static uint OnSoundEffect(uint hash);
+        static void OnSystemUnload();
+        static void OnJumpInComplete();
+        static void __fastcall OnConsumeFireResources(CELauncher* launcher);
 
         static void PlayBadEffect();
         static void PlayEffectSkip();
@@ -48,7 +49,8 @@ class ChaosTimer final : public Component
         void DelayActiveEffect(ActiveEffect* effect, float delay);
         void TriggerChaos(ActiveEffect* effect = nullptr);
         void ToggleDoubleTime();
-        [[nodiscard]] bool DoubleTimeActive() const;
+        [[nodiscard]]
+        bool DoubleTimeActive() const;
         void AdjustModifier(float modifier);
         void Update(float delta);
         void FrameUpdate(float delta);
