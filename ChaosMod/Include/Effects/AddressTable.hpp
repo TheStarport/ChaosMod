@@ -30,7 +30,7 @@ enum class AddressTable : DWORD
 
     // Ship Danage Hooks
     ShipEquipDamage = 0x8732C,
-    GuidedExplosionHit = 0x866C0,
+    ExplosionHit = 0x872A0,
     SolarExplosionHit = 0x875F0,
     SolarMunitionHit = 0x8729C,
     ShipCollisionGroupDamaged = 0x87334,

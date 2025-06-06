@@ -5,26 +5,25 @@
 #include "CoreComponents/ChaosTimer.hpp"
 #include "Effects/AddressTable.hpp"
 
-FARPROC GuidedExplosionHitOrigFunc, SolarExplosionHitOrigFunc, ShipMunitionHitOrigFunc, ShipColGrpDmgFunc, ShipFuseLightFunc, ShipEquipDestroyedFunc;
+FARPROC ExplosionHitOrigFunc, SolarExplosionHitOrigFunc, ShipMunitionHitOrigFunc, ShipColGrpDmgFunc, ShipFuseLightFunc, ShipEquipDestroyedFunc;
 
-bool __stdcall OnHit::GuidedExplosionHit(EqObj* obj, ExplosionDamageEvent* explosion, DamageList* dmg) { return ChaosTimer::OnExplosion(obj, explosion, dmg); }
+bool __stdcall OnHit::ExplosionHit(EqObj* obj, ExplosionDamageEvent* explosion, DamageList* dmg) { return ChaosTimer::OnExplosion(obj, explosion, dmg); }
 
-__declspec(naked) void OnHit::GuidedExplosionHitNaked()
+__declspec(naked) void OnHit::ExplosionHitNaked()
 {
-    __asm
-    {
-		push ecx
-		push[esp + 0xC]
-		push[esp + 0xC]
-		push ecx
-		call GuidedExplosionHit
-		pop ecx
-		test al, al
-		jz callOriginal
-		ret 0x8
+    __asm {
+        push ecx
+        push[esp + 0xC]
+        push[esp + 0xC]
+        push ecx
+        call ExplosionHit
+        pop ecx
+        test al, al
+        jz callOriginal
+        ret 0x8
 
-		callOriginal:
-		jmp [GuidedExplosionHitOrigFunc]
+        callOriginal:
+        jmp [ExplosionHitOrigFunc]
     }
 }
 
@@ -120,7 +119,7 @@ void OnHit::Detour()
 
     detoured = true;
     const auto shipEquipDamage = reinterpret_cast<PDWORD>(ShipEquipDamage);
-    const auto guidedExplosionHitNaked = reinterpret_cast<PDWORD>(GuidedExplosionHitNaked);
+    const auto explosionHitNaked = reinterpret_cast<PDWORD>(ExplosionHitNaked);
     const auto solarExplosionHitNaked = reinterpret_cast<PDWORD>(SolarExplosionHitNaked);
     const auto shipMunitionHit = reinterpret_cast<PDWORD>(ShipMunitionHit);
     const auto shipColGrpDmgNaked = reinterpret_cast<PDWORD>(ShipColGrpDmgNaked);
@@ -130,9 +129,9 @@ void OnHit::Detour()
     auto offset = RelOfs("server.dll", AddressTable::ShipEquipDamage);
     MemUtils::WriteProcMem(offset, &shipEquipDamage, 4);
 
-    offset = RelOfs("server.dll", AddressTable::GuidedExplosionHit);
-    MemUtils::ReadProcMem(offset, &GuidedExplosionHitOrigFunc, 4);
-    MemUtils::WriteProcMem(offset, &guidedExplosionHitNaked, 4);
+    offset = RelOfs("server.dll", AddressTable::ExplosionHit);
+    MemUtils::ReadProcMem(offset, &ExplosionHitOrigFunc, 4);
+    MemUtils::WriteProcMem(offset, &explosionHitNaked, 4);
 
     offset = RelOfs("server.dll", AddressTable::SolarExplosionHit);
     MemUtils::ReadProcMem(offset, &SolarExplosionHitOrigFunc, 4);
