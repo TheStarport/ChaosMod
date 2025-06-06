@@ -11,6 +11,8 @@ extern DWORD dummy;
 namespace Utils
 {
     void CatchupNpc(ResourcePtr<SpawnedObject> obj, bool& catchingUp, float catchUpDistance = 2000.f);
+    const char* GetCurrentStarSphere();
+    void SetNewStarSphere(const char* filepath);
 
     // Get data values from game
     Archetype::Ship* GetShipArch();

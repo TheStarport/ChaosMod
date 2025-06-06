@@ -23,7 +23,8 @@ enum class EffectExclusion
     SendComm,
     FireResource,
     RefireDelay,
-    GetMass
+    GetMass,
+    StarSphere,
 };
 
 class ActiveEffect

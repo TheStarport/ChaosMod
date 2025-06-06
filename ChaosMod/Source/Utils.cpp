@@ -6,6 +6,44 @@ DWORD dummy;
 
 namespace Utils
 {
+    struct SphereObject
+    {
+            void* vtable;
+            uint dunno[3];
+    };
+
+    struct StarSystemSphereManagerThing
+    {
+            SphereObject nebulaObjectHandle;
+            CacheString nebulaFilepath;
+            SphereObject basicStarsObjectHandle;
+            CacheString basicStarsFilepath;
+            SphereObject complexStarsObjectHandle;
+            CacheString complexStarsFilepath;
+
+            uint spheresLoaded;
+            uint targetSphereCount;
+    };
+
+    const char* GetCurrentStarSphere()
+    {
+        static auto mgr = reinterpret_cast<StarSystemSphereManagerThing*>(0x679900);
+        return mgr->nebulaFilepath.value;
+    }
+
+    void SetNewStarSphere(const char* filepath)
+    {
+        using unloadStarSphere = int(__fastcall*)(DWORD);
+        const auto unloadStarSphereFunc = reinterpret_cast<unloadStarSphere>(0x420F70);
+        static auto mgr = reinterpret_cast<StarSystemSphereManagerThing*>(0x679900);
+
+        mgr->spheresLoaded = 0;
+        mgr->nebulaFilepath.clear();
+
+        mgr->nebulaFilepath.value = StringAlloc(filepath, false);
+        unloadStarSphereFunc(reinterpret_cast<DWORD>(mgr));
+    }
+
     void CatchupNpc(ResourcePtr<SpawnedObject> obj, bool& catchingUp, const float catchUpDistance)
     {
         const auto player = Utils::GetCShip();
@@ -71,7 +109,7 @@ namespace Utils
     __declspec(naked) void __stdcall LightFuse(IObjInspectImpl* ship, uint fuseId, float delay, float lifetime, float skip)
     {
         __asm
-        {
+            {
             lea eax, [esp + 8] // fuseId
             push[esp + 20] // skip
             push[esp + 16] // delay
@@ -82,13 +120,13 @@ namespace Utils
             mov eax, [ecx]
             call[eax + 0x1E4]
             ret 20
-        }
+            }
     }
 
     __declspec(naked) void __stdcall UnLightFuse(IObjInspectImpl* ship, uint fuseId, float delay)
     {
         __asm
-        {
+            {
             mov ecx, [esp + 4]
             lea eax, [esp + 8] // fuseId
             push[esp + 12] // delay
@@ -97,7 +135,7 @@ namespace Utils
             mov eax, [ecx]
             call[eax + 0x1E8]
             ret 12
-        }
+            }
     }
 
     std::string GetResourceString(ResourceIds id)
