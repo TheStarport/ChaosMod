@@ -610,6 +610,11 @@ void __stdcall ChaosMod::TerminateAllThreads()
 
 BOOL __stdcall ChaosMod::FreeLibraryDetour(const HMODULE handle)
 {
+    if (!handle)
+    {
+        return false;
+    }
+
     if (dll == handle)
     {
         freeLibraryDetour.UnDetour();

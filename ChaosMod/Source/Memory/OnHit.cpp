@@ -2,6 +2,8 @@
 
 #include "Memory/OnHit.hpp"
 
+#include "Components/GlobalTimers.hpp"
+#include "Components/ShipManipulator.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
 #include "Effects/AddressTable.hpp"
 
@@ -44,6 +46,27 @@ __declspec(naked) void OnHit::SolarExplosionHitNaked()
 
 void __fastcall OnHit::ShipMunitionHit(EqObj* ship, void* edx, MunitionImpactData* data, DamageList* dmg)
 {
+    static uint chaosSwap = CreateID("chaos_ship_swap_cannon_ammo");
+    if (data->munitionId->archId == chaosSwap)
+    {
+        const auto attacker = CObject::Find(data->attackerId, CObject::CSHIP_OBJECT);
+        if (!attacker)
+        {
+            return;
+        }
+
+        attacker->Release();
+
+        const auto hitPos = ship->get_position();
+        const auto hitRot = ship->get_orientation();
+        const auto attackerPos = attacker->get_position();
+        const auto attackerRot = attacker->get_orientation();
+
+        ship->ceqobj()->beam_object(attackerPos, attackerRot, true);
+        attacker->beam_object(hitPos, hitRot, true);
+        return;
+    }
+
     ChaosTimer::OnMunitionHit(ship, data, dmg, false);
 
     ShipMunitionHitCall(ship, data, dmg);
