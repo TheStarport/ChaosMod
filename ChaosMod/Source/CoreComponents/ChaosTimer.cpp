@@ -143,6 +143,25 @@ void ChaosTimer::OnJumpInComplete()
     }
 }
 
+FireResult __fastcall ChaosTimer::OnCanFire(CEGun* gun, void* edx, const Vector& target)
+{
+    static auto moneyGun = CreateID("chaos_plan_b");
+    if (gun->archetype->archId == moneyGun)
+    {
+        int money;
+        pub::Player::InspectCash(1, money);
+        if (constexpr int cost = 4; money < cost)
+        {
+            return FireResult::AmmoRequirementsNotMet;
+        }
+    }
+
+    canFireDetour.UnDetour();
+    const auto result = canFireDetour.GetOriginalFunc()(gun, edx, target);
+    canFireDetour.Detour(OnCanFire);
+    return result;
+}
+
 void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
 {
     const auto i = Get<ChaosTimer>();
@@ -155,6 +174,20 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
     for (const auto& effect : i->persistentEffects)
     {
         effect->OnConsumeFireResources(launcher);
+    }
+
+    static auto moneyGun = CreateID("chaos_plan_b");
+    if (launcher->archetype->archId == moneyGun)
+    {
+        int money;
+        pub::Player::InspectCash(1, money);
+        constexpr int cost = -4;
+        if (money < cost)
+        {
+            return;
+        }
+
+        pub::Player::AdjustCash(1, cost);
     }
 
     consumeFireResourcesDetour.UnDetour();
@@ -337,6 +370,7 @@ ChaosTimer::ChaosTimer()
     MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
 
     consumeFireResourcesDetour.Detour(OnConsumeFireResources);
+    canFireDetour.Detour(OnCanFire);
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef

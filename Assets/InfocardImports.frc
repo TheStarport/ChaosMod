@@ -359,3 +359,17 @@ H 458878
 	\l
 	Turns out that this engine you got from the totally legit junkers dealership doesn't quite have the mileage that was advertised to you. It's consuming fuel at a very high rate, and I doubt you'll maintain your current speed without more fuel.
 	\l
+
+S 458879 Baton Pass
+H 458880 
+	\m\bBATON PASS\B
+	\l
+	Give me a description!
+	\l
+
+S 458881 Plan B
+H 458882
+	\m\bPLAN B\B
+	\l
+	Give me a description!
+	\l

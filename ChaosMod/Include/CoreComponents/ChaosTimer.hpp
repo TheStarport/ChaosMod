@@ -14,8 +14,11 @@ class ChaosTimer final : public Component
         friend OnSystemStatusChange;
 
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher* launcher);
+        using CanFireType = FireResult(__fastcall*)(CEGun* gun, void* edx, const Vector& target);
         inline static FunctionDetour<ConsumeFireResourcesType> consumeFireResourcesDetour{ reinterpret_cast<ConsumeFireResourcesType>(
             GetProcAddress(GetModuleHandleA("common.dll"), "?ConsumeFireResources@CELauncher@@UAEXXZ")) };
+        inline static FunctionDetour<CanFireType> canFireDetour{ reinterpret_cast<CanFireType>(
+            GetProcAddress(GetModuleHandleA("common.dll"), "?CanFire@CEGun@@MBE?AW4FireResult@@ABVVector@@@Z")) };
 
         float currentTime = 0.0f;
         float modifiers = 1.0f;
@@ -33,6 +36,7 @@ class ChaosTimer final : public Component
         static uint OnSoundEffect(uint hash);
         static void OnSystemUnload();
         static void OnJumpInComplete();
+        static FireResult __fastcall OnCanFire(CEGun* gun, void* edx, const Vector& target);
         static void __fastcall OnConsumeFireResources(CELauncher* launcher);
 
         static void PlayBadEffect();
