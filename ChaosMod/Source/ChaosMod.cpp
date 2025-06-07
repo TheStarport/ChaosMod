@@ -118,6 +118,19 @@ void ChaosMod::DelayedInit()
     constexpr std::array<byte, 1> nomadPhantom = { 0x01 };
     MemUtils::WriteProcMem(content + 0x0BD2D8, nomadPhantom.data(), nomadPhantom.size());
 
+    // Always offer missions regardless of reputation
+
+    char patchByte = 0xEB;
+    MemUtils::WriteProcMem(content + 0x060D0F, &patchByte, sizeof(patchByte));
+
+    // Ignore gate locks
+    patchByte = 0xC2;
+    MemUtils::WriteProcMem(content + 0x0CCFAD, &patchByte, sizeof(patchByte));
+
+    // Disable mission failure on attacking friendly/neutral objects
+    constexpr std::array<byte, 2> disableMissionFailures = { 0xEB, 0x0E };
+    MemUtils::WriteProcMem(content + 0x019A59, disableMissionFailures.data(), disableMissionFailures.size());
+
     Get<ChaosTimer>()->InitEffects();
 
     PatchNotes::LoadPatches();
