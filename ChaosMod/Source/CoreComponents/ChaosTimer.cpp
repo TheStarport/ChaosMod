@@ -266,9 +266,8 @@ ActiveEffect* ChaosTimer::SelectEffect()
                 continue;
             }
 
-            // If its not already persisting, lets start the effect!
-            effect->Begin();
-            break;
+            // If it's not already persisting, lets select this effect!
+            return effect;
         }
 
         if (activeEffects.contains(effect))
@@ -468,7 +467,7 @@ void ChaosTimer::Update(const float delta)
             for (const auto& key : activeEffects | std::views::keys)
             {
                 // Don't clear persistent effects
-                if (!dynamic_cast<PersistentEffect*>(key))
+                if (!dynamic_cast<PersistentEffect*>(key) && !key->GetEffectInfo().continueOnBases)
                 {
                     key->End();
                 }

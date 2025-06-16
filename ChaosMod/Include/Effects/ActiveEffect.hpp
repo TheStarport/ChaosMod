@@ -42,6 +42,7 @@ class ActiveEffect
                 bool isTimed = true;
                 EffectExclusion exclusion = EffectExclusion::None;
                 uint weight = 5;
+                bool continueOnBases = false;
         };
 
     private:
