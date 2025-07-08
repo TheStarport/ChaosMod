@@ -186,3 +186,4 @@ or when an option is successfully picked.
 - [CATENCODE](https://sketchfab.com/3d-models/the-flying-spaghetti-monster-7b4dd5fa121a4021875d9b72c7aa52c8) - Flying Spaghetti Monster Model
 - [savounited](https://sketchfab.com/3d-models/alduin-dragon-2242802d82f14846bd4a2337a1794701) - Alduin Dragon Model
 - [Milaein](https://sketchfab.com/3d-models/low-poly-pirate-blunderbuss-gun-075bb97c059046e1b3c8447b54651d1b) - Blunderbuss Model
+- [Kvemon](https://sketchfab.com/3d-models/gravity-gun-low-poly-pixel-art-8269194af2e547bf8662c8e4e3abd56e) - Gravity Gun Model
