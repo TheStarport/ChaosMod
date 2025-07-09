@@ -221,7 +221,7 @@ std::string ChaosMod::GetInfocardName(const uint ids)
     int size = SprechenSieDeutsch::LoadCustomIdsName(ids, wStr.data(), static_cast<int>(wStr.capacity()));
     wStr.reserve(size);
 
-    auto str = StringUtils::wstos(wStr);
+    auto str = StringUtils::wstos(std::wstring_view(wStr.c_str(), wcslen(wStr.data())));
     str.erase(std::ranges::find(str, '\0'), str.end());
     return str;
 }
