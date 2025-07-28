@@ -171,15 +171,13 @@ class SprechenSieDeutsch final : public ActiveEffect
             for (auto& lang : languages)
             {
                 auto& map = dllMap[lang.second] = {};
-                map.emplace_back(LoadLibraryA(std::format("langs/resources-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/infocards-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/misctext-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/nameresources-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/equipresources-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/offerbriberesources-{}.dll", lang.first).c_str()));
-                map.emplace_back(LoadLibraryA(std::format("langs/misctextinfo2-{}.dll", lang.first).c_str()));
-
-                assert(std::ranges::all_of(map, [](auto dll) { return dll != nullptr; }));
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/resources-{}.dll", lang.first).c_str())) != nullptr, "Resources.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/InfoCards-{}.dll", lang.first).c_str())) != nullptr, "infocards.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/misctext-{}.dll", lang.first).c_str())) != nullptr, "misctext.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/nameresources-{}.dll", lang.first).c_str())) != nullptr, "nameresources.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/equipresources-{}.dll", lang.first).c_str())) != nullptr, "equipresources.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/offerbriberesources-{}.dll", lang.first).c_str())) != nullptr, "offerbriberesources.dll could not be loaded");
+                assert(map.emplace_back(LoadLibraryA(std::format("langs/misctextinfo2-{}.dll", lang.first).c_str())) != nullptr, "misctextinfo2.dll could not be loaded");
             }
         }
 
