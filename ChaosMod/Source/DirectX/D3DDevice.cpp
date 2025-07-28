@@ -2,6 +2,7 @@
 
 #include "Components/UiManager.hpp"
 #include "DirectX/d3d.hpp"
+#include "ImGui/Helpers/ImGuiDX9.hpp"
 
 #include <iostream>
 #include <regex>
@@ -189,6 +190,8 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice8::Reset(D3DPRESENT_PARAMETERS8* pPresen
     }
 
     pCurrentRenderTarget = nullptr;
+
+    ImGui_ImplDX9_InvalidateDeviceObjects();
 
     D3DPRESENT_PARAMETERS PresentParams;
     ConvertPresentParameters(*pPresentationParameters, PresentParams);
