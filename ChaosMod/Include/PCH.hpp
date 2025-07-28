@@ -81,6 +81,7 @@ class ChaosMod : public Singleton<ChaosMod>
         static std::optional<std::string> HashLookup(uint hash);
         static void SetLanguage(Language lang);
         static std::string GetInfocardName(uint ids);
+        static bool RunningOnWine();
 };
 
 void Log(const std::string& log);

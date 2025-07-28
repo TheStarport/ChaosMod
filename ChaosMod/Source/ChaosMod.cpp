@@ -601,6 +601,17 @@ ChaosMod::ChaosMod()
 
 ChaosMod::~ChaosMod() { delete cc; }
 
+bool ChaosMod::RunningOnWine()
+{
+    const HMODULE ntDll = GetModuleHandleA("ntdll.dll");
+    if (ntDll && GetProcAddress(ntDll, "wine_get_version"))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 HMODULE dll;
 void __stdcall ChaosMod::TerminateAllThreads()
 {

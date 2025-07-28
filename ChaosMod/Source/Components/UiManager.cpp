@@ -166,8 +166,12 @@ void UiManager::SetCursor(const std::string& str)
     if (const auto cur = this->mapCursors.find(str); cur != this->mapCursors.end())
     {
         ::SetCursor(cur->second);
-        // SetClassLongPtrA(UI::window, GCLP_HCURSOR, (LONG_PTR)cur->second);
-        PostMessage(window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cur->second));
+
+        // Wine doesn't need the PostMessage and locks up if used, Windows does require it
+        if (!ChaosMod::RunningOnWine())
+        {
+            PostMessage(window, WM_SETCURSOR, static_cast<WPARAM>(1), reinterpret_cast<LPARAM>(cur->second));
+        }
     }
 }
 
