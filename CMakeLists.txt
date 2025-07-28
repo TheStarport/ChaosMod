@@ -11,6 +11,24 @@ if (CCACHE_FOUND)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 endif ()
 
+
+if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+    add_compile_definitions("WINAPI_FAMILY=100")
+    if (NOT DEFINED ENV{MSVC})
+        message(FATAL_ERROR "MSVC env was not found and running on Linux")
+    endif ()
+
+    if (NOT DEFINED ENV{INCLUDE})
+        message(FATAL_ERROR "'INCLUDE' env not found. Have you run 'source $ENV{MSVC}/bin/x86/msvcenv.sh' ?")
+    endif ()
+
+    string(REPLACE "z:\\" "/" MSVC_INCLUDE "$ENV{INCLUDE}")
+    string(REPLACE "\\" "/" MSVC_INCLUDE "${MSVC_INCLUDE}")
+    string(REPLACE ";" " " MSVC_INCLUDE "${MSVC_INCLUDE}")
+    separate_arguments(MSVC_INCLUDE)
+    include_directories(${MSVC_INCLUDE})
+endif ()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D \"SAFESEH:NO\"")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SAFESEH:NO")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /SAFESEH:NO")
@@ -140,12 +158,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 # FLCore
 
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreCommon.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreDACom.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreDALib.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreFLServerEXE.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreRemoteClient.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${SDK_PATH}/lib/FLCoreServer.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        "${SDK_PATH}/lib/FLCoreCommon.lib"
+        "${SDK_PATH}/lib/FLCoreDACom.lib"
+        "${SDK_PATH}/lib/FLCoreDALib.lib"
+        "${SDK_PATH}/lib/FLCoreFLServerEXE.lib"
+        "${SDK_PATH}/lib/FLCoreRemoteClient.lib"
+        "${SDK_PATH}/lib/FLCoreServer.lib"
+        "Winmm.lib")
 
 # Copy Discord SDK
 file(COPY "${VENDOR_PATH}/discord_game_sdk/lib/x86/discord_game_sdk.dll"
@@ -162,21 +182,15 @@ if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
 endif ()
 
 # Build Scripts
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE "Winmm.lib")
 
-    if (DEFINED BINARY_COPY_DESTINATION)
-        message(STATUS "Adding post build step")
-        set(OUT_PATH ${CMAKE_BINARY_DIR}/*.dll)
-        string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
-        file(TO_NATIVE_PATH ${VENDOR_PATH} VENDOR_PATH)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND copy /Y "${OUT_PATH}" "${BINARY_COPY_DESTINATION}\\EXE"
-                COMMAND copy /Y "${VENDOR_PATH}\\discord_game_sdk\\lib\\x86\\discord_game_sdk.dll" "${BINARY_COPY_DESTINATION}\\EXE"
-                COMMAND copy /Y "${VENDOR_PATH}\\ffmpeg\\bin\\*.dll" "${BINARY_COPY_DESTINATION}\\EXE"
-                COMMAND powershell ${PROJECT_SOURCE_DIR}/BinUtils/CopyChaosAssets.ps1 -NoLaunch true -CopyDir ${BINARY_COPY_DESTINATION}
-        )
-    endif ()
-else ()
-    message(STATUS "Not building on Windows. Not adding post build step.")
+find_package(Python COMPONENTS Interpreter )
+if (PYTHON_FOUND AND DEFINED BINARY_COPY_DESTINATION)
+    set(OUT_PATH ${CMAKE_BINARY_DIR}/*.dll)
+    string(REPLACE "/" "\\" OUT_PATH "${OUT_PATH}")
+    file(TO_NATIVE_PATH ${VENDOR_PATH} VENDOR_PATH)
+    message(STATUS "Adding post build step")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMAND ${PYTHON_EXECUTABLE} copy_assets.py ${BINARY_COPY_DESTINATION} "$<IF:$<CONFIG:Release>,release,debug>"
+    )
 endif ()
