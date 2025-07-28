@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Components/SplashScreen.hpp"
-
 class ImGuiManager;
 class IntroWindow final
 {

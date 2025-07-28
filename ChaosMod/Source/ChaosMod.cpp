@@ -15,7 +15,6 @@
 #include "Components/SaveManager.hpp"
 #include "Components/ShipManipulator.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-#include "Components/SplashScreen.hpp"
 #include "Components/TTS.hpp"
 #include "Components/Teleporter.hpp"
 #include "Components/UiManager.hpp"
@@ -580,13 +579,10 @@ ChaosMod::ChaosMod()
     SetComponent<Random>(); // Almost everything depends on Random
     SetComponent<GlobalTimers>();
 
-    Get<SplashScreen>()->SetLoadingMessage(5);
     ConfigManager::Load();
 
-    Get<SplashScreen>()->SetLoadingMessage(10);
     SetComponent<ChaosTimer>();
     SetComponent<DrawingHelper>();
-    Get<SplashScreen>()->SetLoadingMessage(15);
     SetComponent<UiManager>();
     SetComponent<KeyManager>();
     SetComponent<ReshadeManager>();
@@ -653,11 +649,6 @@ bool OnStartUp(HWND window, const char* unk)
 
     MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
     MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
-
-    // Display loading screen while we load all our chaos content
-    // It takes a lot longer than vanilla!
-    SetComponent<SplashScreen>(window);
-    Get<SplashScreen>()->SetLoadingMessage(2);
 
     // Force construct ChaosMod
     ChaosMod::i();
