@@ -50,7 +50,7 @@ uniform int3 Size
 		"  FLIPBOOK_TEXTURE 'name.png'\n"
 		"  FLIPBOOK_SIZE_X [ResolutionX]\n"
 		"  FLIPBOOK_SIZE_Y [ResolutionY]";
-	ui_min = 1; ui_max = 32;
+	ui_min = 32; ui_max = 32;
 	ui_category = "Texture dimensions";
 > = int3(32, 32, 30);
 
