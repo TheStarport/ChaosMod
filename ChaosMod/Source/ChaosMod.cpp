@@ -655,6 +655,9 @@ FunctionDetour startUpDetour(DALib::Startup);
 
 bool OnStartUp(HWND window, const char* unk)
 {
+    // Attempt to load our font for FL
+    AddFontResourceExA("../DATA/CHAOS/FONTS/Barlow-Regular.ttf", FR_PRIVATE, nullptr);
+
     constexpr float newX = 0.5f;
     constexpr float newY = 0.5f;
 
