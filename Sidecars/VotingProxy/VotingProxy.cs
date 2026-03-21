@@ -32,7 +32,7 @@ internal class VotingProxy
     {
         // ReSharper disable once NotAccessedVariable
         var mutex = new Mutex(true, "ChaosModVotingMutex", out var @new);
-        if (@new)
+        if (!@new)
         {
             Exit(ExitCode.AlreadyRunning);
         }

@@ -191,6 +191,6 @@ if (PYTHON_FOUND AND DEFINED BINARY_COPY_DESTINATION)
     message(STATUS "Adding post build step")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND ${PYTHON_EXECUTABLE} copy_assets.py ${BINARY_COPY_DESTINATION} "$<IF:$<CONFIG:Release>,release,debug>"
+            COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/copy_assets.py ${BINARY_COPY_DESTINATION} "$<IF:$<CONFIG:Release>,release,debug>"
     )
 endif ()

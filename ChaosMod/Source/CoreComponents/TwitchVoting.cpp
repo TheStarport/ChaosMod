@@ -77,6 +77,7 @@ void TwitchVoting::Cleanup()
         voteThread.request_stop();
         voteThread.join();
     }
+
     sock.reset();
 
     // Backup to ensure no dangling process
