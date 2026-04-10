@@ -1,8 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class SpawnEvilPlayer final : public ActiveEffect
 {
         int i = 0;
@@ -12,7 +11,7 @@ class SpawnEvilPlayer final : public ActiveEffect
         ResourcePtr<SpawnedObject> clone;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (clone.Acquire())
             {
@@ -73,7 +72,7 @@ class SpawnEvilPlayer final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(clone, catchingUp);
+                // TODO: Utils::CatchupNpc(clone, catchingUp);
             }
         }
 

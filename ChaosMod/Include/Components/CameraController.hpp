@@ -1,5 +1,12 @@
 #pragma once
 
+#include "Component.hpp"
+#include "FLCore/Common/Unknown.hpp"
+#include "Utils/Detour.hpp"
+
+#include <array>
+#include <memory>
+
 class CameraController final : public Component
 {
         using CameraCall = int(__fastcall*)(Camera*, void* edx, float interval);

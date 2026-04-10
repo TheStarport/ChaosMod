@@ -1,7 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class Vampire final : public ActiveEffect
 {
         float damageTimer = 0.0f;
@@ -12,7 +11,7 @@ class Vampire final : public ActiveEffect
                 return;
             }
 
-            const auto player = Utils::GetCShip();
+            const auto player = Fluf::GetClient()->GetPlayerCShip();
 
             float relativeHealth = 0.f;
             pub::SpaceObj::GetRelativeHealth(player->id, relativeHealth);
@@ -23,7 +22,7 @@ class Vampire final : public ActiveEffect
 
         void Update(float delta) override
         {
-            auto ship = Utils::GetCShip();
+            auto ship = Fluf::GetClient()->GetPlayerCShip();
             damageTimer -= delta;
             if (!ship || damageTimer > 0.f)
             {
@@ -40,10 +39,10 @@ class Vampire final : public ActiveEffect
             }
 
             bool inCombat = false;
-            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+            ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                         [ship, &inCombat](auto npc)
                                         {
-                                            if (ship == npc || inCombat || glm::distance<3, float, glm::packed_highp>(ship->position, npc->position) > 5000.f)
+                                            if (ship == npc || inCombat || ship->position.distance(npc->position) > 5000.f)
                                             {
                                                 return;
                                             }

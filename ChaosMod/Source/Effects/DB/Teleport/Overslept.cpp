@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/Teleporter.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class Overslept final : public ActiveEffect
 {

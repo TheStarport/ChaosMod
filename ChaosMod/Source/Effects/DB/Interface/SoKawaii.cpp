@@ -1,9 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Components/HudInterface.hpp"
 
 class SoKawaii final : public ActiveEffect
 {

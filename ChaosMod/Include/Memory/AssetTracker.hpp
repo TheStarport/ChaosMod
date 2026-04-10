@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ChaosMod.hpp"
+#include "FLCore/FLCoreServer.h"
+
 class AssetTracker
 {
     public:

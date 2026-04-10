@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ChaosMod.hpp"
+#include "Component.hpp"
+
 class ShipManipulator final : public Component
 {
         using OnPhysicsUpdate = void (*)(unsigned, float);

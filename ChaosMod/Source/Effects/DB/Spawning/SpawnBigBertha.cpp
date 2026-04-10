@@ -1,14 +1,13 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 class SpawnBigBertha final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> bertha;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (bertha.Acquire())
             {

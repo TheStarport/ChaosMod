@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "Effects/PersistentEffect.hpp"
-
+#include "FLCore/Common/Archetype/Root/Equipment/Commodity.hpp"
+#include "FLCore/FLCoreServer.h"
 class DontStarve final : public PersistentEffect
 {
         void Begin() override
@@ -42,7 +42,7 @@ class DontStarve final : public PersistentEffect
         float timeSinceLastEaten = 5.f;
         void Update(const float delta) override
         {
-            auto* ship = Utils::GetCShip();
+            auto* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

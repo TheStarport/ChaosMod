@@ -2,6 +2,8 @@
 
 #include "Component.hpp"
 
+#include <string>
+
 class DiscordManager final : public Component
 {
     bool enabled = false;
@@ -11,6 +13,6 @@ class DiscordManager final : public Component
 
     public:
         DiscordManager();
-        void SetActivity(std::string_view description, uint startTime = 0, uint endTime = 0) const;
+        void SetActivity(std::string_view description, unsigned startTime = 0, unsigned endTime = 0) const;
         void Update();
 };

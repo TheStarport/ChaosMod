@@ -31,7 +31,7 @@ class ChaosOptionText final
                 return;
             }
 
-            const auto config = Get<ConfigManager>();
+            const auto config = ChaosMod::GetConfig();
             const auto& [totalVotes, votes, votePercentages] = Get<TwitchVoting>()->GetCurrentVoteInfo();
 
             for (int i = 0; i < options.size(); ++i)

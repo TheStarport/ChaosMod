@@ -1,8 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/ShipManipulator.hpp"
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class Stalled final : public ActiveEffect
 {
         using CEActivateType = bool(__fastcall*)(void* engine, void* edx, bool state);
@@ -17,7 +16,7 @@ class Stalled final : public ActiveEffect
         {
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_stalled"));
 
-            auto ship = Utils::GetCShip();
+            auto ship = Fluf::GetClient()->GetPlayerCShip();
             CEquipTraverser traverser{ static_cast<int>(EquipmentClass::Engine) };
             CEquip* equip;
 

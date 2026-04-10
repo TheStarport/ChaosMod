@@ -1,6 +1,7 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/CEquip/CAttachedEquip/CELauncher/CEGun.hpp"
+#include "FLCore/Common/INI_Reader.hpp"
 
 class RandomisedProjectiles final : public ActiveEffect
 {

@@ -1,15 +1,14 @@
-#include "PCH.hpp"
 
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class ClonePlayer final : public ActiveEffect
 {
         int i = 0;
         ResourcePtr<SpawnedObject> clone;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (clone.Acquire())
             {
@@ -29,6 +28,11 @@ class ClonePlayer final : public ActiveEffect
                 traverser.currentEquip->GetEquipDesc(desc);
 
                 SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0u : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
+
+                if (item.nickname.contains("power"))
+                {
+                    item.nickname = "infinite_power";
+                }
 
                 items.emplace_back(item);
             }
@@ -70,7 +74,7 @@ class ClonePlayer final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(clone, catchingUp);
+                // TODO: Utils::CatchupNpc(clone, catchingUp);
             }
         }
 

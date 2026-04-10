@@ -1,5 +1,4 @@
 #include "Components/ReshadeManager.hpp"
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 

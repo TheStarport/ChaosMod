@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Components/Component.hpp"
 #include "Effects/ActiveEffect.hpp"
 #include "Effects/PersistentEffect.hpp"
+#include "FLCore/Common/CEquip/CAttachedEquip/CELauncher/CEGun.hpp"
+#include "Utils/Detour.hpp"
+
+#include <unordered_map>
 
 class OnHit;
 class OnSound;

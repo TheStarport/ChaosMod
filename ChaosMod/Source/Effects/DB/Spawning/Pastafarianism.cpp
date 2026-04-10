@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class Pastafarianism final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> spaghetti;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (spaghetti.Acquire())
             {
@@ -40,7 +38,7 @@ class Pastafarianism final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(spaghetti, catchingUp, 4000.f);
+                // TODO: Utils::CatchupNpc(spaghetti, catchingUp, 4000.f);
             }
         }
 

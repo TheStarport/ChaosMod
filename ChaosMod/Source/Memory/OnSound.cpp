@@ -1,10 +1,10 @@
 // ReSharper disable IdentifierTypo
 // ReSharper disable CppInconsistentNaming
-#include "PCH.hpp"
 
 #include "Memory/OnSound.hpp"
 
 #include "CoreComponents/ChaosTimer.hpp"
+#include "FLCore/FLCoreServer.h"
 
 uint* exteriorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?EXTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));
 uint* interiorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?INTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));

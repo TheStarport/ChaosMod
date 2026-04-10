@@ -1,8 +1,6 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/ReshadeManager.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class ArkSurvivalEvolvedExperience final : public ActiveEffect
 {
         inline static std::array eyeBleeders = { CreateID("bw10"), CreateID("ew01"), CreateID("ew05"), CreateID("bw05") };
@@ -17,7 +15,7 @@ class ArkSurvivalEvolvedExperience final : public ActiveEffect
 
         void Update(float delta) override
         {
-            if (const auto ship = Utils::GetCShip(); ship && ship->system != lastSystem)
+            if (const auto ship = Fluf::GetClient()->GetPlayerCShip(); ship && ship->system != lastSystem)
             {
                 const auto reshade = Get<ReshadeManager>();
                 reshade->SetUniformFloat("qUINT_bloom.fx", "BLOOM_CURVE", { 1.5f, 0.f, 0.f }, 1);

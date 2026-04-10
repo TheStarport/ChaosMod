@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/ShipManipulator.hpp"
-
+#include "FLCore/Common/Archetype/Root/EqObj/Ship.hpp"
+#include "FLCore/Common/PhySys/PhySysMethods.hpp"
 void ShipManipulator::SetAngularVelocity(CObject* object, const Vector& newVelocity)
 {
     const auto v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);
@@ -54,6 +54,7 @@ void ShipManipulator::SetPosition(CObject* object, const Vector& pos)
     object->update_tree();
 }
 
+// TODO: Swap this to use FixedUpdate
 void ShipManipulator::PhysicsUpdate(const uint system, float delta)
 {
     detour->UnDetour();
@@ -64,7 +65,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
         PhySys::Update(system, delta);
     }
 
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     if (!ship)
     {
         PhySys::Update(system, delta);
@@ -79,7 +80,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
 
     if (Get<ShipManipulator>()->spin)
     {
-        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+        ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                     [](auto ship)
                                     {
                                         Vector vel = GetAngularVelocity(ship);
@@ -90,7 +91,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
 
     if (Get<ShipManipulator>()->gravity)
     {
-        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+        ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                     [delta](auto ship)
                                     {
                                         Vector newVelocity = ShipManipulator::GetVelocity(ship);
@@ -102,7 +103,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
     if (Get<ShipManipulator>()->personalSpace)
     {
 
-        Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+        ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                     [ship](CShip* otherShip)
                                     {
                                         if (ship == otherShip)
@@ -114,7 +115,7 @@ void ShipManipulator::PhysicsUpdate(const uint system, float delta)
                                         const auto otherPos = otherShip->position;
 
                                         const auto vectorDiff = playerPos - otherPos;
-                                        const auto length = glm::length(vectorDiff);
+                                        const auto length = vectorDiff.magnitude();
 
                                         constexpr float maxFalloffDistance = 400.0f;
                                         constexpr float minFalloffDistance = 200.0f;

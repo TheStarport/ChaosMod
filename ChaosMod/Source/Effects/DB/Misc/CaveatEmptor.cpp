@@ -1,8 +1,8 @@
-#include "PCH.hpp"
 
 #include "Components/GlobalTimers.hpp"
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/Common/Archetype/Root/EqObj/Ship.hpp"
+#include "FLCore/FLCoreServer.h"
 class CaveatEmptor final : public ActiveEffect
 {
         // TODO: Have destroyed equipment persist after dock
@@ -11,7 +11,7 @@ class CaveatEmptor final : public ActiveEffect
 
         static bool DelayedGroupExplosion(float delta)
         {
-            CShip* ship = Utils::GetCShip();
+            CShip* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return true;
@@ -34,7 +34,7 @@ class CaveatEmptor final : public ActiveEffect
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_caveat_emptor"));
 
             // Blow off guns that are not attached to the ship root
-            CShip* ship = Utils::GetCShip();
+            CShip* ship = Fluf::GetClient()->GetPlayerCShip();
 
             std::vector<CAttachedEquip*> attachedEquips;
 

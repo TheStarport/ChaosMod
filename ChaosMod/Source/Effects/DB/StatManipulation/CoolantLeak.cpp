@@ -1,13 +1,13 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/Common/CEquip/CEPower.hpp"
+#include "FLCore/FLCoreServer.h"
 class CoolantLeak final : public ActiveEffect
 {
         static constexpr float fps = 1.0f / 60.0f;
         void Update(float delta) override
         {
-            CShip* ship = Utils::GetCShip();
+            CShip* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;
@@ -29,20 +29,19 @@ class CoolantLeak final : public ActiveEffect
 
         void End() override
         {
-            auto ship = Utils::GetCShip();
-
+            auto ship = static_cast<Ship*>(Fluf::GetClient()->GetPlayerIObj());
             if (ship)
             {
-                Utils::UnLightFuse(Utils::GetInspect(ship->id), CreateID("chaos_coolant_leak"), 0.0f);
+                ship->unlight_fuse(CreateID("chaos_coolant_leak"), 0, 0.0f);
             }
         }
 
         void Begin() override
         {
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_coolant_leak"));
-            auto ship = Utils::GetCShip();
 
-            Utils::LightFuse(Utils::GetInspect(ship->id), CreateID("chaos_coolant_leak"), 0.0f, 5.0f, 0.0f);
+            const auto ship = static_cast<Ship*>(Fluf::GetClient()->GetPlayerIObj());
+            ship->light_fuse(0, CreateID("chaos_coolant_leak"), 0.0f, 5.0f, 0.0f);
         }
 
     public:

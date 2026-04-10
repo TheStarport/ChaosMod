@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Effects/ActiveEffect.hpp"
-
 class SpawnJesus final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> jesus;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (jesus.Acquire())
             {
@@ -40,7 +38,7 @@ class SpawnJesus final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(jesus, catchingUp, 4000.f);
+                // TODO: Utils::CatchupNpc(jesus, catchingUp, 4000.f);
             }
         }
 

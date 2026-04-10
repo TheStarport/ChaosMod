@@ -1,4 +1,3 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 #include "Components/CameraController.hpp"

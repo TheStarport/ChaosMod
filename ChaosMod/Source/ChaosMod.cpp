@@ -1,14 +1,14 @@
-// ReSharper disable CppClangTidyPerformanceNoIntToPtr
-#include "CrashCatcher.hpp"
-#include "PCH.hpp"
 
+#include <Utils/MemUtils.hpp>
+
+// ReSharper disable CppClangTidyPerformanceNoIntToPtr
+#include "ChaosMod.hpp"
+
+#include "CrashCatcher.hpp"
 #include "../Include/CoreComponents/TwitchVoting.hpp"
 #include "Components/CameraController.hpp"
 #include "Components/DiscordManager.hpp"
-#include "Components/EventManager.hpp"
 #include "Components/GlobalTimers.hpp"
-#include "Components/HudInterface.hpp"
-#include "Components/KeyManager.hpp"
 #include "Components/MoviePlayer.hpp"
 #include "Components/PersonalityHelper.hpp"
 #include "Components/ReshadeManager.hpp"
@@ -17,23 +17,19 @@
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Components/TTS.hpp"
 #include "Components/Teleporter.hpp"
-#include "Components/UiManager.hpp"
 
 #include "CoreComponents/ChaosTimer.hpp"
 #include "CoreComponents/PatchNotes.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
 
 #include "Memory/BugFixes.hpp"
-#include "Memory/OnHit.hpp"
 #include "Memory/OnSound.hpp"
-#include "Memory/ShipInfocardOverride.hpp"
 
 #include "Memory/AssetTracker.hpp"
 #include "Memory/OnSystemStatusChange.hpp"
 
-#include <reshade.hpp>
-
-const st6_malloc_t st6_malloc = reinterpret_cast<st6_malloc_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "malloc")); // NOLINT
-const st6_free_t st6_free = reinterpret_cast<st6_free_t>(GetProcAddress(GetModuleHandleA("msvcrt.dll"), "free"));         // NOLINT
+#include <Windows.h>
+#include <reshade/reshade.hpp>
 
 using ScriptLoadPtr = void* (*)(const char*);
 using GlobalTimeFunc = void (*)(double delta);
@@ -43,7 +39,9 @@ std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
 
 using CreateIdFunc = uint (*)(const char* str);
 std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
-std::map<std::string, uint> hashMap;
+std::unordered_map<std::string, uint> hashMap;
+
+std::unique_ptr<CrashCatcher> crashCatcher;
 
 std::optional<std::string> ChaosMod::HashLookup(const uint hash)
 {
@@ -90,15 +88,13 @@ uint CreateIdDetour(const char* string)
 constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
 double timeCounter;
 
-void ChaosMod::DelayedInit()
+void ChaosMod::OnClientLoad()
 {
-    i()->cc = new CrashCatcher();
+    crashCatcher = std::make_unique<CrashCatcher>();
 
     // Register all the components we can!
-    SetComponent<EventManager>();
     SetComponent<CameraController>();
-    SetComponent<MoviePlayer>();
-    SetComponent<HudInterface>();
+    //SetComponent<MoviePlayer>();
     SetComponent<ShipManipulator>();
     SetComponent<Teleporter>();
     SetComponent<TwitchVoting>();
@@ -136,9 +132,7 @@ void ChaosMod::DelayedInit()
     // Apply the patches for the first time
     PatchNotes::ResetPatches(true, false);
     OnSound::Init();
-    OnSystemStatusChange::Init();
-    ShipInfocardOverride::Init();
-    Get<EventManager>()->SetupDetours();
+    //TODO: OnSystemStatusChange::Init();
 }
 
 auto* screenWidth = reinterpret_cast<const DWORD*>(0x679bc8);
@@ -373,7 +367,7 @@ void RequiredMemEdits()
     constexpr float nearPlaneFrustum = 0.05f;
     MemUtils::WriteProcMem(fl + 0x210530, &nearPlaneFrustum, sizeof(float));
 
-    ProtectExecuteReadWrite(reinterpret_cast<void*>(0x46b650), 5);
+    MemUtils::Protect(reinterpret_cast<void*>(0x46b650), 5);
     *reinterpret_cast<PBYTE>(0x46b650) = 0xe9;
     *reinterpret_cast<PDWORD>(0x46b651) = static_cast<DWORD>(0x46b580) - static_cast<DWORD>(0x46b651) - 4;
 
@@ -498,15 +492,6 @@ void RequiredMemEdits()
     PatchResolution();
 }
 
-void* ChaosMod::ScriptLoadHook(const char* script)
-{
-    DelayedInit();
-    Get<UiManager>()->SetCursor("arrow");
-
-    thornLoadDetour->UnDetour();
-    return thornLoadDetour->GetOriginalFunc()(script);
-}
-
 void Update(const double delta)
 {
     timeCounter += delta;
@@ -538,26 +523,6 @@ void Update(const double delta)
     timingDetour->Detour(Update);
 }
 
-void CreateDefaultPerfOptions()
-{
-    char path[MAX_PATH];
-    GetUserDataPath(path);
-    const std::string filePath = std::format("{}/PerfOptions.ini", path);
-    if (std::filesystem::exists(filePath))
-    {
-        return;
-    }
-
-    const auto str = GetResourceString(Utils::ResourceIds::DefaultPerfOptions);
-    if (str.empty())
-    {
-        return;
-    }
-
-    std::ofstream file(filePath, std::ios::beg | std::ios::trunc);
-    file << str << std::endl;
-}
-
 FunctionDetour freeLibraryDetour(FreeLibrary);
 ChaosMod::ChaosMod()
 {
@@ -567,10 +532,7 @@ ChaosMod::ChaosMod()
     const std::string newSavedDataFolder = "FLChaosMod";
     MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
 
-    CreateDefaultPerfOptions();
-
     AssetTracker::StartDetours();
-    OnHit::Detour();
 
     // make needed memory edits for chaos mod to work
     RequiredMemEdits();
@@ -579,27 +541,14 @@ ChaosMod::ChaosMod()
     SetComponent<Random>(); // Almost everything depends on Random
     SetComponent<GlobalTimers>();
 
-    ConfigManager::Load();
+    chaosConfig = std::make_shared<ChaosConfig>(*ConfigHelper<ChaosConfig>::Load("chaos.yml", true, true));
 
     SetComponent<ChaosTimer>();
-    SetComponent<DrawingHelper>();
-    SetComponent<UiManager>();
-    SetComponent<KeyManager>();
     SetComponent<ReshadeManager>();
     SetComponent<DiscordManager>();
-
-    // Setup hooks
-    const HMODULE common = GetModuleHandleA("common");
-    const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
-    timingDetour = std::make_unique<FunctionDetour<GlobalTimeFunc>>(reinterpret_cast<GlobalTimeFunc>(fl + 0x1B2890)); // NOLINT
-    thornLoadDetour = std::make_unique<FunctionDetour<ScriptLoadPtr>>(
-        reinterpret_cast<ScriptLoadPtr>(GetProcAddress(common, "?ThornScriptLoad@@YAPAUIScriptEngine@@PBD@Z"))); // NOLINT
-
-    timingDetour->Detour(Update);
-    thornLoadDetour->Detour(ScriptLoadHook);
 }
 
-ChaosMod::~ChaosMod() { delete cc; }
+ChaosMod::~ChaosMod() { crashCatcher.reset(); }
 
 bool ChaosMod::RunningOnWine()
 {
@@ -612,6 +561,11 @@ bool ChaosMod::RunningOnWine()
     return false;
 }
 
+ChaosConfig* ChaosMod::GetConfig()
+{
+    return instance->chaosConfig.get();
+}
+
 HMODULE dll;
 void __stdcall ChaosMod::TerminateAllThreads()
 {
@@ -621,7 +575,7 @@ void __stdcall ChaosMod::TerminateAllThreads()
     }
 
     // Explicitly reset any components that make use of threads
-    ResetComponent<MoviePlayer>();
+    //ResetComponent<MoviePlayer>();
     ResetComponent<TTS>();
     ResetComponent<TwitchVoting>();
 
@@ -651,25 +605,26 @@ BOOL __stdcall ChaosMod::FreeLibraryDetour(const HMODULE handle)
 
 extern "C" __declspec(dllexport) void Dummy() {}
 
-FunctionDetour startUpDetour(DALib::Startup);
+#include "ImGui/Menus/Debug.hpp"
 
-bool OnStartUp(HWND window, const char* unk)
+void Log(const std::string& log)
 {
-    // Attempt to load our font for FL
-    AddFontResourceExA("../DATA/CHAOS/FONTS/Barlow-Regular.ttf", FR_PRIVATE, nullptr);
+    DebugMenu::Log(log);
 
-    constexpr float newX = 0.5f;
-    constexpr float newY = 0.5f;
+    static char path[MAX_PATH];
+    GetUserDataPath(path);
+    static std::ofstream file(std::format("{}/chaos.log", path), std::ios::beg | std::ios::trunc);
 
-    MemUtils::WriteProcMem(0x4dd493, &newX, sizeof(float));
-    MemUtils::WriteProcMem(0x4dd49b, &newY, sizeof(float));
+    auto now = std::chrono::system_clock::now();
+    file << std::format("{0:%F_%T}: ", now) << log << std::endl;
+}
 
-    // Force construct ChaosMod
-    ChaosMod::i();
-    Get<ReshadeManager>()->SetHModule(dll);
-
-    startUpDetour.UnDetour();
-    return DALib::Startup(window, unk);
+void Assert(const bool cond, const std::string& text, const std::string& file, const int line)
+{
+    if (!cond)
+    {
+        throw std::runtime_error(text + ". In file: " + file + " on line: " + std::to_string(line));
+    }
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
@@ -678,10 +633,6 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
     if (dwReason == DLL_PROCESS_ATTACH)
     {
         dll = hModule;
-
-        // Defer our start-up so we bypass the DLL loader lock
-        // We need our threads :)
-        startUpDetour.Detour(OnStartUp);
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {

@@ -1,8 +1,17 @@
 #pragma once
 #include "../Effects/ActiveEffect.hpp"
 
-#include <moodycamel/concurrentqueue.h>
+#include "ChaosMod.hpp"
+#include "Components/Component.hpp"
+
+#include <concurrentqueue.h>
 #include <zmq_addon.hpp>
+
+struct PipeMessage
+{
+    std::string identifier;
+    std::vector<std::string> params;
+};
 
 class TwitchVoting final : public Component
 {
@@ -21,7 +30,7 @@ class TwitchVoting final : public Component
 
         // Send-Receive payloads from another thread
         std::jthread voteThread;
-        moodycamel::ConcurrentQueue<std::string> commandQueue;
+        moodycamel::ConcurrentQueue<PipeMessage> commandQueue;
         moodycamel::ConcurrentQueue<std::function<void()>> responseQueue;
 
         u64 lastPing = 0;
@@ -41,7 +50,6 @@ class TwitchVoting final : public Component
 
         std::vector<ActiveEffect*> effectSelection;
 
-        static std::string GetPipeJson(std::string_view identifier, const std::vector<std::string>& params);
         bool SpawnVotingProxy();
         void HandleMsg(std::string_view message);
         void SendToSocket(std::string_view identifier, const std::vector<std::string>& params = {});

@@ -1,6 +1,8 @@
 #pragma once
 
-enum class AddressTable : DWORD
+#include <Windows.h>
+
+enum class AddressTable : unsigned long
 {
     // Audio
     CurrentSystemSpace = 0x2798F4,
@@ -42,8 +44,8 @@ enum class AddressTable : DWORD
     NpcDensityCapRange = 0x058F46,
 };
 
-inline DWORD RelOfs(const std::string& str, AddressTable offset)
+inline unsigned long RelOfs(const std::string& str, AddressTable offset)
 {
-    const auto base = reinterpret_cast<DWORD>(GetModuleHandleA(str.c_str()));
-    return base == 0 ? 0 : base + static_cast<DWORD>(offset);
+    const auto base = reinterpret_cast<unsigned long>(GetModuleHandleA(str.c_str()));
+    return base == 0 ? 0 : base + static_cast<unsigned long>(offset);
 }

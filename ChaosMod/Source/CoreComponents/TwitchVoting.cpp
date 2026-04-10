@@ -1,24 +1,13 @@
-#include "PCH.hpp"
 
 #include "CoreComponents/TwitchVoting.hpp"
 
-#include "Components/ConfigManager.hpp"
-#include "Components/UiManager.hpp"
+#include "ChaosConfig.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
+#include "FLCore/FLCoreServer.h"
 
-#include "ImGui/ImGuiManager.hpp"
-
-#include <nlohmann/json.hpp>
+#include "rfl/json.hpp"
 
 #include <winsock.h>
-
-std::string TwitchVoting::GetPipeJson(std::string_view identifier, const std::vector<std::string>& params)
-{
-    nlohmann::json finalJSON;
-    finalJSON["identifier"] = identifier;
-    finalJSON["options"] = params;
-    return finalJSON.dump();
-}
 
 bool TwitchVoting::SpawnVotingProxy()
 {
@@ -40,7 +29,7 @@ bool TwitchVoting::SpawnVotingProxy()
 
     std::string votingProxyArgs = "utilities/VotingProxy.exe --startProxy";
 
-    const auto config = Get<ConfigManager>();
+    const auto config = ChaosMod::GetConfig();
 
     if (const bool result =
             CreateProcessA(nullptr, votingProxyArgs.data(), nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &startupInfo, &procInfo);
@@ -106,10 +95,10 @@ void TwitchVoting::HandleSocketPayloads(const std::stop_token& t)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        std::string command;
+        PipeMessage command;
         while (commandQueue.try_dequeue(command))
         {
-            sock->send(zmq::message_t(command), zmq::send_flags::none);
+            sock->send(zmq::message_t(rfl::json::write(command)), zmq::send_flags::none);
 
             zmq::message_t reply;
             if (const auto res = sock->recv(reply); res && *res > 0)
@@ -180,7 +169,7 @@ void TwitchVoting::Poll()
         return;
     }
 
-    if (!Get<ConfigManager>()->chaosSettings.enableTwitchVoting)
+    if (!ChaosMod::GetConfig()->chaosSettings.enableTwitchVoting)
     {
         Cleanup();
         return;
@@ -247,7 +236,7 @@ void TwitchVoting::Poll()
                 return;
             }
 
-            if (const float value = Get<Random>()->UniformFloat(0.0f, 1.0f); value <= Get<ConfigManager>()->chaosSettings.baseTwitchVoteWeight)
+            if (const float value = Get<Random>()->UniformFloat(0.0f, 1.0f); value <= ChaosMod::GetConfig()->chaosSettings.baseTwitchVoteWeight)
             {
                 auto* effect = effectSelection[selectedResult];
                 if (!effect->CanSelect())
@@ -289,7 +278,7 @@ void TwitchVoting::Poll()
 
         SendToSocket("vote", effectNames);
 
-        ImGuiManager::SetVotingChoices(effectNames);
+        // TODO: ImGuiManager::SetVotingChoices(effectNames);
 
         alternatedVotingRound = !alternatedVotingRound;
     }
@@ -301,7 +290,7 @@ bool TwitchVoting::IsInitialized() const { return handshakeCompleted; }
 
 void TwitchVoting::SendToSocket(const std::string_view identifier, const std::vector<std::string>& params)
 {
-    commandQueue.enqueue(GetPipeJson(identifier, params));
+    commandQueue.enqueue(PipeMessage{std::string(identifier), params});
 }
 
 void TwitchVoting::HandleMsg(std::string_view message)
@@ -320,13 +309,14 @@ void TwitchVoting::HandleMsg(std::string_view message)
     }
     else
     {
-        auto receivedJson = nlohmann::json::parse(message);
-        if (receivedJson.empty())
+        auto receivedJson = rfl::json::read<rfl::Object<rfl::Generic>>(message);
+        if (!receivedJson)
         {
             return;
         }
 
-        if (const std::string identifier = receivedJson["identifier"]; identifier == "voteresult")
+        auto json = receivedJson.value();
+        if (auto identifier = json["identifier"].to_string(); identifier.value_or("") == "voteresult")
         {
             int result = receivedJson["selectedOption"];
 
@@ -335,10 +325,10 @@ void TwitchVoting::HandleMsg(std::string_view message)
             Log(std::format("Pipe (voteresult): {}", result));
             selectedResult = result;
         }
-        else if (identifier == "currentvotes")
+        else if (identifier.value_or("") == "currentvotes")
         {
-            const std::vector<int> votes = receivedJson["votes"];
-            const std::vector<float> votePercentages = receivedJson["votePercentages"];
+            const std::vector<int> votes = rfl::from_generic<std::vector<int>>(json["votes"].value()).value();
+            const std::vector<float> votePercentages = rfl::from_generic<std::vector<float>>(json["votePercentages"].value()).value();
             voteInfo.totalVotes = receivedJson["totalVotes"];
             if (votes.size() == voteInfo.votes.size())
             {
@@ -349,9 +339,9 @@ void TwitchVoting::HandleMsg(std::string_view message)
                 }
             }
         }
-        else if (identifier == "error")
+        else if (identifier.value_or("") == "error")
         {
-            Log(std::format("Error from pipe! {}", receivedJson["message"].get<std::string>()));
+            Log(std::format("Error from pipe! {}", json["message"].to_string().value_or("CANNOT PARSAE")));
         }
     }
 }

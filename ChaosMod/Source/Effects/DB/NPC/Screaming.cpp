@@ -1,7 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class Screaming final : public ActiveEffect
 {
         float interval = 0.0f;
@@ -19,7 +18,7 @@ class Screaming final : public ActiveEffect
 
                 activeShips.clear();
 
-                Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+                ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                             [this](CShip* ship)
                                             {
                                                 if (ship->is_player())

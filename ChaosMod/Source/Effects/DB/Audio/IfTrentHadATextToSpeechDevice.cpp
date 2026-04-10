@@ -1,8 +1,9 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
+#include "Components/Random.hpp"
 #include "Components/TTS.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "Utils/StringUtils.hpp"
 
 class IfTrentHadATextToSpeechDevice final : public ActiveEffect
 {

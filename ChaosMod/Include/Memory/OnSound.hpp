@@ -1,5 +1,15 @@
 #pragma once
 
+#include "Utils/Detour.hpp"
+
+#include <FLCore/FLCoreDefs.hpp>
+#include <Utils/MemUtils.hpp>
+#include <unordered_map>
+
+enum class EquipmentClass;
+class CEquipManager;
+struct CShip;
+class CEquip;
 struct FlSound
 {
         uint unk;

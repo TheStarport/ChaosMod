@@ -1,5 +1,9 @@
 #pragma once
 
+#include "ChaosMod.hpp"
+
+#include <Components/Component.hpp>
+
 class Teleporter : public Component
 {
         inline static uint entryObject = 0;
@@ -26,23 +30,23 @@ class Teleporter : public Component
             public:
                 static void AddX(Vector& v, float dist, const Matrix& ornt)
                 {
-                    v.x += dist * ornt[0][0];
-                    v.y += dist * ornt[1][0];
-                    v.z += dist * ornt[2][0];
+                    v.x += dist * ornt.d[0][0];
+                    v.y += dist * ornt.d[1][0];
+                    v.z += dist * ornt.d[2][0];
                 }
                 // Up/down.
                 static void AddY(Vector& v, float dist, const Matrix& ornt)
                 {
-                    v.x += dist * ornt[0][1];
-                    v.y += dist * ornt[1][1];
-                    v.z += dist * ornt[2][1];
+                    v.x += dist * ornt.d[0][1];
+                    v.y += dist * ornt.d[1][1];
+                    v.z += dist * ornt.d[2][1];
                 }
                 // Forwards/backwards.
                 static void AddZ(Vector& v, float dist, const Matrix& ornt)
                 {
-                    v.x -= dist * ornt[0][2];
-                    v.y -= dist * ornt[1][2];
-                    v.z -= dist * ornt[2][2];
+                    v.x -= dist * ornt.d[0][2];
+                    v.y -= dist * ornt.d[1][2];
+                    v.z -= dist * ornt.d[2][2];
                 }
         };
 

@@ -2,6 +2,7 @@
 os=Windows
 arch=x86
 compiler=msvc
-compiler.version=193
+compiler.version=195
 compiler.runtime=dynamic
-compiler.cppstd=20
+compiler.cppstd=23
+build_type=Debug

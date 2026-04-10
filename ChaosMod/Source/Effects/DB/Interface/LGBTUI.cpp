@@ -1,8 +1,8 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/MemoryEffect.hpp"
-#include "Components/HudInterface.hpp"
+
+// #include "Components/HudInterface.hpp"
 
 class Lgbtui final : public MemoryEffect
 {
@@ -84,13 +84,13 @@ class Lgbtui final : public MemoryEffect
                 MemUtils::WriteProcMem(module + address, bytes.data(), bytes.size());
             }
 
-            Get<HudInterface>()->SetUiColor(((r & 0xff) << 16) + ((g & 0xFF) << 8) + (b & 0xFF));
+            // TODO: Get<HudInterface>()->SetUiColor(((r & 0xff) << 16) + ((g & 0xFF) << 8) + (b & 0xFF));
         }
 
         void End() override
         {
             MemoryEffect::End();
-            Get<HudInterface>()->SetUiColor(0x0);
+            // TODO: Get<HudInterface>()->SetUiColor(0x0);
         }
 
     public:

@@ -1,6 +1,4 @@
 #include "Components/ShipManipulator.hpp"
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
 
 class Yeet final : public ActiveEffect
@@ -16,7 +14,7 @@ class Yeet final : public ActiveEffect
         // Ensure they cannot restart their engine for 5% of effect duration
         void Update(float delta) override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             ship->get_behavior_interface()->update_current_behavior_engage_engine(false);
             ShipManipulator::SetVelocity(ship, movement);
         }

@@ -1,14 +1,14 @@
 // ReSharper disable IdentifierTypo
 // ReSharper disable CppInconsistentNaming
-#include "PCH.hpp"
 
 #include "Memory/OnSystemStatusChange.hpp"
 
 #include "CoreComponents/ChaosTimer.hpp"
 
+/*
 bool __fastcall OnSystemStatusChange::OnJumpTunnelEnter(CShip* ship, void* edx, uint* jumpingShipId)
 {
-    if (Utils::GetCShip() == ship && *jumpingShipId == ship->id)
+    if (Fluf::GetClient()->GetPlayerCShip() == ship && *jumpingShipId == ship->id)
     {
         ChaosTimer::OnSystemUnload();
     }
@@ -38,3 +38,4 @@ void OnSystemStatusChange::Init()
     detourJumpInComplete = std::make_unique<FunctionDetour<OnJumpInCompleteType>>(onJumpInComplete);
     detourJumpInComplete->Detour(OnJumpInComplete);
 }
+*/

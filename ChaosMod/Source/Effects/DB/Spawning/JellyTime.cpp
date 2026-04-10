@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class JellyTime final : public ActiveEffect
 {
         std::vector<ResourcePtr<SpawnedObject>> npcs;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             for (auto npc : npcs)
             {

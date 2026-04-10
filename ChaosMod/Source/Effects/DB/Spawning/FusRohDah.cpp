@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class FusRohDah final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> dragon;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (dragon.Acquire())
             {
@@ -51,7 +49,7 @@ class FusRohDah final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(dragon, catchingUp, 6000.f);
+                // TODO: Utils::CatchupNpc(dragon, catchingUp, 6000.f);
             }
         }
 

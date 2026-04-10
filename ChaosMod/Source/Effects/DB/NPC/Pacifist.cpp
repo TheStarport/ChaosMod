@@ -1,8 +1,7 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
-
+#include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 class Pacifist final : public ActiveEffect
 {
         float timer = 0.0f;
@@ -12,7 +11,7 @@ class Pacifist final : public ActiveEffect
 
         void OnShipDestroyed(DamageList* dmgList, CShip* ship) override
         {
-            if (const auto player = Utils::GetCShip(); !shouldDie && player)
+            if (const auto player = Fluf::GetClient()->GetPlayerCShip(); !shouldDie && player)
             {
                 if (player == ship)
                 {
@@ -36,7 +35,7 @@ class Pacifist final : public ActiveEffect
         {
             if (shouldDie)
             {
-                const auto player = Utils::GetCShip();
+                const auto player = Fluf::GetClient()->GetPlayerCShip();
                 timer -= delta;
                 if (timer <= 0.0f && player)
                 {

@@ -1,6 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class SurpriseMechanics final : public ActiveEffect
 {

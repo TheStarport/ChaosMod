@@ -1,11 +1,11 @@
-#include "PCH.hpp"
 
 #include "Components/Teleporter.hpp"
 
 #include "Components//GlobalTimers.hpp"
 #include "Constants.hpp"
 
-#include <magic_enum_flags.hpp>
+#include "FLCore/FLCoreServer.h"
+#include <magic_enum/magic_enum_flags.hpp>
 
 using namespace magic_enum::bitwise_operators;
 
@@ -42,12 +42,12 @@ void* Teleporter::EnterSystemHook(EntryStack* stack)
         rad *= 1.5f;
 
         // Flip 180
-        stack->orientation[0][0] *= -1;
-        stack->orientation[0][1] *= -1;
-        stack->orientation[0][2] *= -1;
-        stack->orientation[2][0] *= -1;
-        stack->orientation[2][1] *= -1;
-        stack->orientation[2][2] *= -1;
+        stack->orientation.d[0][0] *= -1;
+        stack->orientation.d[0][1] *= -1;
+        stack->orientation.d[0][2] *= -1;
+        stack->orientation.d[2][0] *= -1;
+        stack->orientation.d[2][1] *= -1;
+        stack->orientation.d[2][2] *= -1;
     }
 
     VectorHelpers::AddZ(stack->pos, -rad, stack->orientation);
@@ -82,7 +82,7 @@ void Teleporter::SwitchOutDoneHook()
 
 void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix orient, bool checkTradeLane)
 {
-    if (const auto ship = Utils::GetCShip(); ship && checkTradeLane && ship->is_using_tradelane())
+    if (const auto ship = Fluf::GetClient()->GetPlayerCShip(); ship && checkTradeLane && ship->is_using_tradelane())
     {
         ship->request_exit_tradelane();
 
@@ -98,7 +98,7 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix or
     }
 
     const auto patch = PBYTE(DWORD(GetModuleHandleA("server.dll")) + 0xf600);
-    ProtectExecuteReadWrite(patch + 0xD7, 0x3CA);
+    MemUtils::Protect(patch + 0xD7, 0x3CA);
 
     patch[0x0d7] = 0xeb; // ignore exit object
     patch[0x0d8] = 0x40;
@@ -117,15 +117,15 @@ void Teleporter::ChangeSystem(const uint newSystem, const Vector& pos, Matrix or
         *reinterpret_cast<float*>(patch + 0x2b0) = pos.z; // set entry location
         *reinterpret_cast<float*>(patch + 0x2b8) = pos.y;
         *reinterpret_cast<float*>(patch + 0x2c0) = pos.x;
-        *reinterpret_cast<float*>(patch + 0x2c8) = orient[2][2];
-        *reinterpret_cast<float*>(patch + 0x2d0) = orient[1][1];
-        *reinterpret_cast<float*>(patch + 0x2d8) = orient[0][0];
-        *reinterpret_cast<float*>(patch + 0x2e0) = orient[2][1];
-        *reinterpret_cast<float*>(patch + 0x2e8) = orient[2][0];
-        *reinterpret_cast<float*>(patch + 0x2f0) = orient[1][2];
-        *reinterpret_cast<float*>(patch + 0x2f8) = orient[1][0];
-        *reinterpret_cast<float*>(patch + 0x300) = orient[0][2];
-        *reinterpret_cast<float*>(patch + 0x308) = orient[0][1];
+        *reinterpret_cast<float*>(patch + 0x2c8) = orient.d[2][2];
+        *reinterpret_cast<float*>(patch + 0x2d0) = orient.d[1][1];
+        *reinterpret_cast<float*>(patch + 0x2d8) = orient.d[0][0];
+        *reinterpret_cast<float*>(patch + 0x2e0) = orient.d[2][1];
+        *reinterpret_cast<float*>(patch + 0x2e8) = orient.d[2][0];
+        *reinterpret_cast<float*>(patch + 0x2f0) = orient.d[1][2];
+        *reinterpret_cast<float*>(patch + 0x2f8) = orient.d[1][0];
+        *reinterpret_cast<float*>(patch + 0x300) = orient.d[0][2];
+        *reinterpret_cast<float*>(patch + 0x308) = orient.d[0][1];
     }
 
     *(PDWORD)(patch + 0x388) = 0x03ebc031; // ignore entry object
@@ -143,16 +143,15 @@ void Teleporter::QueueTeleportEffect(float timer)
     Get<GlobalTimers>()->AddTimer(
         [](auto delta)
         {
-            auto ship = Utils::GetCShip();
+            auto ship = static_cast<EqObj*>(Fluf::GetClient()->GetPlayerIObj());
             if (!ship)
             {
                 return true;
             }
 
-            const auto inspect = Utils::GetInspect(ship->id);
             static uint id = CreateID("chaos_teleport_fx");
-            Utils::UnLightFuse(inspect, id, 0.0f);
-            Utils::LightFuse(inspect, id, 0.0f, 5.0f, 0.0f);
+            ship->unlight_fuse(id, 0, 5.f);
+            ship->light_fuse(0, id, 0.0f, 5.0f, 0.0f);
 
             pub::Audio::PlaySoundEffect(1, CreateID("chaos_transmission"));
 
@@ -163,7 +162,7 @@ void Teleporter::QueueTeleportEffect(float timer)
 
 void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
 {
-    auto ship = Utils::GetCShip();
+    auto ship = Fluf::GetClient()->GetPlayerCShip();
 
     if (!ship)
     {
@@ -235,12 +234,12 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
         VectorHelpers::AddZ(newPos, 1.5f * radius, newRot);
 
         // Flip 180
-        newRot[0][0] *= -1;
-        newRot[0][1] *= -1;
-        newRot[0][2] *= -1;
-        newRot[2][0] *= -1;
-        newRot[2][1] *= -1;
-        newRot[2][2] *= -1;
+        newRot.d[0][0] *= -1;
+        newRot.d[0][1] *= -1;
+        newRot.d[0][2] *= -1;
+        newRot.d[2][0] *= -1;
+        newRot.d[2][1] *= -1;
+        newRot.d[2][2] *= -1;
     }
     else if (magic_enum::enum_flags_test(solar->type, ObjectType::TradelaneRing)) // trade lane
     {
@@ -248,15 +247,15 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
         Vector p = solarPos;
         VectorHelpers::AddZ(p, -radius, newRot);
         // Find which side we're on by simply seeing which distance is greater.
-        if (glm::distance<3, float, glm::packed_highp>(newPos, p) > glm::distance<3, float, glm::packed_highp>(newPos, solarPos))
+        if (newPos.distance(p) > newPos.distance(solarPos))
         {
             // Flip 180
-            newRot[0][0] *= -1;
-            newRot[0][1] *= -1;
-            newRot[0][2] *= -1;
-            newRot[2][0] *= -1;
-            newRot[2][1] *= -1;
-            newRot[2][2] *= -1;
+            newRot.d[0][0] *= -1;
+            newRot.d[0][1] *= -1;
+            newRot.d[0][2] *= -1;
+            newRot.d[2][0] *= -1;
+            newRot.d[2][1] *= -1;
+            newRot.d[2][2] *= -1;
 
             newPos = solarPos;
             VectorHelpers::AddZ(newPos, -radius, newRot);
@@ -268,7 +267,7 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
     }
     else
     {
-        float dist = glm::distance<3, float, glm::packed_highp>(newPos, solarPos);
+        float dist = newPos.distance(solarPos);
 
         if (magic_enum::enum_flags_test(solar->type, ObjectType::Moon | ObjectType::Planet | ObjectType::Sun))
         {
@@ -309,12 +308,12 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
                 VectorHelpers::AddZ(newPos, 2 * radius, newRot);
 
                 // Flip 180
-                newRot[0][0] *= -1;
-                newRot[0][1] *= -1;
-                newRot[0][2] *= -1;
-                newRot[2][0] *= -1;
-                newRot[2][1] *= -1;
-                newRot[2][2] *= -1;
+                newRot.d[0][0] *= -1;
+                newRot.d[0][1] *= -1;
+                newRot.d[0][2] *= -1;
+                newRot.d[2][0] *= -1;
+                newRot.d[2][1] *= -1;
+                newRot.d[2][2] *= -1;
             }
         }
     }
@@ -326,7 +325,7 @@ void Teleporter::WarpToSolar(CSolar* solar, bool checkForTradelane)
 
 void Teleporter::WaypointWarp()
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     static const auto waypoint = reinterpret_cast<PBYTE>(0x673374);
     if (*waypoint == 0 || !ship)
     {
@@ -342,7 +341,7 @@ void Teleporter::WarpToRandomStar(const bool inSystem)
     if (inSystem)
     {
         std::vector<CSolar*> stars;
-        Utils::ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT,
+        ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT,
                                      [&stars](CSolar* solar)
                                      {
                                          if (magic_enum::enum_flags_test(solar->type, ObjectType::Sun))
@@ -379,7 +378,7 @@ void Teleporter::WarpToRandomSolar(const bool inSystem)
     if (inSystem)
     {
         std::vector<CSolar*> solars;
-        Utils::ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT, [&solars](CSolar* solar) { solars.emplace_back(solar); });
+        ForEachObject<CSolar>(CObject::Class::CSOLAR_OBJECT, [&solars](CSolar* solar) { solars.emplace_back(solar); });
 
         if (!solars.empty())
         {
@@ -398,7 +397,7 @@ void Teleporter::WarpToRandomSolar(const bool inSystem)
 
 void Teleporter::WarpToRandomSystem()
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
     std::vector<Universe::ISystem*> systems;
     auto system = Universe::GetFirstSystem();
@@ -418,7 +417,7 @@ void Teleporter::WarpToRandomSystem()
 }
 void Teleporter::WarpToPoint(const uint system, const Vector& pos, const Vector& rot) const
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     if (!ship)
     {
         return;
@@ -435,7 +434,7 @@ void Teleporter::WarpToPoint(const uint system, const Vector& pos, const Vector&
 
 void Teleporter::BeamToRandomBase(const bool inSystem)
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     if (!ship)
     {
         return;
@@ -461,7 +460,7 @@ void Teleporter::BeamToRandomBase(const bool inSystem)
 
 void Teleporter::SaveCurrentPosition()
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     if (!ship)
     {
         return;
@@ -471,7 +470,7 @@ void Teleporter::SaveCurrentPosition()
 }
 void Teleporter::RestorePreviousPosition()
 {
-    const auto ship = Utils::GetCShip();
+    const auto ship = Fluf::GetClient()->GetPlayerCShip();
     if (!ship || !savedPosition.system)
     {
         return;

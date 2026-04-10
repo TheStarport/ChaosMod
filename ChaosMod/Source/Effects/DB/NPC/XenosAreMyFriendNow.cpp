@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Constants.hpp"
+#include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class XenosAreMyFriendsNow final : public ActiveEffect
 {

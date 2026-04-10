@@ -1,12 +1,15 @@
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
-#include "ImGui/ImGuiManager.hpp"
 
 class BoxOfChocolates final : public ActiveEffect
 {
-        void Begin() override { ImGuiManager::ToggleBoxOfChocolates(true); }
-        void End() override { ImGuiManager::ToggleBoxOfChocolates(false); }
+        void Begin() override
+        {
+            // ImGuiManager::ToggleBoxOfChocolates(true);
+        }
+        void End() override
+        {
+            // ImGuiManager::ToggleBoxOfChocolates(false);
+        }
 
     public:
         explicit BoxOfChocolates(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

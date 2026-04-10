@@ -1,13 +1,12 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class NeverSayNoToBacta final : public ActiveEffect
 {
         float timer = 1.0f;
         void Update(float delta) override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             timer -= delta;
             if (!ship || timer > 0.0f)
             {

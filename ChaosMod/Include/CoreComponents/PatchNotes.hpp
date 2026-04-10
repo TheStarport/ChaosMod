@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Components/Random.hpp"
 #include "CoreComponents/Patches/Patch.hpp"
 
+#include <stack>
+
+/*
+ TODO:
 class PatchNotes
 {
         inline static float patchTime;
@@ -9,7 +14,7 @@ class PatchNotes
         {
                 std::string version;
                 std::string date;
-                std::vector<std::pair<std::string, Change::ChangePositivity>> changes;
+                //std::vector<std::pair<std::string, Change::ChangePositivity>> changes;
                 std::string releaseName;
         };
 
@@ -19,7 +24,7 @@ class PatchNotes
         static void SavePatches();
         static void RevertPatch(const std::shared_ptr<Patch> &patch);
         static void ApplyPatch(const std::shared_ptr<Patch> &patch, bool showPatchNotes = true);
-        static std::shared_ptr<Change> GetChangePtr(ChangeType type);
+        //static std::shared_ptr<Change> GetChangePtr(ChangeType type);
         inline static Random randomEngine;
         inline static float timeSinceLastUpdate = 15.f;
 
@@ -43,3 +48,4 @@ class PatchNotes
         static void Reseed(std::string_view seed);
         static void Reseed(std::istream &seed);
 };
+*/

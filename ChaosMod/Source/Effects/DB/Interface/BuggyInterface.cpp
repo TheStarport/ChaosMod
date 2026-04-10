@@ -1,8 +1,8 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/MemoryEffect.hpp"
-#include "Components/HudInterface.hpp"
+#include "Utils/Detour.hpp"
+#include "Utils/MemUtils.hpp"
 
 class BuggyInterface final : public MemoryEffect
 {
@@ -27,7 +27,7 @@ class BuggyInterface final : public MemoryEffect
         {
             if (lock)
             {
-                Get<HudInterface>()->SetBuggyInterface(false);
+                // TODO: Get<HudInterface>()->SetBuggyInterface(false);
             }
 
             lockManeuverDetour.UnDetour();
@@ -51,7 +51,7 @@ class BuggyInterface final : public MemoryEffect
             info = offsets[1];
             MemUtils::WriteProcMem(info.module + info.offset, &width, info.length);
 
-            Get<HudInterface>()->SetBuggyInterface(true);
+            // TODO: Get<HudInterface>()->SetBuggyInterface(true);
         }
 
         void Update(const float delta) override
@@ -89,7 +89,7 @@ class BuggyInterface final : public MemoryEffect
             {
                 ended = true;
                 MemoryEffect::End();
-                Get<HudInterface>()->SetBuggyInterface(false);
+                // TODO: Get<HudInterface>()->SetBuggyInterface(false);
             }
         }
 

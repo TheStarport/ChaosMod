@@ -1,14 +1,13 @@
-#include "PCH.hpp"
 
+#include "ChaosConfig.hpp"
 #include "Effects/ActiveEffect.hpp"
-#include "Components/ConfigManager.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
 
 class EmergencyHotfix final : public ActiveEffect
 {
         void Begin() override { PatchNotes::GeneratePatch(); }
-        bool CanSelect() override { return Get<ConfigManager>()->patchNotes.enable; }
+        bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable; }
 
     public:
         explicit EmergencyHotfix(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

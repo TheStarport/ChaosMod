@@ -1,11 +1,15 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
+#include "Components/Random.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
+#include "FLCore/FLCoreServer.h"
+
+#include <unordered_map>
 
 class WhosThatRinging final : public ActiveEffect
 {
-        std::map<uint, float> soundDurationMap = {
+        std::unordered_map<uint, float> soundDurationMap = {
             {CreateID("chaos_jingle_discord_halloween"),  5.f},
             {CreateID("chaos_jingle_discord_halloween"), 18.f},
             {     CreateID("chaos_jingle_discord_xmas"), 32.f},

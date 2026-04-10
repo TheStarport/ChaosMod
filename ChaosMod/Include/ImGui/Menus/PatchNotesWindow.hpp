@@ -104,7 +104,7 @@ class PatchNotesWindow final
 
                     if (patchFilter[0] == '\0' || strstr(lowerA, patchFilter) != nullptr)
                     {
-                        if (Get<ConfigManager>()->patchNotes.displayInColor)
+                        if (ChaosMod::GetConfig()->patchNotes.displayInColor)
                         {
                             ImVec4 col = { 1.f, 1.f, 1.f, 1.f };
                             if (change.first[0] == '+')

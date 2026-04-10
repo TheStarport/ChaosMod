@@ -1,7 +1,13 @@
-#include <PCH.hpp>
+#include <Windows.h>
 
-#include <Components/TTS.hpp>
-#include <shellapi.h>
+#include "Components/Random.hpp"
+#include "Components/TTS.hpp"
+
+#include "ChaosMod.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
+
+#include <filesystem>
+#include <format>
 
 void TTS::GenerateAudio(std::string message)
 {
@@ -122,7 +128,7 @@ void TTS::Update(const float delta)
 
 void TTS::Speak(const std::string_view msg)
 {
-    if (msg.empty() || msg.find("|") != std::string::npos || msg.front() == '"' || msg.front() == '\'' || msg.front() == '`')
+    if (msg.empty() || msg.find('|') != std::string::npos || msg.front() == '"' || msg.front() == '\'' || msg.front() == '`')
     {
         MessageBoxA(nullptr, "Cannot TTS a message that contains a pipe symbol (|), or start with quotes.", "Bad TTS", MB_OK);
         return;

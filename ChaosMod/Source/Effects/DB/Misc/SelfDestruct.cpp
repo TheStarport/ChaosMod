@@ -1,14 +1,13 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class SelfDestruct final : public ActiveEffect
 {
         void Begin() override { pub::Audio::PlaySoundEffect(1, CreateID("chaos_self_destruct")); }
 
         void End() override
         {
-            if (const CShip* ship = Utils::GetCShip(); ship && Get<Random>()->Uniform(0u, 1u))
+            if (const CShip* ship = Fluf::GetClient()->GetPlayerCShip(); ship && Get<Random>()->Uniform(0u, 1u))
             {
                 pub::SpaceObj::Destroy(ship->id, DestroyType::Fuse);
             }

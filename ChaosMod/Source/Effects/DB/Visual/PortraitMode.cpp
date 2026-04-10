@@ -1,7 +1,5 @@
 #include "Components/ReshadeManager.hpp"
-#include "PCH.hpp"
 
-#include "DirectX/Drawing.hpp"
 #include "Effects/ActiveEffect.hpp"
 
 class PortraitMode final : public ActiveEffect

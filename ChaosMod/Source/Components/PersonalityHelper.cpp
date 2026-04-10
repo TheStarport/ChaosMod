@@ -1,6 +1,9 @@
-#include "PCH.hpp"
 
 #include "Components/PersonalityHelper.hpp"
+
+#include "ChaosMod.hpp"
+
+#include <filesystem>
 
 std::optional<const pub::AI::Personality*> PersonalityHelper::Get(const std::string& pilotNickname)
 {

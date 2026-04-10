@@ -1,14 +1,14 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/Common/Globals.hpp"
+#include "FLCore/FLCoreServer.h"
 class ThanksIHateIt final : public ActiveEffect
 {
         std::vector<uint> possibleCargo;
 
         void Begin() override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             auto remaining = ship->get_cargo_hold_remaining();
             if (remaining < 1.0f)
             {
@@ -17,12 +17,11 @@ class ThanksIHateIt final : public ActiveEffect
 
             if (possibleCargo.empty())
             {
-                auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD4);
-                for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
+                for (auto equip = GameData::equipment.begin(); equip != GameData::equipment.end(); ++equip)
                 {
-                    if (equip->value->get_class_type() == Archetype::ClassType::Commodity && equip->value->volume > 0.5f)
+                    if (equip->second->get_class_type() == Archetype::ClassType::Commodity && equip->second->volume > 0.5f)
                     {
-                        possibleCargo.emplace_back(Arch2Good(equip->value->archId));
+                        possibleCargo.emplace_back(Arch2Good(equip->second->archId));
                     }
                 }
             }

@@ -1,7 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class FiftyFifty final : public ActiveEffect
 {
 
@@ -22,8 +21,8 @@ class FiftyFifty final : public ActiveEffect
 
         void Begin() override
         {
-            const EquipmentItem* head = *(EquipmentItem**)(Players.data + 0x27C);
-            const auto ship = Utils::GetCShip();
+            const EquipmentItem* head = *reinterpret_cast<EquipmentItem**>(Players.data + 0x27C);
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

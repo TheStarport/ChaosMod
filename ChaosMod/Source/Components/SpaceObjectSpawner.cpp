@@ -1,4 +1,3 @@
-#include "PCH.hpp"
 
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Components/PersonalityHelper.hpp"
@@ -6,7 +5,6 @@
 #include "Constants.hpp"
 #include "FLCore/Common/Globals.hpp"
 #include "Memory/AssetTracker.hpp"
-
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithNpc(const std::string& npcNickname)
 {
     auto& templates = Get<SpaceObjectSpawner>()->npcTemplates;
@@ -187,7 +185,7 @@ SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::
     {
         if (currentIndex == randomGroupIndex)
         {
-            reputation = listItem.value()->name;
+            reputation = listItem->second.name;
             break;
         }
     }
@@ -269,7 +267,8 @@ ResourcePtr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::Spawn()
     {
         if (const auto obj = response.Acquire())
         {
-            Utils::LightFuse(Utils::GetInspect(obj->spaceObj), CreateID(fuse.value().c_str()), 0.0f, 5.0f, 0.0f);
+            auto ship = static_cast<Ship*>(Fluf::GetClient()->GetPlayerIObj());
+            ship->light_fuse(0, CreateID(fuse.value().c_str()), 0.0f, 5.0f, 0.0f);
         }
     }
 
@@ -295,7 +294,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
     }
 
     si.shipArchetype = npcTemplate.archetypeHash;
-    si.orientation = rotation.value_or(Matrix::Identity());
+    si.orientation = rotation.value_or(Matrix{});
     si.loadout = npcTemplate.loadoutHash;
 
     if (costumeOverride.has_value())
@@ -447,7 +446,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
     si.loadoutId = npcTemplate.loadoutHash;
     si.hitPointsLeft = 1000;
     si.systemId = system.value();
-    si.orientation = rotation.value_or(Matrix::Identity());
+    si.orientation = rotation.value_or(Matrix{});
 
     si.costume =
         costumeOverride.value_or(Costume(CreateID("benchmark_male_head"), CreateID("benchmark_male_body"))); // NOLINT(clang-diagnostic-c++20-extensions)

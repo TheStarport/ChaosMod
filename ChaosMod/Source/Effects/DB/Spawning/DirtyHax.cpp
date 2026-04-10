@@ -1,9 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/SpaceObjectSpawner.hpp"
 #include "Effects/ActiveEffect.hpp"
 #include "Effects/MemoryEffect.hpp"
-
 class DirtyHax final : public MemoryEffect
 {
     using MemoryEffect::MemoryEffect;
@@ -17,7 +15,7 @@ class DirtyHax final : public MemoryEffect
         std::vector<ResourcePtr<SpawnedObject>> npcs;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             for (auto npc : npcs)
             {
@@ -89,7 +87,7 @@ class DirtyHax final : public MemoryEffect
 
                 for (const auto& npc : npcs)
                 {
-                    Utils::CatchupNpc(npc, catchingUp);
+                    // TODO: Utils::CatchupNpc(npc, catchingUp);
                 }
             }
         }

@@ -1,8 +1,5 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include <magic_enum_flags.hpp>
-
 // This effect is 'always active' in that the NPCs are always slightly faster,
 // but when the effect activates they go even faster.
 
@@ -20,7 +17,7 @@ class SwiftNPCs final : public ActiveEffect
             const float orig = detour->GetOriginalFunc()(obj);
             detour->Detour(Detour);
 
-            if (Utils::GetCShip() == obj || !magic_enum::enum_flags_test(obj->objectClass, CObject::CSHIP_OBJECT))
+            if (Fluf::GetClient()->GetPlayerCShip() == obj || !magic_enum::enum_flags_test(obj->objectClass, CObject::CSHIP_OBJECT))
             {
                 return orig;
             }
@@ -31,7 +28,7 @@ class SwiftNPCs final : public ActiveEffect
         }
 
         void Init() override { detour->Detour(Detour); }
-        void Begin() override { modifier = 1.5f; }
+        void Begin() override { modifier = 1.2f; }
         void End() override { modifier = 3.5f; }
 
     public:

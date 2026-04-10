@@ -1,6 +1,8 @@
-#include "PCH.hpp"
-
+#include "Components/Component.hpp"
+#include "Components/Random.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class DodgeThis final : public ActiveEffect
 {

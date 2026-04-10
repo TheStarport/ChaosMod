@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 struct Weight : refl::attr::usage::field
 {
         uint w = 3u;
@@ -61,3 +62,4 @@ REFL_AUTO(type(Archetype::ShieldGenerator), field(regenerationRate, Clamp(0.f, 1
           field(hitPoints));
 
 REFL_AUTO(type(Archetype::Thruster), field(hitPoints), field(powerUsage), field(maxForce, Clamp(24'000.f, 480'000.f)));
+*/

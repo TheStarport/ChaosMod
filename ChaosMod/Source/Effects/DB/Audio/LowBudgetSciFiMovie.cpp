@@ -1,6 +1,7 @@
-#include "PCH.hpp"
-
+#include "ChaosMod.hpp"
+#include "Components/Random.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
 
 class LowBudgetSciFiMovie final : public ActiveEffect
 {

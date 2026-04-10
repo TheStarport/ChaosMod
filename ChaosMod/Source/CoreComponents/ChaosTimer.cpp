@@ -1,21 +1,17 @@
-#include "PCH.hpp"
 
 #include "CoreComponents/ChaosTimer.hpp"
 
-#include "Components/ConfigManager.hpp"
+#include "ChaosConfig.hpp"
 #include "Components/DiscordManager.hpp"
 #include "Components/ShipManipulator.hpp"
 #include "Effects/ActiveEffect.hpp"
 
 #include "Components/GlobalTimers.hpp"
-#include "Components/UiManager.hpp"
 #include "CoreComponents/PatchNotes.hpp"
 #include "Effects/AddressTable.hpp"
-#include "ImGui/ImGuiManager.hpp"
 #include "Memory/OffsetHelper.hpp"
 
-#include <magic_enum.hpp>
-
+#include "FLCore/FLCoreServer.h"
 void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
 {
     // Skip entries that are despawned, not destroyed (invalid memory)
@@ -201,7 +197,7 @@ void __fastcall ChaosTimer::OnConsumeFireResources(CELauncher* launcher)
         auto ship = launcher->GetOwner();
 
         auto orientation = ship->get_orientation();
-        Vector forwards = { orientation[0][2], orientation[1][2], orientation[2][2] };
+        Vector forwards = { orientation.d[0][2], orientation.d[1][2], orientation.d[2][2] };
         forwards *= 1000.f;
 
         Vector newVelocity = ShipManipulator::GetVelocity(ship) + forwards;
@@ -229,7 +225,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
         return nullptr;
     }
 
-    const auto& configEffects = Get<ConfigManager>()->chaosSettings.toggledEffects;
+    const auto& configEffects = ChaosMod::GetConfig()->chaosSettings.toggledEffects;
 
     for (uint attempts = 0; attempts < 15; attempts++)
     {
@@ -253,7 +249,7 @@ ActiveEffect* ChaosTimer::SelectEffect()
             continue;
         }
 
-        if (Get<ConfigManager>()->chaosSettings.blockTeleportsDuringMissions && OffsetHelper::IsInMission() &&
+        if (ChaosMod::GetConfig()->chaosSettings.blockTeleportsDuringMissions && OffsetHelper::IsInMission() &&
             effect->GetEffectInfo().category == EffectType::Teleport)
         {
             continue;
@@ -324,11 +320,11 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     }
 
     // Too many active effects
-    if (activeEffects.size() >= Get<ConfigManager>()->chaosSettings.totalAllowedConcurrentEffects)
+    if (activeEffects.size() >= ChaosMod::GetConfig()->chaosSettings.totalAllowedConcurrentEffects)
     {
         // Clean out those without timers
         std::erase_if(activeEffects, [](const auto& active) { return !active.first->GetEffectInfo().isTimed; });
-        if (activeEffects.size() >= Get<ConfigManager>()->chaosSettings.totalAllowedConcurrentEffects)
+        if (activeEffects.size() >= ChaosMod::GetConfig()->chaosSettings.totalAllowedConcurrentEffects)
         {
             // If still too large skip
             PlayEffectSkip();
@@ -339,10 +335,10 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
     const auto& info = effect->GetEffectInfo();
     Log(std::format("Starting Effect: {} ({})", info.effectName, magic_enum::enum_name(info.category)));
 
-    ImGuiManager::AddToEffectHistory(info.effectName, info.description);
+    // TODO: ImGuiManager::AddToEffectHistory(info.effectName, info.description);
 
     // Set the timing for this effect. If it's not a timed effect, default to 30s to clear it from the list.
-    float timing = info.isTimed ? modifiers * (info.timingModifier * Get<ConfigManager>()->chaosSettings.defaultEffectDuration) : 30.0f;
+    float timing = info.isTimed ? modifiers * (info.timingModifier * ChaosMod::GetConfig()->chaosSettings.defaultEffectDuration) : 30.0f;
 
     if (info.fixedTimeOverride != 0.0f)
     {
@@ -414,7 +410,7 @@ void ChaosTimer::InitEffects()
     }
 }
 
-float ChaosTimer::GetTimeUntilChaos() const { return Get<ConfigManager>()->chaosSettings.timeBetweenChaos - currentTime; }
+float ChaosTimer::GetTimeUntilChaos() const { return ChaosMod::GetConfig()->chaosSettings.timeBetweenChaos - currentTime; }
 
 std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 {
@@ -436,7 +432,7 @@ std::vector<ActiveEffect*> ChaosTimer::GetNextEffects(const int count)
 
 void ChaosTimer::Update(const float delta)
 {
-    const auto config = Get<ConfigManager>();
+    const auto config = ChaosMod::GetConfig();
 
     timeSinceLastUpdate -= delta;
     if (timeSinceLastUpdate < 0.f && config->discordSettings.timerType == DiscordSettings::TimerType::TimeUntilChaos)
@@ -448,7 +444,7 @@ void ChaosTimer::Update(const float delta)
     }
 
     // If they don't have a ship lets not do chaos (aka are they in space?)
-    const auto currentShip = Utils::GetCShip();
+    const auto currentShip = Fluf::GetClient()->GetPlayerCShip();
 
     if (!currentShip)
     {
@@ -502,7 +498,7 @@ void ChaosTimer::Update(const float delta)
         }
     }
 
-    ImGuiManager::SetProgressBarPercentage(currentTime / config->chaosSettings.timeBetweenChaos);
+    // TODO: ImGuiManager::SetProgressBarPercentage(currentTime / config->chaosSettings.timeBetweenChaos);
 
     // Trigger chaos updates
     auto effect = std::begin(activeEffects);

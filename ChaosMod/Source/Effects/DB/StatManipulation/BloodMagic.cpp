@@ -1,14 +1,13 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class BloodMagic final : public ActiveEffect
 {
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher*);
 
         void OnConsumeFireResources(CELauncher* launcher) override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (launcher->GetOwner() != ship)
             {
                 return;
@@ -28,7 +27,7 @@ class BloodMagic final : public ActiveEffect
 
         void Update(float delta) override
         {
-            auto ship = Utils::GetCShip();
+            auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

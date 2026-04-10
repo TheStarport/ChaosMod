@@ -1,5 +1,8 @@
 #pragma once
 
+#include <array>
+#include <FLCore/Common/CommonMethods.hpp>
+
 class Constants final
 {
         inline static std::array bannedBases = { CreateID("[br_m_beryllium_miner]"),

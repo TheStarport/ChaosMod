@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class PleaseDoNotBend final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> maxwell;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (maxwell.Acquire())
             {
@@ -40,7 +38,7 @@ class PleaseDoNotBend final : public ActiveEffect
                 {
                     correctionTimer = 1.f;
 
-                    Utils::CatchupNpc(maxwell, catchingUp, 4000.f);
+                    // TODO: Utils::CatchupNpc(maxwell, catchingUp, 4000.f);
                 }
             }
 

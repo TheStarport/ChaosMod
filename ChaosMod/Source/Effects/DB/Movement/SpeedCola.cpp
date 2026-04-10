@@ -1,9 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
-#include <magic_enum_flags.hpp>
-
+#include "FLCore/FLCoreServer.h"
 class SpeedCola final : public ActiveEffect
 {
         using GetMassType = float(__fastcall*)(CShip* obj);
@@ -16,7 +13,7 @@ class SpeedCola final : public ActiveEffect
             const float orig = getMassDetour.GetOriginalFunc()(obj);
             getMassDetour.Detour(GetMassDetour);
 
-            if (Utils::GetCShip() != obj || !magic_enum::enum_flags_test(obj->objectClass, CObject::CSHIP_OBJECT))
+            if (Fluf::GetClient()->GetPlayerCShip() != obj || !magic_enum::enum_flags_test(obj->objectClass, CObject::CSHIP_OBJECT))
             {
                 return orig;
             }

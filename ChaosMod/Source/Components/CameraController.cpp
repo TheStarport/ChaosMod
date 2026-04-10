@@ -1,6 +1,7 @@
-#include "PCH.hpp"
 
 #include "Components/CameraController.hpp"
+
+#include <optional>
 
 std::unique_ptr<FunctionDetour<CameraController::CameraCall>> CameraController::chaseCameraDetour;
 std::unique_ptr<FunctionDetour<CameraController::CameraCall>> CameraController::turretCameraDetour;

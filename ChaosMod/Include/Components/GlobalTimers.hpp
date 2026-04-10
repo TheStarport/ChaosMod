@@ -1,5 +1,9 @@
 #pragma once
-#include "Components/ConfigManager.hpp"
+#include "../ChaosConfig.hpp"
+
+#include "Components/Random.hpp"
+#include <functional>
+#include <unordered_map>
 
 class GlobalTimers : public Component
 {

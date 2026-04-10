@@ -1,6 +1,6 @@
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/Globals.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class DrunkShopping final : public ActiveEffect
 {
@@ -12,12 +12,11 @@ class DrunkShopping final : public ActiveEffect
             {
                 const auto goodList = GoodList_get();
 
-                auto* equipment = reinterpret_cast<BinarySearchTree<Archetype::Equipment*>*>(0x63FCAD4);
-                for (auto equip = equipment->begin(); equip != equipment->end(); ++equip)
+                for (auto equip = GameData::equipment.begin(); equip != GameData::equipment.end(); ++equip)
                 {
-                    if (equip->value->get_class_type() == Archetype::ClassType::Gun || equip->value->get_class_type() == Archetype::ClassType::Shield)
+                    if (equip->second->get_class_type() == Archetype::ClassType::Gun || equip->second->get_class_type() == Archetype::ClassType::Shield)
                     {
-                        auto goodId = Arch2Good(equip->value->archId);
+                        auto goodId = Arch2Good(equip->second->archId);
                         auto good = goodList->find_by_id(goodId);
                         if (!good || good->price == 0.0f)
                         {

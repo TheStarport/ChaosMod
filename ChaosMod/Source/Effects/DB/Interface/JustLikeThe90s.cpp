@@ -1,14 +1,19 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Components/UiManager.hpp"
+//#include "Components/UiManager.hpp"
 
 class JustLikeThe90s final : public ActiveEffect
 {
         std::vector<HCURSOR> cursors;
-        void Begin() override { Get<UiManager>()->OverrideCursor(cursors[Get<Random>()->Uniform(0u, cursors.size() - 1)]); }
-        void End() override { Get<UiManager>()->OverrideCursor(std::nullopt); }
+        void Begin() override
+        {
+            // TODO: Get<UiManager>()->OverrideCursor(cursors[Get<Random>()->Uniform(0u, cursors.size() - 1)]);
+        }
+        void End() override
+        {
+            // TODO: Get<UiManager>()->OverrideCursor(std::nullopt);
+        }
 
     public:
         JustLikeThe90s(const EffectInfo& info) : ActiveEffect(info)

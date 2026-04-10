@@ -1,6 +1,7 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/Archetype/Explosion.hpp"
+#include "FLCore/Server/IObject/EqObj.hpp"
 
 class DeadlyMissiles final : public ActiveEffect
 {

@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/Common/CEquip/CAttachedEquip/CEThruster.hpp"
+#include "FLCore/Common/CEquip/CInternalEquip/CEEngine.hpp"
 class InvertVelocity final : public ActiveEffect
 {
         static void InvertEngines(CShip* ship)
@@ -21,7 +21,7 @@ class InvertVelocity final : public ActiveEffect
                 }
                 else if (CEThruster* thruster = CEThruster::cast(equip))
                 {
-                    const float thrustValue = *(float*)(*(reinterpret_cast<DWORD*>(thruster) + 3) + 140);
+                    const float thrustValue = *reinterpret_cast<float*>(*(reinterpret_cast<DWORD*>(thruster) + 3) + 140);
                     *reinterpret_cast<float*>(*(reinterpret_cast<DWORD*>(thruster) + 3) + 140) = -thrustValue;
                 }
 
@@ -31,13 +31,13 @@ class InvertVelocity final : public ActiveEffect
 
         void Begin() override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             InvertEngines(ship);
         }
 
         void End() override
         {
-            if (const auto ship = Utils::GetCShip())
+            if (const auto ship = Fluf::GetClient()->GetPlayerCShip())
             {
                 InvertEngines(ship);
             }

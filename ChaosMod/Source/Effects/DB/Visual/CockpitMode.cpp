@@ -1,8 +1,6 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/ReshadeManager.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class CockpitMode final : public ActiveEffect
 {
         using ChangeCamera = void(__thiscall*)(void* unk, const char* camera, int alwaysZero);
@@ -12,7 +10,7 @@ class CockpitMode final : public ActiveEffect
 
         void FrameUpdate(float delta) override
         {
-            if (Utils::GetCShip() && *isThirdPerson)
+            if (Fluf::GetClient()->GetPlayerCShip() && *isThirdPerson)
             {
                 changeCamera(cameraPtr, "first_person", 0);
             }
@@ -20,7 +18,7 @@ class CockpitMode final : public ActiveEffect
 
         void End() override
         {
-            if (Utils::GetCShip() && !*isThirdPerson)
+            if (Fluf::GetClient()->GetPlayerCShip() && !*isThirdPerson)
             {
                 changeCamera(cameraPtr, "third_person", 0);
             }

@@ -7,7 +7,7 @@ class IntroWindow final
 
         static void Render()
         {
-            if (!Get<ConfigManager>()->firstTime)
+            if (!ChaosMod::GetConfig()->firstTime)
             {
                 return;
             }
@@ -43,7 +43,7 @@ class IntroWindow final
             ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
             if (ImGui::Button(text.data()))
             {
-                const auto config = Get<ConfigManager>();
+                const auto config = ChaosMod::GetConfig();
                 config->firstTime = false;
                 config->Save();
             }

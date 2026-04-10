@@ -1,7 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/MemoryEffect.hpp"
+#include "Utils/MemUtils.hpp"
 
 class BossMusic final : public ActiveEffect
 {

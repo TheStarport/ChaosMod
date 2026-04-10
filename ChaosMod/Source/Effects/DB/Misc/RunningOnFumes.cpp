@@ -1,7 +1,7 @@
 #include "Components/ShipManipulator.hpp"
-#include "PCH.hpp"
-
 #include "Effects/PersistentEffect.hpp"
+#include "FLCore/Common/CEquip/CInternalEquip/CEEngine.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class RunningOnFumes final : public PersistentEffect
 {
@@ -20,7 +20,7 @@ class RunningOnFumes final : public PersistentEffect
             float drag = linearDragDetour.GetOriginalFunc()(engine);
             linearDragDetour.Detour(LinearDragDetour);
 
-            if (fuelPercentage < 0.0f && engine->owner == Utils::GetCShip())
+            if (fuelPercentage < 0.0f && engine->owner == Fluf::GetClient()->GetPlayerCShip())
             {
                 drag *= 2.0f;
             }
@@ -34,7 +34,7 @@ class RunningOnFumes final : public PersistentEffect
             float drag = linearCruiseDragDetour.GetOriginalFunc()(ship);
             linearCruiseDragDetour.Detour(LinearCruiseDragDetour);
 
-            if (fuelPercentage < 0.0f && ship == Utils::GetCShip())
+            if (fuelPercentage < 0.0f && ship == Fluf::GetClient()->GetPlayerCShip())
             {
                 drag *= .4f;
             }
@@ -76,7 +76,7 @@ class RunningOnFumes final : public PersistentEffect
         void Update(const float delta) override
         {
             Log(std::to_string(fuelPercentage));
-            auto* ship = Utils::GetCShip();
+            auto* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;
@@ -87,7 +87,7 @@ class RunningOnFumes final : public PersistentEffect
             {
                 timeSinceFuel = 1.0f;
 
-                const float totalSpeed = std::abs(glm::length<3, float, glm::packed_highp>(ship->get_velocity()));
+                const float totalSpeed = ship->get_velocity().magnitude();
                 const float consumption = totalSpeed / 300.f * 3.3f;
                 fuelPercentage -= consumption;
 

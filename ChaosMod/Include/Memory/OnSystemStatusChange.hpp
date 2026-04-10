@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 class OnSystemStatusChange
 {
         using OnJumpTunnelEnterType = bool(__fastcall*)(CShip* ship, void* edx, uint* jumpingShipId);
@@ -16,3 +17,4 @@ class OnSystemStatusChange
         OnSystemStatusChange() = delete;
         static void Init();
 };
+*/

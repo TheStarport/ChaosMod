@@ -1,7 +1,6 @@
 #pragma once
 
-#include "DirectX/Drawing.hpp"
-
+/*
 extern "C"
 {
 #include <libavcodec/avcodec.h>
@@ -256,16 +255,16 @@ class MoviePlayer final : public Component
 
             const AVStream* audioStream = formatContext->streams[audioStreamIndex];
 
-            /* find decoder for the stream */
+            /* find decoder for the stream #1#
             const AVCodec* decoder = avcodec_find_decoder(audioStream->codecpar->codec_id);
 
-            /* Allocate a codec context for the decoder */
+            /* Allocate a codec context for the decoder #1#
             AVCodecContext* decoderContext = avcodec_alloc_context3(decoder);
 
-            /* Copy codec parameters from input stream to output codec context */
+            /* Copy codec parameters from input stream to output codec context #1#
             avcodec_parameters_to_context(decoderContext, audioStream->codecpar);
 
-            /* Init the decoders */
+            /* Init the decoders #1#
             avcodec_open2(decoderContext, decoder, nullptr);
 
             AVFrame* tempFrame = av_frame_alloc();
@@ -344,3 +343,4 @@ class MoviePlayer final : public Component
             avformat_close_input(&formatContext);
         }
 };
+*/

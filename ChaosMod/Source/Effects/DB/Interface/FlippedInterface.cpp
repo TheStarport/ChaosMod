@@ -1,14 +1,17 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
-#include "Components/HudInterface.hpp"
 
 class FlippedUi final : public ActiveEffect
 {
-        void Begin() override { Get<HudInterface>()->ToggleFlipping(); }
-        void End() override { Get<HudInterface>()->ToggleFlipping(); }
+        void Begin() override
+        {
+            // TODO: Get<HudInterface>()->ToggleFlipping();
+        }
+        void End() override
+        {
+            // TODO: Get<HudInterface>()->ToggleFlipping();
+        }
 
     public:
         explicit FlippedUi(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

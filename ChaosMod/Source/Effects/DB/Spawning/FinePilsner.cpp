@@ -1,14 +1,12 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/SpaceObjectSpawner.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class FinePilsner final : public ActiveEffect
 {
         ResourcePtr<SpawnedObject> vc;
         void Spawn()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
 
             if (vc.Acquire())
             {
@@ -39,7 +37,7 @@ class FinePilsner final : public ActiveEffect
             {
                 correctionTimer = 1.f;
 
-                Utils::CatchupNpc(vc, catchingUp);
+                // TODO: Utils::CatchupNpc(vc, catchingUp);
             }
         }
 

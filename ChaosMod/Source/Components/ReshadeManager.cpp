@@ -1,7 +1,8 @@
-#include "PCH.hpp"
 
 #include "Components/ReshadeManager.hpp"
 #include "Components/GlobalTimers.hpp"
+
+#include <filesystem>
 
 using namespace reshade;
 using namespace reshade::api;

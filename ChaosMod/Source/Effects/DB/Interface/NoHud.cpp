@@ -1,9 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Components/UiManager.hpp"
 #include "Memory/OffsetHelper.hpp"
 
 class NoHud final : public ActiveEffect
@@ -24,13 +22,13 @@ class NoHud final : public ActiveEffect
         void Begin() override
         {
             ToggleHud(false);
-            Get<UiManager>()->OverrideCursor(cursor);
+            // TODO: Get<UiManager>()->OverrideCursor(cursor);
         }
 
         void End() override
         {
             ToggleHud(true);
-            Get<UiManager>()->OverrideCursor(std::nullopt);
+            // TODO: Get<UiManager>()->OverrideCursor(std::nullopt);
         };
 
         explicit NoHud(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)

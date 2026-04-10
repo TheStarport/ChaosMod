@@ -1,4 +1,3 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 
@@ -7,7 +6,7 @@ class SpectatorMode final : public ActiveEffect
     public:
         static void SetCloak(const bool state)
         {
-            /*CShip* ship = Utils::GetCShip();
+            /*CShip* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

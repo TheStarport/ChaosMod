@@ -2,7 +2,7 @@
 
 #include "../ImGuiManager.hpp"
 
-#include "Components/ConfigManager.hpp"
+#include "../../ChaosConfig.hpp"
 #include "CoreComponents/TwitchVoting.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
@@ -24,7 +24,7 @@ class Configurator final
         inline static DWORD* gamePauseIncrementor = PDWORD(0x667D54);
         inline static bool doDecrement = false;
 
-        std::shared_ptr<ConfigManager> config = nullptr;
+        std::shared_ptr<ChaosConfig> config = nullptr;
 
         ImGui::FileBrowser fileBrowser{ ImGuiFileBrowserFlags_ConfirmOnEnter };
 
@@ -180,7 +180,7 @@ class Configurator final
 
         void RenderEffectToggleTab() const
         {
-            auto& configEffects = Get<ConfigManager>()->chaosSettings.toggledEffects;
+            auto& configEffects = ChaosMod::GetConfig()->chaosSettings.toggledEffects;
 
             magic_enum::enum_for_each<EffectType>(
                 [&configEffects](auto val)
@@ -214,7 +214,7 @@ class Configurator final
                             i.second = all;
                         }
 
-                        Get<ConfigManager>()->Save();
+                        ChaosMod::GetConfig()->Save();
                     }
 
                     ImGui::SameLine();
@@ -240,7 +240,7 @@ class Configurator final
                             ImGui::TableNextColumn();
                             if (ImGui::Checkbox(info.effectName.c_str(), &isEnabled))
                             {
-                                Get<ConfigManager>()->Save();
+                                ChaosMod::GetConfig()->Save();
                             }
 
                             if (ImGui::IsItemHovered())
@@ -255,7 +255,7 @@ class Configurator final
 
                     if (configEffectsNeedPopulating)
                     {
-                        Get<ConfigManager>()->Save();
+                        ChaosMod::GetConfig()->Save();
                     }
 
                     ImGui::PopID();
@@ -344,7 +344,7 @@ class Configurator final
                 ImGui::SameLine();
                 if (ImGui::Button("Export Preset"))
                 {
-                    exportPath = std::filesystem::current_path().append("presets\\exported.json").string();
+                    exportPath = std::filesystem::current_path().append("presets\\exported.yml").string();
                     config->Save(exportPath);
                     ImGui::OpenPopup("Exported Config");
                 }
@@ -357,7 +357,7 @@ class Configurator final
                 ImGui::SameLine();
                 if (ImGui::Button("Import Preset"))
                 {
-                    static const std::vector<std::string> filters = { ".json", ".txt" };
+                    static const std::vector<std::string> filters = { ".yml", ".txt" };
                     fileBrowser.SetTypeFilters(filters);
 
                     const auto path = std::filesystem::current_path().append("presets");
@@ -459,11 +459,11 @@ class Configurator final
             ImGui::End();
         }
 
-        explicit Configurator(std::shared_ptr<ConfigManager> existingConfig) : importer(existingConfig != nullptr)
+        explicit Configurator(std::shared_ptr<ChaosConfig> existingConfig) : importer(existingConfig != nullptr)
         {
             if (!existingConfig)
             {
-                config = std::shared_ptr<ConfigManager>(Get<ConfigManager>());
+                config = std::shared_ptr<ChaosConfig>(ChaosMod::GetConfig());
             }
             else
             {

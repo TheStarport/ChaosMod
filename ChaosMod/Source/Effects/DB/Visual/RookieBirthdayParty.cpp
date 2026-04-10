@@ -1,7 +1,6 @@
-#include "PCH.hpp"
-
+#include "Server/FlufServer.hpp"
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class RookieBirthdayParty final : public ActiveEffect
 {
         void OnShipDestroyed(DamageList* dmgList, CShip* ship) override
@@ -13,9 +12,10 @@ class RookieBirthdayParty final : public ActiveEffect
                 return;
             }
 
-            if (const auto inspect = Utils::GetInspect(ship->id))
+            auto inspect = static_cast<Ship*>(Fluf::GetFlufServer()->GetObjInspect(ship->id));
+            if (inspect)
             {
-                Utils::LightFuse(inspect, CreateID("chaos_confetti_explosion"), 0.0f, 5.0f, 0.0f);
+                inspect->light_fuse(0, CreateID("chaos_confetti_explosion"), 0.0f, 5.0f, 0.0f);
                 pub::Audio::PlaySoundEffect(1, CreateID("chaos_confetti_sound"));
             }
         }

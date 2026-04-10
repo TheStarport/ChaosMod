@@ -1,7 +1,10 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
+#include "ChaosMod.hpp"
+#include "Components/Random.hpp"
 #include "Effects/PersistentEffect.hpp"
+#include "FLCore/FLCoreServer.h"
+#include "Utils/Detour.hpp"
 
 class SadViolin final : public PersistentEffect
 {

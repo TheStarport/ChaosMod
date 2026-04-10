@@ -1,5 +1,12 @@
 #pragma once
 
+#include <Components/Component.hpp>
+#include <FLCore/FLCoreDefs.hpp>
+#include <string>
+#include <vector>
+
+#include <Utils/StringUtils.hpp>
+
 class ChatConsole final : public Component
 {
         enum class Node
@@ -25,10 +32,7 @@ class ChatConsole final : public Component
         ChatData data{};
 
     public:
-        ChatConsole()
-        {
-            data.c = buffer.data();
-        }
+        ChatConsole() { data.c = buffer.data(); }
 
         // The bits in brackets are the defaults, overridden by the definition in
         // DATA\FONTS\rich_fonts.ini.
@@ -98,14 +102,14 @@ class ChatConsole final : public Component
             *data.i++ = len;
         }
 
-        void Tra(const UINT tra, const UINT mask)
+        void Tra(const uint tra, const uint mask)
         {
             AddNode(static_cast<int>(Node::TRANode), 8);
             *data.i++ = tra; // TextRenderAttributes
             *data.i++ = mask;
         }
 
-        void Style(const USHORT style)
+        void Style(const ushort style)
         {
             AddNode(static_cast<int>(Node::StyleNode), 2);
             *data.s++ = style;

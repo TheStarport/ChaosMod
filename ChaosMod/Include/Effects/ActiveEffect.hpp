@@ -1,5 +1,12 @@
 #pragma once
 
+#include "ChaosMod.hpp"
+#include "FLCore/Common/CEquip/CAttachedEquip/CELauncher.hpp"
+#include "FLCore/Common/Damage.hpp"
+
+#include <string>
+#include <vector>
+
 struct MunitionImpactData;
 enum class EffectType
 {
@@ -41,12 +48,15 @@ class ActiveEffect
                 float fixedTimeOverride = 0.0f;
                 bool isTimed = true;
                 EffectExclusion exclusion = EffectExclusion::None;
-                uint weight = 5;
+                unsigned weight = 5;
                 bool continueOnBases = false;
         };
 
     private:
         EffectInfo effectInfo;
+
+    protected:
+        const ChaosConfig& GetConfig() const { return *ChaosMod::GetConfig(); }
 
     public:
         virtual void Init() {}
@@ -69,7 +79,9 @@ class ActiveEffect
         virtual ~ActiveEffect() = default;
         explicit ActiveEffect(EffectInfo effectInfo) : effectInfo(std::move(effectInfo)) { allEffects.emplace_back(this); }
 
-        const EffectInfo& GetEffectInfo() const { return effectInfo; }
+        [[nodiscard]]
+        const EffectInfo& GetEffectInfo() const
+        { return effectInfo; }
         static const std::vector<ActiveEffect*>& GetAllEffects() { return allEffects; }
 
         ActiveEffect(const ActiveEffect&) = delete;

@@ -1,6 +1,7 @@
 #pragma once
-#include "Components/ConfigManager.hpp"
+#include "../ChaosConfig.hpp"
 #include "Components/ChatConsole.hpp"
+#include "FLCore/FLCoreServer.h"
 #include "Memory/OffsetHelper.hpp"
 
 class SaveManager
@@ -69,7 +70,7 @@ class SaveManager
 
         static void SaveTimer(const float delta)
         {
-            if (!Get<ConfigManager>()->autoSaveSettings.enable)
+            if (!ChaosMod::GetConfig()->autoSaveSettings.enable)
             {
                 return;
             }
@@ -83,17 +84,17 @@ class SaveManager
 
         static void Save()
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship || OffsetHelper::IsInMission())
             {
-                timer = static_cast<float>(Get<ConfigManager>()->autoSaveSettings.timeBetweenSavesInSeconds);
+                timer = static_cast<float>(ChaosMod::GetConfig()->autoSaveSettings.timeBetweenSavesInSeconds);
                 return;
             }
 
-            if (!Get<ConfigManager>()->autoSaveSettings.allowAutoSavesDuringCombat)
+            if (!ChaosMod::GetConfig()->autoSaveSettings.allowAutoSavesDuringCombat)
             {
                 bool hostileNear = false;
-                Utils::ForEachObject<CShip>(CObject::CSHIP_OBJECT,
+                ForEachObject<CShip>(CObject::CSHIP_OBJECT,
                                             [ship, &hostileNear](auto next)
                                             {
                                                 if (ship == next)
@@ -110,7 +111,7 @@ class SaveManager
                                                 float fAttitude = 0.0f;
                                                 pub::Reputation::GetAttitude(otherShipRep, playerRep, fAttitude);
 
-                                                if (auto distance = glm::length(ship->position - next->position);
+                                                if (auto distance = (ship->position - next->position).magnitude();
                                                     std::abs(distance) < 2000.0f && fAttitude < -0.55f)
                                                 {
                                                     hostileNear = true;
@@ -124,7 +125,7 @@ class SaveManager
                 }
             }
 
-            timer = static_cast<float>(Get<ConfigManager>()->autoSaveSettings.timeBetweenSavesInSeconds);
+            timer = static_cast<float>(ChaosMod::GetConfig()->autoSaveSettings.timeBetweenSavesInSeconds);
 
             auto slot = SaveFile();
             Get<ChatConsole>()->Tra(0xFFFFFF40, -1);

@@ -2,6 +2,8 @@
 
 #include <xbyak/xbyak.h>
 
+struct CObject;
+
 class CrashCatcher
 {
     inline static CrashCatcher* instance = nullptr;

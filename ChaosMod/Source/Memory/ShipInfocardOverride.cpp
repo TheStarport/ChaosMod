@@ -1,7 +1,4 @@
-#include "PCH.hpp"
-
-#include "Memory/ShipInfocardOverride.hpp"
-
+/*
 #define RadToDeg(x, xx) ((x / xx) * (180.f / 3.14159265f))
 
 int ShipInfocardOverride::GetShipIds(Archetype::Ship* ship)
@@ -218,3 +215,4 @@ void ShipInfocardOverride::Init()
     AddrIdsShipInventory[0] = 0xe9;
     *(DWORD*)(AddrIdsShipInventory + 1) = (PBYTE)PatchShipInfoInventoryIdsNaked - AddrIdsShipInventory - 5;
 }
+*/

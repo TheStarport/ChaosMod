@@ -1,5 +1,4 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 

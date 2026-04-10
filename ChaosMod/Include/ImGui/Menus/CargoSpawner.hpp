@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Components/ConfigManager.hpp"
+#include "../../ChaosConfig.hpp"
 #include "CoreComponents/TwitchVoting.hpp"
 #include "ImGui/ImGuiManager.hpp"
 

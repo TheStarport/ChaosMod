@@ -1,17 +1,28 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
 #include "Components/MoviePlayer.hpp"
 
 class AllWeKnowIsThatThereWereTwoSides final : public ActiveEffect
 {
-        void FrameUpdate(float delta) override { Get<MoviePlayer>()->FrameUpdate(); }
+        void FrameUpdate(float delta) override
+        {
+            // TODO: Get<MoviePlayer>()->FrameUpdate();
+        }
 
-        void Begin() override { Get<MoviePlayer>()->StartMovie(Movie::OriginalIntro); }
+        void Begin() override
+        {
+            // TODO: Get<MoviePlayer>()->StartMovie(Movie::OriginalIntro);
+        }
 
-        void End() override { Get<MoviePlayer>()->StopMovie(); }
+        void End() override
+        {
+            // TODO: Get<MoviePlayer>()->StopMovie();
+        }
 
-        void Init() override { Get<MoviePlayer>()->RegisterMovie(Movie::OriginalIntro, "../DATA/CHAOS/MOVIES/fl_intro.mp4"); }
+        void Init() override
+        {
+            // TODO: Get<MoviePlayer>()->RegisterMovie(Movie::OriginalIntro, "../DATA/CHAOS/MOVIES/fl_intro.mp4");
+        }
 
     public:
         explicit AllWeKnowIsThatThereWereTwoSides(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

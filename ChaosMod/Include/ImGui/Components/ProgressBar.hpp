@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Components/ConfigManager.hpp"
+#include "../../ChaosConfig.hpp"
 
 #include "imgui.h"
 
@@ -126,7 +126,7 @@ class ProgressBar final
         {
             if (ImGui::BeginMainMenuBar())
             {
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->chaosSettings.progressBarColor);
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ChaosMod::GetConfig()->chaosSettings.progressBarColor);
                 ImGui::ProgressBar(progress, ImVec2(-FLT_MIN, 0), "");
                 ImGui::PopStyleColor();
                 ImGui::EndMainMenuBar();
@@ -165,9 +165,9 @@ class ProgressBar final
             }
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->chaosSettings.progressBarColor);
+            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ChaosMod::GetConfig()->chaosSettings.progressBarColor);
 
-            switch (Get<ConfigManager>()->chaosSettings.progressBarType)
+            switch (ChaosMod::GetConfig()->chaosSettings.progressBarType)
             {
                 case ChaosSettings::ProgressBar::TopBar: DrawTopBar(); break;
                 case ChaosSettings::ProgressBar::SideBar: DrawSideBars(); break;

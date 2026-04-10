@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../ImGuiManager.hpp"
-
-#include <imgui.h>
+#include <imgui/imgui.h>
 
 class ImGuiManager;
 class DebugMenu final
@@ -43,12 +41,12 @@ class DebugMenu final
 
             if (ImGui::Button("Open Configurator"))
             {
-                ImGuiManager::ShowConfigurator();
+                // TODO: ImGuiManager::ShowConfigurator();
             }
 
             if (ImGui::Button("Open Debug Event Selector"))
             {
-                ImGuiManager::ShowEffectSelector();
+                // TODO: ImGuiManager::ShowEffectSelector();
             }
 
             ImGui::Separator();

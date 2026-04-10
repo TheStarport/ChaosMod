@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "CoreComponents/Patches/Changes.hpp"
 
+/*
 CurrencyChange::CurrencyChange() { changeType = ChangeType::Currency; }
 
 void CurrencyChange::Apply()
@@ -120,3 +120,4 @@ size_t CurrencyChange::GetEffectCount()
 
     return possibleGoods.size();
 }
+*/

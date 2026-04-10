@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+#include <set>
+#include <type_traits>
+
 class Component;
 template <class T>
     requires std::is_base_of_v<Component, T>

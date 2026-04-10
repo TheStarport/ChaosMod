@@ -1,6 +1,10 @@
 #pragma once
+
 #include <Concepts.hpp>
 #include <random>
+#include <string>
+#include <iostream>
+#include "Components/Component.hpp"
 
 class Random final : public Component
 {
@@ -62,12 +66,12 @@ class Random final : public Component
 
         template <typename T>
             requires StringRestriction<T>
-        T UniformString(uint length)
+        T UniformString(unsigned length)
         {
             std::uniform_int_distribution<short> aToZ('A', 'Z');
             T retStr;
             retStr.reserve(length);
-            for (uint i = 0; i < length; i++)
+            for (unsigned i = 0; i < length; i++)
             {
                 retStr += static_cast<char>(aToZ(engine));
             }
@@ -77,7 +81,7 @@ class Random final : public Component
 
         template <typename Iterator>
             requires std::random_access_iterator<Iterator>
-        uint Weighted(Iterator start, Iterator end)
+        unsigned Weighted(Iterator start, Iterator end)
         {
             return std::discrete_distribution<>(start, end)(engine);
         }

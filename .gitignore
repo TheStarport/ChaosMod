@@ -15,9 +15,8 @@
 *.so
 *.dylib
 *.dll
-!Hud.dll
 !dinput8.dll
-!ChaosInfocards.dll
+!CustomInfocards.dll
 
 # Fortran module files
 *.mod
@@ -439,14 +438,29 @@ FodyWeavers.xsd
 *.bak
 *.lnk
 
+# CmakeBuild
+cmake-*/
+
 #Temporary Folders
 enc_temp_folder/*
 
+CMakePresets.json
 ConanPresets.json
 .venv/
+venv/
 .idea/
 vendor/
 compile_commands.json
-
+dist/
+build/
+_build/
 build.conf
-Archive/
+
+*.zip
+*.tar.xz
+
+# Files from FLUF
+metadata.rc.in
+PCH.hpp
+PCH.cpp
+LoadConf.cmake

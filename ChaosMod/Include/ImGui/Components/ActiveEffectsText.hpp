@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../../ChaosConfig.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
-#include "Components/ConfigManager.hpp"
 #include "imgui.h"
 
 class ImGuiManager;
@@ -18,13 +18,13 @@ class ActiveEffectsText final
 
             if (isTimed)
             {
-                const float fraction = time / (modifier * Get<ConfigManager>()->chaosSettings.defaultEffectDuration);
+                const float fraction = time / (modifier * ChaosMod::GetConfig()->chaosSettings.defaultEffectDuration);
 
                 ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 200);
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, Get<ConfigManager>()->chaosSettings.progressBarColor);
-                ImGui::PushStyleColor(ImGuiCol_Text, Get<ConfigManager>()->chaosSettings.progressBarTextColor);
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ChaosMod::GetConfig()->chaosSettings.progressBarColor);
+                ImGui::PushStyleColor(ImGuiCol_Text, ChaosMod::GetConfig()->chaosSettings.progressBarTextColor);
 
-                const std::string timeRemaining = Get<ConfigManager>()->chaosSettings.showTimeRemainingOnEffects ? std::format("{:.1f}", time) : "";
+                const std::string timeRemaining = ChaosMod::GetConfig()->chaosSettings.showTimeRemainingOnEffects ? std::format("{:.1f}", time) : "";
                 ImGui::ProgressBar(fraction, ImVec2(200, 0), timeRemaining.c_str());
                 ImGui::PopStyleColor(2);
             }

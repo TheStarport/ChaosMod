@@ -1,9 +1,11 @@
-#include "PCH.hpp"
 
 #include "Effects/MemoryEffect.hpp"
+#include "Utils/MemUtils.hpp"
 
-#include <MMREG.h>
+#include <mmreg.h>
+#include <mmiscapi.h>
 #include <MSAcm.h>
+#include <algorithm>
 #pragma comment(lib, "Msacm32.lib")
 
 class CrossfireAudio final : public ActiveEffect

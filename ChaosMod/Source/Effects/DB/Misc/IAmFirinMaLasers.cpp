@@ -1,24 +1,20 @@
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
-#include "Components/KeyManager.hpp"
-
 class IAmFiringMyLasers final : public ActiveEffect
 {
-        const std::array<Utils::Keys, 16> bannedKeys = { Utils::USER_FIRE_WEAPON1,
-                                                         Utils::USER_FIRE_WEAPON2,           Utils::USER_FIRE_WEAPON3,
-                                                         Utils::USER_FIRE_WEAPON4,           Utils::USER_FIRE_WEAPON5,
-                                                         Utils::USER_FIRE_WEAPON6,           Utils::USER_FIRE_WEAPON7,
-                                                         Utils::USER_FIRE_WEAPON8,           Utils::USER_FIRE_WEAPON9,
-                                                         Utils::USER_FIRE_WEAPON10,          Utils::USER_FIRE_FORWARD,
-                                                         Utils::USER_LAUNCH_COUNTERMEASURES, Utils::USER_LAUNCH_CRUISE_DISRUPTORS,
-                                                         Utils::USER_LAUNCH_MINES,           Utils::USER_LAUNCH_MISSILES,
-                                                         Utils::USER_LAUNCH_TORPEDOS };
+        const std::array<Key, 16> bannedKeys = { Key::USER_FIRE_WEAPON1,
+                                                         Key::USER_FIRE_WEAPON2,           Key::USER_FIRE_WEAPON3,
+                                                         Key::USER_FIRE_WEAPON4,           Key::USER_FIRE_WEAPON5,
+                                                         Key::USER_FIRE_WEAPON6,           Key::USER_FIRE_WEAPON7,
+                                                         Key::USER_FIRE_WEAPON8,           Key::USER_FIRE_WEAPON9,
+                                                         Key::USER_FIRE_WEAPON10,          Key::USER_FIRE_FORWARD,
+                                                         Key::USER_LAUNCH_COUNTERMEASURES, Key::USER_LAUNCH_CRUISE_DISRUPTORS,
+                                                         Key::USER_LAUNCH_MINES,           Key::USER_LAUNCH_MISSILES,
+                                                         Key::USER_LAUNCH_TORPEDOS };
         void Begin() override
         {
             for (const auto key : bannedKeys)
             {
-                Get<KeyManager>()->ToggleAllowedKey(key, false);
+                // TODO: Get<KeyManager>()->ToggleAllowedKey(key, false);
             }
         }
 
@@ -26,13 +22,13 @@ class IAmFiringMyLasers final : public ActiveEffect
         {
             for (const auto key : bannedKeys)
             {
-                Get<KeyManager>()->ToggleAllowedKey(key, true);
+                // TODO: Get<KeyManager>()->ToggleAllowedKey(key, true);
             }
         }
 
         void Update(float delta) override
         {
-            CShip* ship = Utils::GetCShip();
+            CShip* ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

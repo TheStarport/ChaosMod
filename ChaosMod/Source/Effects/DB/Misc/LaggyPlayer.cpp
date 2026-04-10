@@ -1,7 +1,5 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
 class LaggyPlayer final : public ActiveEffect
 {
         float interval = 1.5f;
@@ -31,7 +29,7 @@ class LaggyPlayer final : public ActiveEffect
                 state = 0;
             }
 
-            const auto player = Utils::GetCShip();
+            const auto player = Fluf::GetClient()->GetPlayerCShip();
             if (state == 2)
             {
                 pos = player->get_position();

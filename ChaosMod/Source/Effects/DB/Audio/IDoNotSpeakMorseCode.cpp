@@ -1,6 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class IDoNotSpeakMorseCode final : public ActiveEffect
 {

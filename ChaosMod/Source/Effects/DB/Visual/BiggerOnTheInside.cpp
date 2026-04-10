@@ -1,8 +1,6 @@
 #pragma once
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
 class BiggerOnTheInside final : public ActiveEffect
 {
         std::string originalStarSphere;
@@ -23,12 +21,12 @@ class BiggerOnTheInside final : public ActiveEffect
         void ChangeBackground(const bool reset) const
         {
             const auto index = Get<Random>()->Uniform(0u, backgrounds.size() - 1);
-            Utils::SetNewStarSphere(reset ? originalStarSphere.c_str() : backgrounds[index]);
+            // TODO: Utils::SetNewStarSphere(reset ? originalStarSphere.c_str() : backgrounds[index]);
         }
 
         void Begin() override
         {
-            originalStarSphere = Utils::GetCurrentStarSphere();
+            // TODO: originalStarSphere = Utils::GetCurrentStarSphere();
 
             ChangeBackground(false);
         }

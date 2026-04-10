@@ -1,10 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
-#include "PCH.hpp"
-
-#include "Effects/ActiveEffect.hpp"
 #include "Components/ReshadeManager.hpp"
-
+#include "Effects/ActiveEffect.hpp"
 class RadarJamming final : public ActiveEffect
 {
         using GetTargetLeadFirePosType = bool(__fastcall*)(CShip* ship, void*, IObjInspect* target, Vector* output);
@@ -16,7 +13,7 @@ class RadarJamming final : public ActiveEffect
             GetProcAddress(GetModuleHandleA("common.dll"), "?get_tgt_lead_fire_pos@IObjInspectImpl@@UBEHABGAAVVector@@@Z")) };
 
         inline static constexpr auto fixedTime = 1 / 60.f;
-        inline static Vector disabledVector = glm::vec3{ 99999.f, 99999.f, 99999.f };
+        inline static Vector disabledVector{ 99999.f, 99999.f, 99999.f };
 
         struct TargetData
         {
@@ -68,7 +65,7 @@ class RadarJamming final : public ActiveEffect
             const auto response = getTargetLeadFirePosDetour.GetOriginalFunc()(ship, edx, target, output);
             getTargetLeadFirePosDetour.Detour(GetTargetLeadFirePosDetour);
 
-            if (response && ship == Utils::GetCShip())
+            if (response && ship == Fluf::GetClient()->GetPlayerCShip())
             {
                 ApplyJitter(ship, output);
             }
@@ -82,7 +79,7 @@ class RadarJamming final : public ActiveEffect
             const auto response = getTargetLeadFirePosInspectDetour.GetOriginalFunc()(inspect, edx, id, output);
             getTargetLeadFirePosInspectDetour.Detour(GetTargetLeadFirePosInspectDetour);
 
-            if (inspect->cobject() != Utils::GetCShip() && response)
+            if (inspect->cobject() != Fluf::GetClient()->GetPlayerCShip() && response)
             {
                 ApplyJitter(inspect, output);
             }

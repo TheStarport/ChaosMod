@@ -1,5 +1,16 @@
 #pragma once
 
+#include "Component.hpp"
+#include "FLCore/Common/AI/Personality.hpp"
+#include "FLCore/Common/CObjects/CSimple.hpp"
+#include "FLCore/Common/FmtStr.hpp"
+#include "FLCore/Common/MiscStructs.hpp"
+
+#include <array>
+#include <functional>
+#include <memory>
+#include <optional>
+
 template <typename T>
 class ResourcePtr
 {

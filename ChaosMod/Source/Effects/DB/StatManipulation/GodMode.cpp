@@ -1,18 +1,17 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class GodMode final : public ActiveEffect
 {
         void Begin() override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             pub::SpaceObj::SetInvincible(ship->id, true, true, 0);
         }
 
         void End() override
         {
-            if (const auto ship = Utils::GetCShip())
+            if (const auto ship = Fluf::GetClient()->GetPlayerCShip())
             {
                 pub::SpaceObj::SetInvincible(ship->id, false, false, 0);
             }

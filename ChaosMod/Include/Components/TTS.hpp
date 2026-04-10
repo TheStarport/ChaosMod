@@ -1,6 +1,11 @@
 #pragma once
 
+#include "Component.hpp"
+
 #include <miniaudio.h>
+#include <string>
+#include <thread>
+#include <vector>
 
 class TTS final : public Component
 {

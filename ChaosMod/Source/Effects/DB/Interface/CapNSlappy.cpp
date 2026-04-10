@@ -1,8 +1,6 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
-#include "PCH.hpp"
-
-#include "Components/HudInterface.hpp"
+#include "ChaosMod.hpp"
 #include "Effects/ActiveEffect.hpp"
 
 class CapNSlappy final : public ActiveEffect

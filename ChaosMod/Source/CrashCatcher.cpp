@@ -1,6 +1,7 @@
-#include "PCH.hpp"
 
 #include "CrashCatcher.hpp"
+
+#include "ChaosMod.hpp"
 
 // Inline-ASM isn't read and it often thinks this file is full of 1-line statements
 // ReSharper disable CppDFAUnreachableCode

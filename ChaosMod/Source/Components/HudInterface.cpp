@@ -1,5 +1,5 @@
-#include "PCH.hpp"
 
+/*
 #include "Components/HudInterface.hpp"
 
 #include "VanillaHudComponents/TStatic.hpp"
@@ -222,3 +222,4 @@ void HudInterface::Terminate(TControl* sender) {}
 void HudInterface::ToggleFlipping() { shouldFlip = !shouldFlip; }
 void HudInterface::SetUiColor(const DWORD newColor) { currentColor = newColor; }
 void HudInterface::SetBuggyInterface(const bool buggy) { shouldMakeInterfaceBuggy = buggy; }
+*/

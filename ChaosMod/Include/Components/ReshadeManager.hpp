@@ -1,6 +1,14 @@
 #pragma once
 
-#include <reshade.hpp>
+#include <Windows.h>
+#include "FLCore/X86Math/Vector.hpp"
+
+#include <Components/Component.hpp>
+#include <optional>
+#include <reshade/reshade.hpp>
+#include <string>
+#include <string_view>
+#include <unordered_map>
 
 class ReshadeManager : public Component
 {

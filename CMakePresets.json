@@ -11,28 +11,32 @@
     "configurePresets": [
         {
             "name": "debug",
-            "displayName": "Debug",
-            "inherits": "conan-debug"
+            "displayName": "FLUF Debug",
+            "inherits": "conan-debug",
+            "cacheVariables": {
+                "BUILD_SAMPLES": true
+            }
         },
         {
             "name": "release",
-            "displayName": "Release",
-            "inherits": "conan-release",
+            "displayName": "FLUF Release",
+            "inherits": "conan-relwithdebinfo",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "BUILD_SAMPLES": true,
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
         }
     ],
     "buildPresets": [
         {
             "name": "debug",
-            "displayName": "Debug",
+            "displayName": "FLUF Debug Build",
             "inherits": "conan-debug"
         },
         {
             "name": "release",
-            "displayName": "Release",
-            "inherits": "conan-release"
+            "displayName": "FLUF Release Build",
+            "inherits": "conan-relwithdebinfo"
         }
     ]
 }

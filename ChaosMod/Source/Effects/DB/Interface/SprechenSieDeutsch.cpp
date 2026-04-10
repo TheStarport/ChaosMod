@@ -1,8 +1,6 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "Memory/ShipInfocardOverride.hpp"
 
 class SprechenSieDeutsch final : public ActiveEffect
 {
@@ -132,14 +130,14 @@ class SprechenSieDeutsch final : public ActiveEffect
         {
             std::memset(infocardBuffer.data(), '\0', infocardBuffer.size());
 
-            auto override = ShipInfocardOverride::OverrideIds(ids);
+            /*auto override = ShipInfocardOverride::OverrideIds(ids);
             if (override.has_value())
             {
                 auto& str = override.value();
                 infocardLength = str.size() * 2;
                 memcpy_s(infocardBuffer.data(), infocardBuffer.size(), str.data(), infocardLength);
                 return infocardBuffer.data();
-            }
+            }*/
 
             if (const auto buffer = LoadCustomInfocard(ids))
             {

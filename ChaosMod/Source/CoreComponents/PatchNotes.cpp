@@ -1,17 +1,14 @@
-#include "PCH.hpp"
 
-#include "Components/ConfigManager.hpp"
 #include "CoreComponents/PatchNotes.hpp"
+#include "ChaosConfig.hpp"
 #include "CoreComponents/Patches/Changes.hpp"
 
 #include "Components/DiscordManager.hpp"
-#include "ImGui/ImGuiManager.hpp"
-
-#include <magic_enum.hpp>
 
 #include <Memory/OffsetHelper.hpp>
 #include <semver.hpp>
 
+/*
 void PatchNotes::LoadPatches()
 {
     patchTime = Get<ConfigManager>()->patchNotes.timeBetweenPatchesInMinutes * 60;
@@ -21,9 +18,9 @@ void PatchNotes::LoadPatches()
     GetUserDataPath(path.data());
     path.erase(std::ranges::find(path, '\0'), path.end());
 
-    Log(std::format("Attempting to load patch notes: {}", path + "\\patches.json"));
+    Log(std::format("Attempting to load patch notes: {}", path + "\\patches.yml"));
 
-    std::ifstream file(path + "\\patches.json", std::ios_base::binary | std::ios_base::in);
+    std::ifstream file(path + "\\patches.yml", std::ios_base::binary | std::ios_base::in);
 
     // If the file exists, load it.
     if (!file.is_open())
@@ -83,7 +80,7 @@ void PatchNotes::LoadPatches()
     }
     catch (std::exception& ex)
     {
-        Log(std::format("Failed to parse patch notes.json {}. Attempting to reset file.", ex.what()));
+        Log(std::format("Failed to parse patch notes.yml {}. Attempting to reset file.", ex.what()));
         ResetPatches(false, true);
     }
 }
@@ -121,14 +118,14 @@ void PatchNotes::SavePatches()
     GetUserDataPath(path.data());
     path.erase(std::ranges::find(path, '\0'), path.end());
 
-    std::ofstream file(path + "\\patches.json");
+    std::ofstream file(path + "\\patches.yml");
 
     const std::string jsonStr = json.dump();
 
     file << jsonStr << std::endl; // NOLINT
     file.close();
 
-    Log(std::format("Saving patch notes: {}", path + "\\patches.json"));
+    Log(std::format("Saving patch notes: {}", path + "\\patches.yml"));
 }
 
 void PatchNotes::RevertPatch(const std::shared_ptr<Patch>& patch)
@@ -364,7 +361,7 @@ void PatchNotes::Update(const float delta)
             Get<DiscordManager>()->SetActivity("Waiting for the next patch", lastEffectTimestamp, nextEffectTimestamp);
         }
 
-        if (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || Utils::GetCShip())
+        if (Get<ConfigManager>()->patchNotes.countDownWhileOnBases || Fluf::GetClient()->GetPlayerCShip())
         {
             patchTime -= delta;
             if (patchTime <= 0.0f)
@@ -424,3 +421,4 @@ void Change::SetChangeNameAndDescription(const EditableField* field, const Field
         description = std::format("{} {}: {}   {}  ->  {}", symbol, itemName, newFieldName, *(bool*)oldValue, *(bool*)newValue);
     }
 }
+*/

@@ -1,6 +1,6 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class Cardamine final : public ActiveEffect
 {
@@ -27,7 +27,7 @@ class Cardamine final : public ActiveEffect
 // clang-format off
 SetupEffect(Cardamine, {
     .effectName = "Cardamine, Cardamine.",
-    .description = "Cardamine, Cardamine... everybody wants Cardamine! It's all the NPCs will say...",
+    .description = "Cardamine, Cardamine... everybody wants Cardamine! It's all the NPCs talk about...",
     .category = EffectType::Npc,
     .timingModifier = 2.0f,
     .exclusion = EffectExclusion::SendComm

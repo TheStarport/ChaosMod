@@ -1,14 +1,13 @@
-#include "PCH.hpp"
 
+#include "ChaosConfig.hpp"
 #include "Effects/ActiveEffect.hpp"
-#include "Components/ConfigManager.hpp"
 
 #include "CoreComponents/PatchNotes.hpp"
 
 class PatchDay final : public ActiveEffect
 {
         void Begin() override { PatchNotes::GeneratePatch(PatchNotes::PatchVersion::Major); }
-        bool CanSelect() override { return Get<ConfigManager>()->patchNotes.enable; }
+        bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable; }
 
     public:
         explicit PatchDay(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

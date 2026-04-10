@@ -1,13 +1,13 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
+#include "FLCore/Server/IObject/EqObj.hpp"
 class Juggernog final : public ActiveEffect
 {
         void OnMunitionHitAfter(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList) override
         {
             const auto id = hitObject->get_id();
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship || ship->id != id)
             {
                 return;

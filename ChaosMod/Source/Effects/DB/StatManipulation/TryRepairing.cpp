@@ -1,10 +1,9 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class TryRepairing final : public ActiveEffect
 {
-
         struct EquipmentItem
         {
                 EquipmentItem* next;
@@ -22,7 +21,7 @@ class TryRepairing final : public ActiveEffect
 
         void Begin() override
         {
-            EquipmentItem* head = *(EquipmentItem**)(Players.data + 0x27C);
+            EquipmentItem* head = *reinterpret_cast<EquipmentItem**>(Players.data + 0x27C);
             for (EquipmentItem* eq = head->next; eq != head; eq = eq->next)
             {
                 if (eq->goodId == CreateID("ge_s_repair_01"))

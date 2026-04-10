@@ -1,19 +1,18 @@
-#include "PCH.hpp"
+#include "ChaosMod.hpp"
 
 #include "Components/DiscordManager.hpp"
 
-#include "Components/ConfigManager.hpp"
-
-#include "core.h"
+#include "FLCore/FLCoreServer.h"
+#include "discord_game_sdk/cpp/core.h"
 
 using namespace discord;
 
 Core* core{};
-i64 timeStarted = 0;
+long long timeStarted = 0;
 
 std::string DiscordManager::GetStatus()
 {
-    uint base;
+    unsigned base;
     pub::Player::GetBase(1, base);
 
     if (base)
@@ -69,14 +68,14 @@ void DiscordManager::SetActivity(const std::string_view description, const uint 
 
 void DiscordManager::Update()
 {
-    if (!enabled || !Get<ConfigManager>()->discordSettings.enable)
+    if (!enabled || !ChaosMod::GetConfig()->discordSettings.enable)
     {
         return;
     }
 
     constexpr float delta = 1.f / 60.f;
     timer -= delta;
-    if (timer < 0.f && Get<ConfigManager>()->discordSettings.timerType == DiscordSettings::TimerType::TimePlaying)
+    if (timer < 0.f && ChaosMod::GetConfig()->discordSettings.timerType == DiscordSettings::TimerType::TimePlaying)
     {
         timer = 30.f;
         SetActivity("Enjoying the Chaos", timeStarted);

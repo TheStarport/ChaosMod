@@ -3,7 +3,6 @@
 #include <FLCore/Common/Globals.hpp>
 #include <FLCore/Common/Goods.hpp>
 
-#include <nlohmann/json.hpp>
 #include <regex>
 
 enum class ChangeType
@@ -24,6 +23,7 @@ enum class ChangeType
     // Music
 };
 
+/*
 class Change
 {
     protected:
@@ -187,7 +187,7 @@ template <ChangeType Type>
 class EquipmentChange : public Change
 {
         /*static_assert(Type != ChangeType::Music && Type != ChangeType::Constant && Type != ChangeType::Currency,
-                      "Type provided to an equipment change was not equipment");*/
+                      "Type provided to an equipment change was not equipment");#1#
 
         // clang-format off
         using T = 
@@ -701,3 +701,4 @@ class EquipmentChange : public Change
             return possibleEquipment.size();
         }
 };
+*/

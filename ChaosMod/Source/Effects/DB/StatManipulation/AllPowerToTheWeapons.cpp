@@ -1,7 +1,7 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/Common/CEquip/CEPower.hpp"
+#include "FLCore/FLCoreServer.h"
 class AllPowerToTheWeapons final : public ActiveEffect
 {
         using RefireDelayElapsedType = bool(__fastcall*)(CELauncher*);
@@ -22,7 +22,7 @@ class AllPowerToTheWeapons final : public ActiveEffect
 
         void Update(float delta) override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;

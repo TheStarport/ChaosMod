@@ -1,13 +1,11 @@
-// ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-
-#include "PCH.hpp"
-
 #include "Effects/ActiveEffect.hpp"
-#include "ImGui/ImGuiManager.hpp"
 
 class RollCredits final : public ActiveEffect
 {
-        void Begin() override { ImGuiManager::StartCredits(); }
+        void Begin() override
+        {
+            // TODO: ImGuiManager::StartCredits();
+        }
 
     public:
         explicit RollCredits(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

@@ -1,6 +1,9 @@
+#include "Components/Random.hpp"
 #include "Components/ReshadeManager.hpp"
 #include "CoreComponents/ChaosTimer.hpp"
 #include "Effects/ActiveEffect.hpp"
+#include "FLCore/Common/CommonMethods.hpp"
+#include "FLCore/FLCoreServer.h"
 
 class CatJam final : public ActiveEffect
 {

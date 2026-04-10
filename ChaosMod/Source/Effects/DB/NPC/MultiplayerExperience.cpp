@@ -1,8 +1,7 @@
-#include "PCH.hpp"
 
-#include "Effects/ActiveEffect.hpp"
 #include "Components/ChatConsole.hpp"
-
+#include "Effects/ActiveEffect.hpp"
+#include "FLCore/FLCoreServer.h"
 class MultiplayerExperience final : public ActiveEffect
 {
         std::array<std::wstring, 30> lines = {
@@ -50,7 +49,7 @@ class MultiplayerExperience final : public ActiveEffect
                 interval = 3.0f;
 
                 std::vector<CShip*> ships = {};
-                Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [&ships](CShip* ship) { ships.emplace_back(ship); });
+                ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [&ships](CShip* ship) { ships.emplace_back(ship); });
 
                 if (ships.size() == 1)
                 {

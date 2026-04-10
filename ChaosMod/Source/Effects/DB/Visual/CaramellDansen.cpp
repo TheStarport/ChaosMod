@@ -1,8 +1,7 @@
 #pragma once
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class CaramellDansen final : public ActiveEffect
 {
         std::string originalStarSphere;
@@ -32,7 +31,7 @@ class CaramellDansen final : public ActiveEffect
                 currentColor = -1;
             }
 
-            Utils::SetNewStarSphere(reset ? originalStarSphere.c_str() : colors[++currentColor]);
+            // TODO: Utils::SetNewStarSphere(reset ? originalStarSphere.c_str() : colors[++currentColor]);
         }
 
         void Begin() override
@@ -40,7 +39,7 @@ class CaramellDansen final : public ActiveEffect
             timer = 1.0f;
 
             currentColor = -1;
-            originalStarSphere = Utils::GetCurrentStarSphere();
+            // TODO: originalStarSphere = Utils::GetCurrentStarSphere();
 
             pub::Audio::Tryptich music;
             music.overrideMusic = CreateID("chaos_caramell_dancen");

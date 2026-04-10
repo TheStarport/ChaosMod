@@ -1,8 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreDALib.h"
 class FlappyArchitecture final : public ActiveEffect
 {
         struct AnimationData
@@ -82,8 +81,8 @@ class FlappyArchitecture final : public ActiveEffect
 
         void Update(float delta) override
         {
-            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh); });
-            Utils::ForEachObject<CSolar>(
+            ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh); });
+            ForEachObject<CSolar>(
                 CObject::Class::CSOLAR_OBJECT,
                 [this](CSolar* solar)
                 {
@@ -126,7 +125,7 @@ class FlappyArchitecture final : public ActiveEffect
 
         void End() override
         {
-            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh, true); });
+            ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT, [](CShip* sh) { FlipBay(sh, true); });
             for (auto& val : objectAnimations | std::views::values)
             {
                 for (auto& [id, state, close] : val)

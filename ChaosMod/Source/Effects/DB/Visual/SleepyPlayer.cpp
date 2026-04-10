@@ -1,8 +1,5 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-#include "DirectX/Drawing.hpp"
-
 class SleepyPlayer final : public ActiveEffect
 {
         enum class TiredMode
@@ -16,17 +13,18 @@ class SleepyPlayer final : public ActiveEffect
         int alpha = 0;
         float nextTimestamp = 0.0f;
         int closingIterator = 0;
-        glm::vec2 direction{};
+        std::pair<float, float> direction{};
 
         void BlackOut(const int alpha)
         {
-            const auto drawing = Get<DrawingHelper>();
+            // TODO: reimplement
+            /*const auto drawing = Get<DrawingHelper>();
             drawing->BoxFilled(0.f, 0.0f, 1.f, 1.f, D3DCOLOR_ARGB(alpha, 0, 0, 0));
             if (const float progress = static_cast<float>(alpha) / 255.f; progress > 0)
             {
                 drawing->BoxFilled(0.f, 0.f, 1, progress / 2, D3DCOLOR_XRGB(0, 0, 0));                  // top bar
                 drawing->BoxFilled(0.f, 1.f - (progress / 4), 1, progress / 2, D3DCOLOR_XRGB(0, 0, 0)); // bottom bar
-            }
+            }*/
         }
 
         void Begin() override
@@ -38,7 +36,7 @@ class SleepyPlayer final : public ActiveEffect
 
         void FrameUpdate(float delta) override
         {
-            const auto ship = Utils::GetCShip();
+            const auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;
@@ -72,8 +70,8 @@ class SleepyPlayer final : public ActiveEffect
                 case TiredMode::Waiting:
                     if (nextTimestamp < 0.0f)
                     {
-                        direction.x = Get<Random>()->UniformFloat(-1.0f, 1.0f);
-                        direction.y = Get<Random>()->UniformFloat(-1.0f, 1.0f);
+                        direction.first = Get<Random>()->UniformFloat(-1.0f, 1.0f);
+                        direction.second = Get<Random>()->UniformFloat(-1.0f, 1.0f);
                         currentMode = TiredMode::Closing;
                     }
                     break;
@@ -85,8 +83,8 @@ class SleepyPlayer final : public ActiveEffect
             {
                 // As the eyes start to close start turning the players ship
                 Vector* steering = reinterpret_cast<Vector*>(reinterpret_cast<const PCHAR>(behaviour) + 292);
-                steering->x = direction.x;
-                steering->y = direction.y;
+                steering->x = direction.first;
+                steering->y = direction.second;
             }
 
             BlackOut(alpha);

@@ -1,18 +1,17 @@
-#include "PCH.hpp"
 
 #include "Effects/ActiveEffect.hpp"
-
+#include "FLCore/FLCoreServer.h"
 class Wanted final : public ActiveEffect
 {
         void Begin() override
         {
-            auto ship = Utils::GetCShip();
+            auto ship = Fluf::GetClient()->GetPlayerCShip();
             if (!ship)
             {
                 return;
             }
 
-            Utils::ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
+            ForEachObject<CShip>(CObject::Class::CSHIP_OBJECT,
                                         [ship](auto npc)
                                         {
                                             if (ship == npc)
