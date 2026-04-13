@@ -4,8 +4,7 @@
 // ReSharper disable CppClangTidyPerformanceNoIntToPtr
 #include "ChaosMod.hpp"
 
-#include "CrashCatcher.hpp"
-#include "../Include/CoreComponents/TwitchVoting.hpp"
+#include "CoreComponents/TwitchVoting.hpp"
 #include "Components/CameraController.hpp"
 #include "Components/GlobalTimers.hpp"
 #include "Components/MoviePlayer.hpp"
@@ -26,71 +25,26 @@
 
 #include "Memory/AssetTracker.hpp"
 #include "Memory/OnSystemStatusChange.hpp"
+#include "Server/FlufServer.hpp"
 
 #include <Windows.h>
 #include <reshade/reshade.hpp>
 
-using ScriptLoadPtr = void* (*)(const char*);
-using GlobalTimeFunc = void (*)(double delta);
-
-std::unique_ptr<FunctionDetour<ScriptLoadPtr>> thornLoadDetour;
-std::unique_ptr<FunctionDetour<GlobalTimeFunc>> timingDetour;
-
-using CreateIdFunc = uint (*)(const char* str);
-std::unique_ptr<FunctionDetour<CreateIdFunc>> createIdDetour;
-std::unordered_map<std::string, uint> hashMap;
-
-std::unique_ptr<CrashCatcher> crashCatcher;
-
 std::optional<std::string> ChaosMod::HashLookup(const uint hash)
 {
-    for (const auto& [nickname, existingHash] : hashMap)
+    auto server = Fluf::GetFlufServer();
+    if (!server)
     {
-        if (existingHash == hash)
-        {
-            return nickname;
-        }
+        return std::nullopt;
     }
 
-    return std::nullopt;
+    /*auto resourceManager = server->GetResourceManager();
+    return resourceManager->GetNicknameFromHash(hash);*/
+    return {};
 }
-
-uint CreateIdDetour(const char* string)
-{
-    if (!string)
-    {
-        return 0;
-    }
-
-    if (const auto found = hashMap.find(string); found != hashMap.end())
-    {
-        return found->second;
-    }
-
-    createIdDetour->UnDetour();
-    const uint hash = CreateID(string);
-
-    if (const std::string str = string; !hashMap.contains(str))
-    {
-        hashMap[str] = hash;
-        FILE* hashFile = nullptr;
-        (void)fopen_s(&hashFile, "hashmap.csv", "a");
-        (void)fprintf_s(hashFile, "%s,%u,0x%X\n", string, hash, hash);
-        (void)fflush(hashFile);
-        (void)fclose(hashFile);
-    }
-
-    createIdDetour->Detour(CreateIdDetour);
-    return hash;
-}
-
-constexpr float SixtyFramesPerSecond = 1.0f / 60.0f;
-double timeCounter;
 
 void ChaosMod::OnClientLoad()
 {
-    crashCatcher = std::make_unique<CrashCatcher>();
-
     // Register all the components we can!
     SetComponent<CameraController>();
     //SetComponent<MoviePlayer>();
@@ -114,7 +68,7 @@ void ChaosMod::OnClientLoad()
 
     // Always offer missions regardless of reputation
 
-    char patchByte = 0xEB;
+    byte patchByte = 0xEB;
     MemUtils::WriteProcMem(content + 0x060D0F, &patchByte, sizeof(patchByte));
 
     // Ignore gate locks
@@ -133,13 +87,35 @@ void ChaosMod::OnClientLoad()
     OnSound::Init();
     //TODO: OnSystemStatusChange::Init();
 }
+void ChaosMod::OnClientUpdate(const float delta)
+{
+    if (!OffsetHelper::IsGamePaused())
+    {
+        Get<ChaosTimer>()->FrameUpdate(delta);
+        // TODO: PatchNotes::Update(static_cast<float>(delta));
+    }
+
+    Get<TwitchVoting>()->Poll();
+}
+
+void ChaosMod::OnClientFixedUpdate(const float delta, const bool gamePaused)
+{
+    if (!gamePaused)
+    {
+        SaveManager::SaveTimer(delta);
+        Get<ChaosTimer>()->Update(delta);
+        Get<GlobalTimers>()->Update(delta);
+    }
+
+    Get<TTS>()->Update(delta);
+}
 
 auto* screenWidth = reinterpret_cast<const DWORD*>(0x679bc8);
 auto* screenHeight = reinterpret_cast<const DWORD*>(0x679bcc);
 
 uint width, height;
 
-float CalcFov(float defaultFov)
+float CalcFov(const float defaultFov)
 {
     constexpr float originalAspectRatio = 4.0f / 3.0f;
 
@@ -147,7 +123,7 @@ float CalcFov(float defaultFov)
     return static_cast<float>(atan(newAspectRatio / 2 / (originalAspectRatio / 2 / tan(defaultFov * std::numbers::pi / 180))) * 180 / std::numbers::pi);
 }
 
-float __stdcall Fovx(PBYTE camera) { return CalcFov((camera == (PBYTE)0x67dbf8) ? 27.216f : 35.0f); }
+float __stdcall Fovx(const PBYTE camera) { return CalcFov((camera == (PBYTE)0x67dbf8) ? 27.216f : 35.0f); }
 
 __declspec(naked) void HkCb_Fovx_Naked(void)
 {
@@ -309,31 +285,6 @@ void RequiredMemEdits()
     const auto common = reinterpret_cast<DWORD>(GetModuleHandleA("common.dll"));
     const auto server = reinterpret_cast<DWORD>(GetModuleHandleA("server.dll"));
 
-    // delete hashmap if it exsts
-    (void)remove("hashmap.csv");
-    createIdDetour = std::make_unique<FunctionDetour<CreateIdFunc>>(CreateID);
-    createIdDetour->Detour(CreateIdDetour);
-
-    // Patch out vanilla cursor
-    MemUtils::NopAddress(0x05B1750, 4);
-    MemUtils::NopAddress(0x5B32F2, 7);
-    MemUtils::NopAddress(0x5B1750, 7);
-    MemUtils::NopAddress(0x42025A, 13);
-    MemUtils::NopAddress(0x41ECC7, 16);
-    MemUtils::NopAddress(0x41EAA3, 20);
-
-    // Patch out checks for if the cursor is visible
-    MemUtils::NopAddress(0x004202F6, 7);
-    MemUtils::NopAddress(0x0041EEBD, 7);
-    MemUtils::NopAddress(0x00420474, 7);
-
-    // Patch out SetCursor
-    MemUtils::NopAddress(0x598989, 7);
-    MemUtils::NopAddress(0x5989B6, 7);
-    MemUtils::NopAddress(0x598AF2, 7);
-    MemUtils::NopAddress(0x598BEC, 7);
-    MemUtils::NopAddress(0x598C0B, 7);
-
     // Set borderless window mode
     constexpr std::array<byte, 2> borderlessPatch = { 0x00, 0x00 };
     constexpr DWORD borderlessWindowPatch1 = 0x02477A;
@@ -393,19 +344,6 @@ void RequiredMemEdits()
     constexpr std::array<byte, 3> skipStory = { 0xEB, 0x0C, 0x90 };
     MemUtils::WriteProcMem(fl + 0x5685F, skipStory.data(), skipStory.size());
 
-    // Regenerate restart.fl on each launch and ensure that it's only loaded after regeneration
-    // For some reason, this hack can cause crashes with an invalid pointer.
-    // We fix this by creating a static pointer to the string compare function, then writing the bytes into the hack dynamically.
-    // ReSharper disable once CppDeprecatedEntity
-    static auto cmp = reinterpret_cast<PDWORD>(_strcmpi); // NOLINT(clang-diagnostic-deprecated-declarations)
-    const auto ptr = &cmp;
-    std::array<byte, 45> regenerateRestartFl = { 0x8D, 0x8C, 0x24, 0x5C, 0x01, 0x00, 0x00, 0x51, 0x8D, 0x54, 0x24, 0x5C, 0x52, 0xEB, 0x13,
-                                                 0xFF, 0x11, 0x83, 0xC4, 0x08, 0x85, 0xC0, 0x74, 0x11, 0x8B, 0xCD, 0xE8, 0x22, 0xFD, 0xFF,
-                                                 0xFF, 0xEB, 0x0F, 0x90, 0xB9, 0x48, 0x4A, 0xD6, 0x06, 0xEB, 0xE6, 0x83, 0xC4, 0x08, 0xEB };
-    std::memcpy(regenerateRestartFl.data() + 35, &ptr, 4);
-
-    MemUtils::WriteProcMem(server + 0x6900F, regenerateRestartFl.data(), regenerateRestartFl.size());
-
     // disable PlayerEnemyClamp altogether; instead making NPC enemy target selection random.
     constexpr std::array<byte, 2> disableNpcClamp = { 0xEB, 0x39 };
     MemUtils::WriteProcMem(common + 0x08E86A, disableNpcClamp.data(), disableNpcClamp.size());
@@ -455,15 +393,11 @@ void RequiredMemEdits()
     constexpr uint menu3Ids = 458753;
     MemUtils::WriteProcMem(fl + 0xAABFC, &menu3Ids, 4);
 
-    // Disable target cycling within wing formations
-    // Appears to prevent several AI spawning related crashes, but full consequences not understood. (it breaks a lot of shite, don't turn back on)
-    // MemUtils::NopAddress(0x062EE640, 3);
-    // MemUtils::NopAddress(0x062EE64A, 2);
-
     // Enable keyboard in turret view
 
     byte patchByte = 0;
     MemUtils::WriteProcMem(fl + 0x0C7903, &patchByte, sizeof(patchByte));
+
     patchByte = 0xEB;
     MemUtils::WriteProcMem(fl + 0x0DBB12, &patchByte, sizeof(patchByte));
     MemUtils::WriteProcMem(fl + 0x0DBB58, &patchByte, sizeof(patchByte));
@@ -491,41 +425,9 @@ void RequiredMemEdits()
     PatchResolution();
 }
 
-void Update(const double delta)
-{
-    timeCounter += delta;
-    while (timeCounter > SixtyFramesPerSecond)
-    {
-        if (!OffsetHelper::IsGamePaused())
-        {
-            SaveManager::SaveTimer(SixtyFramesPerSecond);
-            Get<ChaosTimer>()->Update(SixtyFramesPerSecond);
-            Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
-        }
-
-        Get<TTS>()->Update(SixtyFramesPerSecond);
-
-        timeCounter -= SixtyFramesPerSecond;
-    }
-
-    if (!OffsetHelper::IsGamePaused())
-    {
-        Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
-        // TODO: PatchNotes::Update(static_cast<float>(delta));
-    }
-
-    Get<TwitchVoting>()->Poll();
-
-    timingDetour->UnDetour();
-    timingDetour->GetOriginalFunc()(delta);
-    timingDetour->Detour(Update);
-}
-
 FunctionDetour freeLibraryDetour(FreeLibrary);
 ChaosMod::ChaosMod()
 {
-    freeLibraryDetour.Detour(FreeLibraryDetour);
-
     // The very first thing we do is change the saved data folder so we can save and load properly
     const std::string newSavedDataFolder = "FLChaosMod";
     MemUtils::WriteProcMem(reinterpret_cast<DWORD>(GetModuleHandleA("common.dll")) + 0x142684, newSavedDataFolder.data(), newSavedDataFolder.length());
@@ -545,7 +447,18 @@ ChaosMod::ChaosMod()
     SetComponent<ReshadeManager>();
 }
 
-ChaosMod::~ChaosMod() { crashCatcher.reset(); }
+ChaosMod::~ChaosMod()
+{
+    for (const auto& possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
+    {
+        effect->Cleanup();
+    }
+
+    // Explicitly reset any components that make use of threads
+    //ResetComponent<MoviePlayer>();
+    ResetComponent<TTS>();
+    ResetComponent<TwitchVoting>();
+}
 
 bool ChaosMod::RunningOnWine()
 {
@@ -563,44 +476,20 @@ ChaosConfig* ChaosMod::GetConfig()
     return instance->chaosConfig.get();
 }
 
-HMODULE dll;
-void __stdcall ChaosMod::TerminateAllThreads()
+ModuleMajorVersion ChaosMod::MajorVersion()
 {
-    for (const auto& possibleEffects = ActiveEffect::GetAllEffects(); const auto& effect : possibleEffects)
-    {
-        effect->Cleanup();
-    }
-
-    // Explicitly reset any components that make use of threads
-    //ResetComponent<MoviePlayer>();
-    ResetComponent<TTS>();
-    ResetComponent<TwitchVoting>();
-
-    FreeLibraryAndExitThread(dll, 0);
+    return ModuleMajorVersion::Two;
 }
 
-BOOL __stdcall ChaosMod::FreeLibraryDetour(const HMODULE handle)
+ModuleMinorVersion ChaosMod::MinorVersion()
 {
-    if (!handle)
-    {
-        return false;
-    }
-
-    if (dll == handle)
-    {
-        freeLibraryDetour.UnDetour();
-        CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TerminateAllThreads), nullptr, 0, nullptr);
-
-        return true;
-    }
-
-    freeLibraryDetour.UnDetour();
-    const auto res = FreeLibrary(handle);
-    freeLibraryDetour.Detour(FreeLibraryDetour);
-    return res;
+    return ModuleMinorVersion::Zero;
 }
 
-extern "C" __declspec(dllexport) void Dummy() {}
+std::string_view ChaosMod::GetModuleName()
+{
+    return "Chaos Mod";
+}
 
 #include "ImGui/Menus/Debug.hpp"
 
@@ -624,16 +513,18 @@ void Assert(const bool cond, const std::string& text, const std::string& file, c
     }
 }
 
-BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
+BOOL WINAPI DllMain(const HMODULE module, const DWORD reason, LPVOID)
 {
-    DisableThreadLibraryCalls(hModule);
-    if (dwReason == DLL_PROCESS_ATTACH)
+    DisableThreadLibraryCalls(module);
+    if (reason == DLL_PROCESS_DETACH)
     {
-        dll = hModule;
-    }
-    else if (dwReason == DLL_PROCESS_DETACH)
-    {
-        reshade::unregister_addon(hModule);
+        reshade::unregister_addon(module);
     }
     return TRUE;
 }
+
+__declspec(dllexport) std::shared_ptr<FlufModule> ModuleFactory()
+{
+    __pragma(comment(linker, "/EXPORT:ModuleFactory=?ModuleFactory@@YA?AV?$shared_ptr@VFlufModule@@@std@@XZ")) {} ;
+    return std::move(std::dynamic_pointer_cast<FlufModule>(std::make_shared<ChaosMod>()));
+};

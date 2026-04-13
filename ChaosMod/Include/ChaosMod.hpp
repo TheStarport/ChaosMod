@@ -107,12 +107,11 @@ enum class Language
     Scottish
 };
 
-class CrashCatcher;
 class ChaosMod : public FlufCombinedModule
 {
         void OnClientLoad() override;
-        static void __stdcall TerminateAllThreads();
-        static BOOL __stdcall FreeLibraryDetour(const HMODULE handle);
+        void OnClientUpdate(float delta) override;
+        void OnClientFixedUpdate(float delta, bool gamePaused) override;
 
         inline static ChaosMod* instance;
         std::shared_ptr<ChaosConfig> chaosConfig;
@@ -126,6 +125,9 @@ class ChaosMod : public FlufCombinedModule
         static std::string GetInfocardName(uint ids);
         static bool RunningOnWine();
         static ChaosConfig* GetConfig();
+        ModuleMajorVersion MajorVersion() override;
+        ModuleMinorVersion MinorVersion() override;
+        std::string_view GetModuleName() override;
 };
 
 void Log(const std::string& log);
