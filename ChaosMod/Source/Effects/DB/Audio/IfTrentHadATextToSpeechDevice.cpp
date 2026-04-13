@@ -21,8 +21,7 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
             Get<TTS>()->Speak(line);
         }
 
-    public:
-        IfTrentHadATextToSpeechDevice(const EffectInfo &info) : ActiveEffect(info)
+        void Init() override
         {
             for (auto line : StringUtils::GetParams(ttsLinesRaw, '#'))
             {
@@ -30,6 +29,9 @@ class IfTrentHadATextToSpeechDevice final : public ActiveEffect
                 ttsLines.emplace_back(line.substr(0, line.size() - 1));
             }
         }
+
+    public:
+        explicit IfTrentHadATextToSpeechDevice(const EffectInfo &info) : ActiveEffect(info) {}
 };
 
 // clang-format off

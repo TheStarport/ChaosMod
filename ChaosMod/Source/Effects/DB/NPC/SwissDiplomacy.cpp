@@ -24,8 +24,7 @@ class SwissDiplomacy final : public ActiveEffect
             }
         }
 
-    public:
-        explicit SwissDiplomacy(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             INI_Reader ini;
             ini.open("../DATA/initialworld.ini", false);
@@ -48,6 +47,9 @@ class SwissDiplomacy final : public ActiveEffect
                 }
             }
         }
+
+    public:
+        explicit SwissDiplomacy(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

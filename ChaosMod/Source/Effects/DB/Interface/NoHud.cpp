@@ -6,8 +6,6 @@
 
 class NoHud final : public ActiveEffect
 {
-
-        HCURSOR cursor = nullptr;
         static void ToggleHud([[maybe_unused]] bool newState)
         {
             __asm {
@@ -22,13 +20,11 @@ class NoHud final : public ActiveEffect
         void Begin() override
         {
             ToggleHud(false);
-            // TODO: Get<UiManager>()->OverrideCursor(cursor);
         }
 
         void End() override
         {
             ToggleHud(true);
-            // TODO: Get<UiManager>()->OverrideCursor(std::nullopt);
         };
 
         explicit NoHud(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)
@@ -38,8 +34,6 @@ class NoHud final : public ActiveEffect
             const auto fl = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
             MemUtils::WriteProcMem(fl + 0xEC48D, patch.data(), patch.size());
             MemUtils::WriteProcMem(fl + 0x11DACD, patch.data(), patch.size());
-
-            cursor = LoadCursorFromFileA("../DATA/CHAOS/null.cur");
         }
 };
 

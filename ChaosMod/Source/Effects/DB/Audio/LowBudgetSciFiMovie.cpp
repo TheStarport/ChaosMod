@@ -5,8 +5,8 @@
 
 class LowBudgetSciFiMovie final : public ActiveEffect
 {
-        inline static std::vector<uint> pewHashes{};
-        inline static std::vector<uint> replacementHashes = {
+        std::vector<uint> pewHashes{};
+        std::vector<uint> replacementHashes = {
             2369019649, 2841267407, 3135368001, 2614337743, 2673861575, 3209977415, 3016016333, 3070855878, 2688758343, 2989019722, 2184583879, 2539423809,
             3076262977, 2560397249, 3097293761, 2266818753, 2375845313, 2912682433, 3193464207, 2656573839, 3193441679, 2656625039, 3193501071, 2965927109,
             2761999752, 2299940875, 2643243779, 3032838915, 2483682304, 2394261122, 2776681800, 2334361865, 2456277057, 2993138753, 2456270913, 2993116225,
@@ -25,8 +25,7 @@ class LowBudgetSciFiMovie final : public ActiveEffect
             return pewHashes[Get<Random>()->Uniform(0u, pewHashes.size() - 1)];
         }
 
-    public:
-        explicit LowBudgetSciFiMovie(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             pewHashes.clear();
             for (int i = 1; i <= 50; i++)
@@ -41,6 +40,9 @@ class LowBudgetSciFiMovie final : public ActiveEffect
                 pewHashes.emplace_back(CreateID("null"));
             }
         }
+
+    public:
+        explicit LowBudgetSciFiMovie(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

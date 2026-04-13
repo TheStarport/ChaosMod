@@ -12,13 +12,15 @@ class WiffleBats final : public ActiveEffect
         void Begin() override { detour->Detour(Detour); }
         void End() override { detour->UnDetour(); }
 
-    public:
-        explicit WiffleBats(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             auto collision = reinterpret_cast<OnCollision>(
                 GetProcAddress(GetModuleHandleA("server.dll"), "?SPMunitionCollision@IServerImpl@@UAEXABUSSPMunitionCollisionInfo@@I@Z"));
             detour = std::make_unique<FunctionDetour<OnCollision>>(collision);
         }
+
+    public:
+        explicit WiffleBats(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

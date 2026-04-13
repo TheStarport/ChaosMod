@@ -20,7 +20,7 @@ class BuggyInterface final : public MemoryEffect
         bool ended = false;
 
         using LockManeuverT = bool(__fastcall*)(IBehaviorManager* bm, void* edx, bool lock);
-        inline static FunctionDetour<LockManeuverT> lockManeuverDetour = FunctionDetour(reinterpret_cast<LockManeuverT>(GetProcAddress(
+        inline static auto lockManeuverDetour = FunctionDetour(reinterpret_cast<LockManeuverT>(GetProcAddress(
             GetModuleHandleA("common.dll"), "?lock_maneuvers@IBehaviorManager@@QAE_N_N@Z"))); // NOLINT(clang-diagnostic-cast-function-type-strict)
 
         static bool __fastcall LockManeuverDetour(IBehaviorManager* bm, void* edx, bool lock)
@@ -93,7 +93,8 @@ class BuggyInterface final : public MemoryEffect
             }
         }
 
-        explicit BuggyInterface(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) { lockManeuverDetour.Detour(LockManeuverDetour); }
+        void Init() override { lockManeuverDetour.Detour(LockManeuverDetour); }
+        explicit BuggyInterface(const EffectInfo& effectInfo) : MemoryEffect(effectInfo) {}
 };
 
 // clang-format off

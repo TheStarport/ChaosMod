@@ -173,6 +173,8 @@ class SprechenSieDeutsch final : public ActiveEffect
 
         void Init() override
         {
+            LoadLibraries();
+
             dllMap[currentLang] = {
                 GetModuleHandleA("resources.dll"),     GetModuleHandleA("infocards.dll"),      GetModuleHandleA("misctext.dll"),
                 GetModuleHandleA("nameresources.dll"), GetModuleHandleA("equipresources.dll"), GetModuleHandleA("offerbriberesources.dll"),
@@ -199,7 +201,7 @@ class SprechenSieDeutsch final : public ActiveEffect
             return LoadStringW(module, ids, buffer, length);
         }
 
-        explicit SprechenSieDeutsch(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) { LoadLibraries(); }
+        explicit SprechenSieDeutsch(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) { }
 };
 
 std::string ChaosMod::GetInfocardName(const uint ids)

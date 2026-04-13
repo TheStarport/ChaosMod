@@ -41,11 +41,10 @@ class SadViolin final : public PersistentEffect
 
         void End() override { playMusicDetour->UnDetour(); }
 
+        void Init() override { playMusicDetour = std::make_unique<FunctionDetour<PlayMusicFunction>>(pub::Audio::SetMusic); }
+
     public:
-        explicit SadViolin(const EffectInfo& info) : PersistentEffect(info)
-        {
-            playMusicDetour = std::make_unique<FunctionDetour<PlayMusicFunction>>(pub::Audio::SetMusic);
-        }
+        explicit SadViolin(const EffectInfo& info) : PersistentEffect(info) {}
 };
 
 // clang-format off

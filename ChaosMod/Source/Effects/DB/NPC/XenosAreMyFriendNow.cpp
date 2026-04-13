@@ -29,8 +29,7 @@ class XenosAreMyFriendsNow final : public ActiveEffect
             pub::Reputation::SetReputation(rep, npc, 1.0f);
         }
 
-    public:
-        explicit XenosAreMyFriendsNow(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             INI_Reader ini;
             ini.open("../DATA/initialworld.ini", false);
@@ -53,6 +52,9 @@ class XenosAreMyFriendsNow final : public ActiveEffect
                 }
             }
         }
+
+    public:
+        explicit XenosAreMyFriendsNow(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

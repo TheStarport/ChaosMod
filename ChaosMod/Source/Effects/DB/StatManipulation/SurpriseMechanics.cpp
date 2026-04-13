@@ -18,8 +18,7 @@ class SurpriseMechanics final : public ActiveEffect
             }
         }
 
-    public:
-        explicit SurpriseMechanics(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)
+        void Init() override
         {
             INI_Reader ini;
             ini.open("../DATA/CHAOS/chaos_player_equipment.ini", false);
@@ -39,6 +38,11 @@ class SurpriseMechanics final : public ActiveEffect
                     }
                 }
             }
+        }
+
+    public:
+        explicit SurpriseMechanics(const EffectInfo& effectInfo) : ActiveEffect(effectInfo)
+        {
         }
 };
 

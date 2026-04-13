@@ -19,12 +19,14 @@ class IAmRobot final : public ActiveEffect
         void Begin() override { sendCommDetour->Detour(Detour); }
         void End() override { sendCommDetour->UnDetour(); }
 
-    public:
-        explicit IAmRobot(const EffectInfo &info) : ActiveEffect(info)
+        void Init() override
         {
             auto orig = reinterpret_cast<SendCommType>(GetProcAddress(GetModuleHandleA("server.dll"), "?SendComm@SpaceObj@pub@@YAHIIIPBUCostume@@IPAIHIM_N@Z"));
             sendCommDetour = std::make_unique<FunctionDetour<SendCommType>>(orig);
         }
+
+    public:
+        explicit IAmRobot(const EffectInfo &info) : ActiveEffect(info) {}
 };
 
 // clang-format off

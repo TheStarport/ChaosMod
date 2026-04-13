@@ -1,7 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
 #include "Effects/ActiveEffect.hpp"
-//#include "Components/UiManager.hpp"
+// #include "Components/UiManager.hpp"
 
 class JustLikeThe90s final : public ActiveEffect
 {
@@ -15,8 +15,7 @@ class JustLikeThe90s final : public ActiveEffect
             // TODO: Get<UiManager>()->OverrideCursor(std::nullopt);
         }
 
-    public:
-        JustLikeThe90s(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             char szCurDir[MAX_PATH];
             GetCurrentDirectoryA(sizeof(szCurDir), szCurDir);
@@ -38,6 +37,9 @@ class JustLikeThe90s final : public ActiveEffect
                 cursors.emplace_back(hCur);
             }
         }
+
+    public:
+        explicit JustLikeThe90s(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

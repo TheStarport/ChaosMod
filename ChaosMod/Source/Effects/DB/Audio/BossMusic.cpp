@@ -12,7 +12,7 @@ class BossMusic final : public ActiveEffect
         using CallMusic = bool (*)(ID_String* ids, uint, float);
         CallMusic callMusic = reinterpret_cast<CallMusic>(0x4288E0);
 
-        void Begin() override{};
+        void Begin() override {};
 
         void Update(float delta) override
         {
@@ -38,15 +38,17 @@ class BossMusic final : public ActiveEffect
             // TODO: calculate if anything near by is hostile and play the right type of music
 
             MemUtils::ReadProcMem(RelOfs("freelancer.exe", AddressTable::CurrentSystemSpace), reinterpret_cast<void*>(currentPlayingOffset), sizeof(uint));
-        };
+        }
 
-    public:
-        explicit BossMusic(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             currentPlayingOffset = RelOfs("freelancer.exe", AddressTable::CurrentPlayingMusic);
             currentSystemOffset = RelOfs("freelancer.exe", AddressTable::CurrentSystemSpace);
             currentBattleOffset = RelOfs("freelancer.exe", AddressTable::CurrentSystemBattle);
         }
+
+    public:
+        explicit BossMusic(const EffectInfo& info) : ActiveEffect(info) {}
 };
 
 // clang-format off

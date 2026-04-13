@@ -63,8 +63,7 @@ class RandomisedProjectiles final : public ActiveEffect
             detour.UnDetour();
         }
 
-    public:
-        explicit RandomisedProjectiles(const EffectInfo& info) : ActiveEffect(info)
+        void Init() override
         {
             INI_Reader ini;
             ini.open("freelancer.ini", false);
@@ -107,6 +106,11 @@ class RandomisedProjectiles final : public ActiveEffect
 
                 ini.close();
             }
+        }
+
+    public:
+        explicit RandomisedProjectiles(const EffectInfo& info) : ActiveEffect(info)
+        {
         }
 };
 
