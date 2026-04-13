@@ -2,7 +2,6 @@
 #include "CoreComponents/ChaosTimer.hpp"
 
 #include "ChaosConfig.hpp"
-#include "Components/DiscordManager.hpp"
 #include "Components/ShipManipulator.hpp"
 #include "Effects/ActiveEffect.hpp"
 
@@ -33,22 +32,6 @@ void ChaosTimer::ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill)
         {
             effect->OnShipDestroyed(dmgList, ship);
         }
-    }
-}
-
-__declspec(naked) void ChaosTimer::NakedShipDestroyed()
-{
-    __asm {
-        mov eax, [esp+0Ch] ; +4
-        mov edx, [esp+4]
-        push ecx
-        push edx
-        push ecx
-        push eax
-        call ShipDestroyed
-        pop ecx
-        mov eax, [oldShipDestroyed]
-        jmp eax
     }
 }
 
@@ -358,12 +341,6 @@ void ChaosTimer::TriggerChaos(ActiveEffect* effect)
 
 ChaosTimer::ChaosTimer()
 {
-    const auto shipDestroyedAddress = reinterpret_cast<PDWORD>(NakedShipDestroyed);
-
-    const auto offset = RelOfs("server.dll", AddressTable::ShipDestroyedFunction);
-    MemUtils::ReadProcMem(offset, &oldShipDestroyed, 4);
-    MemUtils::WriteProcMem(offset, &shipDestroyedAddress, 4);
-
     consumeFireResourcesDetour.Detour(OnConsumeFireResources);
     canFireDetour.Detour(OnCanFire);
 }
@@ -440,7 +417,6 @@ void ChaosTimer::Update(const float delta)
         timeSinceLastUpdate = 15.f;
         const auto lastEffectTimestamp = static_cast<int64>(TimeUtils::UnixTime<std::chrono::seconds>());
         const auto nextEffectTimestamp = lastEffectTimestamp + static_cast<int64>(GetTimeUntilChaos());
-        Get<DiscordManager>()->SetActivity("Dreading the next act of Chaos", lastEffectTimestamp, nextEffectTimestamp);
     }
 
     // If they don't have a ship lets not do chaos (aka are they in space?)

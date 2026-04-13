@@ -11,7 +11,7 @@ function(set_general_targets)
         message(FATAL_ERROR "set_general_targets called without specifying a project name")
     endif ()
 
-    target_include_directories(${PARSED_ARGS_PROJECT_NAME} PRIVATE
+    target_include_directories(${PARSED_ARGS_PROJECT_NAME} PRIVATE SYSTEM
             ${ROOT_DIR}
             ${ROOT_DIR}/modules
             ${SDK_PATH}/include
@@ -63,7 +63,6 @@ function(begin_glob)
             "${SOURCE_PATH}/*.h*"
             "${INCLUDE_PATH}/*.c*"
             "${INCLUDE_PATH}/*.h*"
-            "${SDK_PATH}/*.h*"
     )
     set(SOURCE_PATH ${SOURCE_PATH} PARENT_SCOPE)
     set(INCLUDE_PATH ${INCLUDE_PATH} PARENT_SCOPE)

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Effects/ActiveEffect.hpp"
 #include "FLCore/FLCoreServer.h"
 class CaramellDansen final : public ActiveEffect

@@ -6,10 +6,26 @@
 #include "CoreComponents/ChaosTimer.hpp"
 #include "FLCore/FLCoreServer.h"
 
-uint* exteriorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?EXTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));
-uint* interiorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?INTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));
+using CreateSoundType = FlSound* (*)(uint& hash);
+using PlaySoundType = bool (*)(FlSound* createdSound, int, int);
+using InterceptSoundType = bool(__fastcall*)(FlSound*);
+using ShipConstructorType = CShip*(__fastcall*)(CShip* ship, void* edx, int unk);
 
-CEquip* __stdcall OnSound::DetourThrusterFind(CEquipManager* equipManager, EquipmentClass thrusterClass)
+std::pair<uint, uint> originalThrusterSounds;
+std::unordered_map<uint, std::pair<uint, uint>> customThrusterSoundMap;
+FunctionDetour shipConstructorDetour{ reinterpret_cast<ShipConstructorType>(reinterpret_cast<DWORD>(GetModuleHandleA(nullptr)) + 0x12EFB0) };
+inline static auto createSound = reinterpret_cast<CreateSoundType>(0x42ae40);
+inline static auto playSound = reinterpret_cast<PlaySoundType>(0x4285f0);
+inline static auto interceptSound = reinterpret_cast<InterceptSoundType>(0x42B840);
+// inline static std::unique_ptr<FunctionDetour<PlaySoundType>> detourPlaySound = nullptr;
+inline static std::unique_ptr<FunctionDetour<InterceptSoundType>> detourInterceptSound = nullptr;
+
+static bool __fastcall SoundIntercept(FlSound* sound);
+
+auto exteriorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?EXTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));
+auto interiorSoundName = reinterpret_cast<uint*>(GetProcAddress(GetModuleHandleA("common.dll"), "?INTERIOR_SOUND_NAME@ThrusterEquipConsts@@3UID_String@@A"));
+
+CEquip* __stdcall DetourThrusterFind(CEquipManager* equipManager, EquipmentClass thrusterClass)
 {
     originalThrusterSounds = { *interiorSoundName, *exteriorSoundName };
 
@@ -27,9 +43,9 @@ CEquip* __stdcall OnSound::DetourThrusterFind(CEquipManager* equipManager, Equip
     return nullptr;
 }
 
-__declspec(naked) void OnSound::DetourThrusterFindNaked()
+constexpr DWORD returnAddr = 0x545531;
+__declspec(naked) void DetourThrusterFindNaked()
 {
-    static constexpr DWORD addr = 0x545531;
     __asm {
         push ecx // preserve
         push [esp+4]
@@ -37,11 +53,11 @@ __declspec(naked) void OnSound::DetourThrusterFindNaked()
         call DetourThrusterFind
         pop ecx
         add esp, 4
-        jmp addr
+        jmp returnAddr
     }
 }
 
-CShip* __fastcall OnSound::ShipConstructorDetour(CShip* ship, void* edx, int unk)
+CShip* __fastcall ShipConstructorDetour(CShip* ship, void* edx, int unk)
 {
     shipConstructorDetour.UnDetour();
     const auto result = shipConstructorDetour.GetOriginalFunc()(ship, edx, unk);
@@ -54,7 +70,7 @@ CShip* __fastcall OnSound::ShipConstructorDetour(CShip* ship, void* edx, int unk
     return result;
 }
 
-bool __fastcall OnSound::SoundIntercept(FlSound* sound)
+bool __fastcall SoundIntercept(FlSound* sound)
 {
     if (const uint newHash = ChaosTimer::OnSoundEffect(sound->hash); newHash != sound->hash)
     {

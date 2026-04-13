@@ -76,7 +76,7 @@ class Change
                          constexpr auto isFloat = std::is_same_v<FieldTypeT, float>;
                          constexpr auto isBool = std::is_same_v<FieldTypeT, bool>;
 
-                         static_assert(isInt || isFloat || isBool, "Stat fields must be ints, floats or bools.");
+                         static_assert(isInt || isFloat || isBool &&Stat fields must be ints, floats or bools.");
 
                          FieldType fieldType;
                          if constexpr (isInt)
@@ -224,7 +224,7 @@ class EquipmentChange : public Change
 
         // clang-format on
 
-        static_assert(!std::is_same_v<T, PVOID>, "Invalid type provided to equipment change or template has invalid configuration");
+        static_assert(!std::is_same_v<T, PVOID> &&Invalid type provided to equipment change or template has invalid configuration");
 
         uint hash = 0;
         std::string field;
@@ -239,7 +239,7 @@ class EquipmentChange : public Change
                      [&fields, &weights](auto member)
                      {
                          FieldData data;
-                         static_assert(!member.is_static && member.is_writable, "Unprocessable field!");
+                         static_assert(!member.is_static && member.is_writable &&Unprocessable field!");
 
                          if constexpr (refl::descriptor::has_attribute<Weight>(member))
                          {
@@ -433,7 +433,7 @@ class EquipmentChange : public Change
         void Multiply(float multiplier) override
         {
             const auto erasure = GetArchetypePtr();
-            ASSERT(erasure.has_value(), "Failed to get archetype pointer!!");
+            assert(erasure.has_value() &&Failed to get archetype pointer!!");
 
             auto item = std::any_cast<std::add_pointer_t<T>>(erasure);
             auto fields = GetEditableFields<T>(item);
@@ -483,7 +483,7 @@ class EquipmentChange : public Change
             hash = possibleEquipment[randomEngine.Uniform(0u, possibleEquipment.size() - 1)];
 
             const auto erasure = GetArchetypePtr();
-            ASSERT(erasure.has_value(), "Failed to get archetype pointer!!");
+            assert(erasure.has_value() &&Failed to get archetype pointer!!");
 
             auto item = std::any_cast<std::add_pointer_t<T>>(erasure);
 

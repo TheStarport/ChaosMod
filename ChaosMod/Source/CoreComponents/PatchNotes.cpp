@@ -3,8 +3,6 @@
 #include "ChaosConfig.hpp"
 #include "CoreComponents/Patches/Changes.hpp"
 
-#include "Components/DiscordManager.hpp"
-
 #include <Memory/OffsetHelper.hpp>
 #include <semver.hpp>
 
@@ -33,7 +31,7 @@ void PatchNotes::LoadPatches()
     try
     {
         const auto json = nlohmann::json::parse(content);
-        ASSERT(json.is_object(), "Patch notes must be an object.");
+        assert(json.is_object() &&Patch notes must be an object.");
         auto patches = json["patches"];
 
         file.close();
@@ -49,7 +47,7 @@ void PatchNotes::LoadPatches()
 
         for (const auto& obj : patches)
         {
-            ASSERT(obj.is_object(), "Every array item must be an object.");
+            assert(obj.is_object() &&Every array item must be an object.");
 
             const auto patch = std::make_shared<Patch>();
             patch->date = obj["date"];
@@ -63,7 +61,7 @@ void PatchNotes::LoadPatches()
             auto changes = obj.at("changes").get<nlohmann::json::array_t>();
             for (const auto& changeObj : changes)
             {
-                ASSERT(changeObj.is_object(), "Changes must be objects");
+                assert(changeObj.is_object() &&Changes must be objects");
 
                 auto change = GetChangePtr(static_cast<ChangeType>(changeObj["type"].get<int>()));
 
@@ -339,7 +337,7 @@ std::shared_ptr<Change> PatchNotes::GetChangePtr(const ChangeType type)
             change = std::make_shared<CurrencyChange>();
             break;
         default:   // NOLINT(clang-diagnostic-covered-switch-default)
-            ASSERT(false, "Invalid type provided in change log.");
+            assert(false &&Invalid type provided in change log.");
     }
     // clang-format on
 

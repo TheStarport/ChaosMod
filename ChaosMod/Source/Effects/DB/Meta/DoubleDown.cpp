@@ -6,8 +6,8 @@
 
 class PatchDay final : public ActiveEffect
 {
-        void Begin() override { PatchNotes::DoubleDown(); }
-        bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable && !PatchNotes::GetPatchNotes().empty(); }
+        //TODO: void Begin() override { PatchNotes::DoubleDown(); }
+        // TODO: bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable && !PatchNotes::GetPatchNotes().empty(); }
 
     public:
         explicit PatchDay(const EffectInfo& effectInfo) : ActiveEffect(effectInfo) {}

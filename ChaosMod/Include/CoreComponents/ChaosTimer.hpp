@@ -8,14 +8,10 @@
 
 #include <unordered_map>
 
-class OnHit;
-class OnSound;
 class OnSystemStatusChange;
 class PatchNotes;
 class ChaosTimer final : public Component
 {
-        friend OnHit;
-        friend OnSound;
         friend OnSystemStatusChange;
 
         using ConsumeFireResourcesType = void(__fastcall*)(CELauncher* launcher);
@@ -32,13 +28,10 @@ class ChaosTimer final : public Component
 
         float timeSinceLastUpdate = 15.f;
 
-        inline static FARPROC oldShipDestroyed = nullptr;
         static void __stdcall ShipDestroyed(DamageList* dmgList, DWORD* ecx, uint kill);
-        static void NakedShipDestroyed();
 
         static void OnMunitionHit(EqObj* hitObject, MunitionImpactData* impact, DamageList* dmgList, bool after);
         static bool OnExplosion(EqObj* hitObject, ExplosionDamageEvent* explosion, DamageList* dmgList);
-        static uint OnSoundEffect(uint hash);
         static void OnSystemUnload();
         static void OnJumpInComplete();
         static FireResult __fastcall OnCanFire(CEGun* gun, void* edx, const Vector& target);
@@ -53,6 +46,12 @@ class ChaosTimer final : public Component
         std::vector<PersistentEffect*> persistentEffects;
 
     public:
+        // Events
+
+        static uint OnSoundEffect(uint hash);
+
+        // Effect Management
+
         ChaosTimer(const ChaosTimer& other) = delete;
         ChaosTimer();
         void DelayActiveEffect(ActiveEffect* effect, float delay);

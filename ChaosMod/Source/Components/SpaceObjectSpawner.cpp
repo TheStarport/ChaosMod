@@ -5,11 +5,12 @@
 #include "Constants.hpp"
 #include "FLCore/Common/Globals.hpp"
 #include "Memory/AssetTracker.hpp"
+
 SpaceObjectSpawner::SpaceObjectBuilder& SpaceObjectSpawner::SpaceObjectBuilder::WithNpc(const std::string& npcNickname)
 {
     auto& templates = Get<SpaceObjectSpawner>()->npcTemplates;
     const auto found = templates.find(CreateID(npcNickname.c_str()));
-    ASSERT(found != templates.end(), "NPC Nickname not found. This means either the provided name was invalid, or the NPC it represented was invalid.");
+    assert(found != templates.end() && "NPC Nickname not found. This means either the provided name was invalid, or the NPC it represented was invalid.");
 
     isNpc = true;
     npcTemplate = found->second;
@@ -323,7 +324,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
             }
             else if (health.value() <= 0.0f)
             {
-                ASSERT(false, "Attempted to spawn an NPC with zero or negative health.");
+                assert(false && "Attempted to spawn an NPC with zero or negative health.");
             }
             else
             {
@@ -332,7 +333,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnNpc()
         }
         else
         {
-            ASSERT(health.value() > 0.0f, "Attempted to spawn an NPC with zero or negative health.");
+            assert(health.value() > 0.0f && "Attempted to spawn an NPC with zero or negative health.");
             si.health = static_cast<uint>(health.value());
         }
     }
@@ -523,7 +524,7 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 
     if (health.has_value())
     {
-        ASSERT(health.value() > 0.0f, "Attempted to spawn an NPC with zero or negative health.");
+        assert(health.value() > 0.0f && "Attempted to spawn an NPC with zero or negative health.");
         if (healthRelative)
         {
             pub::SpaceObj::SetRelativeHealth(spaceId, health.value());
@@ -557,8 +558,8 @@ std::weak_ptr<SpawnedObject> SpaceObjectSpawner::SpaceObjectBuilder::SpawnSolar(
 void SpaceObjectSpawner::SpaceObjectBuilder::ValidateSpawn()
 {
     ASSERT(Archetype::GetSolar(npcTemplate.archetypeHash) || Archetype::GetShip(npcTemplate.archetypeHash), std::format("Ship/Solar archetype not found while building NPC/Station: {}", npcTemplate.archetype));
-    ASSERT(system.has_value(), "Attempting to spawn NPC/Station without a system set.");
-    ASSERT(npcTemplate.loadoutHash, "Attempting to spawn an NPC/Station without a loadout set.");
+    assert(system.has_value() && "Attempting to spawn NPC/Station without a system set.");
+    assert(npcTemplate.loadoutHash && "Attempting to spawn an NPC/Station without a loadout set.");
     ASSERT(Loadout::Get(npcTemplate.loadoutHash), std::format("{} ({}) loadout was not found while loading NPC.", npcTemplate.loadout, npcTemplate.loadoutHash));
 }
 

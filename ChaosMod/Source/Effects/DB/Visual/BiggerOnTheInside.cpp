@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Effects/ActiveEffect.hpp"
 class BiggerOnTheInside final : public ActiveEffect
 {

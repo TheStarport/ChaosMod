@@ -35,7 +35,7 @@ class BloodMagic final : public ActiveEffect
 
             float capacity = 0.f;
 
-            auto traverser = ship->equipManager.StartTraverse(EquipmentClass::Power);
+            CEquipTraverser traverser{ static_cast<int>(EquipmentClass::Power) };
             auto equip = ship->equipManager.Traverse(traverser);
             while (equip)
             {

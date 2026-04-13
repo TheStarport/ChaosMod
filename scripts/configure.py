@@ -1,18 +1,26 @@
 import json
 import os
+from pathlib import Path
 
 import click
 
-from .dependencies import dependencies
+from .linux.generate_rc_includes import generate_rc_includes
+from .linux.generate_vfs import build_vfs
 from .utils import cli, run, is_windows
 
-
 @cli.command(short_help='Install and build dependencies via conan')
-@click.option("--lock", is_flag=True, default=False, help="Whether to regenerate the lockfile")
-def configure(lock: bool):
+def configure():
     msvc_dir = os.environ.get('MSVC', None)
-    if msvc_dir is None:
-        raise Exception("ENV MSVC is not set or points to a directory that does not exist")
+    if not is_windows():
+        if msvc_dir is None:
+            raise Exception("ENV MSVC is not set or points to a directory that does not exist")
+
+        if not os.path.exists("profiles/rc_includes"):
+            vc_dir = Path(os.path.join(msvc_dir, 'VC', 'Tools', 'MSVC'))
+            kit_dir = Path(os.path.join(msvc_dir, 'Windows Kits', '10'))
+            generate_rc_includes(vc_dir, kit_dir, out_dir=Path('profiles/rc_includes'),
+                                 cmake_output=Path('profiles/clang.cmake'))
+            build_vfs(str(vc_dir), str(kit_dir), out_file='profiles/vfs-overlay.yml')
 
     default_profile = run("conan profile path default", allow_error=True)
     if default_profile:
@@ -25,9 +33,6 @@ def configure(lock: bool):
         '-pr:b=default',
         f'-pr:h=./profiles/{host}',
     ]
-
-    if not lock:
-        args.append(f'--lockfile-partial --lockfile=conan-{host}.lock')
 
     if os.path.exists('ConanPresets.json'):
         os.remove('ConanPresets.json')
@@ -62,13 +67,6 @@ def configure(lock: bool):
         with open("ConanPresets.json", "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
 
-    if lock:
-        run(f"conan lock create . --build missing -pr:b=default -pr:h=./profiles/{host} -s build_type=RelWithDebInfo"
-            f" -u --lockfile-out=conan-{host}.lock")
-        # Remove our local packages
-        run(f"conan lock remove --requires='libpq-fluf/*' --requires='libpqxx-fluf/*' --lockfile=conan-{host}.lock "
-            f"--lockfile-out=conan-{host}.lock")
-
 
 # noinspection PyShadowingBuiltins
 @cli.command(short_help='Runs a first-time build, downloading any needed dependencies, and generating preset files.')
@@ -79,7 +77,6 @@ def configure(lock: bool):
 def build(ctx: click.Context, release: bool, no_post_build: bool, no_hooks: bool):
     preset = 'release' if release else 'debug'
 
-    ctx.invoke(dependencies)  # noinspection PyTypeChecker
     ctx.invoke(configure)  # noinspection PyTypeChecker
 
     run(f"cmake --preset={preset} {'-DNO_POST_BUILD=TRUE' if no_post_build else ''} {'-DNO_HOOKS=TRUE' if no_hooks else ''}")

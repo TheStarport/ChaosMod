@@ -114,7 +114,7 @@ class CargoSpawner final
                         case Archetype::ClassType::Gun: str = "Guns/Launchers"; break;
                         case Archetype::ClassType::ShieldGenerator: str = "Shields"; break;
                         case Archetype::ClassType::Thruster: str = "Thrusters"; break;
-                        default: ASSERT(false, "Invalid equip class passed into cargo spawner");
+                        default: assert(false && "Invalid equip class passed into cargo spawner");
                     }
 
                     if (ImGui::BeginTabItem(str.c_str()))

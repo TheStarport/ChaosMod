@@ -30,7 +30,7 @@ class MemoryEffect : public ActiveEffect
 #define MemoryListStart(x) std::vector<MemoryAddress> x = {
 #define MemoryListItem(module, offset, length) { DWORD(GetModuleHandleA(module)), DWORD(AddressTable::offset), length },
 #define MemoryListEnd(x) };                                                                                 \
-    std::vector<MemoryAddress>& GetMemoryAddresses()                                                  \
+    std::vector<MemoryAddress>& GetMemoryAddresses() override                                                  \
     {                                                                                                       \
         return x;                                                                                           \
     }

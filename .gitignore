@@ -464,3 +464,8 @@ metadata.rc.in
 PCH.hpp
 PCH.cpp
 LoadConf.cmake
+
+# Linux Clang Files
+profiles/clang.cmake
+profiles/vfs-overlay.yml
+profiles/rc_includes/

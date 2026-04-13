@@ -2,180 +2,172 @@
 
 #include "Effects/ActiveEffect.hpp"
 
+std::map<Language, std::vector<HMODULE>> dllMap;
+auto currentLang = Language::English;
+
+using GetIdsName = int (*)(void* resourceHandle, uint ids, wchar_t* buffer, int length);
+std::unique_ptr<FunctionDetour<GetIdsName>> getIdsNameDetour;
+
+static std::pair<HMODULE, int> GetModuleByIds(const uint ids)
+{
+    int index = -1;
+    if (ids < 65535)
+    {
+        index = 0;
+    }
+    else if (ids < 131071)
+    {
+        // InfoCards.dll
+        index = 1;
+    }
+    else if (ids < 196607)
+    {
+        // MiscText.dll
+        index = 2;
+    }
+    else if (ids < 262143)
+    {
+        // NameResources.dll
+        index = 3;
+    }
+    else if (ids < 327679)
+    {
+        // EquipResources.dll
+        index = 4;
+    }
+    else if (ids < 393215)
+    {
+        // OfferBribeResources.dll
+        index = 5;
+    }
+    else if (ids < 458751)
+    {
+        // MiscTextInfo2.dll
+        index = 6;
+    }
+    else
+    {
+        return { nullptr, index };
+    }
+
+    return { dllMap[currentLang].at(index), index };
+}
+
+inline static uint infocardLength = 0;
+inline static std::array<char, 65535> infocardBuffer;
+static char* LoadCustomInfocard(uint ids)
+{
+    const auto [module, index] = GetModuleByIds(ids);
+    if (!module)
+    {
+        return nullptr;
+    }
+
+    ids = ids - (65536 * index);
+
+    char* mem = nullptr;
+    infocardLength = 0;
+
+    if (const HRSRC resourceLoc = FindResourceExA(module, MAKEINTRESOURCEA(23), MAKEINTRESOURCEA(ids), 0); resourceLoc != nullptr)
+    {
+        if (const HGLOBAL resourceHandle = LoadResource(module, resourceLoc);
+            resourceHandle == nullptr || (mem = static_cast<char*>(LockResource(resourceHandle))) == nullptr)
+        {
+            return nullptr;
+        }
+
+        infocardLength = (SizeofResource(module, resourceLoc) >> 1) * 2;
+
+        if (infocardLength > 2)
+        {
+            if (infocardLength % 2 == 1 && !mem[infocardLength - 1])
+            {
+                // snip extra null byte
+                infocardLength--;
+            }
+
+            // skip BOM
+            if (mem[0] == static_cast<char>(0xFF) && mem[1] == static_cast<char>(0xFE))
+            {
+                infocardLength -= 2;
+                mem = mem + 2;
+            }
+        }
+
+        memcpy_s(infocardBuffer.data(), infocardBuffer.size(), mem, infocardLength);
+        mem = infocardBuffer.data();
+    }
+
+    return mem;
+}
+
+static int GetIdsNameOverride(void* resourceHandle, uint ids, wchar_t* buffer, int length);
+
+static char* __stdcall GetIdsInfocardOverride(const uint ids)
+{
+    std::memset(infocardBuffer.data(), '\0', infocardBuffer.size());
+
+    /*auto override = ShipInfocardOverride::OverrideIds(ids);
+    if (override.has_value())
+    {
+        auto& str = override.value();
+        infocardLength = str.size() * 2;
+        memcpy_s(infocardBuffer.data(), infocardBuffer.size(), str.data(), infocardLength);
+        return infocardBuffer.data();
+    }*/
+
+    if (const auto buffer = LoadCustomInfocard(ids))
+    {
+        return buffer;
+    }
+
+    return nullptr;
+}
+
+static void GetIdsInfocardNaked();
+
+static void LoadLibraries()
+{
+    // clang-format off
+    const std::array<std::pair<std::string, Language>, 10> languages = {{
+        { "cn", Language::Chinese },
+        { "de", Language::German },
+        { "fr", Language::French },
+        { "uwu", Language::UwU },
+        { "chef", Language::Chef },
+        { "cockney", Language::Cockney },
+        { "eleet", Language::Leet },
+        { "lolcat", Language::LolCat },
+        { "pirate", Language::Pirate },
+        { "scottish", Language::Scottish },
+    }};
+    // clang-format on
+
+    for (auto& lang : languages)
+    {
+        auto& map = dllMap[lang.second] = {};
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/resources-{}.dll", lang.first).c_str())) != nullptr && "Resources.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/InfoCards-{}.dll", lang.first).c_str())) != nullptr && "infocards.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/misctext-{}.dll", lang.first).c_str())) != nullptr && "misctext.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/nameresources-{}.dll", lang.first).c_str())) != nullptr &&
+               "nameresources.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/equipresources-{}.dll", lang.first).c_str())) != nullptr &&
+               "equipresources.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/offerbriberesources-{}.dll", lang.first).c_str())) != nullptr &&
+               "offerbriberesources.dll could not be loaded");
+        assert(map.emplace_back(LoadLibraryA(std::format("langs/misctextinfo2-{}.dll", lang.first).c_str())) != nullptr &&
+               "misctextinfo2.dll could not be loaded");
+    }
+}
+
 class SprechenSieDeutsch final : public ActiveEffect
 {
-        inline static std::map<Language, std::vector<HMODULE>> dllMap;
-
-        inline static Language currentLang = Language::English;
-
-        using GetIdsName = int (*)(void* resourceHandle, uint ids, wchar_t* buffer, int length);
-        inline static std::unique_ptr<FunctionDetour<GetIdsName>> getIdsNameDetour;
-
         void Begin() override
         {
             const auto current = currentLang;
             while (current == currentLang)
             {
                 currentLang = static_cast<Language>(Get<Random>()->Uniform(0, static_cast<int>(Language::Chinese)));
-            }
-        }
-
-        static std::pair<HMODULE, int> GetModuleByIds(const uint ids)
-        {
-            int index = -1;
-            if (ids < 65535)
-            {
-                index = 0;
-            }
-            else if (ids < 131071)
-            {
-                // InfoCards.dll
-                index = 1;
-            }
-            else if (ids < 196607)
-            {
-                // MiscText.dll
-                index = 2;
-            }
-            else if (ids < 262143)
-            {
-                // NameResources.dll
-                index = 3;
-            }
-            else if (ids < 327679)
-            {
-                // EquipResources.dll
-                index = 4;
-            }
-            else if (ids < 393215)
-            {
-                // OfferBribeResources.dll
-                index = 5;
-            }
-            else if (ids < 458751)
-            {
-                // MiscTextInfo2.dll
-                index = 6;
-            }
-            else
-            {
-                return { nullptr, index };
-            }
-
-            return { dllMap[currentLang].at(index), index };
-        }
-
-        inline static uint infocardLength = 0;
-        inline static std::array<char, 65535> infocardBuffer;
-        static char* LoadCustomInfocard(uint ids)
-        {
-            const auto [module, index] = GetModuleByIds(ids);
-            if (!module)
-            {
-                return nullptr;
-            }
-
-            ids = ids - (65536 * index);
-
-            char* mem = nullptr;
-            infocardLength = 0;
-
-            if (const HRSRC resourceLoc = FindResourceExA(module, MAKEINTRESOURCEA(23), MAKEINTRESOURCEA(ids), 0); resourceLoc != nullptr)
-            {
-                if (const HGLOBAL resourceHandle = LoadResource(module, resourceLoc);
-                    resourceHandle == nullptr || (mem = static_cast<char*>(LockResource(resourceHandle))) == nullptr)
-                {
-                    return nullptr;
-                }
-
-                infocardLength = (SizeofResource(module, resourceLoc) >> 1) * 2;
-
-                if (infocardLength > 2)
-                {
-                    if (infocardLength % 2 == 1 && !mem[infocardLength - 1])
-                    {
-                        // snip extra null byte
-                        infocardLength--;
-                    }
-
-                    // skip BOM
-                    if (mem[0] == static_cast<char>(0xFF) && mem[1] == static_cast<char>(0xFE))
-                    {
-                        infocardLength -= 2;
-                        mem = mem + 2;
-                    }
-                }
-
-                memcpy_s(infocardBuffer.data(), infocardBuffer.size(), mem, infocardLength);
-                mem = infocardBuffer.data();
-            }
-
-            return mem;
-        }
-
-        static int GetIdsNameOverride(void* resourceHandle, uint ids, wchar_t* buffer, int length)
-        {
-            auto res = LoadCustomIdsName(ids, buffer, length);
-            if (!res)
-            {
-                getIdsNameDetour->UnDetour();
-                res = getIdsNameDetour->GetOriginalFunc()(resourceHandle, ids, buffer, length);
-                getIdsNameDetour->Detour(GetIdsNameOverride);
-            }
-
-            return res;
-        }
-
-        static char* __stdcall GetIdsInfocardOverride(const uint ids)
-        {
-            std::memset(infocardBuffer.data(), '\0', infocardBuffer.size());
-
-            /*auto override = ShipInfocardOverride::OverrideIds(ids);
-            if (override.has_value())
-            {
-                auto& str = override.value();
-                infocardLength = str.size() * 2;
-                memcpy_s(infocardBuffer.data(), infocardBuffer.size(), str.data(), infocardLength);
-                return infocardBuffer.data();
-            }*/
-
-            if (const auto buffer = LoadCustomInfocard(ids))
-            {
-                return buffer;
-            }
-
-            return nullptr;
-        }
-
-        static void GetIdsInfocardNaked();
-
-        static void LoadLibraries()
-        {
-            // clang-format off
-            const std::array<std::pair<std::string, Language>, 10> languages = {{
-                { "cn", Language::Chinese },
-                { "de", Language::German },
-                { "fr", Language::French },
-                { "uwu", Language::UwU },
-                { "chef", Language::Chef },
-                { "cockney", Language::Cockney },
-                { "eleet", Language::Leet },
-                { "lolcat", Language::LolCat },
-                { "pirate", Language::Pirate },
-                { "scottish", Language::Scottish },
-            }};
-            // clang-format on
-
-            for (auto& lang : languages)
-            {
-                auto& map = dllMap[lang.second] = {};
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/resources-{}.dll", lang.first).c_str())) != nullptr, "Resources.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/InfoCards-{}.dll", lang.first).c_str())) != nullptr, "infocards.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/misctext-{}.dll", lang.first).c_str())) != nullptr, "misctext.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/nameresources-{}.dll", lang.first).c_str())) != nullptr, "nameresources.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/equipresources-{}.dll", lang.first).c_str())) != nullptr, "equipresources.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/offerbriberesources-{}.dll", lang.first).c_str())) != nullptr, "offerbriberesources.dll could not be loaded");
-                assert(map.emplace_back(LoadLibraryA(std::format("langs/misctextinfo2-{}.dll", lang.first).c_str())) != nullptr, "misctextinfo2.dll could not be loaded");
             }
         }
 
@@ -225,7 +217,7 @@ std::string ChaosMod::GetInfocardName(const uint ids)
 void ChaosMod::SetLanguage(Language lang) { SprechenSieDeutsch::SetLanguage(lang); }
 
 constexpr DWORD NakedReturn = 0x57DB25;
-__declspec(naked) void SprechenSieDeutsch::GetIdsInfocardNaked()
+__declspec(naked) void GetIdsInfocardNaked()
 {
     __asm {
         push eax // XMLReader VTable or something..?
@@ -251,6 +243,19 @@ __declspec(naked) void SprechenSieDeutsch::GetIdsInfocardNaked()
         push ebx
         jmp NakedReturn
     }
+}
+
+static int GetIdsNameOverride(void* resourceHandle, uint ids, wchar_t* buffer, int length)
+{
+    auto res = SprechenSieDeutsch::LoadCustomIdsName(ids, buffer, length);
+    if (!res)
+    {
+        getIdsNameDetour->UnDetour();
+        res = getIdsNameDetour->GetOriginalFunc()(resourceHandle, ids, buffer, length);
+        getIdsNameDetour->Detour(GetIdsNameOverride);
+    }
+
+    return res;
 }
 
 // clang-format off

@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 import click
 
 from .utils import cli, log

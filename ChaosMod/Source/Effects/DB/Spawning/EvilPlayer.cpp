@@ -19,16 +19,17 @@ class SpawnEvilPlayer final : public ActiveEffect
             }
 
             std::vector<SpaceObjectSpawner::LoadoutItem> items;
-            for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
+            CEquipTraverser traverser;
+            for (const CEquip* equip = ship->equipManager.Traverse(traverser); equip; equip = ship->equipManager.Traverse(traverser))
             {
-                auto nickname = ChaosMod::HashLookup(traverser.currentEquip->archetype->archId);
+                auto nickname = ChaosMod::HashLookup(equip->archetype->archId);
                 if (!nickname.has_value())
                 {
                     continue;
                 }
 
                 EquipDesc desc;
-                traverser.currentEquip->GetEquipDesc(desc);
+                equip->GetEquipDesc(desc);
 
                 SpaceObjectSpawner::LoadoutItem item{ nickname.value(), desc.is_equipped() ? 0u : desc.count, desc.is_internal() ? "" : desc.hardPoint.value };
 

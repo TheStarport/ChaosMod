@@ -6,7 +6,7 @@
 
 class EmergencyRollback final : public ActiveEffect
 {
-        void Begin() override { PatchNotes::RevertLastPatch(); }
+        // TODO: void Begin() override { PatchNotes::RevertLastPatch(); }
         bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable; }
 
     public:

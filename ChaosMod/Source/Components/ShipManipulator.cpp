@@ -1,7 +1,8 @@
-
 #include "Components/ShipManipulator.hpp"
+
 #include "FLCore/Common/Archetype/Root/EqObj/Ship.hpp"
 #include "FLCore/Common/PhySys/PhySysMethods.hpp"
+
 void ShipManipulator::SetAngularVelocity(CObject* object, const Vector& newVelocity)
 {
     const auto v = Vector(newVelocity.x, newVelocity.y, newVelocity.z);

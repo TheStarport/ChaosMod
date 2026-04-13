@@ -2,6 +2,7 @@
 #include "Effects/PersistentEffect.hpp"
 #include "FLCore/Common/Archetype/Root/Equipment/Commodity.hpp"
 #include "FLCore/FLCoreServer.h"
+
 class DontStarve final : public PersistentEffect
 {
         void Begin() override
@@ -54,12 +55,13 @@ class DontStarve final : public PersistentEffect
                 timeSinceLastEaten = 5.0f;
 
                 bool foundFood = false;
-                for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
+                CEquipTraverser traverser;
+                for (const CEquip* equip = ship->equipManager.Traverse(traverser); equip; equip = ship->equipManager.Traverse(traverser))
                 {
                     EquipDesc desc;
-                    traverser.currentEquip->GetEquipDesc(desc);
+                    equip->GetEquipDesc(desc);
 
-                    if (std::ranges::find(possibleFuel, traverser.currentEquip->archetype->archId) != possibleFuel.end())
+                    if (std::ranges::find(possibleFuel, equip->archetype->archId) != possibleFuel.end())
                     {
                         foundFood = true;
                         break;

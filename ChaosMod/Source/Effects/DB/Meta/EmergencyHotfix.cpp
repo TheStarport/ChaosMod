@@ -6,7 +6,7 @@
 
 class EmergencyHotfix final : public ActiveEffect
 {
-        void Begin() override { PatchNotes::GeneratePatch(); }
+        // TODO: void Begin() override { PatchNotes::GeneratePatch(); }
         bool CanSelect() override { return ChaosMod::GetConfig()->patchNotes.enable; }
 
     public:

@@ -5,15 +5,14 @@ set(NAME "Chaos Mod")
 set(DESCRIPTION "A module to make the game a chaotic experience that you'll never forget.")
 set(CUR_PROJECT "ChaosMod")
 
-find_package(miniaudio)
-find_package(semver)
-find_package(cppzmq)
-find_package(ZeroMQ)
+find_package(miniaudio REQUIRED)
+find_package(semver REQUIRED)
+find_package(cppzmq REQUIRED)
+find_package(ZeroMQ REQUIRED)
 
 # Glob our source files and header files
 begin_glob()
 
-set(DISCORD_GAME_SDK "${VENDOR_PATH}/discord_game_sdk")
 set(DXSDK "${VENDOR_PATH}/DXSDK")
 set(FFMPEG_DIR "${VENDOR_PATH}/ffmpeg")
 
@@ -21,8 +20,6 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/metadata.rc.in" ${CMAKE_CURRENT_BINA
 add_library(${CUR_PROJECT} SHARED
         ${SOURCE_FILES}
         ${CMAKE_CURRENT_BINARY_DIR}/metadata.rc
-        "${DISCORD_GAME_SDK}/cpp/*.h"
-        "${DISCORD_GAME_SDK}/cpp/*.cpp"
 )
 
 # Dependencies
@@ -57,6 +54,9 @@ add_dependencies(${CUR_PROJECT} reflectcpp)
 target_link_libraries(${CUR_PROJECT} PRIVATE
         "${SDK_PATH}/lib/FLCoreCommon.lib"
         "${SDK_PATH}/lib/FLCoreServer.lib"
+        "${SDK_PATH}/lib/FLCoreDALib.lib"
+        "user32.lib"
+        "Winmm.lib"
 )
 
 set_general_targets(PROJECT_NAME ${CUR_PROJECT})

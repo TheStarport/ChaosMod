@@ -16,12 +16,18 @@ class CompressorRecipe(ConanFile):
         tc.generate()
 
     def requirements(self):
-        pass
-        # self.requires('package_name/version', options={ 'shared': False })
+        self.requires("miniaudio/0.11.22")
+        self.requires("neargye-semver/0.3.1")
+        self.requires("zeromq/4.3.5", options={
+            "poller": "epoll",
+            "encryption": False
+        })
+        self.requires("cppzmq/4.11.0")
+        self.requires("yaml-cpp/0.9.0")
 
     def layout(self):
-        self.folders.generators = os.path.join("build", str(self.settings.build_type), "generators")
-        self.folders.build = os.path.join("build", str(self.settings.build_type))
+            self.folders.generators = os.path.join("build", str(self.settings.build_type), "generators")
+            self.folders.build = os.path.join("build", str(self.settings.build_type))
 
     def build(self):
         cmake = CMake(self)

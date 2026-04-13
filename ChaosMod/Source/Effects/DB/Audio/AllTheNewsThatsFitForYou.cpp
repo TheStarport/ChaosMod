@@ -1,6 +1,7 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnusedPrivateField
 
 #include "Effects/ActiveEffect.hpp"
+
 #include "FLCore/FLCoreServer.h"
 
 class AllTheNewsThatsFitForYou final : public ActiveEffect

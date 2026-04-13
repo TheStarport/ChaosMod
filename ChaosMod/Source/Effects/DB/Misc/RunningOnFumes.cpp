@@ -97,12 +97,13 @@ class RunningOnFumes final : public PersistentEffect
                 }
 
                 ushort fuelToRemove = 0;
-                for (auto traverser = ship->equipManager.begin(); traverser != ship->equipManager.end(); ++traverser)
+                CEquipTraverser traverser;
+                for (const CEquip* equip = ship->equipManager.Traverse(traverser); equip; equip = ship->equipManager.Traverse(traverser))
                 {
-                    if (std::ranges::find(possibleFuel, traverser.currentEquip->archetype->archId) != possibleFuel.end())
+                    if (std::ranges::find(possibleFuel, equip->archetype->archId) != possibleFuel.end())
                     {
                         EquipDesc desc;
-                        traverser.currentEquip->GetEquipDesc(desc);
+                        equip->GetEquipDesc(desc);
 
                         fuelToRemove = desc.id;
                         break;

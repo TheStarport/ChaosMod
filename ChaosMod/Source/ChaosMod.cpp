@@ -7,7 +7,6 @@
 #include "CrashCatcher.hpp"
 #include "../Include/CoreComponents/TwitchVoting.hpp"
 #include "Components/CameraController.hpp"
-#include "Components/DiscordManager.hpp"
 #include "Components/GlobalTimers.hpp"
 #include "Components/MoviePlayer.hpp"
 #include "Components/PersonalityHelper.hpp"
@@ -128,9 +127,9 @@ void ChaosMod::OnClientLoad()
 
     Get<ChaosTimer>()->InitEffects();
 
-    PatchNotes::LoadPatches();
+    // TODO: PatchNotes::LoadPatches();
     // Apply the patches for the first time
-    PatchNotes::ResetPatches(true, false);
+    // TODO: PatchNotes::ResetPatches(true, false);
     OnSound::Init();
     //TODO: OnSystemStatusChange::Init();
 }
@@ -504,7 +503,6 @@ void Update(const double delta)
             Get<GlobalTimers>()->Update(SixtyFramesPerSecond);
         }
 
-        Get<DiscordManager>()->Update();
         Get<TTS>()->Update(SixtyFramesPerSecond);
 
         timeCounter -= SixtyFramesPerSecond;
@@ -513,7 +511,7 @@ void Update(const double delta)
     if (!OffsetHelper::IsGamePaused())
     {
         Get<ChaosTimer>()->FrameUpdate(static_cast<float>(delta));
-        PatchNotes::Update(static_cast<float>(delta));
+        // TODO: PatchNotes::Update(static_cast<float>(delta));
     }
 
     Get<TwitchVoting>()->Poll();
@@ -545,7 +543,6 @@ ChaosMod::ChaosMod()
 
     SetComponent<ChaosTimer>();
     SetComponent<ReshadeManager>();
-    SetComponent<DiscordManager>();
 }
 
 ChaosMod::~ChaosMod() { crashCatcher.reset(); }

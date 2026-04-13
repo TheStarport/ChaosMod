@@ -2,6 +2,7 @@
 #include "Effects/ActiveEffect.hpp"
 #include "FLCore/Common/Globals.hpp"
 #include "FLCore/FLCoreServer.h"
+
 class ThanksIHateIt final : public ActiveEffect
 {
         std::vector<uint> possibleCargo;

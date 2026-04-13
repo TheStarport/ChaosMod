@@ -2,6 +2,7 @@
 #include "Components/ShipManipulator.hpp"
 #include "Effects/ActiveEffect.hpp"
 #include "FLCore/FLCoreServer.h"
+
 class Stalled final : public ActiveEffect
 {
         using CEActivateType = bool(__fastcall*)(void* engine, void* edx, bool state);
